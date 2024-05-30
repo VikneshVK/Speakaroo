@@ -24,11 +24,11 @@ public class sceneManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            /*DontDestroyOnLoad(gameObject);*/
+            DontDestroyOnLoad(gameObject); // Ensure the gameObject persists across scenes
         }
-        else
+        else if (Instance != this)
         {
-            Destroy(gameObject);
+            Destroy(gameObject); // Destroy duplicate instances
         }
     }
 
@@ -39,8 +39,10 @@ public class sceneManager : MonoBehaviour
             timeoutPanel.SetActive(false); // Ensure the timeout panel is initially hidden
         }
 
-        StartGameSession();  // dont forget to remove it after the demo
-                             // code is set to run automatically when the level is loaded.
+        if (SceneManager.GetActiveScene().name != "Home Screen") // Start session if not in HomeScene
+        {
+            StartGameSession();
+        }
     }
 
     private void Update()
@@ -58,25 +60,19 @@ public class sceneManager : MonoBehaviour
     public void LoadHomeScene()
     {
         SceneManager.LoadScene("HomeScene");
+        HideTimeoutPanel();
     }
 
     public void LoadLevelsScene()
     {
         SceneManager.LoadScene("LevelsScene");
+        HideTimeoutPanel();
     }
-
-    /*public void LoadSettingsScene()
-    {
-        SceneManager.LoadScene("SettingsScene");
-    }*/
 
     public void LoadLevelScene(int levelIndex)
     {
-        if (timeoutPanel != null)
-        {
-            timeoutPanel.SetActive(false); // Ensure the timeout panel is hidden before loading a new scene
-        }
         SceneManager.LoadScene(levelIndex);
+        HideTimeoutPanel();
         StartGameSession();
     }
 
@@ -87,7 +83,10 @@ public class sceneManager : MonoBehaviour
             timer = sessionTime;
             sessionRunning = true;
         }
-        feedbackText.gameObject.SetActive(false);
+        if (feedbackText != null)
+        {
+            feedbackText.gameObject.SetActive(false);
+        }
     }
 
     public void LevelCompleted()
@@ -101,6 +100,7 @@ public class sceneManager : MonoBehaviour
         {
             SceneManager.LoadScene("GameCompleteScene"); // Example scene for game completion
         }
+        HideTimeoutPanel();
     }
 
     private void TimerEnded()
@@ -179,6 +179,15 @@ public class sceneManager : MonoBehaviour
         else
         {
             SceneManager.LoadScene("GameCompleteScene"); // Example scene for game completion
+        }
+        HideTimeoutPanel();
+    }
+
+    private void HideTimeoutPanel()
+    {
+        if (timeoutPanel != null)
+        {
+            timeoutPanel.SetActive(false);
         }
     }
 }
