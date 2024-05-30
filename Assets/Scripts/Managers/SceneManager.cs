@@ -39,7 +39,8 @@ public class sceneManager : MonoBehaviour
             timeoutPanel.SetActive(false); // Ensure the timeout panel is initially hidden
         }
 
-        if (SceneManager.GetActiveScene().name != "Home Screen") // Start session if not in HomeScene
+        if (SceneManager.GetActiveScene().name != "Home Screen"
+            && SceneManager.GetActiveScene().name != "Minigames Level Select") // Start session if not in HomeScene
         {
             StartGameSession();
         }
@@ -74,6 +75,12 @@ public class sceneManager : MonoBehaviour
         SceneManager.LoadScene(levelIndex);
         HideTimeoutPanel();
         StartGameSession();
+    }
+
+    public void MiniGameLevelSelectScene()
+    {
+        SceneManager.LoadScene("Minigames Level Select");
+        HideTimeoutPanel();
     }
 
     public void StartGameSession()
