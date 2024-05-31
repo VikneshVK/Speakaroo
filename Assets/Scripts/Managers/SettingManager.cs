@@ -15,6 +15,7 @@ public class SettingManager : MonoBehaviour
     [SerializeField] private TMP_InputField securityAnswerInput;
     [SerializeField] private TMP_Text feedbackText;
 
+    
     private int correctMathAnswer;
     private int securityCase;
 
@@ -49,7 +50,7 @@ public class SettingManager : MonoBehaviour
             case 2:
                 // Subtraction challenge
                 number1 = Random.Range(0, 101);
-                number2 = Random.Range(0, 101);
+                number2 = Random.Range(0, number1 + 1);
                 correctMathAnswer = number1 - number2;
                 securityChallengeText.text = $"Solve this problem to access settings:\n{number1} - {number2} = ?";
                 break;
@@ -66,39 +67,52 @@ public class SettingManager : MonoBehaviour
 
     public void SubmitSecurityAnswer()
     {
-        int userAnswer;
+        int userAnswer = 0; 
+
+        if (!int.TryParse(securityAnswerInput.text, out userAnswer))
+        {
+            feedbackText.text = "Invalid input. Please enter a valid number.";
+            return;
+        }
+
         bool isCorrect = false;
 
         switch (securityCase)
         {
             case 1:
+                isCorrect = (userAnswer == correctMathAnswer);
+                break;
             case 2:
-                if (int.TryParse(securityAnswerInput.text, out userAnswer) && userAnswer == correctMathAnswer)
-                {
-                    isCorrect = true;
-                }
+                isCorrect = (userAnswer == correctMathAnswer);
                 break;
             case 3:
-                if (int.TryParse(securityAnswerInput.text, out userAnswer) && userAnswer >= 2004 && userAnswer <= 2020)
-                {
-                    isCorrect = true;
-                }
+                int currentYear = System.DateTime.Now.Year;
+                Debug.Log("Current Year is: " + currentYear);
+                int age = currentYear - userAnswer;
+                Debug.Log("age is:  " + age);
+                isCorrect = (age >= 18);
                 break;
         }
 
         if (isCorrect)
         {
-            // Correct answer, open settings panel
             securityPanel.SetActive(false);
             OpenSettingsPanel();
         }
         else
         {
-            // Incorrect answer, show feedback
-            feedbackText.text = " Please try again.";
+            feedbackText.text = "Incorrect answer. Please try again.";
         }
+
+        StartCoroutine(ShowFeedback());
     }
 
+    private IEnumerator ShowFeedback()
+    {
+        feedbackText.gameObject.SetActive(true);
+        yield return new WaitForSeconds(2f);
+        feedbackText.gameObject.SetActive(false);
+    }
     public void OpenSettingsPanel()
     {
         settingsPanel.SetActive(true);

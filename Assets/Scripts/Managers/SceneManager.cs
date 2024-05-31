@@ -19,6 +19,7 @@ public class sceneManager : MonoBehaviour
 
     private string correctAnswer;
     private int securityCase; // Changed to int for consistency with the switch case
+    private int correctMathAnswer;
 
     private void Awake()
     {
@@ -125,51 +126,58 @@ public class sceneManager : MonoBehaviour
 
     private void GenerateMathProblem()
     {
-        int num1 = Random.Range(0, 101);
-        int num2 = Random.Range(0, 101);
+        // Randomly select a security case
         securityCase = Random.Range(1, 4); // 1 for addition, 2 for subtraction, 3 for year entry
+        int number1, number2;
 
         switch (securityCase)
         {
             case 1:
                 // Addition challenge
-                correctAnswer = (num1 + num2).ToString();
-                timeoutText.text = $"Time's up! Solve this problem to continue:\n{num1} + {num2} = ?";
+                number1 = Random.Range(0, 101);
+                number2 = Random.Range(0, 101);
+                correctMathAnswer = number1 + number2;
+                timeoutText.text = $"Time's Up..! Solve this problem to Continue:\n{number1} + {number2} = ?";
                 break;
             case 2:
                 // Subtraction challenge
-                correctAnswer = (num1 - num2).ToString();
-                timeoutText.text = $"Time's up! Solve this problem to continue:\n{num1} - {num2} = ?";
+                number1 = Random.Range(0, 101);
+                number2 = Random.Range(0, number1 + 1);
+                correctMathAnswer = number1 - number2;
+                timeoutText.text = $"Time's Up..! Solve this problem to Continue:\n{number1} - {number2} = ?";
                 break;
             case 3:
                 // Year entry challenge
-                timeoutText.text = "Enter your year of birth:";
+                timeoutText.text = "Enter Your year of Birth:";
                 break;
         }
-
-        // Clear previous input
-        answerInputField.text = "";
-        feedbackText.text = "";
     }
 
     public void CheckAnswer()
     {
+        int userAnswer = 0;
         bool isCorrect = false;
+
+        if (!int.TryParse(answerInputField.text, out userAnswer))
+        {
+            feedbackText.text = "Invalid input. Please enter a valid number.";
+            return;
+        }
 
         switch (securityCase)
         {
             case 1:
+                isCorrect = (userAnswer == correctMathAnswer);
+                break;
             case 2:
-                if (answerInputField.text.Trim().ToLower() == correctAnswer.ToLower())
-                {
-                    isCorrect = true;
-                }
+                isCorrect = (userAnswer == correctMathAnswer);
                 break;
             case 3:
-                if (int.TryParse(answerInputField.text, out int userAnswer) && userAnswer >= 2004 && userAnswer <= 2020)
-                {
-                    isCorrect = true;
-                }
+                int currentYear = System.DateTime.Now.Year; //to get system time year
+                Debug.Log("Current Year is: " + currentYear);
+                int age = currentYear - userAnswer; // to calculate age
+                Debug.Log("age is:  " + age);
+                isCorrect = (age >= 18);
                 break;
         }
 
