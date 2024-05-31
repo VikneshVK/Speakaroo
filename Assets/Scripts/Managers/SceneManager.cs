@@ -18,6 +18,7 @@ public class sceneManager : MonoBehaviour
     public TMP_Text feedbackText; // Assign in the Inspector
 
     private string correctAnswer;
+    private int securityCase; // Changed to int for consistency with the switch case
 
     private void Awake()
     {
@@ -85,11 +86,12 @@ public class sceneManager : MonoBehaviour
 
     public void StartGameSession()
     {
-        if (!sessionRunning)
+        if (!sessionRunning &&  sessionTime != 0)
         {
             timer = sessionTime;
             sessionRunning = true;
         }
+       
         if (feedbackText != null)
         {
             feedbackText.gameObject.SetActive(false);
@@ -125,37 +127,53 @@ public class sceneManager : MonoBehaviour
     {
         int num1 = Random.Range(0, 101);
         int num2 = Random.Range(0, 101);
-        string[] operators = { "+", "-", "*", "<", ">" };
-        string selectedOperator = operators[Random.Range(0, operators.Length)];
+        securityCase = Random.Range(1, 4); // 1 for addition, 2 for subtraction, 3 for year entry
 
-        switch (selectedOperator)
+        switch (securityCase)
         {
-            case "+":
+            case 1:
+                // Addition challenge
                 correctAnswer = (num1 + num2).ToString();
-                timeoutText.text += $"\n{num1} + {num2} = ?";
+                timeoutText.text = $"Time's up! Solve this problem to continue:\n{num1} + {num2} = ?";
                 break;
-            case "-":
+            case 2:
+                // Subtraction challenge
                 correctAnswer = (num1 - num2).ToString();
-                timeoutText.text += $"\n{num1} - {num2} = ?";
+                timeoutText.text = $"Time's up! Solve this problem to continue:\n{num1} - {num2} = ?";
                 break;
-            case "*":
-                correctAnswer = (num1 * num2).ToString();
-                timeoutText.text += $"\n{num1} * {num2} = ?";
-                break;
-            case "<":
-                correctAnswer = num1 < num2 ? "Yes" : "No";
-                timeoutText.text += $"\nIs {num1} < {num2}? (Yes or No)";
-                break;
-            case ">":
-                correctAnswer = num1 > num2 ? "Yes" : "No";
-                timeoutText.text += $"\nIs {num1} > {num2}? (Yes or No)";
+            case 3:
+                // Year entry challenge
+                timeoutText.text = "Enter your year of birth:";
                 break;
         }
+
+        // Clear previous input
+        answerInputField.text = "";
+        feedbackText.text = "";
     }
 
     public void CheckAnswer()
     {
-        if (answerInputField.text.Trim().ToLower() == correctAnswer.ToLower())
+        bool isCorrect = false;
+
+        switch (securityCase)
+        {
+            case 1:
+            case 2:
+                if (answerInputField.text.Trim().ToLower() == correctAnswer.ToLower())
+                {
+                    isCorrect = true;
+                }
+                break;
+            case 3:
+                if (int.TryParse(answerInputField.text, out int userAnswer) && userAnswer >= 2004 && userAnswer <= 2020)
+                {
+                    isCorrect = true;
+                }
+                break;
+        }
+
+        if (isCorrect)
         {
             feedbackText.text = "Correct! Loading next level...";
             LoadNextLevel();
