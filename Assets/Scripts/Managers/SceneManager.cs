@@ -2,6 +2,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
+using UnityEngine.UI;
 
 public class sceneManager : MonoBehaviour
 {
@@ -21,6 +22,9 @@ public class sceneManager : MonoBehaviour
     private int securityCase; // Changed to int for consistency with the switch case
     private int correctMathAnswer;
 
+    [SerializeField] private GameObject buttonsParent; // For number buttons
+    [SerializeField] private Button backspaceButton; // For backspace button
+
     private void Awake()
     {
         if (Instance == null)
@@ -32,6 +36,7 @@ public class sceneManager : MonoBehaviour
         {
             Destroy(gameObject); // Destroy duplicate instances
         }
+        AssignButtonCallbacks();
     }
 
     private void Start()
@@ -87,12 +92,12 @@ public class sceneManager : MonoBehaviour
 
     public void StartGameSession()
     {
-        if (!sessionRunning &&  sessionTime != 0)
+        if (!sessionRunning && sessionTime != 0)
         {
             timer = sessionTime;
             sessionRunning = true;
         }
-       
+
         if (feedbackText != null)
         {
             feedbackText.gameObject.SetActive(false);
@@ -155,20 +160,19 @@ public class sceneManager : MonoBehaviour
 
     public void CheckAnswer()
     {
-        int userAnswer = 0;
+        int userAnswer;
         bool isCorrect = false;
 
         if (!int.TryParse(answerInputField.text, out userAnswer))
         {
             feedbackText.text = "Invalid input. Please enter a valid number.";
+            StartCoroutine(ShowFeedback());
             return;
         }
 
         switch (securityCase)
         {
             case 1:
-                isCorrect = (userAnswer == correctMathAnswer);
-                break;
             case 2:
                 isCorrect = (userAnswer == correctMathAnswer);
                 break;
@@ -189,10 +193,16 @@ public class sceneManager : MonoBehaviour
         else
         {
             feedbackText.text = "Try again!";
+            ClearAnswerInputField();
         }
 
         // Show feedback for 2 seconds
         StartCoroutine(ShowFeedback());
+    }
+
+    private void ClearAnswerInputField()
+    {
+        answerInputField.text = "";
     }
 
     private IEnumerator ShowFeedback()
@@ -221,6 +231,33 @@ public class sceneManager : MonoBehaviour
         if (timeoutPanel != null)
         {
             timeoutPanel.SetActive(false);
+        }
+    }
+
+    private void AssignButtonCallbacks()
+    {
+        Button[] buttons = buttonsParent.GetComponentsInChildren<Button>();
+        for (int i = 0; i < buttons.Length; i++)
+        {
+            int number = i; // Capture the loop variable
+            buttons[i].onClick.AddListener(() => OnNumberButtonClicked(number));
+        }
+        backspaceButton.onClick.AddListener(OnBackspaceButtonClicked);
+    }
+
+    private void OnNumberButtonClicked(int number)
+    {
+        if (answerInputField.text.Length < 4)
+        {
+            answerInputField.text += number.ToString();
+        }
+    }
+
+    private void OnBackspaceButtonClicked()
+    {
+        if (answerInputField.text.Length > 0)
+        {
+            answerInputField.text = answerInputField.text.Substring(0, answerInputField.text.Length - 1);
         }
     }
 }
