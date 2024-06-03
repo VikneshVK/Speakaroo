@@ -25,6 +25,7 @@ public class profileManager : MonoBehaviour
     [Header("DOB Manager")]
     public DOBManager dobManager;
 
+    [Header("Welcome Text")]
     public TextMeshProUGUI welcomeText;
 
     private List<UserProfile> userProfiles = new List<UserProfile>();
