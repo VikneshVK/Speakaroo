@@ -1,3 +1,6 @@
+using Firebase;
+using Firebase.Database;
+using Firebase.Extensions;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.IO;
@@ -26,6 +29,9 @@ public class GameManager : MonoBehaviour
     private string profilesFilePath;
     private UserProfile currentUserProfile;
 
+    private DatabaseReference dbReference;
+    private bool isFirebaseInitialized = false;
+
     private void Start()
     {
         profilesFilePath = Path.Combine(Application.persistentDataPath, "userProfiles.json");
@@ -38,6 +44,27 @@ public class GameManager : MonoBehaviour
         createProfilePanel.SetActive(false);
 
         clearUsersButton.gameObject.SetActive(userProfiles.Count > 0);
+
+        // Initialize Firebase
+        FirebaseApp.CheckAndFixDependenciesAsync().ContinueWithOnMainThread(task => {
+            if (task.Result == DependencyStatus.Available)
+            {
+                FirebaseApp app = FirebaseApp.DefaultInstance;
+                dbReference = FirebaseDatabase.DefaultInstance.RootReference;
+                isFirebaseInitialized = true;
+                Debug.Log("Firebase initialized successfully. dbReference is set.");
+
+                // Sync profiles when Firebase is initialized and internet is available
+                SyncUserProfilesWithRealtimeDatabase();
+            }
+            else
+            {
+                Debug.LogError("Could not resolve all Firebase dependencies: " + task.Result);
+            }
+        });
+
+        // Sync profiles with Realtime Database every 5 minutes
+        InvokeRepeating("SyncUserProfilesWithRealtimeDatabase", 300, 300);
     }
 
     private void LoadUserProfiles()
@@ -53,6 +80,9 @@ public class GameManager : MonoBehaviour
     {
         string json = JsonConvert.SerializeObject(userProfiles, Formatting.Indented);
         File.WriteAllText(profilesFilePath, json);
+
+        // Sync with Realtime Database when online
+        SyncUserProfilesWithRealtimeDatabase();
     }
 
     private void CreateProfile()
@@ -155,6 +185,48 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    private void SyncUserProfilesWithRealtimeDatabase()
+    {
+        if (!isFirebaseInitialized || dbReference == null)
+        {
+            Debug.LogError("Database reference is not initialized.");
+            return;
+        }
+
+        if (IsConnectedToInternet())
+        {
+            Debug.Log("Internet connection detected. Syncing profiles with Realtime Database.");
+
+            foreach (var userProfile in userProfiles)
+            {
+                string json = JsonUtility.ToJson(userProfile);
+                Debug.Log("Syncing profile: " + userProfile.Name); // Add debug log before the sync
+                dbReference.Child("userProfiles").Child(userProfile.Name).SetRawJsonValueAsync(json).ContinueWithOnMainThread(task =>
+                {
+                    if (task.IsCompleted)
+                    {
+                        Debug.Log("User profile synced with Realtime Database: " + userProfile.Name);
+                    }
+                    else
+                    {
+                        Debug.LogError("Error syncing user profile with Realtime Database: " + task.Exception);
+                    }
+                });
+            }
+        }
+        else
+        {
+            Debug.Log("No internet connection. Profiles will be synced when the device is online.");
+        }
+    }
+
+    private bool IsConnectedToInternet()
+    {
+        bool isConnected = Application.internetReachability != NetworkReachability.NotReachable;
+        Debug.Log("Internet connectivity status: " + isConnected);
+        return isConnected;
+    }
+
     private void DisplayMessage(string message, bool isError)
     {
         messageText.gameObject.SetActive(!string.IsNullOrEmpty(message));
@@ -162,5 +234,3 @@ public class GameManager : MonoBehaviour
         messageText.color = isError ? Color.red : Color.black;
     }
 }
-
-
