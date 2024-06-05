@@ -4,33 +4,27 @@ using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
-    [Header ("Profile Panel")]
-
     public GameObject profilePanel;
     public Transform profileButtonsParent;
     public GameObject profilePrefab;
     public Button createProfileButton;
     public TextMeshProUGUI messageText;
     public Button clearUsersButton;
-
-    [Header("Create Profile Panel")]
-
     public GameObject createProfilePanel;
     public TMP_InputField nameInputField;
     public Sprite[] profileImages;
     public Button saveProfileButton;
     public Button cancelProfileButton;
     public Toggle aacToggle;
-
-    [Header("Date of Birth Manager")]
-
     public DOBManager dobManager;
 
     private List<UserProfile> userProfiles = new List<UserProfile>();
     private string profilesFilePath;
+    private UserProfile currentUserProfile;
 
     private void Start()
     {
@@ -84,7 +78,10 @@ public class GameManager : MonoBehaviour
         {
             Name = name,
             DateOfBirth = dob,
-            ProfileImageIndex = randomIndex
+            ProfileImageIndex = randomIndex,
+            AacNeeded = aacToggle.isOn,
+            LevelsCompleted = 0,
+            WordsLearned = 0
         };
 
         userProfiles.Add(newProfile);
@@ -132,13 +129,30 @@ public class GameManager : MonoBehaviour
         createProfilePanel.SetActive(true);
         nameInputField.text = "";
         dobManager.ClearDateSelection();
+        aacToggle.isOn = false;
         DisplayMessage("", false);
     }
 
     private void SelectProfile(UserProfile userProfile)
     {
+        currentUserProfile = userProfile;
         Debug.Log("Selected profile: " + userProfile.Name);
-        // Implement the logic for selecting a profile.
+
+        // Store the current user profile in PersistentDataManager
+        PersistentDataManager.CurrentUserProfile = userProfile;
+
+        // Optionally load the home screen scene
+        SceneManager.LoadScene("Home Screen"); // Replace with your home screen scene name
+    }
+
+    private void UpdateProfileProgress(int levelsCompleted, int wordsLearned)
+    {
+        if (currentUserProfile != null)
+        {
+            currentUserProfile.LevelsCompleted = levelsCompleted;
+            currentUserProfile.WordsLearned = wordsLearned;
+            SaveUserProfiles();
+        }
     }
 
     private void DisplayMessage(string message, bool isError)
@@ -148,3 +162,5 @@ public class GameManager : MonoBehaviour
         messageText.color = isError ? Color.red : Color.black;
     }
 }
+
+
