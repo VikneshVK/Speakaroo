@@ -64,10 +64,25 @@ public class DOBManager : MonoBehaviour
 
     public string GetSelectedDate()
     {
+        if (dayDropdown.options.Count == 0 || monthDropdown.options.Count == 0 || yearDropdown.options.Count == 0)
+        {
+            return null;
+        }
+
         int day = int.Parse(dayDropdown.options[dayDropdown.value].text);
         int month = monthDropdown.value + 1;
         int year = int.Parse(yearDropdown.options[yearDropdown.value].text);
 
         return new DateTime(year, month, day).ToString("yyyy-MM-dd");
+    }
+
+    public void ClearDateSelection()
+    {
+        dayDropdown.ClearOptions();
+        monthDropdown.ClearOptions();
+        yearDropdown.ClearOptions();
+        PopulateMonthDropdown();
+        PopulateYearDropdown();
+        UpdateDayDropdown();
     }
 }
