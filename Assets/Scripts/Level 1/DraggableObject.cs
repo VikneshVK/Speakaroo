@@ -21,15 +21,16 @@ public class DraggableObject : MonoBehaviour
         {
             Debug.LogError("Main Camera not found. Ensure your camera is tagged as 'MainCamera'.");
         }
-        Debug.Log($"DraggableObject Initialized: {name}, Tag: {tag}");
+        originalPosition = transform.position; // Ensure original position is set at the start
     }
 
     public void Initialize(System.Action<string> correctDropCallback, System.Action incorrectDropCallback)
     {
         onCorrectDrop = correctDropCallback;
         onIncorrectDrop = incorrectDropCallback;
-        originalPosition = transform.position;
         Debug.Log($"DraggableObject Initialized: {name}, Tag: {tag}");
+        Debug.Log($"onCorrectDrop assigned: {onCorrectDrop != null}");
+        Debug.Log($"onIncorrectDrop assigned: {onIncorrectDrop != null}");
     }
 
     void OnMouseDown()
@@ -50,6 +51,8 @@ public class DraggableObject : MonoBehaviour
         isDragging = false;
 
         Debug.Log($"DraggableObject OnMouseUp: {name}, Tag: {tag}");
+        Debug.Log($"onCorrectDrop: {onCorrectDrop != null}");
+        Debug.Log($"onIncorrectDrop: {onIncorrectDrop != null}");
 
         Collider2D[] colliders = Physics2D.OverlapPointAll(GetMouseWorldPosition());
         foreach (var collider in colliders)
@@ -62,14 +65,28 @@ public class DraggableObject : MonoBehaviour
                 {
                     transform.position = collider.transform.position;
                     correctlyDropped = true;
-                    onCorrectDrop.Invoke(tag);
+                    if (onCorrectDrop != null)
+                    {
+                        onCorrectDrop.Invoke(tag);
+                    }
+                    else
+                    {
+                        Debug.Log("onCorrectDrop is not assigned.");
+                    }
                     return;
                 }
             }
         }
 
         transform.position = originalPosition;
-        onIncorrectDrop.Invoke();
+        if (onIncorrectDrop != null)
+        {
+            onIncorrectDrop.Invoke();
+        }
+        else
+        {
+            Debug.Log("onIncorrectDrop is not assigned.");
+        }
     }
 
     void Update()

@@ -22,6 +22,8 @@ public class SpeechBubbleController : MonoBehaviour
     [Header("Toothbrush and Toothpaste")]
     public GameObject toothbrushPrefab; // Prefab for the toothbrush
     public GameObject toothpastePrefab; // Prefab for the toothpaste
+    /*public Transform toothbrushContainer; // Container for the toothbrush
+    public Transform toothpasteContainer; // Container for the toothpaste*/
 
     [Header("Audio Clips")]
     public AudioClip firstObjectDropAudio;
@@ -136,7 +138,7 @@ public class SpeechBubbleController : MonoBehaviour
 
     IEnumerator PlayAllCorrectAudioWithDelay()
     {
-        yield return new WaitForSeconds(1); // Wait for 3 seconds before playing the audio
+        yield return new WaitForSeconds(1); // Wait for 1 second before playing the audio
         audioSource.PlayOneShot(allCorrectDropAudio);
         yield return new WaitForSeconds(allCorrectDropAudio.length); // Wait for the all correct audio to finish
         ProcessRepeats();
@@ -178,11 +180,27 @@ public class SpeechBubbleController : MonoBehaviour
     {
         yield return new WaitForSeconds(1); // Wait for the audio to finish
         cameraZoom.ZoomOut(zoomDuration);
+        yield return new WaitForSeconds(zoomDuration);
         isZoomedIn = false;
 
-        // Instantiate toothbrush and toothpaste at specific locations with specific rotations
-        Instantiate(toothbrushPrefab, new Vector3(-7f, -4.25f, 0f), Quaternion.Euler(0, 0, 22f));
-        Instantiate(toothpastePrefab, new Vector3(-6f, -4f, 0f), Quaternion.Euler(0, 0, 35f));
-        Debug.Log("Toothbrush and toothpaste instantiated with specified rotations.");
+        // Instantiate toothbrush at (-4.81, -4.18, 0) with rotation on z-axis 22 degrees
+        Vector3 toothbrushPosition = new Vector3(-4.81f, -4.18f, 0f);
+        Quaternion toothbrushRotation = Quaternion.Euler(0, 0, 22);
+        Instantiate(toothbrushPrefab, toothbrushPosition, toothbrushRotation);
+
+        // Instantiate toothpaste at (5, -4.05, 0) with rotation on x-axis 35 degrees
+        Vector3 toothpastePosition = new Vector3(5f, -4.05f, 0f);
+        Quaternion toothpasteRotation = Quaternion.Euler(0, 0, 35);
+        Instantiate(toothpastePrefab, toothpastePosition, toothpasteRotation);
+
+        Debug.Log("Toothbrush and toothpaste instantiated inside their containers.");
+
+       /* if (toothpastePrefab.GetComponent<DraggableToothpaste>() != null)
+        {
+            toothpastePrefab.GetComponent<DraggableToothpaste>().Initialize(cameraZoom, toothpastePrefab.transform);
+        }*/
+
+        // Destroy the speech bubble and its children
+        Destroy(gameObject);
     }
 }

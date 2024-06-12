@@ -49,18 +49,21 @@ public class ZoomOnClick : MonoBehaviour
 
     IEnumerator ZoomInCoroutine()
     {
+        objectCollider.enabled = false; // Disable the collider
         cameraZoom.ZoomTo(transform, zoomInSize, zoomDuration);
         yield return new WaitForSeconds(zoomDuration);
         PlayZoomInAudio();
+        objectCollider.enabled = true; // Re-enable the collider
     }
 
     IEnumerator ZoomOutCoroutine()
     {
+        objectCollider.enabled = false; // Disable the collider
         cameraZoom.ZoomOut(zoomDuration);
         yield return new WaitForSeconds(zoomDuration);
         yield return StartCoroutine(PlayZoomOutAudio());
-        objectCollider.enabled = false; // Disable the collider
         InstantiateSpeechBubble(); // Instantiate the speech bubble
+        objectCollider.enabled = true; // Re-enable the collider
     }
 
     void PlayZoomInAudio()
