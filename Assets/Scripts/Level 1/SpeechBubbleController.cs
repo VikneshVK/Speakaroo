@@ -8,22 +8,19 @@ public class SpeechBubbleController : MonoBehaviour
     public float zoomDuration = 2f;
 
     [Header("Game Objects")]
-    public GameObject firstObjectPrefab; // Prefab for the first game object
-    public GameObject secondObjectPrefab; // Prefab for the second game object
-    public Transform firstSpawnContainer; // Container for the first game object
-    public Transform secondSpawnContainer; // Container for the second game object
+    public GameObject firstObjectPrefab;
+    public GameObject secondObjectPrefab;
+    public Transform firstSpawnContainer;
+    public Transform secondSpawnContainer;
 
     [Header("Drop Points")]
-    public GameObject firstDropPointPrefab; // Prefab for the first drop point
-    public GameObject secondDropPointPrefab; // Prefab for the second drop point
-    public Transform firstDropPointContainer; // Container for the first drop point
-    public Transform secondDropPointContainer; // Container for the second drop point
+    public GameObject firstDropPointPrefab;
+    public GameObject secondDropPointPrefab;
+    public Transform firstDropPointContainer;
+    public Transform secondDropPointContainer;
 
-    [Header("Toothbrush and Toothpaste")]
-    public GameObject toothbrushPrefab; // Prefab for the toothbrush
-    public GameObject toothpastePrefab; // Prefab for the toothpaste
-    /*public Transform toothbrushContainer; // Container for the toothbrush
-    public Transform toothpasteContainer; // Container for the toothpaste*/
+    [Header("Toothbrush")]
+    public GameObject toothbrushPrefab;
 
     [Header("Audio Clips")]
     public AudioClip firstObjectDropAudio;
@@ -44,15 +41,17 @@ public class SpeechBubbleController : MonoBehaviour
     private int repeatCount = 0;
     private const int maxRepeats = 3;
 
+    private Collider2D speechBubbleCollider;
+
     void Start()
     {
-        Collider2D bubbleCollider = GetComponent<Collider2D>();
-        if (bubbleCollider == null)
+        speechBubbleCollider = GetComponent<Collider2D>();
+        if (speechBubbleCollider == null)
         {
             Debug.LogError("Collider2D component not found on the speech bubble.");
             return;
         }
-        bubbleCollider.isTrigger = true;
+        speechBubbleCollider.isTrigger = true;
 
         audioSource = gameObject.AddComponent<AudioSource>();
         SetupCameraZoomComponent();
@@ -98,6 +97,8 @@ public class SpeechBubbleController : MonoBehaviour
 
         firstDropPoint = SpawnDropPoint(firstDropPointPrefab, firstDropPointContainer, "bring");
         secondDropPoint = SpawnDropPoint(secondDropPointPrefab, secondDropPointContainer, "toothpaste");
+
+        speechBubbleCollider.enabled = false; // Disable collider to avoid interference
     }
 
     DraggableObject SpawnDraggableObject(GameObject prefab, Transform container, string tag)
@@ -138,9 +139,9 @@ public class SpeechBubbleController : MonoBehaviour
 
     IEnumerator PlayAllCorrectAudioWithDelay()
     {
-        yield return new WaitForSeconds(1); // Wait for 1 second before playing the audio
+        yield return new WaitForSeconds(1);
         audioSource.PlayOneShot(allCorrectDropAudio);
-        yield return new WaitForSeconds(allCorrectDropAudio.length); // Wait for the all correct audio to finish
+        yield return new WaitForSeconds(allCorrectDropAudio.length);
         ProcessRepeats();
     }
 
@@ -178,29 +179,23 @@ public class SpeechBubbleController : MonoBehaviour
 
     IEnumerator ZoomOutCoroutine()
     {
-        yield return new WaitForSeconds(1); // Wait for the audio to finish
+        yield return new WaitForSeconds(1);
         cameraZoom.ZoomOut(zoomDuration);
         yield return new WaitForSeconds(zoomDuration);
         isZoomedIn = false;
 
-        // Instantiate toothbrush at (-4.81, -4.18, 0) with rotation on z-axis 22 degrees
-        Vector3 toothbrushPosition = new Vector3(-4.81f, -4.18f, 0f);
-        Quaternion toothbrushRotation = Quaternion.Euler(0, 0, 22);
-        Instantiate(toothbrushPrefab, toothbrushPosition, toothbrushRotation);
-
-        // Instantiate toothpaste at (5, -4.05, 0) with rotation on x-axis 35 degrees
-        Vector3 toothpastePosition = new Vector3(5f, -4.05f, 0f);
-        Quaternion toothpasteRotation = Quaternion.Euler(0, 0, 35);
-        Instantiate(toothpastePrefab, toothpastePosition, toothpasteRotation);
-
-        Debug.Log("Toothbrush and toothpaste instantiated inside their containers.");
-
-       /* if (toothpastePrefab.GetComponent<DraggableToothpaste>() != null)
+        GameObject toothbrushContainerObj = GameObject.Find("brush Container");
+        if (toothbrushContainerObj != null && toothbrushContainerObj.CompareTag("brush"))
         {
-            toothpastePrefab.GetComponent<DraggableToothpaste>().Initialize(cameraZoom, toothpastePrefab.transform);
-        }*/
+            Transform toothbrushContainer = toothbrushContainerObj.transform;
+            Instantiate(toothbrushPrefab, toothbrushContainer.position, toothbrushContainer.rotation);
+            Debug.Log("Toothbrush instantiated inside its container.");
+        }
+        else
+        {
+            Debug.LogError("Toothbrush container not found or tag mismatch.");
+        }
 
-        // Destroy the speech bubble and its children
         Destroy(gameObject);
     }
 }
