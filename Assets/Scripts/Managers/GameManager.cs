@@ -54,6 +54,9 @@ public class GameManager : MonoBehaviour
                 isFirebaseInitialized = true;
                 Debug.Log("Firebase initialized successfully. dbReference is set.");
 
+                // Fetch profiles from Firebase
+                FetchUserProfilesFromFirebase();
+
                 // Sync profiles when Firebase is initialized and internet is available
                 SyncUserProfilesWithRealtimeDatabase();
             }
@@ -218,6 +221,37 @@ public class GameManager : MonoBehaviour
         {
             Debug.Log("No internet connection. Profiles will be synced when the device is online.");
         }
+    }
+
+    private void FetchUserProfilesFromFirebase()
+    {
+        if (!isFirebaseInitialized || dbReference == null)
+        {
+            Debug.LogError("Database reference is not initialized.");
+            return;
+        }
+
+        dbReference.Child("userProfiles").GetValueAsync().ContinueWithOnMainThread(task =>
+        {
+            if (task.IsCompleted)
+            {
+                DataSnapshot snapshot = task.Result;
+                userProfiles.Clear();
+                foreach (DataSnapshot profileSnapshot in snapshot.Children)
+                {
+                    string json = profileSnapshot.GetRawJsonValue();
+                    UserProfile userProfile = JsonUtility.FromJson<UserProfile>(json);
+                    userProfiles.Add(userProfile);
+                }
+                SaveUserProfiles(); // Save fetched profiles locally
+                DisplayUserProfiles(); // Update the UI
+                Debug.Log("User profiles fetched from Firebase.");
+            }
+            else
+            {
+                Debug.LogError("Error fetching user profiles from Firebase: " + task.Exception);
+            }
+        });
     }
 
     private bool IsConnectedToInternet()
