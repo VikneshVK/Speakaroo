@@ -121,7 +121,7 @@ public class CameraViewportHandler : MonoBehaviour
         ComputeResolution();
     }
 
-    private void ComputeResolution()
+    public void ComputeResolution()
     {
         float leftX, rightX, topY, bottomY;
 

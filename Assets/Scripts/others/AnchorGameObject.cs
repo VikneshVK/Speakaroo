@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System;
 
 [ExecuteInEditMode]
 public class AnchorGameObject : MonoBehaviour
@@ -17,7 +18,8 @@ public class AnchorGameObject : MonoBehaviour
         TopRight,
     };
 
-    public bool executeInUpdate;
+   
+public bool executeInUpdate;
 
     public AnchorType anchorType;
     public Vector3 anchorOffset;
@@ -98,7 +100,6 @@ public class AnchorGameObject : MonoBehaviour
             transform.position = newPos;
         }
     }
-
 #if UNITY_EDITOR
     // Update is called once per frame
     void Update()
