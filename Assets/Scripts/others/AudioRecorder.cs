@@ -7,13 +7,14 @@ public class AudioRecorder : MonoBehaviour
     private AudioClip recordedClip;
     private bool isRecording = false;
     private float recordLength = 5f; // Length of the audio recording in seconds
+    private float highPitchFactor = 1.5f; // Higher pitch factor
 
     void Start()
     {
         audioSource = gameObject.AddComponent<AudioSource>();
     }
 
-    // Call this method when the record button is clicked
+    // Call this method when you want to start recording
     public void StartRecording()
     {
         if (Microphone.IsRecording(null))
@@ -40,7 +41,7 @@ public class AudioRecorder : MonoBehaviour
         }
     }
 
-    // Call this method when the play button is clicked
+    // Call this method when you want to play the recording
     public void PlayRecording()
     {
         if (recordedClip == null)
@@ -50,7 +51,8 @@ public class AudioRecorder : MonoBehaviour
         }
 
         audioSource.clip = recordedClip;
+        audioSource.pitch = highPitchFactor; // Set the pitch higher before playing
         audioSource.Play();
-        Debug.Log("Playing the recorded audio.");
+        Debug.Log("Playing the recorded audio at a higher pitch.");
     }
 }
