@@ -10,6 +10,8 @@ public class ZoomOnCharacter : MonoBehaviour
     public CameraViewportHandler viewportHandler;
     public float zoomDuration = 2.0f;
     public float targetOrthographicSize = 5f;  // Target size when zoomed in
+    public GameObject speechBubble;  // Reference to the GameObject prefab to instantiate
+    public Transform speechBubblePosition;
 
     private Camera mainCamera;
     private Animator animator;
@@ -17,6 +19,7 @@ public class ZoomOnCharacter : MonoBehaviour
     private bool isZoomedIn;
     private float originalOrthographicSize;
     private Vector3 originalCameraPosition;  // Store the original camera position to reset after zoom out
+    private bool hasInstantiated; // Flag to check if the GameObject has already been instantiated
 
     void Start()
     {
@@ -83,6 +86,7 @@ public class ZoomOnCharacter : MonoBehaviour
     private IEnumerator ZoomOutCamera()
     {
         isZooming = true;
+        Collider2D collider = this.GetComponent<Collider2D>();
 
         float elapsedTime = 0f;
         Vector3 startPosition = zoomCamera.transform.position;
@@ -108,6 +112,20 @@ public class ZoomOnCharacter : MonoBehaviour
         if (animator != null)
         {
             animator.SetBool("isZoomedOut", true);
+            // Start playing the talk animation
+            animator.Play("Talk");
+        }
+
+        collider.enabled = false;
+    }
+
+    void Update()
+    {
+        if (!hasInstantiated && animator.GetCurrentAnimatorStateInfo(0).IsName("Talk") && animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f && !animator.IsInTransition(0))
+        {
+            Instantiate(speechBubble, speechBubblePosition.position, Quaternion.identity);
+            hasInstantiated = true; // Set the flag so instantiation only happens once
+            
         }
     }
 }

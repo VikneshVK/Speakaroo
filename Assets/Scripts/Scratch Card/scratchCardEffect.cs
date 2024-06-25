@@ -1,40 +1,73 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class scratchCardEffect : MonoBehaviour
+public class ScratchCardEffect : MonoBehaviour
 {
     public GameObject maskPrefab;
-    private bool isPressed = false;
+    private GameObject instantiatedMask; // To keep track of the instantiated mask
+    private bool timerStarted = false;
+    private bool audioPlayed = false; // Flag to track if audio has been played
 
-
-    // Update is called once per frame
     void Update()
     {
-        
-        var mousePos = Input.mousePosition;
-        mousePos.z = 10;
-        mousePos = Camera.main.ScreenToWorldPoint(mousePos);
+        // Check if the left mouse button is pressed
+        if (Input.GetMouseButton(0))
+        {
+            Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            Vector2 mousePos2D = new Vector2(mousePos.x, mousePos.y);
 
-        if(isPressed == true)
-        {
-            GameObject maskSprite = Instantiate(maskPrefab.gameObject, mousePos, Quaternion.identity);
-            maskSprite.transform.parent = gameObject.transform;
-        }
+            RaycastHit2D hit = Physics2D.Raycast(mousePos2D, Vector2.zero);
 
-        if (Input.GetMouseButtonDown(0)) 
-        {
-            Invoke("reveal", 5);
-            isPressed = true;
-        }
-        else if (Input.GetMouseButtonUp(0))
-        {
-            isPressed = false;
+            // Check if the raycast hit this specific GameObject and it has the correct tag
+            if (hit.collider != null && hit.collider.gameObject == gameObject &&
+                (gameObject.tag == "Card_1" || gameObject.tag == "Card_2"))
+            {
+                Vector3 spawnPos = new Vector3(hit.point.x, hit.point.y, hit.collider.transform.position.z);
+
+                if (!AlreadyHasMaskAtPoint(spawnPos, hit.collider.transform))
+                {
+                    instantiatedMask = Instantiate(maskPrefab, spawnPos, Quaternion.identity);
+                    instantiatedMask.transform.SetParent(hit.collider.transform);
+
+                    if (!timerStarted)
+                    {
+                        timerStarted = true;
+                        Invoke("DisableSpriteAndPlayAudio", 5f); // Schedule the method call
+                    }
+                }
+            }
         }
     }
 
-    void reveal()
+    private void DisableSpriteAndPlayAudio()
     {
-        Destroy(this.gameObject);
+        SpriteRenderer sr = GetComponent<SpriteRenderer>();
+        AudioSource audioSource = GetComponent<AudioSource>();
+
+        if (sr != null)
+        {
+            sr.enabled = false;
+        }
+
+        if (audioSource != null && !audioPlayed && audioSource.clip != null)
+        {
+            audioSource.Play();
+            audioPlayed = true; // Mark as played to prevent further playback
+        }
+
+        timerStarted = false; // Reset timer
+    }
+
+    private bool AlreadyHasMaskAtPoint(Vector3 point, Transform parent)
+    {
+        foreach (Transform child in parent)
+        {
+            if (child.gameObject.CompareTag("Mask"))
+            {
+                float distance = Vector3.Distance(child.position, point);
+                if (distance < 0.01f) // Adjust as necessary
+                    return true;
+            }
+        }
+        return false;
     }
 }
