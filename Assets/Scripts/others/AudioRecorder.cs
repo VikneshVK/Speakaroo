@@ -55,4 +55,17 @@ public class AudioRecorder : MonoBehaviour
         audioSource.Play();
         Debug.Log("Playing the recorded audio at a higher pitch.");
     }
+    public void DestroyGameObject()
+    {
+        GameObject targetObject = GameObject.Find("ST_Mechanics");
+        if (targetObject != null)
+        {
+            Destroy(targetObject);
+            Debug.Log("ST_Mechanics destroyed.");
+        }
+        else
+        {
+            Debug.Log("ST_Mechanics not found.");
+        }
+    }
 }
