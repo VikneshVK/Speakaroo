@@ -63,18 +63,18 @@ public class Speech_Bubble_Controller : MonoBehaviour
         float initialDelay = 1f;  // Delay to start first child's animation after BG's tween
         float staggerTime = 0.5f; // Time stagger between subsequent animations
 
-        // Animate children: Bubble, Kid, Bird
-        AnimateChild(bgTransform, "Bubble", initialDelay);
-        AnimateChild(bgTransform, "Kid", initialDelay + staggerTime);
-        AnimateChild(bgTransform, "Bird", initialDelay + 2 * staggerTime);
+        // Animate children: Kid, Bird, Bubble
+        AnimateChild(bgTransform, "Kid", initialDelay);
+        AnimateChild(bgTransform, "Bird", initialDelay + staggerTime);
+        AnimateChild(bgTransform, "Bubble", initialDelay + 2 * staggerTime);
 
-        // Animate Bubble's children: Card_1, Card_2
+        // Animate Bubble's children: Card_1, Card_2, and the nested ST_Canvas
         Transform bubble = bgTransform.Find("Bubble");
         if (bubble != null)
         {
             AnimateChild(bubble, "Card_1", initialDelay + 3 * staggerTime);
             AnimateChild(bubble, "Card_2", initialDelay + 4 * staggerTime);
-            AnimateChild(bubble, "ST_Canvas", initialDelay + 5 * staggerTime);
+            AnimateCanvas(bubble, "ST_Canvas", initialDelay + 5 * staggerTime);
         }
         else
         {
@@ -94,6 +94,21 @@ public class Speech_Bubble_Controller : MonoBehaviour
         else
         {
             Debug.LogError(childName + " not found in " + parentTransform.name, this);
+        }
+    }
+
+    private void AnimateCanvas(Transform parentTransform, string childName, float delay)
+    {
+        Transform canvas = parentTransform.Find(childName);
+        if (canvas != null)
+        {
+            AnimateChild(canvas, "DisplayText", delay);
+            AnimateChild(canvas, "Retry Button", delay + 0.5f);
+            AnimateChild(canvas, "Close button", delay + 1f);
+        }
+        else
+        {
+            Debug.LogError("Canvas " + childName + " not found in " + parentTransform.name, this);
         }
     }
 }

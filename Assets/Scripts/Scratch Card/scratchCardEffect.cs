@@ -5,17 +5,17 @@ using TMPro; // Required for TextMeshPro elements
 public class ScratchCardEffect : MonoBehaviour
 {
     public GameObject maskPrefab;
-    public TextMeshProUGUI feedbackText; // Assigned via inspector (TextMeshPro text component)
+    public TextMeshProUGUI feedbackText;
     private GameObject instantiatedMask;
     private bool timerStarted = false;
     private bool audioPlayed = false;
     private AudioSource audioSource;
     private AudioClip recordedClip;
-    /*private bool isRecording = false;*/
     private float recordLength = 5f;
     private float highPitchFactor = 1.5f;
     private float silenceThreshold = 0.01f;
-    public UiManager uiManager;  // Reference to the UIManager
+    public UiManager uiManager;
+    private BirdController birdController;
 
     void Start()
     {
@@ -26,10 +26,29 @@ public class ScratchCardEffect : MonoBehaviour
         }
         audioSource.loop = false;
 
-        // Debugging to check if the clip is assigned
         if (audioSource.clip == null)
         {
             Debug.LogError("Audio Clip not assigned to AudioSource component");
+        }
+
+        // Initialize BirdController reference
+        InitializeBirdController();
+    }
+
+    void InitializeBirdController()
+    {
+        GameObject parrotGameObject = GameObject.FindWithTag("Bird");
+        if (parrotGameObject != null)
+        {
+            birdController = parrotGameObject.GetComponent<BirdController>();
+            if (birdController == null)
+            {
+                Debug.LogError("BirdController component not found on Parrot GameObject");
+            }
+        }
+        else
+        {
+            Debug.LogError("Parrot GameObject not found");
         }
     }
 
@@ -156,42 +175,26 @@ public class ScratchCardEffect : MonoBehaviour
 
     public void PerformClose()
     {
-        // Perform the close action
-        Debug.Log("Close action triggered");
-
-        // Find the "parrot" GameObject and get its Animator component
-        GameObject parrot = GameObject.Find("parrot");
-        if (parrot != null)
+        if (birdController != null)
         {
-            Animator parrotAnimator = parrot.GetComponent<Animator>();
-            if (parrotAnimator != null)
-            {
-                // Set the "startFlying" parameter to true
-                parrotAnimator.SetBool("startFlying", true);
-            }
-            else
-            {
-                Debug.LogError("Animator component not found on 'parrot'");
-            }
+            birdController.StartFlying();
+            Debug.Log("Parrot starts flying.");
         }
         else
         {
-            Debug.LogError("GameObject 'parrot' not found");
+            Debug.LogError("BirdController not found or not initialized.");
         }
 
         // Find and destroy the "ST_Mechanics" GameObject
         GameObject stMechanics = GameObject.Find("ST_Mechanics(Clone)");
-        if (stMechanics != null)
+        GameObject Uipanel = GameObject.Find("ST_Canvas");
+        if(Uipanel != null)
         {
-            Destroy(stMechanics);
+            Uipanel.SetActive(false);
         }
-        else
-        {
-            Debug.LogError("GameObject 'ST_Mechanics' not found");
-        }
+        
+        LeanTween.scale(stMechanics, Vector3.zero, 1f).setEase(LeanTweenType.easeOutQuad);
     }
-
-
     private bool AlreadyHasMaskAtPoint(Vector3 point, Transform parent)
     {
         foreach (Transform child in parent)

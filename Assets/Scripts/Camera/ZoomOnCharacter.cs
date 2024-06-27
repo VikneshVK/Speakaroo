@@ -113,7 +113,7 @@ public class ZoomOnCharacter : MonoBehaviour
         {
             animator.SetBool("isZoomedOut", true);
             // Start playing the talk animation
-            animator.Play("Talk");
+            animator.Play("Talk_0");
         }
 
         collider.enabled = false;
