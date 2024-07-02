@@ -4,10 +4,10 @@ using UnityEngine.SceneManagement;
 using TMPro;
 using UnityEngine.UI;
 
-public class sceneManager : MonoBehaviour
+public class PanalManager : MonoBehaviour
 {
     // Singleton instance
-    public static sceneManager Instance { get; private set; }
+    public static PanalManager Instance { get; private set; }
 
     public float sessionTime; // need to update it on parental control
     private float timer;

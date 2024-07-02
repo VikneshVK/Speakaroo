@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class ParentalControl : MonoBehaviour
 {
     public Slider sessionTimeSlider; // Reference to the Slider UI element
-    public sceneManager sceneManager; // Reference to the scene manager script
+    public PanalManager sceneManager; // Reference to the scene manager script
     public TMP_Text sliderValue;
 
     // Start is called before the first frame update

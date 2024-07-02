@@ -82,34 +82,30 @@ public class BirdController : MonoBehaviour
         // Wait for half of the knockBrush animation duration
         yield return new WaitForSeconds(knockBrushDuration / 2);
 
-        // Perform the tweens
-        if (brushHolder != null && brushContainer != null)
+        // Check if the brush holder has a child (assuming the brush is the first child)
+        if (brushHolder != null && brushHolder.childCount > 0)
         {
-            // Rotate the brushHolder to 90 degrees on the z-axis
-            LeanTween.rotateZ(brushHolder.gameObject, 85f, 0.5f);
-
-            // Get the brush transform (assuming it's the first child of brushHolder)
+            // Get the brush transform and detach it from the brush holder
             Transform brushTransform = brushHolder.GetChild(0);
+            brushTransform.SetParent(null);
 
-            if (brushTransform != null)
+            // Perform the tweens
+            if (brushContainer != null)
             {
-                // Animate the brush to fall to the position of the brushContainer
+                // Tween the rotation of the brush holder to 85 degrees on the z-axis
+                LeanTween.rotateZ(brushHolder.gameObject, 85f, 0.5f);
+
+                // Animate the detached brush to move to the position of the brushContainer
                 LeanTween.move(brushTransform.gameObject, brushContainer.position, 1.0f).setEase(LeanTweenType.easeInOutQuad);
 
-                // Rotate the brush during the fall with a final rotation value of 90 degrees on the z-axis
-                LeanTween.rotateAround(brushTransform.gameObject, Vector3.forward, 360f, 1.0f).setOnComplete(() =>
-                {
-                    brushTransform.rotation = Quaternion.Euler(0, 0, 90);
-                });
+                // Rotate the brush to 90 degrees during the movement
+                LeanTween.rotateZ(brushTransform.gameObject, 0f, 1.0f);
             }
             else
             {
-                Debug.LogError("Brush transform not found as child of brushHolder");
+                Debug.LogError("Brush container not assigned in the inspector.");
             }
         }
-        else
-        {
-            Debug.LogError("Brush holder or brush container not assigned in the inspector");
-        }
+        
     }
 }
