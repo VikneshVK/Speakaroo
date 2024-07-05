@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class TapController : MonoBehaviour
 {
@@ -59,8 +60,16 @@ public class TapController : MonoBehaviour
 
         showerParticleSystem.Stop();
         showerParticleSystem.gameObject.SetActive(false); // Turn off the particle system
-
-      /*  LeanTween.move(showerScreen, showerScreenTargetPosition.position, 1f).setEase(LeanTweenType.easeInOutQuad);*/
+        Scene_Manager sceneManager = GameObject.Find("Scene_Manager").GetComponent<Scene_Manager>();
+        if (sceneManager != null)
+        {
+            sceneManager.LoadLevel("Level 3");
+        }
+        else
+        {
+            Debug.LogError("SceneManager not found or Scene_Manager script not attached.");
+        }
+        /*  LeanTween.move(showerScreen, showerScreenTargetPosition.position, 1f).setEase(LeanTweenType.easeInOutQuad);*/
 
         isInteractable = true; // Make the tap interactable again
     }
