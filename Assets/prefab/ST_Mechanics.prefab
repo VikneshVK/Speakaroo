@@ -467,9 +467,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: AudioRecorder, Assembly-CSharp
-        m_MethodName: StartRecording
+      - m_Target: {fileID: 135940740060064953}
+        m_TargetAssemblyTypeName: ScratchCardEffect, Assembly-CSharp
+        m_MethodName: PerformRetry
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1567,9 +1567,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: AudioRecorder, Assembly-CSharp
-        m_MethodName: PlayRecording
+      - m_Target: {fileID: 135940740060064953}
+        m_TargetAssemblyTypeName: ScratchCardEffect, Assembly-CSharp
+        m_MethodName: PerformClose
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

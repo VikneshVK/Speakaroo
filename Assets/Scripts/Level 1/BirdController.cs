@@ -56,7 +56,7 @@ public class BirdController : MonoBehaviour
         isFlying = false;
         animator.SetBool("IsFlying", false);
         rb.velocity = Vector2.zero; // Ensure the bird stops moving
-        animator.SetBool("knockBrush", true);
+        animator.SetBool("knock", true);
     }
 
     void OnTriggerEnter2D(Collider2D other)

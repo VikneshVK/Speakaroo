@@ -16,6 +16,7 @@ public class ScratchCardEffect : MonoBehaviour
     private float silenceThreshold = 0.01f;
     public UiManager uiManager;
     private BirdController birdController;
+    private BirdControllerScene2 birdControllerScene2; // Add reference for BirdControllerScene2
 
     void Start()
     {
@@ -41,9 +42,21 @@ public class ScratchCardEffect : MonoBehaviour
         if (parrotGameObject != null)
         {
             birdController = parrotGameObject.GetComponent<BirdController>();
-            if (birdController == null)
+            birdControllerScene2 = parrotGameObject.GetComponent<BirdControllerScene2>();
+
+            if (birdController != null)
             {
-                Debug.LogError("BirdController component not found on Parrot GameObject");
+                // BirdController found
+                Debug.Log("BirdController component found and initialized.");
+            }
+            else if (birdControllerScene2 != null)
+            {
+                // BirdControllerScene2 found
+                Debug.Log("BirdControllerScene2 component found and initialized.");
+            }
+            else
+            {
+                Debug.LogError("Neither BirdController nor BirdControllerScene2 component found on Parrot GameObject");
             }
         }
         else
@@ -97,7 +110,6 @@ public class ScratchCardEffect : MonoBehaviour
             }
         }
     }
-
 
     private void DisableSpriteAndStartRecording()
     {
@@ -178,23 +190,29 @@ public class ScratchCardEffect : MonoBehaviour
         if (birdController != null)
         {
             birdController.StartFlying();
-            Debug.Log("Parrot starts flying.");
+            Debug.Log("Parrot starts flying with BirdController.");
+        }
+        else if (birdControllerScene2 != null)
+        {
+            birdControllerScene2.StartFlying();
+            Debug.Log("Parrot starts flying with BirdControllerScene2.");
         }
         else
         {
-            Debug.LogError("BirdController not found or not initialized.");
+            Debug.LogError("Neither BirdController nor BirdControllerScene2 found or initialized.");
         }
 
         // Find and destroy the "ST_Mechanics" GameObject
         GameObject stMechanics = GameObject.Find("ST_Mechanics(Clone)");
         GameObject Uipanel = GameObject.Find("ST_Canvas");
-        if(Uipanel != null)
+        if (Uipanel != null)
         {
             Uipanel.SetActive(false);
         }
-        
+
         LeanTween.scale(stMechanics, Vector3.zero, 1f).setEase(LeanTweenType.easeOutQuad);
     }
+
     private bool AlreadyHasMaskAtPoint(Vector3 point, Transform parent)
     {
         foreach (Transform child in parent)

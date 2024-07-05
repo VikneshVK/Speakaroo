@@ -1,13 +1,13 @@
-using UnityEngine;
 using System.Collections;
+using UnityEngine;
 
 public class BrushController : MonoBehaviour
 {
     private bool isDragging = false;
-    
+
     private Vector3 initialPosition;
     private Animator brushAnimator;
-    public Animator boyAnimator;
+    public Animator boyAnimator; // Ensure this is unique in the script
     public GameObject dropTarget;
     public GameObject teeth;
     public GameObject paste;
@@ -17,6 +17,19 @@ public class BrushController : MonoBehaviour
 
     private SpriteRenderer spriteRenderer;
 
+    public Camera mainCamera;                // Reference to the main camera
+    public Camera zoomCamera;                // Reference to the zoom camera
+    public CameraViewportHandler mainCameraViewportHandler; // Reference to the CameraViewportHandler script on the main camera
+    public CameraViewportHandler zoomCameraViewportHandler; // Reference to the CameraViewportHandler script on the zoom camera
+
+    public float zoomDuration = 2.0f;
+    public float targetOrthographicSize = 5f;
+
+    private bool isZooming;
+    private bool isZoomedIn;
+    private float originalOrthographicSize;
+    private Vector3 originalCameraPosition;
+
     void Start()
     {
         brushAnimator = GetComponent<Animator>();
@@ -24,9 +37,19 @@ public class BrushController : MonoBehaviour
         initialPosition = transform.position;
         brushBackSprite = Resources.Load<Sprite>("Images/brush back");
         CheckComponents();
+
+        originalOrthographicSize = mainCamera.orthographicSize;
+        originalCameraPosition = mainCamera.transform.position;
+        zoomCamera.enabled = false; // Ensure zoom camera is disabled initially
     }
 
     void Update()
+    {
+        HandleDragging();
+        HandleMouseInput();
+    }
+
+    private void HandleDragging()
     {
         if (isDragging)
         {
@@ -34,13 +57,16 @@ public class BrushController : MonoBehaviour
             mousePosition.z = 0;
             transform.position = mousePosition;
         }
+    }
 
-        if ( Input.GetMouseButtonDown(0))
+    private void HandleMouseInput()
+    {
+        if (Input.GetMouseButtonDown(0))
         {
             StartDragging();
         }
 
-        if ( Input.GetMouseButtonUp(0) && isDragging)
+        if (Input.GetMouseButtonUp(0) && isDragging)
         {
             isDragging = false;
             CheckDrop();
@@ -54,7 +80,6 @@ public class BrushController : MonoBehaviour
         if (hitCollider != null && hitCollider.gameObject == gameObject)
         {
             isDragging = true;
-            
             initialPosition = transform.position;
         }
     }
@@ -75,13 +100,11 @@ public class BrushController : MonoBehaviour
         {
             Debug.Log("Drop failed, returning to initial position.");
             transform.position = initialPosition;
-             
         }
     }
 
     private void HandleSuccessfulDrop(GameObject target)
     {
-        
         transform.position = target.transform.position;
         transform.rotation = Quaternion.Euler(0, 0, 0);
 
@@ -94,33 +117,100 @@ public class BrushController : MonoBehaviour
         }
         else if (target == teeth)
         {
-            
-            Foam.SetActive(true);
-            Destroy(teeth);
-            StartCoroutine(DeactivateFoamAndSetBrushed());
-        }        
+            StartCoroutine(ZoomAndHandleFoam());
+        }
     }
 
-    private IEnumerator DeactivateFoamAndSetBrushed()
+    private IEnumerator ZoomAndHandleFoam()
     {
-        yield return new WaitForSeconds(5);  // Wait for 5 seconds
-        Foam.SetActive(false);
-        GetComponent<Collider2D>().enabled = false; // Deactivate foam
+        // Deactivate main camera and zoom camera viewport handler
+        mainCamera.enabled = false;
+        zoomCameraViewportHandler.enabled = false;
+
+        yield return StartCoroutine(ZoomInOnTeeth());
+
+        Foam.SetActive(true);
+        Destroy(teeth);
+
+        yield return new WaitForSeconds(10); // Wait for 10 seconds
+
+        yield return StartCoroutine(ZoomOutCamera()); // First zoom out
+
+        Foam.SetActive(false); // Then deactivate foam
+        GetComponent<Collider2D>().enabled = false; // Deactivate foam collider
 
         // Reset brush to the rest position and disable dragging
         transform.position = restPosition.position;
         isDragging = false; // Ensure brush is not draggable
-       
 
-        boyAnimator.SetBool("isBrushed", true);  // Set the animator parameter
+        boyAnimator.SetBool("isBrushed", true); // Set the animator parameter
         StartCoroutine(CheckTeethShineAnimation());
+    }
+
+    private IEnumerator ZoomInOnTeeth()
+    {
+        isZooming = true;
+        zoomCamera.enabled = true;
+
+        float elapsedTime = 0f;
+        Vector3 targetPosition = new Vector3(teeth.transform.position.x, teeth.transform.position.y, originalCameraPosition.z); // Maintain original Z position
+        while (elapsedTime < zoomDuration)
+        {
+            zoomCamera.orthographicSize = Mathf.Lerp(originalOrthographicSize, targetOrthographicSize, elapsedTime / zoomDuration);
+            zoomCamera.transform.position = Vector3.Lerp(originalCameraPosition, targetPosition, elapsedTime / zoomDuration);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        zoomCamera.orthographicSize = targetOrthographicSize;
+        zoomCamera.transform.position = targetPosition;
+        isZooming = false;
+        isZoomedIn = true;
+
+        Debug.Log("Zoom In Completed");
+    }
+
+    private IEnumerator ZoomOutCamera()
+    {
+        isZooming = true;
+        Collider2D collider = this.GetComponent<Collider2D>();
+
+        float elapsedTime = 0f;
+        Vector3 startPosition = zoomCamera.transform.position;
+        float startSize = zoomCamera.orthographicSize;
+
+        while (elapsedTime < zoomDuration)
+        {
+            zoomCamera.orthographicSize = Mathf.Lerp(startSize, originalOrthographicSize, elapsedTime / zoomDuration);
+            zoomCamera.transform.position = Vector3.Lerp(startPosition, originalCameraPosition, elapsedTime / zoomDuration);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        zoomCamera.orthographicSize = originalOrthographicSize;
+        zoomCamera.transform.position = originalCameraPosition;
+        mainCamera.enabled = true;
+        zoomCameraViewportHandler.enabled = true;
+        zoomCamera.enabled = false;
+
+        isZooming = false;
+        isZoomedIn = false;
+
+        Debug.Log("Zoom Out Completed");
+
+        if (boyAnimator != null)
+        {
+            boyAnimator.SetBool("isZoomedOut", true);
+        }
+
+        collider.enabled = false;
     }
 
     private IEnumerator CheckTeethShineAnimation()
     {
         yield return new WaitUntil(() => boyAnimator.GetCurrentAnimatorStateInfo(0).IsName("TeethShine") &&
                                          boyAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f);
-        // Assuming Scene_Manager script is attached to a GameObject named "SceneManager"
+
         Scene_Manager sceneManager = GameObject.Find("Scene_Manager").GetComponent<Scene_Manager>();
         if (sceneManager != null)
         {
@@ -131,10 +221,10 @@ public class BrushController : MonoBehaviour
             Debug.LogError("SceneManager not found or Scene_Manager script not attached.");
         }
     }
+
     private IEnumerator HandleAnimationCompletion()
     {
         yield return new WaitUntil(() => brushAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f && !brushAnimator.IsInTransition(0));
-       
     }
 
     private void CheckComponents()
@@ -142,6 +232,11 @@ public class BrushController : MonoBehaviour
         if (dropTarget == null || teeth == null || paste == null || GetComponent<Collider2D>() == null || brushBackSprite == null)
         {
             Debug.LogError("One or more required components are missing or not assigned in the inspector.");
+        }
+
+        if (mainCamera == null || zoomCamera == null || mainCameraViewportHandler == null || zoomCameraViewportHandler == null)
+        {
+            Debug.LogError("Camera references or viewport handler is missing.");
         }
     }
 }
