@@ -45,6 +45,11 @@ public class BrushController : MonoBehaviour
 
     void Update()
     {
+        if (Camera.main == null)
+        {
+            return; // Skip Update if no main camera is found
+        }
+
         HandleDragging();
         HandleMouseInput();
     }
@@ -54,8 +59,23 @@ public class BrushController : MonoBehaviour
         if (isDragging)
         {
             Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            mousePosition.z = 0;
+            mousePosition.z = 0; // Ensure that the z-position is zero to match your 2D plane
             transform.position = mousePosition;
+
+            // Perform raycast while dragging
+            RaycastHit2D[] hits = Physics2D.RaycastAll(mousePosition, Vector2.zero);
+            foreach (RaycastHit2D hit in hits)
+            {
+                if (hit.collider != null)
+                {
+                    if (hit.collider.gameObject == teeth && hit.collider.gameObject.CompareTag("Teeth") && !isZoomedIn)
+                    {
+                        // Start zooming in if hovering over teeth
+                        StartCoroutine(ZoomAndHandleFoam());
+                        break;
+                    }
+                }
+            }
         }
     }
 
@@ -75,6 +95,8 @@ public class BrushController : MonoBehaviour
 
     private void StartDragging()
     {
+        if (Camera.main == null) return; // Guard clause to ensure Camera.main is not null
+
         Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         Collider2D hitCollider = Physics2D.OverlapPoint(mousePosition);
         if (hitCollider != null && hitCollider.gameObject == gameObject)
@@ -86,19 +108,25 @@ public class BrushController : MonoBehaviour
 
     private void CheckDrop()
     {
-        if (dropTarget != null && Vector3.Distance(transform.position, dropTarget.transform.position) < 0.5f)
+        Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        RaycastHit2D[] hits = Physics2D.RaycastAll(mousePosition, Vector2.zero);
+
+        bool dropHandled = false;
+        foreach (RaycastHit2D hit in hits)
         {
-            Debug.Log("Drop successful.");
-            HandleSuccessfulDrop(dropTarget);
+            if (hit.collider != null)
+            {
+                if (hit.collider.gameObject == dropTarget && hit.collider.gameObject.CompareTag("DropPoint"))
+                {
+                    HandleSuccessfulDrop(dropTarget);
+                    dropHandled = true;
+                    break;
+                }
+            }
         }
-        else if (teeth != null && Vector3.Distance(transform.position, teeth.transform.position) < 0.5f)
+
+        if (!dropHandled)
         {
-            Debug.Log("Drop on teeth successful.");
-            HandleSuccessfulDrop(teeth);
-        }
-        else
-        {
-            Debug.Log("Drop failed, returning to initial position.");
             transform.position = initialPosition;
         }
     }
@@ -115,36 +143,81 @@ public class BrushController : MonoBehaviour
             Destroy(paste);
             StartCoroutine(HandleAnimationCompletion());
         }
-        else if (target == teeth)
-        {
-            StartCoroutine(ZoomAndHandleFoam());
-        }
     }
 
     private IEnumerator ZoomAndHandleFoam()
     {
-        // Deactivate main camera and zoom camera viewport handler
+        isZoomedIn = true; // Set zoom state
         mainCamera.enabled = false;
         zoomCameraViewportHandler.enabled = false;
 
         yield return StartCoroutine(ZoomInOnTeeth());
 
-        Foam.SetActive(true);
-        Destroy(teeth);
+        // Start brushing process
+        float brushTimer = 10f; // Total time required for brushing
+        bool isBrushing = false;
 
-        yield return new WaitForSeconds(10); // Wait for 10 seconds
+        while (brushTimer > 0)
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                StartDragging();
+            }
 
-        yield return StartCoroutine(ZoomOutCamera()); // First zoom out
+            if (isDragging)
+            {
+                // Perform raycast to check if the brush is over the teeth while dragging
+                Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+                mousePosition.z = 0; // Ensure that the z-position is zero to match your 2D plane
 
-        Foam.SetActive(false); // Then deactivate foam
-        GetComponent<Collider2D>().enabled = false; // Deactivate foam collider
+                RaycastHit2D[] hits = Physics2D.RaycastAll(mousePosition, Vector2.zero);
+                bool isOverTeeth = false;
+                foreach (RaycastHit2D hit in hits)
+                {
+                    if (hit.collider != null && hit.collider.gameObject == teeth)
+                    {
+                        isOverTeeth = true;
+                        break;
+                    }
+                }
 
-        // Reset brush to the rest position and disable dragging
+                if (isOverTeeth)
+                {
+                    if (!isBrushing)
+                    {
+                        isBrushing = true;
+                        Foam.SetActive(true); // Activate foam when brushing starts
+                    }
+                    brushTimer -= Time.deltaTime; // Reduce timer if brushing is occurring
+                }
+                else
+                {
+                    if (isBrushing)
+                    {
+                        isBrushing = false;
+                        Foam.SetActive(false); // Deactivate foam if the brush is not over the teeth
+                    }
+                }
+            }
+            else
+            {
+                if (isBrushing)
+                {
+                    isBrushing = false;
+                    Foam.SetActive(false); // Deactivate foam if dragging stops
+                }
+            }
+
+            yield return null; // Wait until the next frame
+        }
+
+        Foam.SetActive(false); // Ensure foam is deactivated after brushing is complete
+        yield return StartCoroutine(ZoomOutCamera()); // Zoom out after brushing is done
+
+        // Reset brush to the rest position
         transform.position = restPosition.position;
-        isDragging = false; // Ensure brush is not draggable
-
-        boyAnimator.SetBool("isBrushed", true); // Set the animator parameter
-        StartCoroutine(CheckTeethShineAnimation());
+        boyAnimator.SetBool("isBrushed", true); // Set the animator parameter if brushing is considered complete
+        isZoomedIn = false; // Reset zoom state
     }
 
     private IEnumerator ZoomInOnTeeth()
@@ -166,8 +239,6 @@ public class BrushController : MonoBehaviour
         zoomCamera.transform.position = targetPosition;
         isZooming = false;
         isZoomedIn = true;
-
-        Debug.Log("Zoom In Completed");
     }
 
     private IEnumerator ZoomOutCamera()
@@ -196,30 +267,12 @@ public class BrushController : MonoBehaviour
         isZooming = false;
         isZoomedIn = false;
 
-        Debug.Log("Zoom Out Completed");
-
         if (boyAnimator != null)
         {
             boyAnimator.SetBool("isZoomedOut", true);
         }
 
         collider.enabled = false;
-    }
-
-    private IEnumerator CheckTeethShineAnimation()
-    {
-        yield return new WaitUntil(() => boyAnimator.GetCurrentAnimatorStateInfo(0).IsName("TeethShine") &&
-                                         boyAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f);
-
-        Scene_Manager sceneManager = GameObject.Find("Scene_Manager").GetComponent<Scene_Manager>();
-        if (sceneManager != null)
-        {
-            sceneManager.LoadLevel("Level 2");
-        }
-        else
-        {
-            Debug.LogError("SceneManager not found or Scene_Manager script not attached.");
-        }
     }
 
     private IEnumerator HandleAnimationCompletion()

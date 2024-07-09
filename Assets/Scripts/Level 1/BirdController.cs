@@ -10,6 +10,7 @@ public class BirdController : MonoBehaviour
     private Rigidbody2D rb;
     public Transform brushHolder; // Reference to the brush holder
     public Transform brushContainer; // Reference to the final position of the brush
+    public Collider2D brushCollider; // Reference to the brush's collider
 
     void Start()
     {
@@ -20,12 +21,12 @@ public class BirdController : MonoBehaviour
             Debug.LogError("Rigidbody2D component not found on the GameObject");
             return; // Stop further execution to avoid accessing null reference
         }
-        rb.isKinematic = true; // Set Rigidbody2D to kinematic because we are moving the bird manually
-        rb.gravityScale = 0; // Prevent Rigidbody2D from applying gravity
+        rb.isKinematic = true;
+        rb.gravityScale = 0;
 
-        if (brushHolder == null || brushContainer == null)
+        if (brushHolder == null || brushContainer == null || brushCollider == null)
         {
-            Debug.LogError("Brush holder or brush container not assigned in the inspector");
+            Debug.LogError("Brush holder, brush container or brush collider not assigned in the inspector");
         }
     }
 
@@ -55,57 +56,45 @@ public class BirdController : MonoBehaviour
     {
         isFlying = false;
         animator.SetBool("IsFlying", false);
-        rb.velocity = Vector2.zero; // Ensure the bird stops moving
+        rb.velocity = Vector2.zero;
         animator.SetBool("knock", true);
     }
 
     void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("brush"))
+        if (other.CompareTag("BrushHolder"))
         {
-            StopFlying();  // Stop flying when colliding with a brush tagged object
-
-            // Start the coroutine to trigger the brush animations
+            StopFlying();
             StartCoroutine(TriggerBrushKnockAtMidpoint());
         }
     }
 
     private IEnumerator TriggerBrushKnockAtMidpoint()
     {
-        // Play knockBrush animation on bird
         animator.SetTrigger("knockBrush");
-
-        // Get the duration of the knockBrush animation
         AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
         float knockBrushDuration = stateInfo.length;
-
-        // Wait for half of the knockBrush animation duration
         yield return new WaitForSeconds(knockBrushDuration / 2);
 
-        // Check if the brush holder has a child (assuming the brush is the first child)
         if (brushHolder != null && brushHolder.childCount > 0)
         {
-            // Get the brush transform and detach it from the brush holder
             Transform brushTransform = brushHolder.GetChild(0);
             brushTransform.SetParent(null);
 
-            // Perform the tweens
             if (brushContainer != null)
             {
-                // Tween the rotation of the brush holder to 85 degrees on the z-axis
                 LeanTween.rotateZ(brushHolder.gameObject, 85f, 0.5f);
-
-                // Animate the detached brush to move to the position of the brushContainer
-                LeanTween.move(brushTransform.gameObject, brushContainer.position, 1.0f).setEase(LeanTweenType.easeInOutQuad);
-
-                // Rotate the brush to 90 degrees during the movement
+                var tween = LeanTween.move(brushTransform.gameObject, brushContainer.position, 1.0f).setEase(LeanTweenType.easeInOutQuad);
                 LeanTween.rotateZ(brushTransform.gameObject, 0f, 1.0f);
+
+                // Wait for the tween to complete before activating the collider
+                yield return new WaitForSeconds(tween.time);
+                brushCollider.enabled = true; // Activate the collider
             }
             else
             {
                 Debug.LogError("Brush container not assigned in the inspector.");
             }
         }
-        
     }
 }

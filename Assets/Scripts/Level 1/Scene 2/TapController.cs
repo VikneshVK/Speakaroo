@@ -63,7 +63,7 @@ public class TapController : MonoBehaviour
         Scene_Manager sceneManager = GameObject.Find("Scene_Manager").GetComponent<Scene_Manager>();
         if (sceneManager != null)
         {
-            sceneManager.LoadLevel("Level 3");
+            sceneManager.LoadLevel("Scene 3");
         }
         else
         {
