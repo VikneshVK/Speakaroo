@@ -148,7 +148,7 @@ Transform:
   m_GameObject: {fileID: 16276922}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.61, y: -2.6675, z: 0}
+  m_LocalPosition: {x: -0.61, y: -1.1630454, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1.35}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -264,7 +264,7 @@ Transform:
   m_GameObject: {fileID: 54898133}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -8.1575, z: 0}
+  m_LocalPosition: {x: 0, y: -6.653045, z: 0}
   m_LocalScale: {x: 1.14, y: 0.73, z: 0.8}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -500,7 +500,7 @@ Transform:
   m_GameObject: {fileID: 380725176}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -4.7275, z: 0}
+  m_LocalPosition: {x: 0, y: -3.2230453, z: 0}
   m_LocalScale: {x: 1.25, y: 1.25, z: 1.25}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -696,7 +696,7 @@ Transform:
   m_GameObject: {fileID: 403084766}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -4.2575, z: 0}
+  m_LocalPosition: {x: 0, y: -2.7530456, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1158,7 +1158,7 @@ Transform:
   m_GameObject: {fileID: 751019022}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0.7071068, w: 0.7071068}
-  m_LocalPosition: {x: 8.469999, y: -7.2275, z: 0}
+  m_LocalPosition: {x: 8.469999, y: -5.7230453, z: 0}
   m_LocalScale: {x: 0.9, y: 0.9, z: 0.77697843}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -6096,6 +6096,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 926611054}
+  - component: {fileID: 926611055}
   m_Layer: 0
   m_Name: brush container
   m_TagString: Untagged
@@ -6112,12 +6113,27 @@ Transform:
   m_GameObject: {fileID: 926611053}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -8.6, y: -5.57, z: -0.22585866}
+  m_LocalPosition: {x: -11.42, y: -5.6230454, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &926611055
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 926611053}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b67dda73a78d4b149aea233d3ef42090, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  executeInUpdate: 1
+  anchorType: 0
+  anchorOffset: {x: 3.58, y: 1.31, z: 0}
 --- !u!1 &932517710
 GameObject:
   m_ObjectHideFlags: 0
@@ -6900,7 +6916,7 @@ Transform:
   m_GameObject: {fileID: 1426675462}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 5.08, y: 3.4624996, z: 0}
+  m_LocalPosition: {x: 5.08, y: 4.966954, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -7078,7 +7094,7 @@ Transform:
   m_GameObject: {fileID: 1598184810}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -1.9274998, z: 0}
+  m_LocalPosition: {x: 0, y: -0.42304516, z: 0}
   m_LocalScale: {x: 5, y: 5, z: 5}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -7171,7 +7187,7 @@ Transform:
   m_GameObject: {fileID: 1622203132}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 8.49, y: -5.3575, z: 0}
+  m_LocalPosition: {x: 8.49, y: -3.8530455, z: 0}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -7629,7 +7645,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1261242162691769517, guid: 5cc33678a45eebd4eb94af593e86f318, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3220799799381724627, guid: 5cc33678a45eebd4eb94af593e86f318, type: 3}
       propertyPath: m_Pivot.x
