@@ -1,62 +1,69 @@
 using UnityEngine;
 using System.Collections;
-using TMPro; // Required for TextMeshPro elements
+using TMPro;
 
 public class ScratchCardEffect : MonoBehaviour
 {
     public GameObject maskPrefab;
     public TextMeshProUGUI feedbackText;
     private GameObject instantiatedMask;
-    private bool timerStarted = false;
-    private bool audioPlayed = false;
-    private AudioSource audioSource;
+    private bool isSpawning = false;
+    private bool recordingStarted = false;
+    private AudioSource audio1;
+    private AudioSource audio2;
     private AudioClip recordedClip;
     private float recordLength = 5f;
     private float highPitchFactor = 1.5f;
     private float silenceThreshold = 0.01f;
+    private bool card1Processed = false;
+    private bool card2Processed = false;
+
+    public GameObject Card1;
+    public GameObject Card2;
+    public GameObject retryButton; // Reference to the retry button
+    public GameObject prefabInstance; // Reference to the prefab instance
+
     public UiManager uiManager;
     private BirdController birdController;
-    private BirdControllerScene2 birdControllerScene2; // Add reference for BirdControllerScene2
+    private Animator birdAnimator; // Add reference for Bird Animator
 
-    void Start()
+    private void Start()
     {
-        audioSource = GetComponent<AudioSource>();
-        if (audioSource == null)
-        {
-            audioSource = gameObject.AddComponent<AudioSource>();
-        }
-        audioSource.loop = false;
+        audio1 = Card1.GetComponent<AudioSource>();
+        audio2 = Card2.GetComponent<AudioSource>();
 
-        if (audioSource.clip == null)
+        if (audio1 == null || audio2 == null)
         {
-            Debug.LogError("Audio Clip not assigned to AudioSource component");
+            Debug.LogError("Audio Source not assigned to one or both cards.");
         }
 
-        // Initialize BirdController reference
+        Collider2D collider1 = Card1.GetComponent<Collider2D>();
+        Collider2D collider2 = Card2.GetComponent<Collider2D>();
+        collider1.enabled = true;
+        collider2.enabled = false;
+
+        retryButton.SetActive(true); // Ensure retry button is enabled
+        retryButton.transform.localScale = Vector3.zero; // Initialize the retry button scale to zero
+
+        // Initialize BirdController and Animator reference
         InitializeBirdController();
     }
 
-    void InitializeBirdController()
+    private void InitializeBirdController()
     {
         GameObject parrotGameObject = GameObject.FindWithTag("Bird");
         if (parrotGameObject != null)
         {
             birdController = parrotGameObject.GetComponent<BirdController>();
-            birdControllerScene2 = parrotGameObject.GetComponent<BirdControllerScene2>();
+            birdAnimator = parrotGameObject.GetComponent<Animator>();
 
             if (birdController != null)
             {
-                // BirdController found
                 Debug.Log("BirdController component found and initialized.");
-            }
-            else if (birdControllerScene2 != null)
-            {
-                // BirdControllerScene2 found
-                Debug.Log("BirdControllerScene2 component found and initialized.");
             }
             else
             {
-                Debug.LogError("Neither BirdController nor BirdControllerScene2 component found on Parrot GameObject");
+                Debug.LogError("BirdController component not found on Parrot GameObject");
             }
         }
         else
@@ -65,14 +72,19 @@ public class ScratchCardEffect : MonoBehaviour
         }
     }
 
-    void Update()
+    private void Update()
     {
+        if (isSpawning || recordingStarted)
+        {
+            return; // Skip update if currently spawning or recording
+        }
+
         if (Input.GetMouseButton(0))
         {
             if (Camera.main == null)
             {
                 Debug.LogError("Main Camera is not set in the scene.");
-                return; // Exit if there's no main camera
+                return;
             }
 
             Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -80,14 +92,28 @@ public class ScratchCardEffect : MonoBehaviour
 
             RaycastHit2D hit = Physics2D.Raycast(mousePos2D, Vector2.zero);
 
-            if (hit.collider == null)
+            if (hit.collider != null && hit.collider.gameObject == Card1 && !card1Processed)
             {
-                Debug.Log("Raycast did not hit any collider.");
-                return; // Exit if no object was hit
+                StartCoroutine(SpawnPrefabs(hit.collider.transform));
             }
+            else if (hit.collider != null && hit.collider.gameObject == Card2 && card1Processed && !card2Processed)
+            {
+                StartCoroutine(SpawnPrefabs(hit.collider.transform));
+            }
+        }
+    }
 
-            if (hit.collider.gameObject == gameObject &&
-                (gameObject.tag == "Card_1" || gameObject.tag == "Card_2"))
+    private IEnumerator SpawnPrefabs(Transform cardTransform)
+    {
+        isSpawning = true;
+
+        for (float timer = 0; timer < 5f; timer += Time.deltaTime)
+        {
+            Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            Vector2 mousePos2D = new Vector2(mousePos.x, mousePos.y);
+
+            RaycastHit2D hit = Physics2D.Raycast(mousePos2D, Vector2.zero);
+            if (hit.collider != null && hit.collider.transform == cardTransform)
             {
                 Vector3 spawnPos = new Vector3(hit.point.x, hit.point.y, hit.collider.transform.position.z);
 
@@ -95,129 +121,112 @@ public class ScratchCardEffect : MonoBehaviour
                 {
                     instantiatedMask = Instantiate(maskPrefab, spawnPos, Quaternion.identity);
                     instantiatedMask.transform.SetParent(hit.collider.transform);
-
-                    if (!timerStarted && uiManager != null)
-                    {
-                        timerStarted = true;
-                        Invoke("DisableSpriteAndStartRecording", 5f);
-                        uiManager.ShowButtons(); // Show retry and close buttons through the UI manager
-                    }
-                    else if (uiManager == null)
-                    {
-                        Debug.LogError("UIManager not found. Ensure it is in the scene and correctly referenced.");
-                    }
                 }
             }
-        }
-    }
 
-    private void DisableSpriteAndStartRecording()
-    {
-        SpriteRenderer sr = GetComponent<SpriteRenderer>();
+            yield return null;
+        }
+
+        SpriteRenderer sr = cardTransform.GetComponent<SpriteRenderer>();
         if (sr != null) sr.enabled = false;
-        if (!audioPlayed && audioSource.clip != null)
+
+        isSpawning = false;
+
+        AudioSource audioSourceToPlay = (cardTransform == Card1.transform) ? audio1 : audio2;
+
+        if (!audioSourceToPlay.isPlaying && audioSourceToPlay.clip != null)
         {
-            audioSource.Play();
-            audioPlayed = true;
-            Invoke("CheckAndRecordAudio", audioSource.clip.length);
+            audioSourceToPlay.Play();
+            yield return new WaitForSeconds(audioSourceToPlay.clip.length);
+
+            StartCoroutine(CheckAndRecordAudio(cardTransform));
         }
-        else
-        {
-            Debug.LogError("no audio found");
-        }
-        timerStarted = false;
     }
 
-    private void CheckAndRecordAudio()
+    private IEnumerator CheckAndRecordAudio(Transform cardTransform)
     {
+        recordingStarted = true;
+
+        // Tween retry button to original scale when recording starts
+        LeanTween.scale(retryButton, Vector3.one, 0.5f).setEase(LeanTweenType.easeOutBack);
+
         if (!Microphone.IsRecording(null))
         {
             recordedClip = Microphone.Start(null, false, Mathf.CeilToInt(recordLength), 44100);
-            StartCoroutine(AnalyzeRecording());
-        }
-    }
+            yield return new WaitForSeconds(recordLength);
 
-    IEnumerator AnalyzeRecording()
-    {
-        float[] samples = new float[Mathf.CeilToInt(44100 * recordLength)];
-        bool detectedVoice = false;
+            Microphone.End(null);
+            float[] samples = new float[Mathf.CeilToInt(44100 * recordLength)];
+            recordedClip.GetData(samples, 0);
 
-        yield return new WaitForSeconds(recordLength);
-
-        Microphone.End(null);
-        recordedClip.GetData(samples, 0);
-
-        foreach (float sample in samples)
-        {
-            if (Mathf.Abs(sample) > silenceThreshold)
+            bool detectedVoice = false;
+            foreach (float sample in samples)
             {
-                detectedVoice = true;
-                break;
+                if (Mathf.Abs(sample) > silenceThreshold)
+                {
+                    detectedVoice = true;
+                    break;
+                }
+            }
+
+            if (detectedVoice)
+            {
+                feedbackText.text = "Did you say...?";
+                PlayRecording(cardTransform);
+            }
+            else
+            {
+                feedbackText.text = "Try saying the word!";
             }
         }
 
-        if (detectedVoice)
-        {
-            feedbackText.text = "Did you say...?";
-            PlayRecording();
-        }
-        else
-        {
-            feedbackText.text = "Try saying the word!";
-        }
+        recordingStarted = false;
     }
 
-    private void PlayRecording()
+    private void PlayRecording(Transform cardTransform)
     {
         if (recordedClip != null)
         {
-            audioSource.pitch = highPitchFactor;
-            audioSource.clip = recordedClip;
-            audioSource.Play();
+            AudioSource audioSourceToPlay = (cardTransform == Card1.transform) ? audio1 : audio2;
+
+            audioSourceToPlay.pitch = highPitchFactor;
+            audioSourceToPlay.clip = recordedClip;
+            audioSourceToPlay.Play();
+            Collider2D collider2 = Card2.GetComponent<Collider2D>();
+
+            if (cardTransform == Card1.transform)
+            {
+                card1Processed = true;
+                collider2.enabled = true;
+
+                // Tween retry button back to zero when card 2 collider is enabled
+                LeanTween.scale(retryButton, Vector3.zero, 0.5f).setEase(LeanTweenType.easeInBack);
+            }
+            else if (cardTransform == Card2.transform)
+            {
+                card2Processed = true;
+                StartCoroutine(WaitForRecordingToEndThenTweenAndFly(audioSourceToPlay));
+            }
+
+            Debug.Log(cardTransform.name + " playback complete");
         }
     }
 
-    public void PerformRetry()
+    private IEnumerator WaitForRecordingToEndThenTweenAndFly(AudioSource audioSourceToPlay)
     {
-        // Reset state for retry
-        feedbackText.text = "";
-        audioPlayed = false;
-        CheckAndRecordAudio();
-    }
+        yield return new WaitWhile(() => audioSourceToPlay.isPlaying);
 
-    public void PerformClose()
-    {
-        if (birdController != null)
-        {
-            birdController.StartFlying();
-            Debug.Log("Parrot starts flying with BirdController.");
-        }
-        else if (birdControllerScene2 != null)
-        {
-            birdControllerScene2.StartFlying();
-            Debug.Log("Parrot starts flying with BirdControllerScene2.");
-        }
-        else
-        {
-            Debug.LogError("Neither BirdController nor BirdControllerScene2 found or initialized.");
-        }
+        // Scale the entire prefab to zero
+        LeanTween.scale(prefabInstance, Vector3.zero, 0.1f).setEase(LeanTweenType.easeInOutBack);
 
-        // Find and destroy the "ST_Mechanics" GameObject
-        GameObject stMechanics = GameObject.Find("ST_Mechanics(Clone)");
-        GameObject Uipanel = GameObject.Find("ST_Canvas");
-        if (Uipanel != null)
-        {
-            Uipanel.SetActive(false);
-        }
-
-        LeanTween.scale(stMechanics, Vector3.zero, 1f).setEase(LeanTweenType.easeOutQuad);
+        // Set the isFlying boolean to true
+        birdAnimator.SetBool("IsFlying", true);
     }
 
     private bool AlreadyHasMaskAtPoint(Vector3 point, Transform parent)
     {
         foreach (Transform child in parent)
         {
-            // First, check if the child has any tag assigned to avoid "Untagged" errors
             if (!string.IsNullOrEmpty(child.tag) && child.gameObject.CompareTag("Mask"))
             {
                 float distance = Vector3.Distance(child.position, point);

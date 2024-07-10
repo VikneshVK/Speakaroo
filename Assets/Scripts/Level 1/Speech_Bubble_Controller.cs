@@ -51,6 +51,7 @@ public class Speech_Bubble_Controller : MonoBehaviour
             }
 
             StartDelayedChildAnimations(bgInstance.transform);
+            DisableCardColliders(bgInstance.transform);
         }
         else
         {
@@ -103,12 +104,43 @@ public class Speech_Bubble_Controller : MonoBehaviour
         if (canvas != null)
         {
             AnimateChild(canvas, "DisplayText", delay);
-            AnimateChild(canvas, "Retry Button", delay + 0.5f);
-            AnimateChild(canvas, "Close button", delay + 1f);
+            
+
         }
         else
         {
             Debug.LogError("Canvas " + childName + " not found in " + parentTransform.name, this);
+        }
+    }
+
+    private void DisableCardColliders(Transform bgTransform)
+    {
+        DisableCollidersInCard(bgTransform, "Card_1");
+        DisableCollidersInCard(bgTransform, "Card_2");
+    }
+
+    private void DisableCollidersInCard(Transform bgTransform, string cardName)
+    {
+        Transform card = bgTransform.Find("Bubble/" + cardName);
+        if (card != null)
+        {
+            Transform front = card.Find(cardName.ToLower() + "_front");
+            if (front != null)
+            {
+                Collider2D collider = front.GetComponent<Collider2D>();
+                if (collider != null)
+                {
+                    collider.enabled = false;
+                }
+            }
+            else
+            {
+                Debug.LogError(cardName + " front not found in " + card.name, this);
+            }
+        }
+        else
+        {
+            Debug.LogError(cardName + " not found in Bubble", this);
         }
     }
 }

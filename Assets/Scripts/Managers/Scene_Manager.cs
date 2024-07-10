@@ -20,8 +20,10 @@ public class Scene_Manager : MonoBehaviour
 
     IEnumerator LoadScene(string LvlName)
     {
+        Debug.Log("Attempting to load scene: " + LvlName);
         TransitionAnim.SetTrigger("end");
-        yield return new WaitForSeconds(1.5f);
+        yield return new WaitForSeconds(1.5f);  // Ensure this delay aligns with your animation duration
+        Debug.Log("Now loading scene.");
         SceneManager.LoadScene(LvlName);
     }
 }

@@ -44,6 +44,8 @@ public class ZoomOnCharacter : MonoBehaviour
     {
         yield return StartCoroutine(cameraController.ZoomOut());
         isZoomedIn = false;
+        Collider2D collider = GetComponent<Collider2D>();
+        collider.enabled = false;   
         UpdateAnimatorFlags(false);
         // Start the talk animation directly if required
         animator.Play("Talk_0");
