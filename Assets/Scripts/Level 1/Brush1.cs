@@ -24,6 +24,8 @@ public class Brush1 : MonoBehaviour
 
     private float originalOrthographicSize;
 
+    private Vector3 dragOffset;
+
     void Start()
     {
         mainCamera = GameObject.FindWithTag("MainCamera")?.GetComponent<Camera>();
@@ -34,7 +36,7 @@ public class Brush1 : MonoBehaviour
         foamParticles = foam?.GetComponentInChildren<ParticleSystem>();
         brushSpriteRenderer = GetComponent<SpriteRenderer>();
         originalSprite = brushSpriteRenderer.sprite;
-        brushBackSprite = Resources.Load<Sprite>("Images/brush back");
+        brushBackSprite = Resources.Load<Sprite>("Images/brush-back");
 
         GameObject brushingPlace = GameObject.FindWithTag("Brushing Place");
 
@@ -50,24 +52,23 @@ public class Brush1 : MonoBehaviour
 
     IEnumerator ZoomAndMove(Vector3 targetPosition)
     {
-        // This line smoothly changes the orthographic size to zoom in, creating a zoom effect.
+        // Smoothly change the orthographic size to zoom in
         LeanTween.value(gameObject, mainCamera.orthographicSize, zoomSize, zoomDuration)
             .setOnUpdate((float val) => mainCamera.orthographicSize = val)
-            .setEase(LeanTweenType.easeInOutQuad); // Optional: Makes the zoom smoother
+            .setEase(LeanTweenType.easeInOutQuad);
 
-        // Update to smoothly move the camera along the Y-axis from its current position to a new position.
+        // Smoothly move the camera to the new position
         Vector3 newCameraPosition = new Vector3(0, -2, -10);
         LeanTween.move(mainCamera.gameObject, newCameraPosition, zoomDuration)
-            .setEase(LeanTweenType.easeInOutQuad); // Optional: Makes the movement smoother
+            .setEase(LeanTweenType.easeInOutQuad);
 
         // Move the brush to the target position
         LeanTween.move(gameObject, targetPosition, zoomDuration)
-            .setEase(LeanTweenType.easeInOutQuad) // Optional: Makes the movement smoother
+            .setEase(LeanTweenType.easeInOutQuad)
             .setOnComplete(() => isDraggable = true);
 
         yield return new WaitForSeconds(zoomDuration);
     }
-
 
     void Update()
     {
@@ -79,13 +80,20 @@ public class Brush1 : MonoBehaviour
 
     private void DragBrush()
     {
+        if (Input.GetMouseButtonDown(0) && GetComponent<Collider2D>().enabled)
+        {
+            Vector3 mousePos = mainCamera.ScreenToWorldPoint(Input.mousePosition);
+            mousePos.z = 0; // Ensure the z position is not altered
+            dragOffset = transform.position - mousePos;
+        }
+
         if (Input.GetMouseButton(0) && GetComponent<Collider2D>().enabled)
         {
             Vector3 mousePos = mainCamera.ScreenToWorldPoint(Input.mousePosition);
-            mousePos.z = 0; // Ensure the z position is not altered.
-            transform.position = mousePos;
+            mousePos.z = 0; // Ensure the z position is not altered
+            transform.position = mousePos + dragOffset;
 
-            RaycastHit2D[] hits = Physics2D.RaycastAll(mousePos, Vector2.zero);
+            RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position, Vector2.zero);
             bool currentlyHovering = false;
             foreach (var hit in hits)
             {
@@ -97,7 +105,7 @@ public class Brush1 : MonoBehaviour
                         isHovering = true;
                         foamParticles.Play();
                         brushSpriteRenderer.sprite = brushBackSprite;
-                        transform.rotation = Quaternion.Euler(0, 0, 90); // Rotate -90 degrees on z-axis
+                       /* transform.rotation = Quaternion.Euler(0, 0, 90); // Rotate 90 degrees on z-axis*/
                         StartCoroutine(HandleHover());
                     }
                 }
@@ -110,16 +118,38 @@ public class Brush1 : MonoBehaviour
                 transform.rotation = Quaternion.identity; // Reset rotation
                 StopCoroutine(HandleHover());
             }
+
+            // Ensure the foam particles continue to play while hovering
+            if (currentlyHovering)
+            {
+                if (!foamParticles.isPlaying)
+                {
+                    foamParticles.Play();
+                }
+            }
+            else
+            {
+                if (foamParticles.isPlaying)
+                {
+                    foamParticles.Stop();
+                }
+            }
+        }
+        else
+        {
+            if (foamParticles.isPlaying)
+            {
+                foamParticles.Stop();
+            }
         }
     }
 
-
-
     IEnumerator HandleHover()
     {
-        while (isHovering)
+        while (isHovering && Input.GetMouseButton(0))
         {
             hoverTimer += Time.deltaTime;
+            Debug.Log("Hover Timer: " + hoverTimer); // Debug log to show hover time
             if (hoverTimer >= hoverDuration)
             {
                 // Disable the collider to stop dragging
@@ -134,14 +164,12 @@ public class Brush1 : MonoBehaviour
                 }
 
                 ZoomOutAndDestroy();
-                
 
                 break;
             }
             yield return null;
         }
     }
-
 
     private void ZoomOutAndDestroy()
     {
@@ -157,21 +185,15 @@ public class Brush1 : MonoBehaviour
 
         Destroy(teeth);
         Destroy(foamParticles);
-        gameObject.SetActive(false);    
+        gameObject.SetActive(false);
 
         // Tween to change the orthographic size of the camera back to its original size
         LeanTween.value(gameObject, mainCamera.orthographicSize, originalOrthographicSize, zoomDuration)
             .setOnUpdate((float val) => mainCamera.orthographicSize = val);
 
         // Tween to move the camera back to its original position
-        Vector3 originalCameraPosition = new Vector3(0, 0, -10);
         LeanTween.move(mainCamera.gameObject, originalCameraPosition, zoomDuration).setOnComplete(() => {
             Destroy(gameObject); // Optionally, destroy the brush object here
         });
-
     }
-
-
-
-
 }

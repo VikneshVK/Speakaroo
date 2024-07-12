@@ -47,7 +47,7 @@ public class Speech_Bubble_Controller : MonoBehaviour
             if (bgInstance.transform.position == Vector3.zero)
             {
                 // Animate to original scale if position is exactly zero
-                LeanTween.scale(bgInstance, new Vector3(25, 15, 15), 1f).setEase(LeanTweenType.easeOutBack);
+                LeanTween.scale(bgInstance, new Vector3(0.9f, 0.75f, 1f), 1f).setEase(LeanTweenType.easeOutBack);
             }
 
             StartDelayedChildAnimations(bgInstance.transform);

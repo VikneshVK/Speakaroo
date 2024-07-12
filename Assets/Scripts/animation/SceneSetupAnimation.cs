@@ -41,7 +41,7 @@ public class SceneSetupAnimation : MonoBehaviour
                     // Re-enable the anchor script after tweening if it exists
                     if (tweenTarget.anchorScript != null)
                     {
-                        /*tweenTarget.anchorScript.enabled = true;*/
+                        tweenTarget.anchorScript.enabled = true;
                     }
                 });
             }

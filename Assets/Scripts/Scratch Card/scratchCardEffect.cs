@@ -11,6 +11,7 @@ public class ScratchCardEffect : MonoBehaviour
     public GameObject Card2;
     public GameObject retryButton;
     public GameObject prefabInstance;
+    public GameObject ST_Canvas;
 
     private GameObject instantiatedMask;
     private bool isSpawning = false;
@@ -237,7 +238,27 @@ public class ScratchCardEffect : MonoBehaviour
     private IEnumerator WaitForRecordingToEndThenTweenAndFly(AudioSource audioSourceToPlay)
     {
         yield return new WaitWhile(() => audioSourceToPlay.isPlaying);
+
+        
+        Transform[] childTransforms = prefabInstance.GetComponentsInChildren<Transform>();
+
+       
+        foreach (Transform child in childTransforms)
+        {
+            if (child != prefabInstance.transform) // Skip the parent prefabInstance itself
+            {
+                LeanTween.scale(child.gameObject, Vector3.zero, 0.5f).setEase(LeanTweenType.easeInOutBack);
+            }
+        }
+
+        // Wait for all children to finish tweening
+        yield return new WaitForSeconds(0.5f);
+
+        // Scale down the prefabInstance itself
         LeanTween.scale(prefabInstance, Vector3.zero, 1f).setEase(LeanTweenType.easeInOutBack);
+
+        // Wait for the prefabInstance to finish tweening
+        yield return new WaitForSeconds(1f);
 
         if (birdAnimator != null)
         {
