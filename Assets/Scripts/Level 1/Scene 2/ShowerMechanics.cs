@@ -20,6 +20,8 @@ public class ShowerMechanics : MonoBehaviour
         CheckAnimationAndSpawnPrefab();
     }
 
+
+
     void HandleTapInput()
     {
         if (Input.GetMouseButtonDown(0))
