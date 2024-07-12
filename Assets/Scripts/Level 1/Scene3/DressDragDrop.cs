@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class DressDragDrop : MonoBehaviour
@@ -9,6 +10,7 @@ public class DressDragDrop : MonoBehaviour
     public GameObject summerDress;
     public GameObject winterDress;
     public GameObject schoolDress;
+    public Animator boyAnimator;
 
     void Start()
     {
@@ -22,6 +24,12 @@ public class DressDragDrop : MonoBehaviour
             Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             mousePosition.z = 0f; // Ensure the z position is 0 for 2D games
             transform.position = mousePosition;
+        }
+        Collider2D collider = GetComponent<Collider2D>();
+        if (boyAnimator.GetCurrentAnimatorStateInfo(0).IsName("Idle 0") &&
+           boyAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
+        {
+            collider.enabled = true;
         }
     }
 

@@ -7,6 +7,8 @@ public class ShowerMechanics : MonoBehaviour
     public GameObject prefabToSpawn;
     public Transform spawnLocation;
     public GameObject shampooGameObject; // Reference to the shampoo GameObject
+    public GameObject HotTap;
+    public GameObject ColdTap;
 
     private bool hotTapOn = false;
     private bool coldTapOn = false;
@@ -81,7 +83,15 @@ public class ShowerMechanics : MonoBehaviour
     void CheckAnimationAndSpawnPrefab()
     {
         AnimatorStateInfo stateInfo = boyAnimator.GetCurrentAnimatorStateInfo(0);
-        if (stateInfo.IsName("Talk Animation") && stateInfo.normalizedTime >= 1.0f && !hasSpawned)
+        Collider2D HotCollider = HotTap.GetComponent<Collider2D>();
+        Collider2D ColdCollider = ColdTap.GetComponent<Collider2D>();
+        if (stateInfo.IsName("Idle 1") && stateInfo.normalizedTime >= 1.0f)
+        {
+            HotCollider.enabled = true;
+            ColdCollider.enabled = true;
+        }
+
+        if (stateInfo.IsName("Ask Kiki") && stateInfo.normalizedTime >= 1.0f && !hasSpawned)
         {
             SpawnPrefab();
             hasSpawned = true;

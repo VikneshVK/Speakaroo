@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
  
 
@@ -14,6 +15,7 @@ public class ShowerController : MonoBehaviour
 
     private bool tapsOn = false; // To track if taps are currently turned on
     private Scene_Manager sceneManager;
+    private bool foamDestroyed = false;
 
     private void Update()
     {
@@ -50,7 +52,7 @@ public class ShowerController : MonoBehaviour
             hotTapAnimator.SetTrigger("TapOn");
             coldTapAnimator.SetTrigger("TapOn");
             showerParticles.Play();
-            boyAnimator.SetBool("showerDone", true); // Set the showerDone boolean in the boy's Animator
+           
 
             StartCoroutine(DestroyFoamObjects());
         }
@@ -60,6 +62,10 @@ public class ShowerController : MonoBehaviour
             hotTapAnimator.SetTrigger("TapOff");
             coldTapAnimator.SetTrigger("TapOff");
             showerParticles.Stop();
+        }
+        if (foamDestroyed && tapsOn == false )
+        {
+            boyAnimator.SetBool("showerDone", true);
         }
     }
 
@@ -73,6 +79,7 @@ public class ShowerController : MonoBehaviour
         }
 
         foamObjects.Clear();
-        yield return new WaitForSeconds(0.5f); // Wait for the foam to shrink and be destroyed
+        yield return new WaitForSeconds(0.5f); 
+        foamDestroyed = true;
     }
 }
