@@ -6,6 +6,11 @@ public class Speech_Bubble_Controller : MonoBehaviour
 {
     public GameObject prefab;  // Prefab containing the "BG" object with children.
 
+    void Awake()
+    {
+        // Initialize LeanTween with a higher limit for the number of tweens
+        LeanTween.init(5000);
+    }
     void Start()
     {
         if (prefab == null)

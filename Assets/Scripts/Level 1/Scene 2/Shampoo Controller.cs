@@ -4,11 +4,12 @@ public class ShampooController : MonoBehaviour
 {
     public GameObject foamPrefab; // Reference to the foam prefab
     public Transform foamSpawnLocation; // Reference to the spawn location
-    public Transform shampooFinalPosition;
+    public Transform shampooFinalPosition; // Position to reset the shampoo to
     public Vector3 initialPosition; // Initial position of the shampoo
     public int maxFoamCount = 6; // Maximum number of foams to spawn
     public float spawnCooldown = 0.5f; // Cooldown time in seconds between spawns
-    public ShowerController showerController; // Reference to the ShowerController
+    public GameObject boyGameObject; // Reference to the boy GameObject
+    public GameObject showerGameObject; // Reference to the shower GameObject
 
     private bool isDragging = false;
     private Vector3 offset;
@@ -16,13 +17,29 @@ public class ShampooController : MonoBehaviour
     private int foamCount = 0; // Current count of spawned foams
     private bool isDraggable = true;
     private float nextSpawnTime = 0f; // Time when the next foam can be spawned
-    private Collider2D shampooCollider;
+    private Collider2D shampooCollider; // Collider of the shampoo
+
+    private ShowerMechanics showerMechanics; // ShowerMechanics script reference
+    private ShowerController showerController; // ShowerController script reference
 
     private void Start()
     {
         mainCamera = Camera.main;
-        initialPosition = transform.position; // Store the initial position
-        shampooCollider = GetComponent<Collider2D>(); // Get the shampoo's collider
+        initialPosition = transform.position;
+        shampooCollider = GetComponent<Collider2D>();
+
+        // Ensure the shower GameObject is active before fetching components
+        if (showerGameObject.activeSelf)
+        {
+            showerMechanics = boyGameObject.GetComponent<ShowerMechanics>();
+            showerController = showerGameObject.GetComponent<ShowerController>();
+        }
+
+        if (showerMechanics == null)
+            Debug.LogError("ShowerMechanics script not found on " + showerGameObject.name);
+        if (showerController == null)
+            Debug.LogError("ShowerController script not found on " + showerGameObject.name);
+
     }
 
     private void OnMouseDown()
@@ -30,7 +47,7 @@ public class ShampooController : MonoBehaviour
         if (isDraggable)
         {
             isDragging = true;
-            offset = transform.position - GetMouseWorldPos();
+            offset = transform.position - GetMouseWorldPos(); // Calculate offset
         }
     }
 
@@ -44,7 +61,7 @@ public class ShampooController : MonoBehaviour
         if (isDragging && isDraggable)
         {
             Vector3 mousePos = GetMouseWorldPos() + offset;
-            transform.position = new Vector3(mousePos.x, mousePos.y, initialPosition.z); // Keep the original z position
+            transform.position = new Vector3(mousePos.x, mousePos.y, initialPosition.z); // Dragging movement
 
             if (Time.time >= nextSpawnTime)
             {
@@ -55,27 +72,16 @@ public class ShampooController : MonoBehaviour
                     {
                         if (foamCount < maxFoamCount)
                         {
-                            Vector3 randomPosition = foamSpawnLocation.position + new Vector3(
-                                Random.Range(-foamSpawnLocation.localScale.x / 2, foamSpawnLocation.localScale.x / 2),
-                                Random.Range(-foamSpawnLocation.localScale.y / 2, foamSpawnLocation.localScale.y / 2),
-                                0
-                            );
-
-                          /*  Quaternion randomRotation = Quaternion.Euler(0, 0, Random.Range(0, 360));*/
-
-                            GameObject foamInstance = Instantiate(foamPrefab, randomPosition, Quaternion.identity);
-                            foamInstance.transform.localScale = Vector3.zero;
-                            LeanTween.scale(foamInstance, new Vector3(1, 1, 1), 0.5f); // Tween the scale from 0 to 1 over 0.5 seconds
-                            foamCount++;
-                            Debug.Log("Foam spawned: " + foamCount);
-
-                            showerController.AddFoamObject(foamInstance); // Add the foam instance to the shower controller
-
-                            nextSpawnTime = Time.time + spawnCooldown; // Set the next spawn time
+                            SpawnFoam();
+                            if (foamCount == 1) // Trigger script switch on first foam
+                            {
+                                showerMechanics.enabled = false;
+                                showerController.enabled = true;
+                            }
                         }
-                        if (foamCount >= maxFoamCount)
+                        else
                         {
-                            ResetPosition();
+                            ResetPosition(); // Reset position and disable interactions
                             return;
                         }
                         break;
@@ -83,6 +89,21 @@ public class ShampooController : MonoBehaviour
                 }
             }
         }
+    }
+
+    private void SpawnFoam()
+    {
+        Vector3 randomPosition = foamSpawnLocation.position + new Vector3(
+            Random.Range(-foamSpawnLocation.localScale.x / 2, foamSpawnLocation.localScale.x / 2),
+            Random.Range(-foamSpawnLocation.localScale.y / 2, foamSpawnLocation.localScale.y / 2),
+            0
+        );
+        GameObject foamInstance = Instantiate(foamPrefab, randomPosition, Quaternion.identity);
+        foamInstance.transform.localScale = Vector3.zero;
+        LeanTween.scale(foamInstance, new Vector3(1, 1, 1), 0.5f); // Animate foam appearance
+        foamCount++;
+        showerController.AddFoamObject(foamInstance); // Add foam to shower controller
+        nextSpawnTime = Time.time + spawnCooldown; // Update next spawn time
     }
 
     private Vector3 GetMouseWorldPos()
@@ -94,10 +115,11 @@ public class ShampooController : MonoBehaviour
 
     private void ResetPosition()
     {
-        transform.SetLocalPositionAndRotation(shampooFinalPosition.position, Quaternion.identity);// Reset the position to the initial position
+        transform.position = shampooFinalPosition.position; // Reset the position
+        transform.rotation = Quaternion.identity; // Reset the rotation
 
         isDragging = false; // Stop dragging
-        isDraggable = false; // Make the shampoo non-draggable
+        isDraggable = false; // Make non-draggable
         shampooCollider.enabled = false; // Deactivate the collider
     }
 }

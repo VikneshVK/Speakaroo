@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+ 
 
 public class ShowerController : MonoBehaviour
 {
@@ -8,8 +9,11 @@ public class ShowerController : MonoBehaviour
     public Animator hotTapAnimator, coldTapAnimator; // References to the tap animators
     public ParticleSystem showerParticles; // Reference to the water particles
     public Collider2D hotTapCollider, coldTapCollider; // Colliders for the hot and cold taps for interaction
+    public Animator boyAnimator; // Reference to the boy's Animator
+    public GameObject boyGameObject; // Reference to the boy GameObject
 
     private bool tapsOn = false; // To track if taps are currently turned on
+    private Scene_Manager sceneManager;
 
     private void Update()
     {
@@ -22,6 +26,14 @@ public class ShowerController : MonoBehaviour
             {
                 OnTapClicked();
             }
+        }
+
+        // Check if the "end shine" animation is completed
+        if (boyAnimator.GetCurrentAnimatorStateInfo(0).IsName("end shine") &&
+            boyAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
+        {
+            // Once the animation completes, move to the next scene
+            sceneManager.LoadLevel("Level 3");
         }
     }
 
@@ -38,6 +50,7 @@ public class ShowerController : MonoBehaviour
             hotTapAnimator.SetTrigger("TapOn");
             coldTapAnimator.SetTrigger("TapOn");
             showerParticles.Play();
+            boyAnimator.SetBool("showerDone", true); // Set the showerDone boolean in the boy's Animator
 
             StartCoroutine(DestroyFoamObjects());
         }

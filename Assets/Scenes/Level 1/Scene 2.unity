@@ -311,7 +311,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 4
+  m_SortingOrder: 8
   m_Sprite: {fileID: 21300000, guid: 4e20bfc4c1c651242b7fdb24fd2aa957, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -515,7 +515,7 @@ Transform:
   m_GameObject: {fileID: 660544005}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -11.87, y: 3.4, z: 0}
+  m_LocalPosition: {x: -11, y: 5.1, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -624,6 +624,7 @@ GameObject:
   - component: {fileID: 854984598}
   - component: {fileID: 854984597}
   - component: {fileID: 854984600}
+  - component: {fileID: 854984601}
   m_Layer: 0
   m_Name: shower
   m_TagString: Untagged
@@ -714,6 +715,26 @@ MonoBehaviour:
   executeInUpdate: 1
   anchorType: 7
   anchorOffset: {x: 0, y: 0.17, z: 0}
+--- !u!114 &854984601
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 854984596}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 43b8c8a503955144a8968820b409a658, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  foamObjects: []
+  hotTapAnimator: {fileID: 892564471}
+  coldTapAnimator: {fileID: 1446971104}
+  showerParticles: {fileID: 2070074717}
+  hotTapCollider: {fileID: 892564474}
+  coldTapCollider: {fileID: 1446971107}
+  boyAnimator: {fileID: 2063642306}
+  boyGameObject: {fileID: 2063642303}
 --- !u!1 &892564470
 GameObject:
   m_ObjectHideFlags: 0
@@ -1239,7 +1260,7 @@ Transform:
   m_GameObject: {fileID: 1268194588}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.09, y: 2.61, z: 0}
+  m_LocalPosition: {x: 0.09, y: 3.47, z: 0}
   m_LocalScale: {x: 1.4, y: 1.4, z: 1.4}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -2069,7 +2090,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 3
+  m_SortingOrder: 7
   m_Sprite: {fileID: 21300000, guid: 9fac625cf745fc74d867eb86a6d93a8e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -2088,7 +2109,7 @@ BoxCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1824060252}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Density: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -2143,8 +2164,9 @@ MonoBehaviour:
   shampooFinalPosition: {fileID: 660544006}
   initialPosition: {x: 0, y: 0, z: 0}
   maxFoamCount: 6
-  spawnCooldown: 0.5
-  showerController: {fileID: 0}
+  spawnCooldown: 1
+  boyGameObject: {fileID: 2063642303}
+  showerGameObject: {fileID: 854984596}
 --- !u!1 &1909357512
 GameObject:
   m_ObjectHideFlags: 0
@@ -2348,10 +2370,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a745793edbd86246ba82af2ee749a5f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  showerParticles: {fileID: 2070074717}
   hotTapAnimator: {fileID: 892564471}
   coldTapAnimator: {fileID: 1446971104}
   boyAnimator: {fileID: 2063642306}
+  showerParticles: {fileID: 2070074717}
+  prefabToSpawn: {fileID: 2720721835439482840, guid: bc09070ad1c57594f96790685e63e0d9, type: 3}
+  spawnLocation: {fileID: 935869109}
+  shampooGameObject: {fileID: 1824060252}
 --- !u!1 &2070074715
 GameObject:
   m_ObjectHideFlags: 0

@@ -2,16 +2,15 @@ using UnityEngine;
 
 public class ShowerMechanics : MonoBehaviour
 {
-    public Animator boyAnimator;                // Reference to the boy's Animator
-    public GameObject prefabToSpawn;            // Prefab to spawn
-    public Transform spawnLocation;             // Location to spawn the prefab
-
+    public Animator hotTapAnimator, coldTapAnimator, boyAnimator;
     public ParticleSystem showerParticles;
-    public Animator hotTapAnimator, coldTapAnimator;
+    public GameObject prefabToSpawn;
+    public Transform spawnLocation;
+    public GameObject shampooGameObject; // Reference to the shampoo GameObject
 
     private bool hotTapOn = false;
     private bool coldTapOn = false;
-    private bool hasSpawned = false;            // To ensure prefab spawns only once per animation completion
+    private bool hasSpawned = false;
 
     void Update()
     {
@@ -24,6 +23,7 @@ public class ShowerMechanics : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition), Vector2.zero);
+
             if (hit.collider != null)
             {
                 if (hit.collider.CompareTag("Hot Tap") || hit.collider.CompareTag("Cold Tap"))
@@ -91,10 +91,22 @@ public class ShowerMechanics : MonoBehaviour
     void SpawnPrefab()
     {
         Instantiate(prefabToSpawn, spawnLocation.position, Quaternion.identity);
+        EnableShampooCollider(); // Enable the shampoo's collider after spawning the prefab
+    }
+
+    void EnableShampooCollider()
+    {
+        Collider2D shampooCollider = shampooGameObject.GetComponent<Collider2D>();
+        Debug.Log("Collider Identified");
+        if (shampooCollider != null)
+        {
+            shampooCollider.enabled = true;
+            Debug.Log("Collider Enabled");// Enable the collider
+        }
     }
 
     void OnDisable()
     {
-        hasSpawned = false;  // Reset spawn flag when disabled
+        hasSpawned = false;  // Reset the spawning flag
     }
 }
