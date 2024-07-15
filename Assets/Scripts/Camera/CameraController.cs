@@ -8,6 +8,7 @@ public class CameraController : MonoBehaviour
     public float targetZoomSize = 5f; // Target size when zoomed in
     private float originalZoomSize; // Original zoom size to return to
     private Vector3 originalPosition; // Store the original camera position to reset after zoom out
+    private CameraViewportHandler viewportHandler; // Reference to the ViewportHandler script
 
     void Start()
     {
@@ -17,11 +18,23 @@ public class CameraController : MonoBehaviour
         }
         originalZoomSize = cam.orthographicSize; // Store the original zoom size
         originalPosition = cam.transform.position; // Store the original position
+
+        viewportHandler = GetComponent<CameraViewportHandler>(); // Get the ViewportHandler script attached to the same GameObject
+        if (viewportHandler == null)
+        {
+            Debug.LogError("ViewportHandler script not found on the camera GameObject.");
+        }
     }
 
     // Method to zoom in on a specific target
     public IEnumerator ZoomInOn(Transform target)
     {
+        if (viewportHandler != null)
+        {
+            viewportHandler.enabled = false; // Disable ViewportHandler
+            Debug.Log("ViewportHandler disabled.");
+        }
+
         float elapsedTime = 0;
         Vector3 targetPosition = new Vector3(target.position.x, target.position.y, cam.transform.position.z);
 
@@ -63,9 +76,11 @@ public class CameraController : MonoBehaviour
         // Explicitly set the final size and position to ensure they match exactly
         cam.orthographicSize = originalZoomSize;
         cam.transform.position = originalPosition;
+
+        if (viewportHandler != null)
+        {
+            viewportHandler.enabled = true; // Enable ViewportHandler
+            Debug.Log("ViewportHandler enabled.");
+        }
     }
-
-
-
 }
-

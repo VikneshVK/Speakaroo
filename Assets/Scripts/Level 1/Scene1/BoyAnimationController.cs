@@ -14,6 +14,7 @@ public class BoyAnimationController : MonoBehaviour
     public Transform speechBubbleContainer;
 
     private float originalOrthographicSize;
+    private CameraViewportHandler viewportHandler;
 
     private void Start()
     {
@@ -32,6 +33,7 @@ public class BoyAnimationController : MonoBehaviour
             return;
         }
 
+        viewportHandler = mainCamera.GetComponent<CameraViewportHandler>();
         originalOrthographicSize = mainCamera.orthographicSize;
         targetPosition = new Vector3(0, transform.position.y, transform.position.z); // Center of the viewport
 
@@ -77,6 +79,7 @@ public class BoyAnimationController : MonoBehaviour
     private IEnumerator ZoomIn()
     {
         float startOrthographicSize = mainCamera.orthographicSize;
+        viewportHandler.enabled = false;
         float elapsedTime = 0;
 
         while (elapsedTime < zoomDuration)
@@ -112,6 +115,7 @@ public class BoyAnimationController : MonoBehaviour
         }
 
         mainCamera.orthographicSize = originalOrthographicSize;
+        viewportHandler.enabled = true;
         animator.SetBool("showTeeth", false);
 
         // Continue the animation sequence

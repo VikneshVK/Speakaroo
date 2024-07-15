@@ -47,7 +47,7 @@ public class SceneSetupAnimation : MonoBehaviour
             }
             else
             {
-                Debug.LogWarning("TweenTarget setup incorrect for one or more entries.");
+                Debug.Log("TweenTarget setup incorrect for one or more entries.");
             }
         }
     }
