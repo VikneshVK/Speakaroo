@@ -2,11 +2,17 @@ using UnityEngine;
 
 public class DragAndDropController : MonoBehaviour
 {
-    public Transform correctDropZone;
+    public GameObject correctDropZoneObject; // Reference to the drop zone game object
+    public GameObject speechBubblePrefab; // Reference to the speech bubble prefab
+    public GameObject mechanicsPrefab; // Prefab specific to this game object (bus, whale, or building)
+    public Transform speechBubbleContainer;
+    public GameObject Boy;
     public Animator boyAnimator;
-    public float blinkDuration = 0.1f;
-    public int blinkCount = 2;
-    public float dropOffset = 0.5f;
+    public Animator animator; // Animator attached to this game object
+
+    public float blinkDuration = 0.1f; // Duration for each blink
+    public int blinkCount = 2; // Number of times the object should blink on incorrect drop
+    public float dropOffset = 0.5f; // Allowable distance to count as a correct drop
 
     private Vector3 originalPosition;
     private Quaternion originalRotation;
@@ -18,6 +24,8 @@ public class DragAndDropController : MonoBehaviour
         originalPosition = transform.position;
         originalRotation = transform.rotation;
         objectRenderer = GetComponent<Renderer>();
+        animator = GetComponent<Animator>();
+        boyAnimator = Boy.GetComponent<Animator>();
     }
 
     void Update()
@@ -56,8 +64,10 @@ public class DragAndDropController : MonoBehaviour
         if (IsCorrectDropZone())
         {
             boyAnimator.SetBool("isRightDrop", true);
-            transform.position = correctDropZone.position;
-            transform.rotation = correctDropZone.rotation; // Match the rotation
+            transform.position = correctDropZoneObject.transform.position;
+            transform.rotation = correctDropZoneObject.transform.rotation;
+            animator.SetTrigger("isRightDrop");
+            // Animation Event will call SpawnSpeechBubble at the end of the animation
         }
         else
         {
@@ -66,16 +76,23 @@ public class DragAndDropController : MonoBehaviour
         }
     }
 
+    // Method to be called by an Animation Event
+    public void SpawnSpeechBubble()
+    {
+        GameObject speechBubble = Instantiate(speechBubblePrefab, speechBubbleContainer.position, Quaternion.identity);
+        SpeechBubble bubbleController = speechBubble.GetComponent<SpeechBubble>();
+        bubbleController.Setup(mechanicsPrefab, this);
+       /* bubbleController.SpawnMechanicsPrefab();*/
+    }
+
     bool IsCorrectDropZone()
     {
-        // Check if the object is dropped within the specified offset range
-        return Vector3.Distance(transform.position, correctDropZone.position) <= dropOffset;
+        return Vector3.Distance(transform.position, correctDropZoneObject.transform.position) <= dropOffset;
     }
 
     System.Collections.IEnumerator BlinkRedAndReset()
     {
         Color originalColor = objectRenderer.material.color;
-
         for (int i = 0; i < blinkCount; i++)
         {
             objectRenderer.material.color = Color.red;
@@ -85,6 +102,6 @@ public class DragAndDropController : MonoBehaviour
         }
 
         transform.position = originalPosition;
-        transform.rotation = originalRotation; // Reset to the original rotation
+        transform.rotation = originalRotation;
     }
 }

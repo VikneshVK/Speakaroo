@@ -8,14 +8,18 @@ public class BoyController : MonoBehaviour
     public GameObject Bus;
     public GameObject Whale;
     public GameObject Building;
+    public GameObject Bird;
 
     private Animator animator;
+    private Animator birdAnimator;
     private bool isWalking = false;
     private bool isIdleCompleted = false;
 
     void Start()
     {
         animator = GetComponent<Animator>();
+        birdAnimator = Bird.GetComponent<Animator>();
+
         if (stopPosition == null)
         {
             Debug.LogError("Stop position not set for BoyController.");
@@ -55,12 +59,21 @@ public class BoyController : MonoBehaviour
                 isWalking = false;
                 isWalkCompleted = true;
                 animator.SetBool("isWalkCompleted", true); // Assuming you have an animation parameter to transition
+                birdAnimator.SetBool("can talk", true) ;
+                /*enableParrotTalk();*/
                 enableColliders();
                 Debug.Log("Walk completed.");
             }
         }
     }
 
+   /* void enableParrotTalk()
+    {
+        if (birdAnimator.GetCurrentAnimatorStateInfo(0).IsName("Bird Talk") && animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
+        {
+            enableColliders();
+        }
+    }*/
     void enableColliders()
     {
         Collider2D busCollider = Bus.GetComponent<Collider2D>();
