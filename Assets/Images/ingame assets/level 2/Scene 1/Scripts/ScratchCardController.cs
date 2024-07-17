@@ -3,7 +3,7 @@ using System.Collections;
 using TMPro;
 using UnityEngine.UI;
 
-public class ScratchCardEffect : MonoBehaviour
+public class ScratchCardController : MonoBehaviour
 {
     public GameObject maskPrefab;
     public TextMeshProUGUI feedbackText;
@@ -27,15 +27,9 @@ public class ScratchCardEffect : MonoBehaviour
     private bool card2Processed = false;
 
     public UiManager uiManager;
-    private BirdController birdController;
     private Animator birdAnimator;
 
     private Button retryButtonComponent;
-
-    void Awake()
-    {
-        Debug.Log("Retry Button Active State in Awake: " + retryButton.activeSelf);
-    }
 
     private void Start()
     {
@@ -44,8 +38,7 @@ public class ScratchCardEffect : MonoBehaviour
         InitializeAudioSources();
         InitializeColliders();
         InitializeRetryButton();
-        Debug.Log("Retry Button Active State after Initialization: " + retryButton.activeSelf);
-        InitializeBirdController();
+        InitializeBirdAnimator();
     }
 
     private void InitializeAudioSources()
@@ -69,38 +62,28 @@ public class ScratchCardEffect : MonoBehaviour
 
     private void InitializeRetryButton()
     {
-        // Ensure the retry button is active in the scene
-        if (!retryButton.activeSelf)
-        {
-            retryButton.SetActive(true);
-        }
-        retryButton.transform.localScale = Vector3.zero; // Initialize the retry button scale to zero
+        retryButton.SetActive(true);
+        retryButton.transform.localScale = Vector3.zero;
 
         retryButtonComponent = retryButton.GetComponent<Button>();
         if (retryButtonComponent != null)
         {
             retryButtonComponent.onClick.AddListener(Retry);
-            Debug.Log("Retry button initialized and listener added.");
-        }
-        else
-        {
-            Debug.LogError("Retry Button component not found.");
         }
     }
 
-    private void InitializeBirdController()
+    private void InitializeBirdAnimator()
     {
-        GameObject parrotGameObject = GameObject.FindWithTag("Bird");
-        if (parrotGameObject != null)
+        GameObject birdGameObject = GameObject.FindWithTag("Bird");
+        if (birdGameObject != null)
         {
-            birdController = parrotGameObject.GetComponent<BirdController>();
-            birdAnimator = parrotGameObject.GetComponent<Animator>();
+            birdAnimator = birdGameObject.GetComponent<Animator>();
 
-            Debug.Log("BirdController and Animator components found and initialized.");
+            Debug.Log("Bird Animator component found and initialized.");
         }
         else
         {
-            Debug.LogError("Parrot GameObject not found");
+            Debug.LogError("Bird GameObject not found.");
         }
     }
 
@@ -120,12 +103,11 @@ public class ScratchCardEffect : MonoBehaviour
 
             if (hit.collider != null && hit.collider.gameObject == Card1 && !card1Processed)
             {
-                Debug.Log("Card 1 hit detected.");
                 StartCoroutine(SpawnPrefabs(hit.collider.transform));
             }
             else if (hit.collider != null && hit.collider.gameObject == Card2 && card1Processed && !card2Processed)
             {
-                Debug.Log("Card 2 hit detected.");
+                StopAllAudio(); // Stop any audio before playing new one
                 LeanTween.scale(retryButton, Vector3.zero, 0.5f).setEase(LeanTweenType.easeOutBack);
                 StartCoroutine(SpawnPrefabs(hit.collider.transform));
             }
@@ -134,7 +116,6 @@ public class ScratchCardEffect : MonoBehaviour
 
     private IEnumerator SpawnPrefabs(Transform cardTransform)
     {
-        Debug.Log("Spawning prefabs started.");
         isSpawning = true;
 
         for (float timer = 0; timer < 5f; timer += Time.deltaTime)
@@ -160,7 +141,6 @@ public class ScratchCardEffect : MonoBehaviour
         if (sr != null) sr.enabled = false;
 
         isSpawning = false;
-        Debug.Log("Spawning prefabs ended.");
 
         AudioSource audioSourceToPlay = (cardTransform == Card1.transform) ? audio1 : audio2;
         if (!audioSourceToPlay.isPlaying && audioSourceToPlay.clip != null)
@@ -179,11 +159,9 @@ public class ScratchCardEffect : MonoBehaviour
 
         if (!Microphone.IsRecording(null))
         {
-            // Start recording audio
             AudioClip recordedClip = Microphone.Start(null, false, Mathf.CeilToInt(recordLength), 44100);
             yield return new WaitForSeconds(recordLength);
 
-            // Stop recording and analyze the audio
             Microphone.End(null);
             float[] samples = new float[Mathf.CeilToInt(44100 * recordLength)];
             recordedClip.GetData(samples, 0);
@@ -206,7 +184,6 @@ public class ScratchCardEffect : MonoBehaviour
             else
             {
                 feedbackText.text = "Click Retry and try saying the word!";
-                // Make retry button visible only if no voice detected
                 LeanTween.scale(retryButton, Vector3.one, 0.5f).setEase(LeanTweenType.easeOutBack);
             }
         }
@@ -229,35 +206,33 @@ public class ScratchCardEffect : MonoBehaviour
 
     private void PlayRecording(Transform cardTransform)
     {
-        if (cardTransform == Card1.transform && recAudio1 != null)
+        AudioSource audioSourceToPlay = (cardTransform == Card1.transform) ? audio1 : audio2;
+        audioSourceToPlay.pitch = highPitchFactor;
+        audioSourceToPlay.clip = (cardTransform == Card1.transform) ? recAudio1 : recAudio2;
+        audioSourceToPlay.Play();
+
+        if (cardTransform == Card1.transform)
         {
-            audio1.pitch = highPitchFactor;
-            audio1.clip = recAudio1;
-            audio1.Play();
             card1Processed = true;
             Card2.GetComponent<Collider2D>().enabled = true;
-            LeanTween.scale(retryButton, Vector3.one, 0.5f).setEase(LeanTweenType.easeInBack);
         }
-        else if (cardTransform == Card2.transform && recAudio2 != null)
+        else if (cardTransform == Card2.transform)
         {
-            audio2.pitch = highPitchFactor;
-            audio2.clip = recAudio2;
-            audio2.Play();
             card2Processed = true;
-            LeanTween.scale(retryButton, Vector3.one, 0.5f).setEase(LeanTweenType.easeInBack);
-            StartCoroutine(WaitForRecordingToEndThenTweenAndFly(audio2));
-            
+            StartCoroutine(WaitForRecordingToEndThenTweenAndFly(audioSourceToPlay));
         }
+
+        LeanTween.scale(retryButton, Vector3.one, 0.5f).setEase(LeanTweenType.easeInBack);
     }
 
     private IEnumerator WaitForRecordingToEndThenTweenAndFly(AudioSource audioSourceToPlay)
     {
         yield return new WaitWhile(() => audioSourceToPlay.isPlaying);
 
-        
+
         Transform[] childTransforms = prefabInstance.GetComponentsInChildren<Transform>();
 
-       
+
         foreach (Transform child in childTransforms)
         {
             if (child != prefabInstance.transform) // Skip the parent prefabInstance itself
@@ -283,20 +258,6 @@ public class ScratchCardEffect : MonoBehaviour
         {
             Debug.LogError("Bird Animator is not assigned or not found.");
         }
-    }
-
-    private bool AlreadyHasMaskAtPoint(Vector3 point, Transform parent)
-    {
-        foreach (Transform child in parent)
-        {
-            if (!string.IsNullOrEmpty(child.tag) && child.gameObject.CompareTag("Mask"))
-            {
-                float distance = Vector3.Distance(child.position, point);
-                if (distance < 0.01f) // Adjust this threshold as necessary
-                    return true;
-            }
-        }
-        return false;
     }
 
     public void Retry()
@@ -326,21 +287,43 @@ public class ScratchCardEffect : MonoBehaviour
         LeanTween.scale(retryButton, Vector3.one, 0.5f).setEase(LeanTweenType.easeInBack);
     }
 
+    private void StopAllAudio()
+    {
+        audio1.Stop();
+        audio2.Stop();
+    }
+
     private void ResetAudioSources()
     {
         audio1.Stop();
         audio2.Stop();
+        audio1.clip = null;
+        audio2.clip = null;
         audio1.pitch = 1;
         audio2.pitch = 1;
     }
 
     private IEnumerator PlayAudioAndRecord(Transform cardTransform, AudioSource audioSource)
     {
-        if (!audioSource.isPlaying && audioSource.clip != null)
+        if ( audioSource.clip != null)
         {
             audioSource.Play();
             yield return new WaitForSeconds(audioSource.clip.length);
             StartCoroutine(CheckAndRecordAudio(cardTransform));
         }
+    }
+
+    private bool AlreadyHasMaskAtPoint(Vector3 point, Transform parent)
+    {
+        foreach (Transform child in parent)
+        {
+            if (!string.IsNullOrEmpty(child.tag) && child.gameObject.CompareTag("Mask"))
+            {
+                float distance = Vector3.Distance(child.position, point);
+                if (distance < 0.01f)
+                    return true;
+            }
+        }
+        return false;
     }
 }

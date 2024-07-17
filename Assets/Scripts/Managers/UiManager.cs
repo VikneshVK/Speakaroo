@@ -7,23 +7,24 @@ public class UiManager : MonoBehaviour
 {
     public Button retryButton;
     public ScratchCardEffect scratchCardEffect; // Reference to the ScratchCardEffect script
+    public ScratchCardController scratchCardController;
 
     void Start()
     {
         retryButton.onClick.AddListener(RetryAction);
-        retryButton.gameObject.SetActive(false);
     }
 
-    public void ShowButtons()
-    {
-        retryButton.gameObject.SetActive(true);
-    }
+   
 
-    private void RetryAction()
+    public void RetryAction()
     {
         if (scratchCardEffect != null)
         {
             scratchCardEffect.Retry();
+        }
+        else if(scratchCardController != null)
+        {
+            scratchCardController.Retry();
         }
         else
         {
