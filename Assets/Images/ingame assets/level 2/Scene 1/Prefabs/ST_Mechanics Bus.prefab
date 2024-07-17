@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4528407380327842564}
   - component: {fileID: 8533653626148699191}
-  - component: {fileID: 135940740060064953}
+  - component: {fileID: 5977405018633922169}
   - component: {fileID: 1889391926793195526}
   - component: {fileID: 8872215780239452039}
   m_Layer: 0
@@ -87,7 +87,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 2
   m_SpriteSortPoint: 0
---- !u!114 &135940740060064953
+--- !u!114 &5977405018633922169
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -96,7 +96,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 670242834472814222}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 99cc6b5dc9d236843a336c38118f58e8, type: 3}
+  m_Script: {fileID: 11500000, guid: c33bae8c1f2e24f41a913b48e5e1c6a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   maskPrefab: {fileID: 1433547584507210601, guid: 1d26dd531982ed445a9d65d037809122, type: 3}
@@ -472,7 +472,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 135940740060064953}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: ScratchCardEffect, Assembly-CSharp
         m_MethodName: Retry
         m_Mode: 1
@@ -833,7 +833,7 @@ GameObject:
   m_Component:
   - component: {fileID: 9061228471674905663}
   - component: {fileID: 2819755656229525566}
-  - component: {fileID: 2057100487630461643}
+  - component: {fileID: 2665104499315174540}
   - component: {fileID: 7223334087950513183}
   - component: {fileID: 8171713126479263056}
   m_Layer: 0
@@ -910,7 +910,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 2
   m_SpriteSortPoint: 0
---- !u!114 &2057100487630461643
+--- !u!114 &2665104499315174540
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -919,7 +919,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 6441429343506500955}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 99cc6b5dc9d236843a336c38118f58e8, type: 3}
+  m_Script: {fileID: 11500000, guid: c33bae8c1f2e24f41a913b48e5e1c6a4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   maskPrefab: {fileID: 1433547584507210601, guid: 1d26dd531982ed445a9d65d037809122, type: 3}
@@ -1370,7 +1370,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   retryButton: {fileID: 4829617909842716813}
-  scratchCardEffect: {fileID: 2057100487630461643}
+  scratchCardEffect: {fileID: 0}
+  scratchCardController: {fileID: 2665104499315174540}
 --- !u!1 &9062221607789034392
 GameObject:
   m_ObjectHideFlags: 0

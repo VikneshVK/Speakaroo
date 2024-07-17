@@ -5,15 +5,22 @@ public class DragAndDropController : MonoBehaviour
     public GameObject correctDropZoneObject; // Reference to the drop zone game object
     public GameObject speechBubblePrefab; // Reference to the speech bubble prefab
     public GameObject mechanicsPrefab; // Prefab specific to this game object (bus, whale, or building)
-    public Transform speechBubbleContainer;
+    public GameObject Bus;
+    public GameObject miniBus; // Miniature bus with collider
+    public GameObject Whale;
+    public GameObject miniWhale; // Miniature whale with collider
+    public GameObject Building;
+    public GameObject miniBuilding; // Miniature building with collider
     public GameObject Boy;
-    public Animator boyAnimator;
-    public Animator animator; // Animator attached to this game object
+    public Transform speechBubbleContainer;
+    
 
-    public float blinkDuration = 0.1f; // Duration for each blink
-    public int blinkCount = 2; // Number of times the object should blink on incorrect drop
-    public float dropOffset = 0.5f; // Allowable distance to count as a correct drop
+    public float dropOffset;
+    public float blinkCount;
+    public float blinkDuration;
 
+    private Animator boyAnimator;
+    private Animator animator; // Animator attached to this game object
     private Vector3 originalPosition;
     private Quaternion originalRotation;
     private bool isDragging = false;
@@ -26,6 +33,11 @@ public class DragAndDropController : MonoBehaviour
         objectRenderer = GetComponent<Renderer>();
         animator = GetComponent<Animator>();
         boyAnimator = Boy.GetComponent<Animator>();
+
+        // Initially disable colliders
+        miniBus.GetComponent<Collider2D>().enabled = false;
+        miniWhale.GetComponent<Collider2D>().enabled = false;
+        miniBuilding.GetComponent<Collider2D>().enabled = false;
     }
 
     void Update()
@@ -67,7 +79,10 @@ public class DragAndDropController : MonoBehaviour
             transform.position = correctDropZoneObject.transform.position;
             transform.rotation = correctDropZoneObject.transform.rotation;
             animator.SetTrigger("isRightDrop");
-            // Animation Event will call SpawnSpeechBubble at the end of the animation
+            
+
+            // Enable the collider of the corresponding miniature object
+            EnableMiniatureCollider();
         }
         else
         {
@@ -76,13 +91,36 @@ public class DragAndDropController : MonoBehaviour
         }
     }
 
-    // Method to be called by an Animation Event
     public void SpawnSpeechBubble()
     {
         GameObject speechBubble = Instantiate(speechBubblePrefab, speechBubbleContainer.position, Quaternion.identity);
         SpeechBubble bubbleController = speechBubble.GetComponent<SpeechBubble>();
         bubbleController.Setup(mechanicsPrefab, this);
-       /* bubbleController.SpawnMechanicsPrefab();*/
+        disableColliders();
+    }
+
+    void disableColliders()
+    {
+        Building.GetComponent<Collider2D>().enabled = false;
+        Whale.GetComponent<Collider2D>().enabled = false;
+        Bus.GetComponent<Collider2D>().enabled = false;
+    }
+    
+
+    void EnableMiniatureCollider()
+    {
+        switch (gameObject.name)
+        {
+            case "bus":
+                miniBus.GetComponent<Collider2D>().enabled = true;
+                break;
+            case "whale":
+                miniWhale.GetComponent<Collider2D>().enabled = true;
+                break;
+            case "building blocks":
+                miniBuilding.GetComponent<Collider2D>().enabled = true;
+                break;
+        }
     }
 
     bool IsCorrectDropZone()

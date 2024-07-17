@@ -31,6 +31,10 @@ public class ScratchCardController : MonoBehaviour
 
     private Button retryButtonComponent;
 
+    private void Awake()
+    {
+        LeanTween.init(1500);
+    }
     private void Start()
     {
         Debug.Log("Game Started: Initializing components.");
@@ -252,7 +256,7 @@ public class ScratchCardController : MonoBehaviour
 
         if (birdAnimator != null)
         {
-            birdAnimator.SetBool("IsFlying", true);
+            birdAnimator.SetBool("startWalking", true);
         }
         else
         {
@@ -262,30 +266,33 @@ public class ScratchCardController : MonoBehaviour
 
     public void Retry()
     {
-        StopAllCoroutines();
-        feedbackText.text = "Restarting...";
-        recordingStarted = false;
-        isSpawning = false;
+        StopAllCoroutines(); // Stop all coroutines to prevent conflicts and overlap.
+        feedbackText.text = "Restarting..."; // Update feedback text to inform the user.
 
         if (card1Processed && !card2Processed)
         {
+            // If card1 was processed but not card2, reset recAudio1 and start the process for card1 again.
             recAudio1 = null;
             StartCoroutine(PlayAudioAndRecord(Card1.transform, audio1));
         }
         else if (card2Processed)
         {
+            // If card2 was processed, reset recAudio2 and start the process for card2 again.
             recAudio2 = null;
             StartCoroutine(PlayAudioAndRecord(Card2.transform, audio2));
         }
 
+        // Reset the audio sources to ensure they are clean for a new start.
         ResetAudioSources();
 
+        // Re-enable colliders accordingly.
         Card1.GetComponent<Collider2D>().enabled = true;
-        Card2.GetComponent<Collider2D>().enabled = false;
+        Card2.GetComponent<Collider2D>().enabled = card1Processed; // Only enable Card2 if Card1 has been processed.
 
-        retryButton.SetActive(true);
-        LeanTween.scale(retryButton, Vector3.one, 0.5f).setEase(LeanTweenType.easeInBack);
+        retryButton.SetActive(true); // Make sure the retry button is visible.
+        LeanTween.scale(retryButton, Vector3.one, 0.5f).setEase(LeanTweenType.easeInBack); // Animate the retry button to reappear smoothly.
     }
+
 
     private void StopAllAudio()
     {
