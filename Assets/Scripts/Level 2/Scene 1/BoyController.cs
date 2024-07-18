@@ -49,7 +49,7 @@ public class BoyController : MonoBehaviour
 
         if (isWalkCompleted && !isTalking)
         {
-            if (animator.GetCurrentAnimatorStateInfo(0).IsName("Talk 1") &&
+            if (animator.GetCurrentAnimatorStateInfo(0).IsName("Idle_1") &&
                 animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
             {
                 isTalking = true;  // Marks the boy's talking phase as complete
@@ -68,6 +68,12 @@ public class BoyController : MonoBehaviour
                 collidersEnabled = true;  // Marks that colliders are now enabled                
             }
             
+        }
+
+        if (birdAnimator.GetCurrentAnimatorStateInfo(0).IsName("bird talk_") &&
+                birdAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
+        {
+            animator.SetBool("cleaningComplete", true);
         }
     }
 

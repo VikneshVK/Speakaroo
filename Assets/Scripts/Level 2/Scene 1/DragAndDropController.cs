@@ -25,6 +25,8 @@ public class DragAndDropController : MonoBehaviour
     private Quaternion originalRotation;
     private bool isDragging = false;
     private Renderer objectRenderer;
+   
+    
 
     void Start()
     {
@@ -86,13 +88,15 @@ public class DragAndDropController : MonoBehaviour
         }
         else
         {
-            boyAnimator.SetBool("isWrongDrop", true);
+            
             StartCoroutine(BlinkRedAndReset());
+            boyAnimator.SetBool("isWrongDrop", true);
         }
     }
 
     public void SpawnSpeechBubble()
     {
+        boyAnimator.SetBool("isRightDrop", false);
         GameObject speechBubble = Instantiate(speechBubblePrefab, speechBubbleContainer.position, Quaternion.identity);
         SpeechBubble bubbleController = speechBubble.GetComponent<SpeechBubble>();
         bubbleController.Setup(mechanicsPrefab, this);
@@ -138,7 +142,7 @@ public class DragAndDropController : MonoBehaviour
             objectRenderer.material.color = originalColor;
             yield return new WaitForSeconds(blinkDuration);
         }
-
+        boyAnimator.SetBool("isWrongDrop", false);
         transform.position = originalPosition;
         transform.rotation = originalRotation;
     }

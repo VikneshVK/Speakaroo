@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
 using System.Linq;
+using System;
 
 public class ParrotController : MonoBehaviour
 {
@@ -11,8 +12,10 @@ public class ParrotController : MonoBehaviour
     public Transform finalPositionWhale;
     public Transform finalPositionBus;
     public Transform finalPositionBuilding;
+    public Boolean cleaningCompleted;
     public float speed = 5.0f;
 
+    private AnchorGameObject anchor;
     private Animator animator;
     private SpriteRenderer spriteRenderer;
     private Vector3 startPosition;
@@ -28,6 +31,9 @@ public class ParrotController : MonoBehaviour
         animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         startPosition = transform.position;
+        anchor = GetComponent<AnchorGameObject>();
+        cleaningCompleted = false;
+        
         mainObjects = new Dictionary<string, GameObject>
         {
             {"bus S", mainBus},
@@ -44,6 +50,7 @@ public class ParrotController : MonoBehaviour
     {
         if (animator.GetBool("startWalking") && !isReturning)
         {
+            anchor.enabled = false;
             transform.Translate(speed * Time.deltaTime, 0, 0); // Move the parrot to the right
         }
 
@@ -54,6 +61,7 @@ public class ParrotController : MonoBehaviour
         if (pushedObjects.Count == requiredObjects.Count && !pushedObjects.Except(requiredObjects).Any())
         {
             animator.SetBool("cleaningDone", true); // All required objects have been pushed
+            cleaningCompleted = true;
         }
     }
 
@@ -115,6 +123,7 @@ public class ParrotController : MonoBehaviour
         {
             ResetAnimatorBooleans();
             spriteRenderer.flipX = true;
+            anchor.enabled = true;
             isReturning = false;
         }
     }

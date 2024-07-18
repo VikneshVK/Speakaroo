@@ -257,6 +257,7 @@ public class ScratchCardController : MonoBehaviour
         if (birdAnimator != null)
         {
             birdAnimator.SetBool("startWalking", true);
+            birdAnimator.SetBool("resetPosition", false);
         }
         else
         {
