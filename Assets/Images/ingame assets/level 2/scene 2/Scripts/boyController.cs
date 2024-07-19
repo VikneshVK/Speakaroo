@@ -13,6 +13,9 @@ public class boyController : MonoBehaviour
     public GameObject pillowSmallRight;
     public GameObject bedsheet;
 
+    // Reference to the PillowDragAndDrop script
+    public PillowDragAndDrop pillowDragAndDrop;
+
     private Animator animator;
     private SpriteRenderer spriteRenderer;
     private bool isWalking = false;
@@ -51,7 +54,34 @@ public class boyController : MonoBehaviour
         {
             EnableColliders();
         }
+
+        // Check if all pillows have been dropped and trigger the allDone animation parameter
+        if (PillowDragAndDrop.droppedPillowsCount == 4)  // Accessing static variable correctly
+        {
+            animator.SetBool("allDone", true);
+        }
+
+        Debug.Log("Current state: " + animator.GetCurrentAnimatorStateInfo(0).IsName("Talk 0"));
+        Debug.Log("Normalized time: " + animator.GetCurrentAnimatorStateInfo(0).normalizedTime);
+
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName("Talk 0") && animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.9f)
+        {
+            animator.SetBool("canWalk", true);
+            isWalking = true;
+
+            if (isWalking)
+            {
+                Debug.Log("Attempting to move left");
+                Debug.Log("Current position: " + transform.position);
+                Debug.Log("Walk speed: " + walkSpeed);
+
+                transform.position += Vector3.left * walkSpeed * Time.deltaTime;
+                Debug.Log("New position: " + transform.position);
+            }
+        }
+
     }
+
 
     private void MoveToStopPosition()
     {
@@ -77,7 +107,7 @@ public class boyController : MonoBehaviour
         if (pillowBigLeft != null) pillowBigLeft.GetComponent<Collider2D>().enabled = false;
         if (pillowSmallLeft != null) pillowSmallLeft.GetComponent<Collider2D>().enabled = false;
         if (pillowSmallRight != null) pillowSmallRight.GetComponent<Collider2D>().enabled = false;
-        
+
     }
 
     private void EnableColliders()
@@ -87,4 +117,3 @@ public class boyController : MonoBehaviour
         Debug.Log("Colliders enabled for interactive objects.");
     }
 }
-

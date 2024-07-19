@@ -12,7 +12,7 @@ public class PillowDragAndDrop : MonoBehaviour
     private Vector3 offset;
     private int originalSortingOrder;
     private SpriteRenderer spriteRenderer;
-    private static int droppedPillowsCount = 0;
+    public static int droppedPillowsCount = 0;
     private static int totalPillows = 4; // Total number of pillow objects
 
     private static bool bigPillowLeftDropped = false;
@@ -136,12 +136,12 @@ public class PillowDragAndDrop : MonoBehaviour
 
             Animator dustAnimator = dust.GetComponent<Animator>();
             dustAnimator.enabled = true;
-            /*if (dustAnimator != null)
+            if (dustAnimator != null)
             {
-                *//*dustAnimator.SetTrigger("dusting");*//* // Trigger the dusting animation
+                
                 StartCoroutine(DeactivateDustAfterAnimation(dustAnimator));
-            }*/
             }
+        }
         }
 
     private System.Collections.IEnumerator DeactivateDustAfterAnimation(Animator animator)
