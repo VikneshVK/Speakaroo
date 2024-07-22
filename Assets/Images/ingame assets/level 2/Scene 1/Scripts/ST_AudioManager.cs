@@ -1,21 +1,28 @@
 using UnityEngine;
 using System.Collections;
-using TMPro; // Ensure you have TMPro namespace included
-using UnityEngine.UI; // Ensure you have UI namespace included
+using TMPro;
+using UnityEngine.UI;
+using System;
 
 public class ST_AudioManager : MonoBehaviour
 {
     public static ST_AudioManager Instance;
     public AudioSource audioSourceCard1;
     public AudioSource audioSourceCard2;
+    public AudioSource recordedAudioSource;
     public float recordLength = 5f;
     public float highPitchFactor = 1.5f;
-    public GameObject ST_Canvas; // Assign the ST_Canvas in the Inspector
+    public GameObject ST_Canvas;
     private TextMeshProUGUI displayText;
     private Button retryButton;
-    private AudioSource currentAudioSource;
     private string currentCardTag;
     private bool isRetrying = false;
+
+    public event Action<int> OnRecordingComplete;
+    public event Action OnCard1PlaybackComplete;
+    public event Action OnCard2Interaction;
+    public event Action OnPlaybackComplete;
+    public event Action OnRetryClicked;
 
     private void Awake()
     {
@@ -43,27 +50,36 @@ public class ST_AudioManager : MonoBehaviour
 
         if (cardTag == "Card_1")
         {
-            currentAudioSource = audioSourceCard1;
-            StartCoroutine(PlayAudioAndRecord(currentAudioSource));
+            StartCoroutine(PlayOriginalClipAndRecord(audioSourceCard1, 1));
         }
         else if (cardTag == "Card_2")
         {
-            currentAudioSource = audioSourceCard2;
-            StartCoroutine(PlayAudioAndRecord(currentAudioSource));
+            OnCard2Interaction?.Invoke();
+            StartCoroutine(PlayOriginalClipAndRecord(audioSourceCard2, 2));
         }
     }
 
-    private IEnumerator PlayAudioAndRecord(AudioSource audioSource)
+    private IEnumerator PlayOriginalClipAndRecord(AudioSource originalAudioSource, int cardNumber)
     {
-        if (!isRetrying)
-        {
-            audioSource.Play();
-            yield return new WaitForSeconds(audioSource.clip.length);
-        }
+        originalAudioSource.Play();
+        yield return StartCoroutine(WaitForSecondsRealtime(originalAudioSource.clip.length));
 
-        displayText.text = "Listening ...!";
+        if (cardNumber == 1)
+        {
+            displayText.text = "Listening ...!";
+            StartCoroutine(RecordAndAnalyzeAudio(cardNumber));
+        }
+        else if (cardNumber == 2)
+        {
+            displayText.text = "Listening ...!";
+            StartCoroutine(RecordAndAnalyzeAudio(cardNumber));
+        }
+    }
+
+    private IEnumerator RecordAndAnalyzeAudio(int cardNumber)
+    {
         AudioClip recordedClip = Microphone.Start(null, false, Mathf.CeilToInt(recordLength), 44100);
-        yield return new WaitForSeconds(recordLength);
+        yield return StartCoroutine(WaitForSecondsRealtime(recordLength));
         Microphone.End(null);
 
         float[] samples = new float[Mathf.CeilToInt(44100 * recordLength)];
@@ -74,11 +90,33 @@ public class ST_AudioManager : MonoBehaviour
         if (detectedVoice)
         {
             displayText.text = "Did You Say?";
-            PlayRecordingWithFunnyVoice(recordedClip);
+            PlayRecordedClipWithFunnyVoice(recordedClip);
+            yield return StartCoroutine(WaitForSecondsRealtime(recordedClip.length));
         }
         else
         {
             displayText.text = "No sound detected.";
+        }
+
+        if (cardNumber == 1)
+        {
+            OnCard1PlaybackComplete?.Invoke();
+        }
+        else if (cardNumber == 2)
+        {
+            OnPlaybackComplete?.Invoke();
+        }
+
+        OnRecordingComplete?.Invoke(cardNumber);
+    }
+
+    private IEnumerator WaitForSecondsRealtime(float time)
+    {
+        float counter = 0;
+        while (counter < time)
+        {
+            counter += Time.deltaTime;
+            yield return null;
         }
     }
 
@@ -86,7 +124,7 @@ public class ST_AudioManager : MonoBehaviour
     {
         foreach (float sample in samples)
         {
-            if (Mathf.Abs(sample) > 0.01f) // Silence threshold
+            if (Mathf.Abs(sample) > 0.01f)
             {
                 return true;
             }
@@ -94,18 +132,17 @@ public class ST_AudioManager : MonoBehaviour
         return false;
     }
 
-    private void PlayRecordingWithFunnyVoice(AudioClip recordedClip)
+    private void PlayRecordedClipWithFunnyVoice(AudioClip recordedClip)
     {
-        currentAudioSource.pitch = highPitchFactor;
-        currentAudioSource.clip = recordedClip;
-        currentAudioSource.Play();
+        recordedAudioSource.pitch = highPitchFactor;
+        recordedAudioSource.clip = recordedClip;
+        recordedAudioSource.Play();
     }
 
     private void OnRetryButtonClick()
     {
-        isRetrying = true;
+        OnRetryClicked?.Invoke();
         StopAllCoroutines();
         PlayAudioAfterDestroy(currentCardTag);
-        isRetrying = false;
     }
 }
