@@ -16,7 +16,7 @@ public class ST_AudioManager : MonoBehaviour
     private TextMeshProUGUI displayText;
     private Button retryButton;
     private string currentCardTag;
-    private bool isRetrying = false;
+    /*private bool isRetrying = false;*/
 
     public event Action<int> OnRecordingComplete;
     public event Action OnCard1PlaybackComplete;
