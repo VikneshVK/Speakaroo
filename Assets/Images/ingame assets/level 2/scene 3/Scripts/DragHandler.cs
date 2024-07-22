@@ -10,11 +10,13 @@ public class DragHandler : MonoBehaviour
     private Vector2 originalPosition;
     private bool isDragging = false;
     private Collider2D objectCollider;
+    private AnchorGameObject anchor;
 
     void Start()
     {
         objectCollider = GetComponent<Collider2D>();
         objectCollider.enabled = false; // Initially disable all colliders
+        anchor = GetComponent<AnchorGameObject>();
     }
 
     void Update()
@@ -35,11 +37,16 @@ public class DragHandler : MonoBehaviour
 
     void OnMouseDown()
     {
+
         Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         if (objectCollider == Physics2D.OverlapPoint(mousePosition))
         {
             isDragging = true;
             originalPosition = transform.position;
+            if (anchor != null) 
+            {
+                anchor.enabled = false;
+            }
         }
     }
 
@@ -73,6 +80,7 @@ public class DragHandler : MonoBehaviour
             nextGameObject.GetComponent<Collider2D>().enabled = true;
         }
         Debug.Log("Total Correct Drops: " + dragManager.totalCorrectDrops);
+        Destroy(targetPosition.gameObject);
     }
 }
 

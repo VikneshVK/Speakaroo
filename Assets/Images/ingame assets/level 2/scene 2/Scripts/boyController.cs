@@ -20,6 +20,7 @@ public class boyController : MonoBehaviour
     private SpriteRenderer spriteRenderer;
     private bool isWalking = false;
     private bool hasReachedStopPosition = false;
+    private bool shouldContinueWalking = false;
 
     void Start()
     {
@@ -61,23 +62,24 @@ public class boyController : MonoBehaviour
             animator.SetBool("allDone", true);
         }
 
-        Debug.Log("Current state: " + animator.GetCurrentAnimatorStateInfo(0).IsName("Talk 0"));
-        Debug.Log("Normalized time: " + animator.GetCurrentAnimatorStateInfo(0).normalizedTime);
+        /*Debug.Log("Current state: " + animator.GetCurrentAnimatorStateInfo(0).IsName("Talk 0"));
+        Debug.Log("Normalized time: " + animator.GetCurrentAnimatorStateInfo(0).normalizedTime);*/
 
         if (animator.GetCurrentAnimatorStateInfo(0).IsName("Talk 0") && animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.9f)
         {
+            shouldContinueWalking = true;
+        }
+
+        if (shouldContinueWalking)
+        {
+            Debug.Log("Attempting to move left");
             animator.SetBool("canWalk", true);
-            isWalking = true;
+            spriteRenderer.flipX = false;
+            Debug.Log("Current position: " + transform.position);
+            Debug.Log("Walk speed: " + walkSpeed);
 
-            if (isWalking)
-            {
-                Debug.Log("Attempting to move left");
-                Debug.Log("Current position: " + transform.position);
-                Debug.Log("Walk speed: " + walkSpeed);
-
-                transform.position += Vector3.left * walkSpeed * Time.deltaTime;
-                Debug.Log("New position: " + transform.position);
-            }
+            transform.position += Vector3.left * walkSpeed * Time.deltaTime;
+            Debug.Log("New position: " + transform.position);
         }
 
     }

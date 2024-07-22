@@ -267,33 +267,43 @@ public class ScratchCardController : MonoBehaviour
 
     public void Retry()
     {
-        StopAllCoroutines(); // Stop all coroutines to prevent conflicts and overlap.
-        feedbackText.text = "Restarting..."; // Update feedback text to inform the user.
+        // Stop all coroutines and audio immediately
+        StopAllCoroutines();
+        StopAllAudio();
 
-        if (card1Processed && !card2Processed)
-        {
-            // If card1 was processed but not card2, reset recAudio1 and start the process for card1 again.
-            recAudio1 = null;
-            StartCoroutine(PlayAudioAndRecord(Card1.transform, audio1));
-        }
-        else if (card2Processed)
-        {
-            // If card2 was processed, reset recAudio2 and start the process for card2 again.
-            recAudio2 = null;
-            StartCoroutine(PlayAudioAndRecord(Card2.transform, audio2));
-        }
-
-        // Reset the audio sources to ensure they are clean for a new start.
+        // Reset feedback text and audio sources
+        feedbackText.text = "Restarting...";
         ResetAudioSources();
 
-        // Re-enable colliders accordingly.
-        Card1.GetComponent<Collider2D>().enabled = true;
-        Card2.GetComponent<Collider2D>().enabled = card1Processed; // Only enable Card2 if Card1 has been processed.
+        // Reset processed flags
+        card1Processed = false;
+        card2Processed = false;
 
-        retryButton.SetActive(true); // Make sure the retry button is visible.
-        LeanTween.scale(retryButton, Vector3.one, 0.5f).setEase(LeanTweenType.easeInBack); // Animate the retry button to reappear smoothly.
+        // Reset colliders
+        Card1.GetComponent<Collider2D>().enabled = true;
+        Card2.GetComponent<Collider2D>().enabled = false;
+
+        // Destroy all mask prefabs
+        DestroyAllMasks(Card1.transform);
+        DestroyAllMasks(Card2.transform);
+
+        // Re-initialize retry button
+        retryButton.SetActive(true);
+        LeanTween.scale(retryButton, Vector3.zero, 0.5f).setEase(LeanTweenType.easeOutBack);
+
+        feedbackText.text = "Ready to try again!";
     }
 
+    private void DestroyAllMasks(Transform parent)
+    {
+        foreach (Transform child in parent)
+        {
+            if (child.gameObject.CompareTag("Mask"))
+            {
+                Destroy(child.gameObject);
+            }
+        }
+    }
 
     private void StopAllAudio()
     {

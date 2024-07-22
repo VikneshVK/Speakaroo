@@ -64,6 +64,7 @@ public class BirdController : MonoBehaviour
     {
         if (other.CompareTag("BrushHolder"))
         {
+            other.GetComponent<Collider2D>().enabled = false;
             StopFlying();
             StartCoroutine(TriggerBrushKnockAtMidpoint());
         }

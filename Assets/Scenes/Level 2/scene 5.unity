@@ -1079,7 +1079,7 @@ MonoBehaviour:
   pillowSmallLeft: {fileID: 1739629795}
   pillowSmallRight: {fileID: 926076959}
   bedsheet: {fileID: 797688688}
-  pillowDragAndDrop: {fileID: 0}
+  pillowDragAndDrop: {fileID: 391338652}
 --- !u!1 &926076959
 GameObject:
   m_ObjectHideFlags: 0
@@ -1339,7 +1339,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -0.060240746, y: 1.54, z: 0}
-  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_LocalScale: {x: 2.2, y: 2.2, z: 2.2}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
@@ -2261,6 +2261,7 @@ GameObject:
   - component: {fileID: 1681356260}
   - component: {fileID: 1681356259}
   - component: {fileID: 1681356262}
+  - component: {fileID: 1681356263}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -2386,6 +2387,23 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
+--- !u!114 &1681356263
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1681356258}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fdb816bb937a8f944a622578cbe76994, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  wireColor: {r: 1, g: 1, b: 1, a: 1}
+  UnitsSize: 20
+  constraint: 1
+  camera: {fileID: 1681356260}
+  executeInUpdate: 1
 --- !u!1 &1681664023
 GameObject:
   m_ObjectHideFlags: 0
