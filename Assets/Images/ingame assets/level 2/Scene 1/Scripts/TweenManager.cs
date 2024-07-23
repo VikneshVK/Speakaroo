@@ -3,6 +3,7 @@ using System.Collections;
 
 public class TweenManager : MonoBehaviour
 {
+    public bool speechTherapyCompleted = false;
     private Animator birdAnimator;
     private bool isRetryClicked = false;
 
@@ -62,6 +63,7 @@ public class TweenManager : MonoBehaviour
         // Wait for the children to finish tweening
         LeanTween.delayedCall(0.5f, () =>
         {
+             speechTherapyCompleted = true;
             // Set the animator parameters for the bird
             if (birdAnimator != null)
             {
