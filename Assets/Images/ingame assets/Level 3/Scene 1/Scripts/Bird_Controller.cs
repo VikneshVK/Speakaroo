@@ -13,7 +13,7 @@ public class Bird_Controller : MonoBehaviour
     private Animator boyAnimator;
     private bool isFlying = false;
     private bool isIdleCompleted = false;
-    private bool isFlyingCompleted = false;
+    /*private bool isFlyingCompleted = false;*/
     private bool collidersEnabled = false; // To ensure colliders are enabled only once
 
     void Start()
@@ -51,7 +51,7 @@ public class Bird_Controller : MonoBehaviour
             if (Mathf.Abs(birdStopPosition.position.x - transform.position.x) <= 0.1f)
             {
                 isFlying = false;
-                isFlyingCompleted = true;
+                /*isFlyingCompleted = true;*/
                 animator.SetBool("canFly", false);
             }
         }

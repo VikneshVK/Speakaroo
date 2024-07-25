@@ -1,25 +1,27 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
-public class tube : MonoBehaviour
+public class Tube : MonoBehaviour
 {
-    public int lenth;
+    public int length;
     public LineRenderer lineRend;
     public Vector3[] segmentPoses;
     public Transform targetDir;
     public float targetDistance;
     public float smoothSpeed;
+    public GameObject mainGameobject;
 
-    private int segments = 15;
     private Vector3[] segmentV;
+    private SpriteRenderer spriteRenderer;
 
     private void Start()
     {
-
-        lineRend.positionCount = lenth;
-        segmentPoses = new Vector3[lenth];
-        segmentV = new Vector3[lenth];
+        lineRend.positionCount = length;
+        segmentPoses = new Vector3[length];
+        segmentV = new Vector3[length];
+        spriteRenderer = mainGameobject.GetComponent<SpriteRenderer>();  // Ensure this is correctly assigned
     }
 
     private void Update()
@@ -28,8 +30,11 @@ public class tube : MonoBehaviour
 
         for (int i = 1; i < segmentPoses.Length; i++)
         {
+            // Adjust the target direction based on flipY state
+            Vector3 adjustedTargetDir = spriteRenderer.flipY ? -targetDir.right : targetDir.right;
+
             segmentPoses[i] = Vector3.SmoothDamp(segmentPoses[i], segmentPoses[i - 1] +
-                targetDir.right * (targetDistance/2), ref segmentV[i], smoothSpeed);
+                adjustedTargetDir * targetDistance, ref segmentV[i], smoothSpeed);
         }
 
         lineRend.SetPositions(segmentPoses);
