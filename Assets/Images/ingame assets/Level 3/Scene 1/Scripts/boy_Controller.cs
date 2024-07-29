@@ -6,6 +6,7 @@ public class boy_Controlelr : MonoBehaviour
 {
     public Transform stopPosition;    
     public float walkSpeed = 2f;
+    public GameObject Bird;
     
 
     private Animator animator;
@@ -18,6 +19,7 @@ public class boy_Controlelr : MonoBehaviour
     {
         animator = GetComponent<Animator>();        
         spriteRenderer = GetComponent<SpriteRenderer>();
+        birdAnimator = Bird.GetComponent<Animator>();
     }
 
     // Update is called once per frame

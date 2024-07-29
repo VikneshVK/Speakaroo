@@ -5,16 +5,13 @@ using UnityEngine;
 public class spin : MonoBehaviour
 {
     public Vector3 rotateAmount;
-    public float rotateTime;
-    // Start is called before the first frame update
-    void Start()
-    {
+    public float rotateTime = 1f;  // Default to 1 to prevent division by zero
 
-    }
-
-    // Update is called once per frame
     void Update()
     {
-        transform.Rotate(rotateAmount * Time.deltaTime / rotateTime);
+        if (rotateTime > 0f)  // Ensure rotateTime is positive
+        {
+            transform.Rotate(rotateAmount * Time.deltaTime / rotateTime);
+        }
     }
 }

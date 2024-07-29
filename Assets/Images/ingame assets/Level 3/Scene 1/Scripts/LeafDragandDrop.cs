@@ -17,12 +17,18 @@ public class LeafDragAndDrop : MonoBehaviour
     private Vector3 offset;
     private Vector3 startPosition;
 
+    
+    private AnchorGameObject anchorGameObjectScript;
+
     private void Start()
     {
         startPosition = transform.position;
         binAnimator = bin.GetComponent<Animator>();
         leavesAnimator = spareLeaves.GetComponent<Animator>();
         smokeAnimator = trashCanSmoke.GetComponent<Animator>();
+
+        
+        anchorGameObjectScript = GetComponent<AnchorGameObject>(); 
     }
 
     private void Update()
@@ -42,6 +48,12 @@ public class LeafDragAndDrop : MonoBehaviour
             Vector3 mousePosition = new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10);
             offset = transform.position - Camera.main.ScreenToWorldPoint(mousePosition);
             dragging = true;
+
+            
+            if (anchorGameObjectScript != null)
+            {
+                anchorGameObjectScript.enabled = false;
+            }
         }
     }
 
