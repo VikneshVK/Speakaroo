@@ -2,12 +2,12 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SpeechBubble_Baloons : MonoBehaviour
+public class SpeechBubble_Balloons : MonoBehaviour
 {
     public GameObject prefabToSpawn;
     public GameObject[] balloonPrefabs; // Array to hold different balloon prefabs
-    public int balloonCount = 10; // Number of balloons to spawn
-    public float balloonSpeed = 2f; // Speed at which balloons move
+    public int balloonCount = 20; // Number of balloons to spawn
+    public float balloonSpeed = 10f; // Speed at which balloons move (increased for faster movement)
     private Dictionary<Transform, Vector3> originalScales = new Dictionary<Transform, Vector3>();
 
     private Collider2D objectCollider;
@@ -78,10 +78,11 @@ public class SpeechBubble_Baloons : MonoBehaviour
             GameObject balloon = Instantiate(balloonPrefab, spawnPosition, Quaternion.identity);
 
             // Set the target position directly above the spawn position
-            Vector3 moveTarget = new Vector3(spawnPosition.x, Camera.main.ViewportToWorldPoint(new Vector3(0f, 1.2f, Camera.main.nearClipPlane + 5f)).y, 0);
+            Vector3 moveTarget = new Vector3(spawnPosition.x, Camera.main.ViewportToWorldPoint(new Vector3(spawnPosition.x, 1.2f, Camera.main.nearClipPlane + 5f)).y, 0);
 
-            LeanTween.move(balloon, moveTarget, balloonSpeed).setOnComplete(() => Destroy(balloon));
-            yield return new WaitForSeconds(0.2f); // Delay between balloon spawns
+            // Use balloonSpeed as the duration directly for faster movement
+            LeanTween.move(balloon, moveTarget, 1f / balloonSpeed).setOnComplete(() => Destroy(balloon));
+            yield return new WaitForSeconds(0.2f); // Decreased delay between balloon spawns
         }
         onComplete?.Invoke(); // Call the onComplete action after all balloons are spawned
     }
