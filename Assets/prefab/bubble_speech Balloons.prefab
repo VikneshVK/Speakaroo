@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2752934136967514722}
   - component: {fileID: 2415521729880175096}
   - component: {fileID: 2672854043516699021}
-  - component: {fileID: 7623848106974148603}
+  - component: {fileID: 3971432974025621102}
   m_Layer: 0
   m_Name: bubble_speech Balloons
   m_TagString: Untagged
@@ -131,7 +131,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 7.8, y: 7.11}
   m_EdgeRadius: 0
---- !u!114 &7623848106974148603
+--- !u!114 &3971432974025621102
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -140,6 +140,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 2720721835439482840}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c9910a6fea9a3444ba4d53932359a3fb, type: 3}
+  m_Script: {fileID: 11500000, guid: 4a35b907d52893d4281d113d010202ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  prefabToSpawn: {fileID: 2604101911739624177, guid: 0b6ece04fb99dbd4da13074a3f64217c, type: 3}
+  balloonPrefabs:
+  - {fileID: 5212196212075300466, guid: b6ba3f68dd29d004389015080cf49a5d, type: 3}
+  - {fileID: 3950397747086539872, guid: 8204f46d924c17c4881c230d4393b41b, type: 3}
+  - {fileID: 3924332530084411020, guid: b85f2636c224188498c2029c6c907dc2, type: 3}
+  balloonCount: 10
+  balloonSpeed: 2

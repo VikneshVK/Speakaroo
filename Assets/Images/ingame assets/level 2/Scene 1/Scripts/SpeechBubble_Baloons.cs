@@ -7,7 +7,7 @@ public class SpeechBubble_Balloons : MonoBehaviour
     public GameObject prefabToSpawn;
     public GameObject[] balloonPrefabs; // Array to hold different balloon prefabs
     public int balloonCount = 20; // Number of balloons to spawn
-    public float balloonSpeed = 10f; // Speed at which balloons move (increased for faster movement)
+    public float balloonSpeed = 5f; // Speed at which balloons move (increased for faster movement)
     private Dictionary<Transform, Vector3> originalScales = new Dictionary<Transform, Vector3>();
 
     private Collider2D objectCollider;
