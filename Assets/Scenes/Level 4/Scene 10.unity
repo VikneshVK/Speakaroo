@@ -132,6 +132,7 @@ GameObject:
   m_Component:
   - component: {fileID: 30121631}
   - component: {fileID: 30121630}
+  - component: {fileID: 30121632}
   m_Layer: 0
   m_Name: open-fridge
   m_TagString: Untagged
@@ -200,7 +201,7 @@ Transform:
   m_GameObject: {fileID: 30121629}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 10.64, y: -0.18239999, z: 0}
+  m_LocalPosition: {x: 12.506666, y: 0, z: 0}
   m_LocalScale: {x: 2.1857092, y: 2.1857092, z: 2.1857092}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -209,6 +210,21 @@ Transform:
   - {fileID: 1730279385}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &30121632
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 30121629}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b67dda73a78d4b149aea233d3ef42090, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  executeInUpdate: 1
+  anchorType: 5
+  anchorOffset: {x: -6.16, y: 0, z: 0}
 --- !u!1 &68615489
 GameObject:
   m_ObjectHideFlags: 0
@@ -303,6 +319,7 @@ GameObject:
   m_Component:
   - component: {fileID: 107064328}
   - component: {fileID: 107064327}
+  - component: {fileID: 107064329}
   m_Layer: 0
   m_Name: ketail
   m_TagString: Untagged
@@ -371,12 +388,27 @@ Transform:
   m_GameObject: {fileID: 107064326}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.38, y: 1.28, z: 0}
+  m_LocalPosition: {x: 1.3233337, y: 1.42, z: 0}
   m_LocalScale: {x: 1.5445, y: 1.5445, z: 1.5445}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &107064329
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 107064326}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b67dda73a78d4b149aea233d3ef42090, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  executeInUpdate: 1
+  anchorType: 3
+  anchorOffset: {x: 19.99, y: 1.42, z: 0}
 --- !u!1 &111855913
 GameObject:
   m_ObjectHideFlags: 0
@@ -639,6 +671,7 @@ GameObject:
   m_Component:
   - component: {fileID: 649937173}
   - component: {fileID: 649937172}
+  - component: {fileID: 649937174}
   m_Layer: 0
   m_Name: plant 2
   m_TagString: Untagged
@@ -707,12 +740,27 @@ Transform:
   m_GameObject: {fileID: 649937171}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 14.34, y: -4.76, z: 0}
+  m_LocalPosition: {x: 15.786666, y: -5.33, z: 0}
   m_LocalScale: {x: 1.4667, y: 1.4667, z: 1.4667}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &649937174
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 649937171}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b67dda73a78d4b149aea233d3ef42090, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  executeInUpdate: 1
+  anchorType: 5
+  anchorOffset: {x: -2.88, y: -5.33, z: 0}
 --- !u!1 &772328353
 GameObject:
   m_ObjectHideFlags: 0
@@ -807,6 +855,7 @@ GameObject:
   m_Component:
   - component: {fileID: 830670843}
   - component: {fileID: 830670842}
+  - component: {fileID: 830670844}
   m_Layer: 0
   m_Name: kitchen-stand
   m_TagString: Untagged
@@ -875,12 +924,27 @@ Transform:
   m_GameObject: {fileID: 830670841}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -7.95, y: -4, z: 0}
+  m_LocalPosition: {x: -7.446666, y: -3.92, z: 0}
   m_LocalScale: {x: 1.82, y: 1.82, z: 1.82}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &830670844
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 830670841}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b67dda73a78d4b149aea233d3ef42090, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  executeInUpdate: 1
+  anchorType: 3
+  anchorOffset: {x: 11.22, y: -3.92, z: 0}
 --- !u!1 &842223181
 GameObject:
   m_ObjectHideFlags: 0
@@ -891,6 +955,7 @@ GameObject:
   m_Component:
   - component: {fileID: 842223183}
   - component: {fileID: 842223182}
+  - component: {fileID: 842223184}
   m_Layer: 0
   m_Name: cutting-board
   m_TagString: Untagged
@@ -959,12 +1024,27 @@ Transform:
   m_GameObject: {fileID: 842223181}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -8.25, y: 3.52, z: 0}
+  m_LocalPosition: {x: -9.716666, y: 4.14, z: 0}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &842223184
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 842223181}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b67dda73a78d4b149aea233d3ef42090, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  executeInUpdate: 1
+  anchorType: 3
+  anchorOffset: {x: 8.95, y: 4.14, z: 0}
 --- !u!1 &928436308
 GameObject:
   m_ObjectHideFlags: 0
@@ -977,6 +1057,7 @@ GameObject:
   - component: {fileID: 928436310}
   - component: {fileID: 928436309}
   - component: {fileID: 928436312}
+  - component: {fileID: 928436313}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1027,7 +1108,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 10
+  orthographic size: 10.5
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -1102,6 +1183,23 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
+--- !u!114 &928436313
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 928436308}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fdb816bb937a8f944a622578cbe76994, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  wireColor: {r: 1, g: 1, b: 1, a: 1}
+  UnitsSize: 21
+  constraint: 1
+  camera: {fileID: 928436310}
+  executeInUpdate: 1
 --- !u!1 &1509205032
 GameObject:
   m_ObjectHideFlags: 0
@@ -1181,7 +1279,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.39, y: -0.80127, z: 0}
-  m_LocalScale: {x: 1.8556, y: 1.8556, z: 1.8556}
+  m_LocalScale: {x: 2.28, y: 2.28, z: 2.28}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
@@ -1196,6 +1294,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1667284363}
   - component: {fileID: 1667284362}
+  - component: {fileID: 1667284364}
   m_Layer: 0
   m_Name: cleaning-cloth
   m_TagString: Untagged
@@ -1264,12 +1363,27 @@ Transform:
   m_GameObject: {fileID: 1667284361}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -16.51, y: 2.6499999, z: 0}
+  m_LocalPosition: {x: -15.906666, y: 4.14, z: 0}
   m_LocalScale: {x: 1.67, y: 1.67, z: 1.67}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1667284364
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1667284361}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b67dda73a78d4b149aea233d3ef42090, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  executeInUpdate: 1
+  anchorType: 3
+  anchorOffset: {x: 2.76, y: 4.14, z: 0}
 --- !u!1 &1713721330
 GameObject:
   m_ObjectHideFlags: 0
@@ -1784,6 +1898,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2127180995}
   - component: {fileID: 2127180994}
+  - component: {fileID: 2127180996}
   m_Layer: 0
   m_Name: karandi
   m_TagString: Untagged
@@ -1852,12 +1967,27 @@ Transform:
   m_GameObject: {fileID: 2127180993}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -3.79, y: 3.3899999, z: 0}
+  m_LocalPosition: {x: -4.3066664, y: 4.4, z: 0}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2127180996
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2127180993}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b67dda73a78d4b149aea233d3ef42090, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  executeInUpdate: 1
+  anchorType: 3
+  anchorOffset: {x: 14.36, y: 4.4, z: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
