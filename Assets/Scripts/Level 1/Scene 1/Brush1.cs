@@ -8,7 +8,6 @@ public class Brush1 : MonoBehaviour
     private GameObject foam;
     private ParticleSystem foamParticles;
     private GameObject Boy;
-    private Sprite brushBack;
     public float zoomSize = 5f;
     public float zoomDuration = 2f;
     public float hoverDuration = 5f;
@@ -109,7 +108,6 @@ public class Brush1 : MonoBehaviour
                         isHovering = true;
                         foamParticles.Play();
                         brushSpriteRenderer.sprite = brushBackSprite;
-                       /* transform.rotation = Quaternion.Euler(0, 0, 90); // Rotate 90 degrees on z-axis*/
                         StartCoroutine(HandleHover());
                     }
                 }
