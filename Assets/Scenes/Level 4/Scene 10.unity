@@ -167,6 +167,7 @@ MonoBehaviour:
   - {fileID: 1614735081}
   - {fileID: 1656148530}
   - {fileID: 1210617036}
+  prefabSpawned: 0
 --- !u!95 &11706190
 Animator:
   serializedVersion: 5
@@ -1458,7 +1459,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 6
+  m_SortingOrder: 10
   m_Sprite: {fileID: 21300000, guid: 191c71b568a79f040b9cfb2eeb670792, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 1
@@ -1520,6 +1521,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dropLocation: {fileID: 906875454}
   startPosition: {fileID: 1601795546}
+  boy: {fileID: 11706188}
+  parrotSpriteRenderer: {fileID: 1421998272}
   flySpeed: 8
 --- !u!1 &1476618656
 GameObject:

@@ -21,7 +21,7 @@ public class JojoController : MonoBehaviour
 
     private bool isWalking = false;
     private bool isIdleCompleted = false;
-    private bool prefabSpawned = false; // To ensure the initial prefab is spawned only once
+    public bool prefabSpawned = false; // To ensure the initial prefab is spawned only once
     private bool fridgeColliderEnabled = false; // To ensure the fridge collider is enabled only once
     private bool spriteChanged = false; // To track if the fridge sprite has been changed
 
@@ -47,9 +47,14 @@ public class JojoController : MonoBehaviour
     void Update()
     {
         HandleIdleCompletion();
-        HandleWalking();        
+        HandleWalking();
         CheckAndEnableFridgeCollider();
-        CheckAndSpawnPrefab();
+
+        // Continuously check and spawn the prefab as long as itemsDropped < 3
+        if (KikiController.itemsDropped < 3)
+        {
+            CheckAndSpawnPrefab();
+        }
     }
 
     private void HandleIdleCompletion()
@@ -89,7 +94,7 @@ public class JojoController : MonoBehaviour
         }
     }
 
-    private void CheckAndSpawnPrefab()
+    public void CheckAndSpawnPrefab()
     {
         if (!prefabSpawned && animator.GetCurrentAnimatorStateInfo(0).IsName("Talk 2") &&
             animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.9f)
@@ -97,12 +102,12 @@ public class JojoController : MonoBehaviour
             if (prefabToSpawn != null && spawnLocation != null)
             {
                 Instantiate(prefabToSpawn, spawnLocation.position, spawnLocation.rotation);
-                prefabSpawned = true; // Prevents multiple spawning
+                prefabSpawned = true;
             }
         }
     }
 
-    private void CheckAndEnableFridgeCollider()
+    public void CheckAndEnableFridgeCollider()
     {
         if (!fridgeColliderEnabled && animator.GetCurrentAnimatorStateInfo(0).IsName("Talk") &&
             animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.9f)
@@ -126,6 +131,7 @@ public class JojoController : MonoBehaviour
             {
                 fridgeSpriteRenderer.sprite = newSprite;
                 spriteChanged = true;
+                fridgeCollider.enabled = false;
 
                 // Spawn additional prefabs at specified locations
                 for (int i = 0; i < prefabsToSpawnAfterSpriteChange.Length; i++)

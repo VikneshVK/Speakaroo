@@ -1,169 +1,200 @@
 using UnityEngine;
+using System.Collections;
 
 public class KikiController : MonoBehaviour
 {
     public static int itemsDropped = 0;
 
-    public Transform dropLocation; // Reference to the drop location
-    public Transform startPosition; // Reference to the start position
+    public Transform dropLocation;
+    public Transform startPosition;
+    public GameObject boy;
+    public SpriteRenderer parrotSpriteRenderer;
 
-    public float flySpeed = 2f; // Speed at which Kiki flies
+    public float flySpeed = 2f;
 
     private Animator birdAnimator;
+    private Animator boyAnimator;
     private GameObject currentItem;
-    private GameObject iceCream;
-    private GameObject cookies;
-    private GameObject apples;
-    private int itemIndex = 0; // To track which item to handle next
+    private JojoController jojoController;
 
     private Vector3 targetPosition;
-    private bool isMoving = false; // Indicates whether the character is currently moving
-    private System.Action onComplete;
+    private bool isMoving = false;
+
+    private enum BirdState
+    {
+        Idle,
+        FlyingToItem,
+        PickingUpItem,
+        FlyingToDropLocation,
+        DroppingItem,
+        ReturningToStart
+    }
+
+    private BirdState currentState = BirdState.Idle;
 
     void Start()
     {
         birdAnimator = GetComponent<Animator>();
+        boyAnimator = boy.GetComponent<Animator>();
+        transform.position = startPosition.position;
 
-        // Find items by their tags
-        iceCream = GameObject.FindGameObjectWithTag("IceCream");
-        cookies = GameObject.FindGameObjectWithTag("Cookies");
-        apples = GameObject.FindGameObjectWithTag("Apples");
-
-        transform.position = startPosition.position; // Initialize to start position
+        jojoController = boy.GetComponent<JojoController>();
     }
 
     void Update()
     {
-        if (isMoving)
+        switch (currentState)
         {
-            MoveToTarget();
-        }
-        else
-        {
-            HandleFlying();
-            HandlePositionReached();
-            HandleItemPicked();
-            HandleItemDropped();
+            case BirdState.Idle:
+                CheckStartFlying();
+                break;
+
+            case BirdState.FlyingToItem:
+            case BirdState.FlyingToDropLocation:
+            case BirdState.ReturningToStart:
+                MoveToTarget();
+                break;
+
+            case BirdState.PickingUpItem:
+                CheckPickupCompletion();
+                break;
+
+            case BirdState.DroppingItem:
+                CheckDropCompletion();
+                break;
         }
     }
 
-    private void HandleFlying()
+    private void CheckStartFlying()
     {
         if (birdAnimator.GetBool("startFlying"))
         {
+            UpdateItemReferences();
             currentItem = GetCurrentItem();
             if (currentItem != null)
             {
                 birdAnimator.SetBool("startFlying", false);
+                currentState = BirdState.FlyingToItem;
                 targetPosition = currentItem.transform.position;
-                onComplete = OnReachItemPosition;
-                isMoving = true; // Start moving towards the item
+                isMoving = true;
             }
         }
     }
 
     private GameObject GetCurrentItem()
     {
-        switch (itemIndex)
+        switch (itemsDropped)
         {
             case 0:
-                return iceCream;
+                return GameObject.FindGameObjectWithTag("IceCream");
             case 1:
-                return cookies;
+                return GameObject.FindGameObjectWithTag("Cookies");
             case 2:
-                return apples;
+                return GameObject.FindGameObjectWithTag("Apples");
             default:
                 birdAnimator.SetBool("allDone", true);
                 return null;
         }
     }
 
-    private void HandlePositionReached()
-    {
-        if (birdAnimator.GetBool("positionReached"))
-        {
-            PickupItem();
-        }
-    }
-
-    private void PickupItem()
-    {
-        if (currentItem != null && birdAnimator.GetBool("positionReached"))
-        {
-            currentItem.transform.SetParent(transform);
-            birdAnimator.SetBool("itemPicked", true);
-            birdAnimator.SetBool("positionReached", false);
-            targetPosition = dropLocation.position;
-            onComplete = OnReachDropLocation;
-            isMoving = true; // Start moving towards the drop location
-        }
-    }
-
-    private void HandleItemPicked()
-    {
-        // This function is kept for logical separation, but the movement is handled in HandleFlying and PickupItem
-    }
-
-    private void DropItem()
-    {
-        if (currentItem != null)
-        {
-            currentItem.transform.SetParent(null);
-            currentItem.transform.position = dropLocation.position;
-            currentItem = null;
-            birdAnimator.SetBool("itemDropped", true);
-            birdAnimator.SetBool("positionReached", false);
-        }
-    }
-
-    private void HandleItemDropped()
-    {
-        if (birdAnimator.GetBool("itemDropped"))
-        {
-            itemsDropped++;
-            itemIndex++;
-            birdAnimator.SetBool("itemDropped", false);
-            if (itemIndex < 3)
-            {
-                birdAnimator.SetBool("startFlying", true);
-            }
-            else
-            {
-                birdAnimator.SetBool("allDone", true);
-            }
-
-            targetPosition = startPosition.position;
-            onComplete = OnReturnToStart;
-            isMoving = true; // Start moving back to start position
-        }
-    }
-
     private void MoveToTarget()
     {
+        if (!isMoving) return;
+
         transform.position = Vector3.MoveTowards(transform.position, targetPosition, flySpeed * Time.deltaTime);
 
         if (Vector3.Distance(transform.position, targetPosition) < 0.1f)
         {
-            onComplete?.Invoke();
-            onComplete = null; // Reset the callback
-            isMoving = false; // Stop moving
+            isMoving = false;
+            OnReachTarget();
         }
     }
 
-    private void OnReachItemPosition()
+    private void OnReachTarget()
     {
-        birdAnimator.SetBool("positionReached", true);
+        switch (currentState)
+        {
+            case BirdState.FlyingToItem:
+                birdAnimator.SetBool("positionReached", true);
+                currentState = BirdState.PickingUpItem;
+                break;
+
+            case BirdState.FlyingToDropLocation:
+                birdAnimator.SetBool("positionReached", true);
+                birdAnimator.SetBool("itemPicked", false); // Reset itemPicked before dropping
+                currentState = BirdState.DroppingItem;
+                break;
+
+            case BirdState.ReturningToStart:
+                OnReturnToStart();
+                currentState = BirdState.Idle;
+                break;
+        }
     }
 
-    private void OnReachDropLocation()
+    private void CheckPickupCompletion()
     {
-        DropItem();
-        birdAnimator.SetBool("positionReached", true);
+        if (birdAnimator.GetCurrentAnimatorStateInfo(0).IsName("pick up") &&
+            birdAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
+        {
+            currentItem.transform.SetParent(transform);
+            birdAnimator.SetBool("itemPicked", true);
+            birdAnimator.SetBool("positionReached", false);
+            parrotSpriteRenderer.flipX = false;
+            currentState = BirdState.FlyingToDropLocation;
+            targetPosition = dropLocation.position;
+            isMoving = true;
+        }
+    }
+
+    private void CheckDropCompletion()
+    {
+        if (birdAnimator.GetCurrentAnimatorStateInfo(0).IsName("drop") &&
+            birdAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
+        {
+            currentItem.transform.SetParent(null);
+            currentItem.transform.position = dropLocation.position;
+            birdAnimator.SetBool("itemDropped", true);
+            birdAnimator.SetBool("positionReached", false);
+            currentState = BirdState.ReturningToStart;
+            targetPosition = startPosition.position;
+            isMoving = true;
+        }
     }
 
     private void OnReturnToStart()
     {
-        // Logic when the parrot returns to the start position
-        // This can be used to trigger any additional behaviors
+        birdAnimator.SetBool("positionReached", true);
+        parrotSpriteRenderer.flipX = true;
+        itemsDropped++;
+        Debug.Log("itemDropped: " + itemsDropped);
+
+        if (itemsDropped == 3)
+        {
+            birdAnimator.SetBool("allDone", true);
+        }
+        else
+        {
+            boyAnimator.SetTrigger("talk2");
+            jojoController.CheckAndSpawnPrefab();
+        }
+        currentState = BirdState.Idle;
+        StartCoroutine(ResetPositionReachedAfterDelay());
+    }
+
+    private IEnumerator ResetPositionReachedAfterDelay()
+    {
+        yield return new WaitForSeconds(0.1f);
+
+        birdAnimator.SetBool("positionReached", false);
+        birdAnimator.SetBool("startFlying", false);
+        birdAnimator.SetBool("itemPicked", false);
+        birdAnimator.SetBool("itemDropped", false);
+        jojoController.prefabSpawned = false;
+    }
+
+    public void UpdateItemReferences()
+    {
+        currentItem = null; // Reset currentItem
     }
 }
