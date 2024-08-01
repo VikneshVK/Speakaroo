@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class TweeningController : MonoBehaviour
 {
-    [SerializeField] private bool isSecondTime = false;
+    public bool isSecondTime = false;
 
     [Header("Set 1 Game Objects and Target Positions")]
     public GameObject[] set1Objects;
