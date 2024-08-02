@@ -156,7 +156,7 @@ MonoBehaviour:
   stopPosition: {fileID: 645123786}
   walkSpeed: 5
   Bird: {fileID: 1421998271}
-  prefabToSpawn: {fileID: 2720721835439482840, guid: ea65c1e53bd09f74abcaab50e97ccb5c, type: 3}
+  prefabToSpawn: {fileID: 2720721835439482840, guid: 08d5208dd67bee449ac25b4150ec9560, type: 3}
   spawnLocation: {fileID: 1476618657}
   fridge: {fileID: 30121629}
   prefabsToSpawnAfterSpriteChange:
@@ -412,7 +412,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 30121629}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f70ddff39985e794fa6025cbe6d18d39, type: 3}
+  m_Script: {fileID: 11500000, guid: 64e27c2d543f67f43bc52a77e45448f3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   Boy: {fileID: 11706188}
@@ -1410,8 +1410,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1421998273}
   - component: {fileID: 1421998272}
-  - component: {fileID: 1421998274}
   - component: {fileID: 1421998275}
+  - component: {fileID: 1421998274}
   m_Layer: 0
   m_Name: parrot
   m_TagString: Bird
@@ -1516,14 +1516,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 1421998271}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 15c762f3102930b42b7abe1bda01285a, type: 3}
+  m_Script: {fileID: 11500000, guid: 0d65ef9c32fff654889b65d6b0ec6072, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   dropLocation: {fileID: 906875454}
   startPosition: {fileID: 1601795546}
   boy: {fileID: 11706188}
   parrotSpriteRenderer: {fileID: 1421998272}
-  flySpeed: 8
+  flySpeed: 5
 --- !u!1 &1476618656
 GameObject:
   m_ObjectHideFlags: 0

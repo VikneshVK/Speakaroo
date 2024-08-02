@@ -60,7 +60,7 @@ public class JojoController : MonoBehaviour
     private void HandleIdleCompletion()
     {
         if (!isIdleCompleted && animator.GetCurrentAnimatorStateInfo(0).IsName("Idle") &&
-            animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
+            animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.9f)
         {
             isIdleCompleted = true;
             spriteRenderer.flipX = true;

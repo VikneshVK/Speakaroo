@@ -1,7 +1,8 @@
-using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 
-public class TweenManager1 : MonoBehaviour
+public class Tween_Manager1 : MonoBehaviour
 {
     public bool speechTherapyCompleted = false;
     private Animator birdAnimator;
@@ -63,7 +64,7 @@ public class TweenManager1 : MonoBehaviour
         // Wait for the children to finish tweening
         LeanTween.delayedCall(0.5f, () =>
         {
-             speechTherapyCompleted = true;
+            speechTherapyCompleted = true;
             // Set the animator parameters for the bird
             if (birdAnimator != null)
             {
@@ -77,5 +78,5 @@ public class TweenManager1 : MonoBehaviour
             });
         });
     }
-}
 
+}

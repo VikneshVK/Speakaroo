@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class DraggingController1 : MonoBehaviour
 {
@@ -25,9 +26,9 @@ public class DraggingController1 : MonoBehaviour
     private Vector3 birdInitialPosition;
     public Transform birdEndPosition;
 
-    public Transform cerealInitialPosition; // Set in inspector
-    public Transform milkInitialPosition; // Set in inspector
-    public Transform cherryInitialPosition; // Set in inspector
+    public Transform cerealInitialPosition; 
+    public Transform milkInitialPosition; 
+    public Transform cherryInitialPosition; 
 
     private BoxCollider2D cerealCollider;
     private BoxCollider2D milkCollider;
@@ -35,13 +36,19 @@ public class DraggingController1 : MonoBehaviour
     public GameObject tweenManager;
     private TweeningController tweeningController;
     private bool startSecondTime = false;
+    private bool finalBowlDisabled = false;
+
+
+    public GameObject maskPrefab; 
+    public GameObject finalBowlSpriteObject; 
+    public GameObject eatenBowl; 
 
     private void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
         initialPosition = transform.position;
-        initialRotation = transform.rotation; // Store the initial rotation
-        initialZ = transform.position.z; // Store the initial z-axis value
+        initialRotation = transform.rotation; 
+        initialZ = transform.position.z; 
 
         if (gameObject.CompareTag("Milk"))
         {
@@ -77,7 +84,7 @@ public class DraggingController1 : MonoBehaviour
         cerealCollider = GameObject.FindGameObjectWithTag("Cereal")?.GetComponent<BoxCollider2D>();
         milkCollider = GameObject.FindGameObjectWithTag("Milk")?.GetComponent<BoxCollider2D>();
 
-        if (cerealCollider != null) cerealCollider.enabled = true;
+        if (cerealCollider != null) cerealCollider.enabled = false;
         if (milkCollider != null) milkCollider.enabled = false;
 
         if (tweenManager != null)
@@ -94,8 +101,6 @@ public class DraggingController1 : MonoBehaviour
         offset = transform.position - mousePosition;
         offset.z = 0;
         isDragging = true;
-
-
     }
 
     private void OnMouseDrag()
@@ -106,20 +111,18 @@ public class DraggingController1 : MonoBehaviour
             Vector3 targetPosition = mousePosition + offset;
             transform.position = Vector3.Lerp(transform.position, targetPosition, Time.deltaTime * 10f);
 
-
-
             Collider2D bowlCollider = GameObject.FindGameObjectWithTag("EmptyBowl")?.GetComponent<Collider2D>();
             if (bowlCollider != null && bowlCollider.bounds.Contains(transform.position))
             {
                 if (gameObject.CompareTag("Milk"))
                 {
                     spriteRenderer.sprite = newSprite;
-                    transform.rotation = Quaternion.Euler(0, 0, -100); // Rotate the milk object
+                    transform.rotation = Quaternion.Euler(0, 0, -100); 
                 }
                 else if (gameObject.CompareTag("Cereal"))
                 {
                     spriteRenderer.sprite = newSprite;
-                    transform.rotation = Quaternion.Euler(0, 0, 100); // Rotate the cereal object
+                    transform.rotation = Quaternion.Euler(0, 0, 100); 
                 }
             }
         }
@@ -158,7 +161,10 @@ public class DraggingController1 : MonoBehaviour
             if (gameObject.CompareTag("Cherry"))
             {
                 bowlSpriteRenderer.sprite = finalBowlSprite;
-                startSecondTime = true;
+                Debug.Log("coroutine will be started");
+
+                
+                StartCoroutine(ExecuteBirdTweenAndReveal());
             }
 
             if (gameObject.CompareTag("Milk") && milkInitialPosition != null)
@@ -175,6 +181,7 @@ public class DraggingController1 : MonoBehaviour
             }
             transform.rotation = initialRotation;
 
+           
             StartBirdTweenSequence();
         }
         else
@@ -193,8 +200,92 @@ public class DraggingController1 : MonoBehaviour
             }
             transform.rotation = initialRotation;
         }
+    }
 
+    private IEnumerator ExecuteBirdTweenAndReveal()
+    {
+        yield return StartCoroutine(WaitAndTweenBack());
+        yield return StartCoroutine(SpawnMasksAndReveal());
+    }
 
+    private IEnumerator SpawnMasksAndReveal()
+    {
+        
+        Debug.Log("coroutine is started for 5 secs");
+        isDragging = false;
+
+        float elapsedTime = 0f;
+        float maskInterval = 1f; 
+
+        while (elapsedTime < 3f)
+        {
+            InstantiateMaskWithinBounds();
+            elapsedTime += maskInterval;
+            yield return new WaitForSeconds(maskInterval);
+        }
+
+        
+        if (finalBowlSpriteObject != null)
+        {
+            Debug.Log("Disabling the sprite renderer of the final bowl sprite object");
+            finalBowlSpriteObject.GetComponent<SpriteRenderer>().enabled = false;
+            finalBowlDisabled = true; 
+        }
+        else
+        {
+            Debug.Log("finalBowlSpriteObject is already null");
+        }
+        startSecondTime = true;
+        StartBirdTweenSequence();
+    }
+
+    private void InstantiateMaskWithinBounds()
+    {
+        if (finalBowlSpriteObject == null)
+        {
+            Debug.Log("finalBowlSpriteObject is null");
+            return;
+        }
+
+        Collider2D bowlCollider = finalBowlSpriteObject.GetComponent<Collider2D>();
+        if (bowlCollider == null)
+        {
+            Debug.Log("bowlCollider is null");
+            return;
+        }
+
+        Bounds bounds = bowlCollider.bounds;
+        Vector2 randomPosition;
+        bool positionValid;
+
+        do
+        {
+            randomPosition = new Vector2(
+                Random.Range(bounds.min.x, bounds.max.x),
+                Random.Range(bounds.min.y, bounds.max.y)
+            );
+
+            positionValid = IsPositionWithinBounds(randomPosition, bowlCollider) && !IsPositionInsideMaskCollider(randomPosition);
+        } while (!positionValid);
+
+        Instantiate(maskPrefab, randomPosition, Quaternion.identity);
+        Debug.Log($"Instantiated mask prefab at {randomPosition}");
+    }
+
+    private bool IsPositionWithinBounds(Vector2 position, Collider2D collider)
+    {
+        return collider.bounds.Contains(position);
+    }
+
+    private bool IsPositionInsideMaskCollider(Vector2 position)
+    {
+        CircleCollider2D maskCollider = maskPrefab.GetComponent<CircleCollider2D>();
+        if (maskCollider == null) return false;
+
+        Vector2 maskCenter = maskCollider.transform.position;
+        float radius = maskCollider.radius * maskCollider.transform.lossyScale.x;
+
+        return Vector2.Distance(position, maskCenter) <= radius;
     }
 
     private void StartBirdTweenSequence()
@@ -210,7 +301,7 @@ public class DraggingController1 : MonoBehaviour
         }
     }
 
-    private System.Collections.IEnumerator WaitAndTweenBack()
+    private IEnumerator WaitAndTweenBack()
     {
         yield return new WaitForSeconds(2f);
 
@@ -239,18 +330,12 @@ public class DraggingController1 : MonoBehaviour
                 activeGameObject = cherryCollider.gameObject;
             }
 
-            if (activeGameObject != null)
-            {
-                LeanTween.scale(activeGameObject, activeGameObject.transform.localScale * 1.15f, 0.5f).setEase(LeanTweenType.easeInOutQuad).setOnComplete(() =>
-                {
-                    LeanTween.scale(activeGameObject, activeGameObject.transform.localScale / 1.15f, 0.5f).setEase(LeanTweenType.easeInOutQuad);
-                });
-            }
-
             if (startSecondTime && tweeningController != null)
             {
                 tweeningController.isSecondTime = true;
             }
         });
+
+        yield return new WaitForSeconds(1f); 
     }
 }

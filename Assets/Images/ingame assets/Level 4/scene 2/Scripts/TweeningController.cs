@@ -28,12 +28,18 @@ public class TweeningController : MonoBehaviour
 
         for (int i = 0; i < set1Objects.Length; i++)
         {
-            set1InitialPositions[i] = set1Objects[i].transform.position;
+            if (set1Objects[i] != null) // Check if the game object is not null
+            {
+                set1InitialPositions[i] = set1Objects[i].transform.position;
+            }
         }
 
         for (int i = 0; i < set2Objects.Length; i++)
         {
-            set2InitialPositions[i] = set2Objects[i].transform.position;
+            if (set2Objects[i] != null) // Check if the game object is not null
+            {
+                set2InitialPositions[i] = set2Objects[i].transform.position;
+            }
         }
 
         // Initially, tween Set 1 to target positions
@@ -59,8 +65,11 @@ public class TweeningController : MonoBehaviour
     {
         for (int i = 0; i < objects.Length; i++)
         {
-            LeanTween.cancel(objects[i]); // Cancel any existing tweens on the object
-            LeanTween.move(objects[i], targets[i].position, 1f).setEase(LeanTweenType.easeOutBack);
+            if (objects[i] != null && targets[i] != null)
+            {
+                LeanTween.cancel(objects[i]); // Cancel any existing tweens on the object
+                LeanTween.move(objects[i], targets[i].position, 1f).setEase(LeanTweenType.easeOutBack);
+            }
         }
     }
 
@@ -68,8 +77,11 @@ public class TweeningController : MonoBehaviour
     {
         for (int i = 0; i < objects.Length; i++)
         {
-            LeanTween.cancel(objects[i]); // Cancel any existing tweens on the object
-            LeanTween.move(objects[i], initialPositions[i], 1f).setEase(LeanTweenType.easeOutBack);
+            if (objects[i] != null)
+            {
+                LeanTween.cancel(objects[i]); // Cancel any existing tweens on the object
+                LeanTween.move(objects[i], initialPositions[i], 1f).setEase(LeanTweenType.easeOutBack);
+            }
         }
     }
 }

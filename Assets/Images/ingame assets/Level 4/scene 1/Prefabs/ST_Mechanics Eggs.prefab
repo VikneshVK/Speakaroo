@@ -559,8 +559,8 @@ GameObject:
   - component: {fileID: 5281686057119677487}
   - component: {fileID: 8673317651995614699}
   - component: {fileID: 4138314664446258938}
-  - component: {fileID: -650285777758818679}
   - component: {fileID: 5575182874481522414}
+  - component: {fileID: 6924981240714735821}
   m_Layer: 0
   m_Name: ST_Mechanics Eggs
   m_TagString: Untagged
@@ -652,19 +652,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   retryButton: {fileID: 6988325343574809455}
---- !u!114 &-650285777758818679
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2604101911739624177}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7364ca30fe9311b419a9cc7dc3227d08, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  speechTherapyCompleted: 0
 --- !u!114 &5575182874481522414
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -679,6 +666,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   card1Front: {fileID: 4756142388874844127}
   card2Front: {fileID: 1272492349041683033}
+--- !u!114 &6924981240714735821
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2604101911739624177}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0cc1457a45b827242b145175c8fb4fbf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speechTherapyCompleted: 0
 --- !u!1 &3224220872099072880
 GameObject:
   m_ObjectHideFlags: 0
