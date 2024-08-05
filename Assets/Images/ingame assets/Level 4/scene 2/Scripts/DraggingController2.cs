@@ -5,17 +5,13 @@ public class DraggingController2 : MonoBehaviour
     private Vector3 offset;
     private Vector3 startPosition;
     private bool isDragging = false;
-    private Transform blenderTransform;
-    private SpriteRenderer blenderSpriteRenderer;
-    private Sprite originalBlenderSprite;
-    private Sprite activeBlenderSprite;
+    private Vector3 originalScale;  // Store the original scale of the object
+    private SpriteChangeController spriteChangeController;
 
     void Start()
     {
-        blenderTransform = GameObject.FindGameObjectWithTag("Blender").transform;
-        blenderSpriteRenderer = blenderTransform.GetComponent<SpriteRenderer>();
-        originalBlenderSprite = blenderSpriteRenderer.sprite;
-        activeBlenderSprite = Resources.Load<Sprite>("Images/LVL 4 scene 2/blender_active");
+        originalScale = transform.localScale;  // Initialize original scale
+        spriteChangeController = FindObjectOfType<SpriteChangeController>();  // Get the SpriteChangeController
     }
 
     void Update()
@@ -24,50 +20,38 @@ public class DraggingController2 : MonoBehaviour
         {
             Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             transform.position = new Vector3(mousePosition.x + offset.x, mousePosition.y + offset.y, transform.position.z);
-            blenderSpriteRenderer.sprite = activeBlenderSprite; 
-        }
-    }
-
-    private void OnMouseDown()
-    {
-        Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        offset = transform.position - mousePosition;
-        startPosition = transform.position; 
-        isDragging = true;
-    }
-
-    private void OnMouseUp()
-    {
-        isDragging = false;
-        blenderSpriteRenderer.sprite = originalBlenderSprite; 
-        if (IsOverlappingBlender())
-        {
-            UpdateBlenderSprite(); 
-            Debug.Log(gameObject.name + " dropped on the blender and blended!");
-        }
-        transform.position = startPosition; 
-    }
-
-    private bool IsOverlappingBlender()
-    {
-        Collider2D collider = GetComponent<Collider2D>();
-        Collider2D blenderCollider = blenderTransform.GetComponent<Collider2D>();
-
-        return collider.bounds.Intersects(blenderCollider.bounds);
-    }
-
-    private void UpdateBlenderSprite()
-    {
-        string spritePath = "Images/LVL 4 scene 2/" + gameObject.name.ToLower() + "_blender";
-        Sprite newBlenderSprite = Resources.Load<Sprite>(spritePath);
-        if (newBlenderSprite != null)
-        {
-            blenderSpriteRenderer.sprite = newBlenderSprite;
+            transform.localScale = originalScale * 1.1f;  // Scale up by 10%
+            spriteChangeController.ActivateBlenderSprite();  // Activate active blender sprite
         }
         else
         {
-            Debug.LogError("Sprite not found at path: " + spritePath);
-            blenderSpriteRenderer.sprite = originalBlenderSprite;
+            transform.localScale = originalScale;  // Reset scale when not dragging
         }
+    }
+
+    void OnMouseDown()
+    {
+        Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        offset = transform.position - mousePosition;
+        startPosition = transform.position;
+        isDragging = true;
+    }
+
+    void OnMouseUp()
+    {
+        isDragging = false;
+        transform.position = startPosition;
+        spriteChangeController.ResetBlender();  // Reset blender sprite to original after dropping
+        if (IsOverlappingBlenderJar())
+        {
+            spriteChangeController.UpdateBlenderJarSprite(gameObject.tag);  // Update blender sprite based on fruit tag
+        }
+    }
+
+    private bool IsOverlappingBlenderJar()
+    {
+        Collider2D collider = GetComponent<Collider2D>();
+        Collider2D blenderJarCollider = GameObject.FindGameObjectWithTag("Blender_Jar").GetComponent<Collider2D>();
+        return collider.bounds.Intersects(blenderJarCollider.bounds);
     }
 }
