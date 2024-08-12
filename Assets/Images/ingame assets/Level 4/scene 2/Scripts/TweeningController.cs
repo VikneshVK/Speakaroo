@@ -15,6 +15,8 @@ public class TweeningController : MonoBehaviour
     private Vector3[] set1InitialPositions;
     private Vector3[] set2InitialPositions;
 
+    private JuiceManager juiceManager;
+
     private void Awake()
     {
         LeanTween.init(5000);
@@ -22,6 +24,8 @@ public class TweeningController : MonoBehaviour
 
     private void Start()
     {
+        juiceManager = FindObjectOfType<JuiceManager>();
+
         // Store initial positions of the game objects
         set1InitialPositions = new Vector3[set1Objects.Length];
         set2InitialPositions = new Vector3[set2Objects.Length];
@@ -53,6 +57,12 @@ public class TweeningController : MonoBehaviour
         {
             TweenSetToInitial(set1Objects, set1InitialPositions);
             TweenSetToTarget(set2Objects, set2Targets);
+
+            // Inform JuiceManager that it is the second time
+            if (juiceManager != null)
+            {
+                juiceManager.isSecondTime = true;
+            }
         }
         else
         {

@@ -1,47 +1,68 @@
-using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
+using System.Collections.Generic;
+using System.Linq;
 
 public class JuiceController : MonoBehaviour
 {
-    public TMP_Text fruitRequirementsText;
-    private List<string> requiredFruits = new List<string>();
+    public List<string> requiredFruits = new List<string>();
     private SpriteChangeController spriteChangeController;
+    public JuiceManager juiceManager;
 
     void Start()
     {
         spriteChangeController = FindObjectOfType<SpriteChangeController>();
-        spriteChangeController.OnKikisJuiceChanged += UpdateFruitRequirementsBasedOnKikisJuice;  // Subscribe to the event
-        UpdateFruitRequirementsUI();
+        juiceManager = FindObjectOfType<JuiceManager>();
+        DisableJarCollider();
     }
 
-    private void UpdateFruitRequirementsBasedOnKikisJuice(bool isKikisJuice)
+    public bool ValidateFruit(List<string> fruitsInBlender)
     {
-        requiredFruits.Clear();
-        if (isKikisJuice)
-        {
-            requiredFruits.Add("Kiwi");
-            requiredFruits.Add("Blueberry");
-        }
-        else
-        {
-            requiredFruits.Add("Strawberry");
-        }
-        UpdateFruitRequirementsUI();
+        fruitsInBlender.Sort();
+        juiceManager.requiredFruits.Sort();
+        bool isValid = juiceManager.requiredFruits.SequenceEqual(fruitsInBlender);
+        Debug.Log($"Validating fruits: {string.Join(", ", fruitsInBlender)}, RequiredFruits: {string.Join(", ", juiceManager.requiredFruits)}, IsValid: {isValid}");
+        return isValid;
     }
 
-    private void UpdateFruitRequirementsUI()
+    public void EnableBlenderCollider()
     {
-        fruitRequirementsText.text = "Required Fruits: " + string.Join(", ", requiredFruits);
-        Debug.Log("Fruit requirements updated: " + fruitRequirementsText.text);
+        // Enable blender collider for clicking
+        Collider2D blenderCollider = GameObject.FindGameObjectWithTag("Blender").GetComponent<Collider2D>();
+        blenderCollider.enabled = true;
     }
 
-    void OnDestroy()
+    public void DisableBlenderCollider()
     {
-        // Unsubscribe to prevent memory leaks
-        if (spriteChangeController)
-        {
-            spriteChangeController.OnKikisJuiceChanged -= UpdateFruitRequirementsBasedOnKikisJuice;
-        }
+        // Disable blender collider after clicking
+        Collider2D blenderCollider = GameObject.FindGameObjectWithTag("Blender").GetComponent<Collider2D>();
+        blenderCollider.enabled = false;
+    }
+
+    public void EnableJarCollider()
+    {
+        // Enable jar collider for dragging
+        Collider2D jarCollider = GameObject.FindGameObjectWithTag("Blender_Jar").GetComponent<Collider2D>();
+        jarCollider.enabled = true;
+    }
+
+    public void DisableJarCollider()
+    {
+        // Disable jar collider after dragging
+        Collider2D jarCollider = GameObject.FindGameObjectWithTag("Blender_Jar").GetComponent<Collider2D>();
+        jarCollider.enabled = false;
+    }
+
+    public void TriggerBlenderAnimation(string fruitTag)
+    {
+        Animator blenderAnimator = GameObject.FindGameObjectWithTag("Blender").GetComponent<Animator>();
+        blenderAnimator.SetTrigger(fruitTag);
+    }
+
+    public void TriggerBlenderAnimationForKiki(List<string> fruitsInBlender)
+    {
+        fruitsInBlender.Sort();
+        string animationTrigger = string.Join("", fruitsInBlender);
+        Animator blenderAnimator = GameObject.FindGameObjectWithTag("Blender").GetComponent<Animator>();
+        blenderAnimator.SetTrigger(animationTrigger);
     }
 }
