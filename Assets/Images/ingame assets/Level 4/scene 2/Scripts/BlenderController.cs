@@ -40,7 +40,7 @@ public class BlenderController : MonoBehaviour
     private IEnumerator EnableJarSpriteAfterAnimation()
     {
         // Wait for the animation to complete
-        yield return new WaitForSeconds(1.7f);  // Adjust based on animation length
+        yield return new WaitForSeconds(2.05f);  // Adjust based on animation length
 
         // Enable the jar's sprite renderer
         jarSpriteRenderer.enabled = true;

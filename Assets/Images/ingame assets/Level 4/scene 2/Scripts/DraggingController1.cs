@@ -26,9 +26,9 @@ public class DraggingController1 : MonoBehaviour
     private Vector3 birdInitialPosition;
     public Transform birdEndPosition;
 
-    public Transform cerealInitialPosition; 
-    public Transform milkInitialPosition; 
-    public Transform cherryInitialPosition; 
+    public Transform cerealInitialPosition;
+    public Transform milkInitialPosition;
+    public Transform cherryInitialPosition;
 
     private BoxCollider2D cerealCollider;
     private BoxCollider2D milkCollider;
@@ -38,28 +38,35 @@ public class DraggingController1 : MonoBehaviour
     private bool startSecondTime = false;
     private bool finalBowlDisabled = false;
 
+    public GameObject maskPrefab;
+    public GameObject finalBowlSpriteObject;
+    public GameObject eatenBowl;
 
-    public GameObject maskPrefab; 
-    public GameObject finalBowlSpriteObject; 
-    public GameObject eatenBowl; 
+    // Animator references
+    private Animator cerealAnimator;
+    private Animator milkAnimator;
+    private Animator cherryAnimator;  // Cherry Animator reference
 
     private void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
         initialPosition = transform.position;
-        initialRotation = transform.rotation; 
-        initialZ = transform.position.z; 
+        initialRotation = transform.rotation;
+        initialZ = transform.position.z;
 
         if (gameObject.CompareTag("Milk"))
         {
             newSprite = Resources.Load<Sprite>("Images/Lvl 4 Scene 2/milk-Open");
+            milkAnimator = GetComponent<Animator>(); // Get Animator for Milk
+            Debug.Log("Milk Animator initialized.");
         }
         else if (gameObject.CompareTag("Cereal"))
         {
             newSprite = Resources.Load<Sprite>("Images/Lvl 4 Scene 2/cereal-Opened");
+            cerealAnimator = GetComponent<Animator>(); // Get Animator for Cereal
+            Debug.Log("Cereal Animator initialized.");
         }
 
-        milkSprite = Resources.Load<Sprite>("Images/Lvl 4 Scene 2/c-Bowl");
         cerealSprite = Resources.Load<Sprite>("Images/Lvl 4 Scene 2/c-Bowl");
         milkAndCerealSprite = Resources.Load<Sprite>("Images/Lvl 4 Scene 2/mc-Bowl");
         finalBowlSprite = Resources.Load<Sprite>("Images/Lvl 4 Scene 2/mcc-Bowl");
@@ -67,7 +74,9 @@ public class DraggingController1 : MonoBehaviour
         GameObject cherry = GameObject.FindGameObjectWithTag("Cherry");
         if (cherry != null)
         {
+            cherryAnimator = cherry.GetComponent<Animator>();  // Corrected reference
             cherryCollider = cherry.GetComponent<BoxCollider2D>();
+
             if (cherryCollider != null)
             {
                 cherryCollider.enabled = false;
@@ -101,6 +110,22 @@ public class DraggingController1 : MonoBehaviour
         offset = transform.position - mousePosition;
         offset.z = 0;
         isDragging = true;
+
+        // Immediately set the object's position to avoid the initial lag
+        transform.position = new Vector3(mousePosition.x + offset.x, mousePosition.y + offset.y, initialZ);
+
+        // Delay the pause action
+        if (tweeningController != null)
+        {
+            StartCoroutine(DelayedPause());
+        }
+    }
+
+    private IEnumerator DelayedPause()
+    {
+        yield return new WaitForEndOfFrame();  // Delay by one frame
+        tweeningController.isPaused = true;
+        Debug.Log("TweeningController paused during dragging.");
     }
 
     private void OnMouseDrag()
@@ -109,7 +134,7 @@ public class DraggingController1 : MonoBehaviour
         {
             Vector3 mousePosition = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, -Camera.main.transform.position.z));
             Vector3 targetPosition = mousePosition + offset;
-            transform.position = Vector3.Lerp(transform.position, targetPosition, Time.deltaTime * 10f);
+            transform.position = new Vector3(targetPosition.x, targetPosition.y, initialZ);
 
             Collider2D bowlCollider = GameObject.FindGameObjectWithTag("EmptyBowl")?.GetComponent<Collider2D>();
             if (bowlCollider != null && bowlCollider.bounds.Contains(transform.position))
@@ -117,12 +142,12 @@ public class DraggingController1 : MonoBehaviour
                 if (gameObject.CompareTag("Milk"))
                 {
                     spriteRenderer.sprite = newSprite;
-                    transform.rotation = Quaternion.Euler(0, 0, -100); 
+                    transform.rotation = Quaternion.Euler(0, 0, -100);
                 }
                 else if (gameObject.CompareTag("Cereal"))
                 {
                     spriteRenderer.sprite = newSprite;
-                    transform.rotation = Quaternion.Euler(0, 0, 100); 
+                    transform.rotation = Quaternion.Euler(0, 0, 100);
                 }
             }
         }
@@ -135,17 +160,22 @@ public class DraggingController1 : MonoBehaviour
 
         if (bowlCollider != null && bowlCollider.bounds.Contains(transform.position))
         {
+            transform.rotation = Quaternion.identity;
+
             SpriteRenderer bowlSpriteRenderer = bowlCollider.GetComponent<SpriteRenderer>();
 
             if (gameObject.CompareTag("Milk"))
             {
+                Debug.Log("Milk dropped in the bowl. Triggering isPouring animation.");
+                StartCoroutine(PlayPouringAnimation(milkAnimator, bowlSpriteRenderer, milkAndCerealSprite));
                 isMilkDropped = true;
-                bowlSpriteRenderer.sprite = milkSprite;
             }
             else if (gameObject.CompareTag("Cereal"))
             {
+                Debug.Log("Cereal dropped in the bowl. Triggering isPouring animation.");
+                StartCoroutine(PlayPouringAnimation(cerealAnimator, bowlSpriteRenderer, cerealSprite));
+                milkCollider.enabled = true;
                 isCerealDropped = true;
-                bowlSpriteRenderer.sprite = cerealSprite;
             }
 
             if (isMilkDropped && isCerealDropped && !gameObject.CompareTag("Cherry"))
@@ -160,45 +190,63 @@ public class DraggingController1 : MonoBehaviour
 
             if (gameObject.CompareTag("Cherry"))
             {
-                bowlSpriteRenderer.sprite = finalBowlSprite;
-                Debug.Log("coroutine will be started");
-
-                
+                Debug.Log("Cherry dropped. Starting bird animation sequence.");
+                StartCoroutine(PlayPouringAnimation(cherryAnimator, bowlSpriteRenderer, finalBowlSprite));
                 StartCoroutine(ExecuteBirdTweenAndReveal());
             }
-
-            if (gameObject.CompareTag("Milk") && milkInitialPosition != null)
-            {
-                transform.position = milkInitialPosition.position;
-            }
-            else if (gameObject.CompareTag("Cereal") && cerealInitialPosition != null)
-            {
-                transform.position = cerealInitialPosition.position;
-            }
-            else if (gameObject.CompareTag("Cherry") && cherryInitialPosition != null)
-            {
-                transform.position = cherryInitialPosition.position;
-            }
-            transform.rotation = initialRotation;
-
-           
-            StartBirdTweenSequence();
         }
         else
         {
-            if (gameObject.CompareTag("Milk") && milkInitialPosition != null)
+            // Instantly return to the initial position and rotation if dropped outside the bowl
+            ResetPositionAndRotation();
+        }
+    }
+
+    private IEnumerator PlayPouringAnimation(Animator animator, SpriteRenderer bowlSpriteRenderer, Sprite newSprite)
+    {
+        if (animator != null)
+        {
+            Debug.Log("isPouring trigger set.");
+            animator.SetTrigger("isPouring");
+
+            yield return new WaitForSeconds(0.1f);
+
+            // Wait until the animation completes
+            while (animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1.0f || animator.IsInTransition(0))
             {
-                transform.position = milkInitialPosition.position;
+                yield return null;
             }
-            else if (gameObject.CompareTag("Cereal") && cerealInitialPosition != null)
-            {
-                transform.position = cerealInitialPosition.position;
-            }
-            else if (gameObject.CompareTag("Cherry") && cherryInitialPosition != null)
-            {
-                transform.position = cherryInitialPosition.position;
-            }
-            transform.rotation = initialRotation;
+            Debug.Log("Pouring animation completed.");
+        }
+
+        // Update the bowl's sprite after the animation has completed
+        bowlSpriteRenderer.sprite = newSprite;
+
+        // Now reset the position and rotation of the dropped object
+        ResetPositionAndRotation();
+    }
+
+    private void ResetPositionAndRotation()
+    {
+        if (gameObject.CompareTag("Milk") && milkInitialPosition != null)
+        {
+            transform.position = milkInitialPosition.position;
+        }
+        else if (gameObject.CompareTag("Cereal") && cerealInitialPosition != null)
+        {
+            transform.position = cerealInitialPosition.position;
+        }
+        else if (gameObject.CompareTag("Cherry") && cherryInitialPosition != null)
+        {
+            transform.position = cherryInitialPosition.position;
+        }
+        transform.rotation = initialRotation;
+
+        // Resume the TweeningController's behavior after resetting position
+        if (tweeningController != null)
+        {
+            tweeningController.isPaused = false;
+            Debug.Log("TweeningController resumed after resetting position.");
         }
     }
 
@@ -210,12 +258,11 @@ public class DraggingController1 : MonoBehaviour
 
     private IEnumerator SpawnMasksAndReveal()
     {
-        
-        Debug.Log("coroutine is started for 5 secs");
+        Debug.Log("Coroutine for mask reveal started.");
         isDragging = false;
 
         float elapsedTime = 0f;
-        float maskInterval = 1f; 
+        float maskInterval = 1f;
 
         while (elapsedTime < 3f)
         {
@@ -224,16 +271,15 @@ public class DraggingController1 : MonoBehaviour
             yield return new WaitForSeconds(maskInterval);
         }
 
-        
         if (finalBowlSpriteObject != null)
         {
-            Debug.Log("Disabling the sprite renderer of the final bowl sprite object");
+            Debug.Log("Disabling the sprite renderer of the final bowl sprite object.");
             finalBowlSpriteObject.GetComponent<SpriteRenderer>().enabled = false;
-            finalBowlDisabled = true; 
+            finalBowlDisabled = true;
         }
         else
         {
-            Debug.Log("finalBowlSpriteObject is already null");
+            Debug.Log("finalBowlSpriteObject is already null.");
         }
         startSecondTime = true;
         StartBirdTweenSequence();
@@ -243,14 +289,14 @@ public class DraggingController1 : MonoBehaviour
     {
         if (finalBowlSpriteObject == null)
         {
-            Debug.Log("finalBowlSpriteObject is null");
+            Debug.Log("finalBowlSpriteObject is null.");
             return;
         }
 
         Collider2D bowlCollider = finalBowlSpriteObject.GetComponent<Collider2D>();
         if (bowlCollider == null)
         {
-            Debug.Log("bowlCollider is null");
+            Debug.Log("bowlCollider is null.");
             return;
         }
 
@@ -269,7 +315,7 @@ public class DraggingController1 : MonoBehaviour
         } while (!positionValid);
 
         Instantiate(maskPrefab, randomPosition, Quaternion.identity);
-        Debug.Log($"Instantiated mask prefab at {randomPosition}");
+        Debug.Log($"Instantiated mask prefab at {randomPosition}.");
     }
 
     private bool IsPositionWithinBounds(Vector2 position, Collider2D collider)
@@ -295,6 +341,7 @@ public class DraggingController1 : MonoBehaviour
             LeanTween.move(bird, birdEndPosition.position, 1f).setEase(LeanTweenType.easeInOutQuad).setOnComplete(() =>
             {
                 birdAnimator.SetTrigger("canTalk");
+                Debug.Log("Bird animation triggered.");
 
                 StartCoroutine(WaitAndTweenBack());
             });
@@ -336,6 +383,6 @@ public class DraggingController1 : MonoBehaviour
             }
         });
 
-        yield return new WaitForSeconds(1f); 
+        yield return new WaitForSeconds(1f);
     }
 }

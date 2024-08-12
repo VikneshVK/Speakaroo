@@ -3,6 +3,7 @@ using UnityEngine;
 public class TweeningController : MonoBehaviour
 {
     public bool isSecondTime = false;
+    public bool isPaused = false; // New flag to pause tweening
 
     [Header("Set 1 Game Objects and Target Positions")]
     public GameObject[] set1Objects;
@@ -52,6 +53,12 @@ public class TweeningController : MonoBehaviour
 
     private void Update()
     {
+        if (isPaused)
+        {
+            // Skip updating logic while paused
+            return;
+        }
+
         // Continuously check the boolean value and tween objects accordingly
         if (isSecondTime)
         {
