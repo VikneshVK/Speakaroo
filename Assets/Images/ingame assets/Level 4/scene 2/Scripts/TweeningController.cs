@@ -3,7 +3,6 @@ using UnityEngine;
 public class TweeningController : MonoBehaviour
 {
     public bool isSecondTime = false;
-    public bool isPaused = false; // New flag to pause tweening
 
     [Header("Set 1 Game Objects and Target Positions")]
     public GameObject[] set1Objects;
@@ -17,6 +16,8 @@ public class TweeningController : MonoBehaviour
     private Vector3[] set2InitialPositions;
 
     private JuiceManager juiceManager;
+
+    private bool previousState = false; // To track the previous state of isSecondTime
 
     private void Awake()
     {
@@ -48,18 +49,37 @@ public class TweeningController : MonoBehaviour
         }
 
         // Initially, tween Set 1 to target positions
-        TweenSetToTarget(set1Objects, set1Targets);
+        PerformInitialTweening();
     }
 
     private void Update()
     {
-        if (isPaused)
+        // Check if isSecondTime has changed
+        if (isSecondTime != previousState)
         {
-            // Skip updating logic while paused
-            return;
+            previousState = isSecondTime;
+            PerformTweening();
         }
+    }
 
-        // Continuously check the boolean value and tween objects accordingly
+    private void PerformInitialTweening()
+    {
+        if (isSecondTime)
+        {
+            // Move set 2 to target positions and set 1 back to initial positions
+            TweenSetToInitial(set1Objects, set1InitialPositions);
+            TweenSetToTarget(set2Objects, set2Targets);
+        }
+        else
+        {
+            // Move set 1 to target positions and set 2 back to initial positions
+            TweenSetToTarget(set1Objects, set1Targets);
+            TweenSetToInitial(set2Objects, set2InitialPositions);
+        }
+    }
+
+    private void PerformTweening()
+    {
         if (isSecondTime)
         {
             TweenSetToInitial(set1Objects, set1InitialPositions);

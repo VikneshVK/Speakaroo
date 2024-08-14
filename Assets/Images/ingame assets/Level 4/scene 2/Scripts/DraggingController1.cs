@@ -42,10 +42,7 @@ public class DraggingController1 : MonoBehaviour
     public GameObject finalBowlSpriteObject;
     public GameObject eatenBowl;
 
-    // Animator references
-    private Animator cerealAnimator;
-    private Animator milkAnimator;
-    private Animator cherryAnimator;  // Cherry Animator reference
+    private Animator objectAnimator;
 
     private void Start()
     {
@@ -54,19 +51,18 @@ public class DraggingController1 : MonoBehaviour
         initialRotation = transform.rotation;
         initialZ = transform.position.z;
 
+        objectAnimator = GetComponent<Animator>();
+
         if (gameObject.CompareTag("Milk"))
         {
             newSprite = Resources.Load<Sprite>("Images/Lvl 4 Scene 2/milk-Open");
-            milkAnimator = GetComponent<Animator>(); // Get Animator for Milk
-            Debug.Log("Milk Animator initialized.");
         }
         else if (gameObject.CompareTag("Cereal"))
         {
             newSprite = Resources.Load<Sprite>("Images/Lvl 4 Scene 2/cereal-Opened");
-            cerealAnimator = GetComponent<Animator>(); // Get Animator for Cereal
-            Debug.Log("Cereal Animator initialized.");
         }
 
+        milkSprite = Resources.Load<Sprite>("Images/Lvl 4 Scene 2/c-Bowl");
         cerealSprite = Resources.Load<Sprite>("Images/Lvl 4 Scene 2/c-Bowl");
         milkAndCerealSprite = Resources.Load<Sprite>("Images/Lvl 4 Scene 2/mc-Bowl");
         finalBowlSprite = Resources.Load<Sprite>("Images/Lvl 4 Scene 2/mcc-Bowl");
@@ -74,9 +70,7 @@ public class DraggingController1 : MonoBehaviour
         GameObject cherry = GameObject.FindGameObjectWithTag("Cherry");
         if (cherry != null)
         {
-            cherryAnimator = cherry.GetComponent<Animator>();  // Corrected reference
             cherryCollider = cherry.GetComponent<BoxCollider2D>();
-
             if (cherryCollider != null)
             {
                 cherryCollider.enabled = false;
@@ -110,22 +104,6 @@ public class DraggingController1 : MonoBehaviour
         offset = transform.position - mousePosition;
         offset.z = 0;
         isDragging = true;
-
-        // Immediately set the object's position to avoid the initial lag
-        transform.position = new Vector3(mousePosition.x + offset.x, mousePosition.y + offset.y, initialZ);
-
-        // Delay the pause action
-        if (tweeningController != null)
-        {
-            StartCoroutine(DelayedPause());
-        }
-    }
-
-    private IEnumerator DelayedPause()
-    {
-        yield return new WaitForEndOfFrame();  // Delay by one frame
-        tweeningController.isPaused = true;
-        Debug.Log("TweeningController paused during dragging.");
     }
 
     private void OnMouseDrag()
@@ -134,7 +112,7 @@ public class DraggingController1 : MonoBehaviour
         {
             Vector3 mousePosition = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, -Camera.main.transform.position.z));
             Vector3 targetPosition = mousePosition + offset;
-            transform.position = new Vector3(targetPosition.x, targetPosition.y, initialZ);
+            transform.position = Vector3.Lerp(transform.position, targetPosition, Time.deltaTime * 10f);
 
             Collider2D bowlCollider = GameObject.FindGameObjectWithTag("EmptyBowl")?.GetComponent<Collider2D>();
             if (bowlCollider != null && bowlCollider.bounds.Contains(transform.position))
@@ -157,73 +135,23 @@ public class DraggingController1 : MonoBehaviour
     {
         isDragging = false;
         Collider2D bowlCollider = GameObject.FindGameObjectWithTag("EmptyBowl")?.GetComponent<Collider2D>();
-
+        transform.rotation = Quaternion.identity;
         if (bowlCollider != null && bowlCollider.bounds.Contains(transform.position))
         {
-            transform.rotation = Quaternion.identity;
-
             SpriteRenderer bowlSpriteRenderer = bowlCollider.GetComponent<SpriteRenderer>();
 
-            if (gameObject.CompareTag("Milk"))
+            // Trigger "isPouring" animation
+            if (objectAnimator != null)
             {
-                Debug.Log("Milk dropped in the bowl. Triggering isPouring animation.");
-                StartCoroutine(PlayPouringAnimation(milkAnimator, bowlSpriteRenderer, milkAndCerealSprite));
-                isMilkDropped = true;
-            }
-            else if (gameObject.CompareTag("Cereal"))
-            {
-                Debug.Log("Cereal dropped in the bowl. Triggering isPouring animation.");
-                StartCoroutine(PlayPouringAnimation(cerealAnimator, bowlSpriteRenderer, cerealSprite));
-                milkCollider.enabled = true;
-                isCerealDropped = true;
+                objectAnimator.SetTrigger("isPouring");
             }
 
-            if (isMilkDropped && isCerealDropped && !gameObject.CompareTag("Cherry"))
-            {
-                bowlSpriteRenderer.sprite = milkAndCerealSprite;
-
-                if (cherryCollider != null)
-                {
-                    cherryCollider.enabled = true;
-                }
-            }
-
-            if (gameObject.CompareTag("Cherry"))
-            {
-                Debug.Log("Cherry dropped. Starting bird animation sequence.");
-                StartCoroutine(PlayPouringAnimation(cherryAnimator, bowlSpriteRenderer, finalBowlSprite));
-                StartCoroutine(ExecuteBirdTweenAndReveal());
-            }
+            // Reset position and change sprite after animation ends through events
         }
         else
         {
-            // Instantly return to the initial position and rotation if dropped outside the bowl
             ResetPositionAndRotation();
         }
-    }
-
-    private IEnumerator PlayPouringAnimation(Animator animator, SpriteRenderer bowlSpriteRenderer, Sprite newSprite)
-    {
-        if (animator != null)
-        {
-            Debug.Log("isPouring trigger set.");
-            animator.SetTrigger("isPouring");
-
-            yield return new WaitForSeconds(0.1f);
-
-            // Wait until the animation completes
-            while (animator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1.0f || animator.IsInTransition(0))
-            {
-                yield return null;
-            }
-            Debug.Log("Pouring animation completed.");
-        }
-
-        // Update the bowl's sprite after the animation has completed
-        bowlSpriteRenderer.sprite = newSprite;
-
-        // Now reset the position and rotation of the dropped object
-        ResetPositionAndRotation();
     }
 
     private void ResetPositionAndRotation()
@@ -241,13 +169,69 @@ public class DraggingController1 : MonoBehaviour
             transform.position = cherryInitialPosition.position;
         }
         transform.rotation = initialRotation;
+        Debug.Log("Position Reset");
+    }
 
-        // Resume the TweeningController's behavior after resetting position
-        if (tweeningController != null)
+    private void ResetPositionAndChangeSprite(string tag)
+    {
+        SpriteRenderer bowlSpriteRenderer = GameObject.FindGameObjectWithTag("EmptyBowl")?.GetComponent<SpriteRenderer>();
+
+        if (tag == "Cereal")
         {
-            tweeningController.isPaused = false;
-            Debug.Log("TweeningController resumed after resetting position.");
+            isCerealDropped = true;
+            if (bowlSpriteRenderer != null)
+                bowlSpriteRenderer.sprite = cerealSprite;
+
+            transform.position = cerealInitialPosition.position;
+            Debug.Log("Cereal Position Reset and Sprite Changed");
         }
+        else if (tag == "Milk")
+        {
+            isMilkDropped = true;
+            if (bowlSpriteRenderer != null)
+                bowlSpriteRenderer.sprite = milkAndCerealSprite;
+
+            transform.position = milkInitialPosition.position;
+            Debug.Log("Milk Position Reset and Sprite Changed");
+        }
+        else if (tag == "Cherry")
+        {
+            if (isMilkDropped && isCerealDropped)
+            {
+                if (bowlSpriteRenderer != null)
+                    bowlSpriteRenderer.sprite = finalBowlSprite;
+                StartCoroutine(ExecuteBirdTweenAndReveal());
+            }
+
+            transform.position = cherryInitialPosition.position;
+            Debug.Log("Cherry Position Reset and Sprite Changed");
+        }
+
+        transform.rotation = initialRotation;
+
+        // Enable the collider for the next item
+        if (tag == "Cereal" && milkCollider != null)
+            milkCollider.enabled = true;
+        else if (tag == "Milk" && cherryCollider != null)
+            cherryCollider.enabled = true;
+    }
+
+    private void CerealAnimationComplete()
+    {
+        ResetPositionAndChangeSprite("Cereal");
+        StartBirdTweenSequence();
+    }
+
+    private void MilkAnimationComplete()
+    {
+        ResetPositionAndChangeSprite("Milk");
+        StartBirdTweenSequence();
+    }
+
+    private void CherryAnimationComplete()
+    {
+        ResetPositionAndChangeSprite("Cherry");
+        StartBirdTweenSequence();
     }
 
     private IEnumerator ExecuteBirdTweenAndReveal()
@@ -258,9 +242,6 @@ public class DraggingController1 : MonoBehaviour
 
     private IEnumerator SpawnMasksAndReveal()
     {
-        Debug.Log("Coroutine for mask reveal started.");
-        isDragging = false;
-
         float elapsedTime = 0f;
         float maskInterval = 1f;
 
@@ -273,13 +254,8 @@ public class DraggingController1 : MonoBehaviour
 
         if (finalBowlSpriteObject != null)
         {
-            Debug.Log("Disabling the sprite renderer of the final bowl sprite object.");
             finalBowlSpriteObject.GetComponent<SpriteRenderer>().enabled = false;
             finalBowlDisabled = true;
-        }
-        else
-        {
-            Debug.Log("finalBowlSpriteObject is already null.");
         }
         startSecondTime = true;
         StartBirdTweenSequence();
@@ -288,17 +264,11 @@ public class DraggingController1 : MonoBehaviour
     private void InstantiateMaskWithinBounds()
     {
         if (finalBowlSpriteObject == null)
-        {
-            Debug.Log("finalBowlSpriteObject is null.");
             return;
-        }
 
         Collider2D bowlCollider = finalBowlSpriteObject.GetComponent<Collider2D>();
         if (bowlCollider == null)
-        {
-            Debug.Log("bowlCollider is null.");
             return;
-        }
 
         Bounds bounds = bowlCollider.bounds;
         Vector2 randomPosition;
@@ -315,7 +285,6 @@ public class DraggingController1 : MonoBehaviour
         } while (!positionValid);
 
         Instantiate(maskPrefab, randomPosition, Quaternion.identity);
-        Debug.Log($"Instantiated mask prefab at {randomPosition}.");
     }
 
     private bool IsPositionWithinBounds(Vector2 position, Collider2D collider)
@@ -341,8 +310,6 @@ public class DraggingController1 : MonoBehaviour
             LeanTween.move(bird, birdEndPosition.position, 1f).setEase(LeanTweenType.easeInOutQuad).setOnComplete(() =>
             {
                 birdAnimator.SetTrigger("canTalk");
-                Debug.Log("Bird animation triggered.");
-
                 StartCoroutine(WaitAndTweenBack());
             });
         }
@@ -354,27 +321,17 @@ public class DraggingController1 : MonoBehaviour
 
         LeanTween.move(bird, birdInitialPosition, 1f).setEase(LeanTweenType.easeInOutQuad).setOnComplete(() =>
         {
-            GameObject activeGameObject = null;
-            if (!isCerealDropped)
+            if (!isCerealDropped && cerealCollider != null)
             {
-                if (cerealCollider != null)
-                {
-                    cerealCollider.enabled = true;
-                    activeGameObject = cerealCollider.gameObject;
-                }
+                cerealCollider.enabled = true;
             }
-            else if (!isMilkDropped)
+            else if (!isMilkDropped && milkCollider != null)
             {
-                if (milkCollider != null)
-                {
-                    milkCollider.enabled = true;
-                    activeGameObject = milkCollider.gameObject;
-                }
+                milkCollider.enabled = true;
             }
             else if (cherryCollider != null)
             {
                 cherryCollider.enabled = true;
-                activeGameObject = cherryCollider.gameObject;
             }
 
             if (startSecondTime && tweeningController != null)

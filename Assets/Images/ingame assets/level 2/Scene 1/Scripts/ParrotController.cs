@@ -111,7 +111,7 @@ public class ParrotController : MonoBehaviour
 
     private void OnCompleteMove()
     {
-        spriteRenderer.flipX = false; // Prepare sprite for walk back
+       /* spriteRenderer.flipX = false;*/ // Prepare sprite for walk back
         animator.SetBool("walkBack", true);
         isReturning = true;
     }
@@ -122,7 +122,7 @@ public class ParrotController : MonoBehaviour
         if (transform.position == startPosition)
         {
             ResetAnimatorBooleans();
-            spriteRenderer.flipX = true;
+            /*spriteRenderer.flipX = true;*/
             anchor.enabled = true;
             isReturning = false;
         }

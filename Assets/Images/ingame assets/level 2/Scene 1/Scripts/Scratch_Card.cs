@@ -10,6 +10,13 @@ public class Scratch_Card : MonoBehaviour
     private bool isSpawning = false;
     private bool timerStarted = false;
 
+    private AudioSource audioSource;
+
+    private void Awake()
+    {
+        audioSource = gameObject.AddComponent<AudioSource>();
+    }
+
     void Update()
     {
         if (Input.GetMouseButton(0))
@@ -27,7 +34,7 @@ public class Scratch_Card : MonoBehaviour
 
                 if (!timerStarted)
                 {
-                    StartCoroutine(DestroyCardAfterDelay(5f));
+                    StartCoroutine(DestroyCardAfterDelay(2f));
                     timerStarted = true;
                 }
             }
@@ -41,6 +48,9 @@ public class Scratch_Card : MonoBehaviour
     private IEnumerator SpawnPrefabs()
     {
         isSpawning = true;
+
+        // Play scratch audio through the AudioManager
+        ST_AudioManager.Instance.PlayScratchAudio();
 
         while (isSpawning)
         {
@@ -84,7 +94,7 @@ public class Scratch_Card : MonoBehaviour
 
         if (parentTransform != null)
         {
-            ST_AudioManager.Instance.PlayAudioAfterDestroy(parentTransform.tag);
+            ST_AudioManager.Instance.PlayRevealAudio(parentTransform.tag); // Play reveal audio after destruction
         }
     }
 }

@@ -33,7 +33,7 @@ public class BirdControllerScene2 : MonoBehaviour
 
     void Update()
     {
-        if (animator.GetBool("IsFlying"))
+        if (animator.GetBool("isFlying"))
         {
             if (!isFlying)
             {
@@ -50,13 +50,13 @@ public class BirdControllerScene2 : MonoBehaviour
     public void StartFlying()
     {
         isFlying = true;
-        animator.SetBool("IsFlying", true);
+        animator.SetBool("isFlying", true);
     }
 
     public void StopFlying()
     {
         isFlying = false;
-        animator.SetBool("IsFlying", false);
+        animator.SetBool("isFlying", false);
         rb.velocity = Vector2.zero; // Ensure the bird stops moving
         animator.SetBool("knock", true);
     }

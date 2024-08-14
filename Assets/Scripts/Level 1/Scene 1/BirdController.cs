@@ -32,7 +32,7 @@ public class BirdController : MonoBehaviour
 
     void Update()
     {
-        if (animator.GetBool("IsFlying"))
+        if (animator.GetBool("isFlying"))
         {
             if (!isFlying)
             {
@@ -49,13 +49,13 @@ public class BirdController : MonoBehaviour
     public void StartFlying()
     {
         isFlying = true;
-        animator.SetBool("IsFlying", true);
+        animator.SetBool("isFlying", true);
     }
 
     public void StopFlying()
     {
         isFlying = false;
-        animator.SetBool("IsFlying", false);
+        animator.SetBool("isFlying", false);
         rb.velocity = Vector2.zero;
         animator.SetBool("knock", true);
     }
@@ -72,7 +72,7 @@ public class BirdController : MonoBehaviour
 
     private IEnumerator TriggerBrushKnockAtMidpoint()
     {
-        animator.SetTrigger("knockBrush");
+        /*animator.SetTrigger("knockBrush");*/
         AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
         float knockBrushDuration = stateInfo.length;
         yield return new WaitForSeconds(knockBrushDuration / 2);

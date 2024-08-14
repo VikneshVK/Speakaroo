@@ -335,6 +335,7 @@ GameObject:
   - component: {fileID: 69734994}
   - component: {fileID: 69734996}
   - component: {fileID: 69734997}
+  - component: {fileID: 69734998}
   m_Layer: 0
   m_Name: Milk-Closed
   m_TagString: Milk
@@ -474,7 +475,28 @@ MonoBehaviour:
   tweenManager: {fileID: 399465457}
   maskPrefab: {fileID: 1433547584507210601, guid: 49c56f0785beb2c438ddb02cb2d51133, type: 3}
   finalBowlSpriteObject: {fileID: 734810635}
-  eatenBowl: {fileID: 1685670263}
+  eatenBowl: {fileID: 0}
+--- !u!95 &69734998
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 69734993}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 98e04e3035f16284589cb8808ceee71d, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &287426171
 GameObject:
   m_ObjectHideFlags: 0
@@ -668,7 +690,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8554ecbcc6186ca4d9e3c0f82de5f62e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isSecondTime: 1
+  isSecondTime: 0
   set1Objects:
   - {fileID: 866387354}
   - {fileID: 69734993}
@@ -914,6 +936,7 @@ GameObject:
   - component: {fileID: 531209504}
   - component: {fileID: 531209506}
   - component: {fileID: 531209505}
+  - component: {fileID: 531209507}
   m_Layer: 0
   m_Name: chreey
   m_TagString: Cherry
@@ -1007,7 +1030,7 @@ MonoBehaviour:
   tweenManager: {fileID: 399465457}
   maskPrefab: {fileID: 1433547584507210601, guid: 49c56f0785beb2c438ddb02cb2d51133, type: 3}
   finalBowlSpriteObject: {fileID: 734810635}
-  eatenBowl: {fileID: 1685670263}
+  eatenBowl: {fileID: 0}
 --- !u!61 &531209506
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1053,6 +1076,27 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 2.23, y: 1.9}
   m_EdgeRadius: 0
+--- !u!95 &531209507
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 531209502}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 8c7789b9bb6215c4da72c1734fe87e07, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &531397249
 GameObject:
   m_ObjectHideFlags: 0
@@ -1224,6 +1268,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d36eba9164b7d7146b0ee26a52c403b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pourAngle: 45
+  rotationSpeed: 5
 --- !u!1 &560857034
 GameObject:
   m_ObjectHideFlags: 0
@@ -1395,6 +1441,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d36eba9164b7d7146b0ee26a52c403b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  pourAngle: 45
+  rotationSpeed: 5
 --- !u!1 &608699200
 GameObject:
   m_ObjectHideFlags: 0
@@ -1729,7 +1777,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!212 &734810636
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -2034,6 +2082,7 @@ GameObject:
   - component: {fileID: 866387355}
   - component: {fileID: 866387357}
   - component: {fileID: 866387358}
+  - component: {fileID: 866387359}
   m_Layer: 0
   m_Name: cereal-Closed
   m_TagString: Cereal
@@ -2173,7 +2222,28 @@ MonoBehaviour:
   tweenManager: {fileID: 399465457}
   maskPrefab: {fileID: 1433547584507210601, guid: 49c56f0785beb2c438ddb02cb2d51133, type: 3}
   finalBowlSpriteObject: {fileID: 734810635}
-  eatenBowl: {fileID: 1685670263}
+  eatenBowl: {fileID: 0}
+--- !u!95 &866387359
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 866387354}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 094568881b5cd0f4a85d5178de55caf0, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &921011780
 GameObject:
   m_ObjectHideFlags: 0
@@ -3706,7 +3776,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!61 &1685670264
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -3840,7 +3910,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &1942680794
 Transform:
   m_ObjectHideFlags: 0
@@ -4259,8 +4329,8 @@ BoxCollider2D:
   m_Offset: {x: 0, y: 0}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5255102, y: 0.25}
-    oldSize: {x: 4.5581393, y: 10.953488}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 5.76, y: 6.53}
     newSize: {x: 4.71, y: 10.61}
     adaptiveTilingThreshold: 0.5
     drawMode: 0

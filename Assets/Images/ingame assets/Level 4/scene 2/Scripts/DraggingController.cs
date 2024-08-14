@@ -53,7 +53,7 @@ public class DraggingController : MonoBehaviour
         {
             HandleDropOnGlass(glassCollider);
             transform.position = startPosition;
-            transform.rotation = Quaternion.identity;
+            transform.rotation = Quaternion.identity;  // Reset rotation after drop
         }
         else
         {
@@ -69,20 +69,12 @@ public class DraggingController : MonoBehaviour
             }
         }
 
-        // Pass the current object's collider to IsOverlappingBlenderJar
         Collider2D fruitCollider = GetComponent<Collider2D>();
         if (spriteChangeController.IsOverlappingBlenderJar(fruitCollider) && gameObject.tag != "Blender_Jar")
         {
-            Debug.Log("IsOverlappingBlenderJar returned true and gameObject tag is: " + gameObject.tag);
             spriteChangeController.UpdateBlenderJarSprite(gameObject.tag, gameObject);
         }
-        else
-        {
-            Debug.Log("Condition not met: IsOverlappingBlenderJar returned " + spriteChangeController.IsOverlappingBlenderJar(fruitCollider) + " or gameObject tag is: " + gameObject.tag);
-        }
     }
-
-
 
     private Collider2D FindOverlappingGlass()
     {
@@ -97,35 +89,24 @@ public class DraggingController : MonoBehaviour
         return null;
     }
 
-    public void OnGlassCollision(GlassController glassController)
-    {
-        // Rotate the jar and change the glass sprite
-        if (glassController.CompareTag("Glass1"))
-        {
-            transform.Rotate(new Vector3(0, 0, 100)); // Rotate 100 degrees on z-axis
-        }
-        else if (glassController.CompareTag("Glass2"))
-        {
-            transform.Rotate(new Vector3(0, 0, -100)); // Rotate -100 degrees on z-axis
-        }
-
-        string glassSpriteName = spriteChangeController.GetJuiceSpriteName();
-        Sprite newGlassSprite = Resources.Load<Sprite>("Images/LVL 4 scene 2/" + glassSpriteName);
-        glassController.GetComponent<SpriteRenderer>().sprite = newGlassSprite;
-        Debug.Log($"Dropped on {glassController.name}, changed sprite to {glassSpriteName}");
-        spriteChangeController.ResetBlenderJarSprite();
-        transform.rotation = Quaternion.identity;
-        StartCoroutine(StartBirdTweenSequence(glassController.CompareTag("Glass2")));
-    }
-
     private void HandleDropOnGlass(Collider2D glassCollider)
     {
-        // Notify the glass collider that it has been interacted with
         GlassController glassController = glassCollider.GetComponent<GlassController>();
         if (glassController != null)
         {
             OnGlassCollision(glassController);
         }
+    }
+
+    public void OnGlassCollision(GlassController glassController)
+    {
+        // Only update sprites when the jar is dropped
+        string glassSpriteName = spriteChangeController.GetJuiceSpriteName();
+        Sprite newGlassSprite = Resources.Load<Sprite>("Images/LVL 4 scene 2/" + glassSpriteName);
+        glassController.GetComponent<SpriteRenderer>().sprite = newGlassSprite;
+
+        spriteChangeController.ResetBlenderJarSprite();
+        StartCoroutine(StartBirdTweenSequence(glassController.CompareTag("Glass2")));
     }
 
     private IEnumerator StartBirdTweenSequence(bool isGlass2)
@@ -143,13 +124,10 @@ public class DraggingController : MonoBehaviour
         {
             juiceManager.sceneEnded = true;
             juiceManager.fruitRequirementsText.gameObject.SetActive(false);
-            Debug.Log("Scene ended. Juice making is complete.");
         }
         else
         {
             juiceManager.isKikiJuice = true;
-            Debug.Log("isKikiJuice set to true");
-
             spriteChangeController.ResetBlender();
             juiceManager.UpdateFruitRequirements(true);
         }
