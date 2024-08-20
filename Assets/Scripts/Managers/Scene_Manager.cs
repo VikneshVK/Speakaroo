@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 public class Scene_Manager : MonoBehaviour
 {
     public Animator TransitionAnim;
+    
 
     // Update is called once per frame
     void Update()

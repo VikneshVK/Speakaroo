@@ -1,45 +1,43 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
+
 
 public class DragAndDropController : MonoBehaviour
 {
-    public GameObject correctDropZoneObject; // Reference to the drop zone game object
-    public GameObject speechBubblePrefab; // Reference to the speech bubble prefab
-    public GameObject mechanicsPrefab; // Prefab specific to this game object (bus, whale, or building)
-    public GameObject Bus;
-    public GameObject miniBus; // Miniature bus with collider
-    public GameObject Whale;
-    public GameObject miniWhale; // Miniature whale with collider
-    public GameObject Building;
-    public GameObject miniBuilding; // Miniature building with collider
+    public GameObject correctDropZoneObject;
+    public GameObject speechBubblePrefab;
+    public GameObject mechanicsPrefab;
+    public GameObject miniBus;
+    public GameObject miniWhale;
+    public GameObject miniBuilding;
     public GameObject Boy;
     public Transform speechBubbleContainer;
-    
 
     public float dropOffset;
     public float blinkCount;
     public float blinkDuration;
 
     private Animator boyAnimator;
-    private Animator animator; // Animator attached to this game object
+    private bool isDragging = false;
+    private Vector3 offset;
+    private Dictionary<GameObject, bool> interactionStatus = new Dictionary<GameObject, bool>();    
     private Vector3 originalPosition;
     private Quaternion originalRotation;
-    private bool isDragging = false;
-    private Renderer objectRenderer;
-   
-    
+    private SpriteRenderer objectRenderer;
 
     void Start()
     {
-        originalPosition = transform.position;
-        originalRotation = transform.rotation;
-        objectRenderer = GetComponent<Renderer>();
-        animator = GetComponent<Animator>();
         boyAnimator = Boy.GetComponent<Animator>();
+        interactionStatus.Add(miniBus, false);
+        interactionStatus.Add(miniWhale, false);
+        interactionStatus.Add(miniBuilding, false);
+        originalPosition = transform.position;
 
-        // Initially disable colliders
-        miniBus.GetComponent<Collider2D>().enabled = false;
+        // Disable colliders for the start, only enable for the first interactable
         miniWhale.GetComponent<Collider2D>().enabled = false;
         miniBuilding.GetComponent<Collider2D>().enabled = false;
+        objectRenderer = GetComponent<SpriteRenderer>();
     }
 
     void Update()
@@ -52,12 +50,16 @@ public class DragAndDropController : MonoBehaviour
             if (hit.collider != null && hit.collider.gameObject == gameObject)
             {
                 isDragging = true;
+                HelpPointerManager.IsAnyObjectBeingInteracted = true;
+                HelpPointerManager.Instance.StopHelpPointer(); // Stop the help pointer
+                offset = transform.position - mousePosition;
             }
         }
 
         if (Input.GetMouseButtonUp(0) && isDragging)
         {
             isDragging = false;
+            HelpPointerManager.IsAnyObjectBeingInteracted = false;
             CheckDrop();
         }
 
@@ -70,7 +72,7 @@ public class DragAndDropController : MonoBehaviour
     void DragObject()
     {
         Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        transform.position = new Vector3(mousePosition.x, mousePosition.y, originalPosition.z);
+        transform.position = mousePosition + offset;
     }
 
     void CheckDrop()
@@ -79,51 +81,46 @@ public class DragAndDropController : MonoBehaviour
         {
             boyAnimator.SetBool("isRightDrop", true);
             transform.position = correctDropZoneObject.transform.position;
-            transform.rotation = correctDropZoneObject.transform.rotation;
-            animator.SetTrigger("isRightDrop");
-            
+            transform.rotation = Quaternion.identity;
+            InstantiateSpeechBubble(); // Spawn speech bubble after successful drop
 
-            // Enable the collider of the corresponding miniature object
             EnableMiniatureCollider();
+            MarkAsInteracted(gameObject);
         }
         else
         {
-            
-            StartCoroutine(BlinkRedAndReset());
-            boyAnimator.SetBool("isWrongDrop", true);
+            ResetObjectPosition();
         }
     }
 
-    public void SpawnSpeechBubble()
+    void InstantiateSpeechBubble()
     {
-        boyAnimator.SetBool("isRightDrop", false);
         GameObject speechBubble = Instantiate(speechBubblePrefab, speechBubbleContainer.position, Quaternion.identity);
         SpeechBubble bubbleController = speechBubble.GetComponent<SpeechBubble>();
         bubbleController.Setup(mechanicsPrefab, this);
-        disableColliders();
     }
-
-    void disableColliders()
-    {
-        Building.GetComponent<Collider2D>().enabled = false;
-        Whale.GetComponent<Collider2D>().enabled = false;
-        Bus.GetComponent<Collider2D>().enabled = false;
-    }
-    
 
     void EnableMiniatureCollider()
     {
         switch (gameObject.name)
         {
-            case "bus":
+            case "Bus":
                 miniBus.GetComponent<Collider2D>().enabled = true;
                 break;
-            case "whale":
+            case "Whale":
                 miniWhale.GetComponent<Collider2D>().enabled = true;
                 break;
-            case "building blocks":
+            case "Building":
                 miniBuilding.GetComponent<Collider2D>().enabled = true;
                 break;
+        }
+    }
+
+    public void MarkAsInteracted(GameObject obj)
+    {
+        if (interactionStatus.ContainsKey(obj))
+        {
+            interactionStatus[obj] = true;
         }
     }
 
@@ -132,7 +129,20 @@ public class DragAndDropController : MonoBehaviour
         return Vector3.Distance(transform.position, correctDropZoneObject.transform.position) <= dropOffset;
     }
 
-    System.Collections.IEnumerator BlinkRedAndReset()
+    public Vector3 GetDropLocation()
+    {
+        return correctDropZoneObject.transform.position;
+    }
+
+    void ResetObjectPosition()
+    {
+        // Reset position if the drop was incorrect
+        transform.position = originalPosition;
+        boyAnimator.SetBool("isWrongDrop", true);
+        StartCoroutine(BlinkRedAndReset());
+    }
+
+    IEnumerator BlinkRedAndReset()
     {
         Color originalColor = objectRenderer.material.color;
         for (int i = 0; i < blinkCount; i++)

@@ -1,36 +1,32 @@
 using UnityEngine;
+using System.Collections;
 
 public class PillowDragAndDrop : MonoBehaviour
 {
     public Transform targetPosition;
-    public Collider2D nextCollider; // The next collider to enable after this pillow is successfully dropped
-    public GameObject dust; // Reference to the dust game object, assigned from the inspector
-    public GameObject bedsheet; // Reference to the bedsheet game object, assigned from the inspector
+    public Collider2D nextCollider;
+    public GameObject dust;
+    public GameObject bedsheet;
+    public float offsetValue = 2f;
+    public HelperHandController helperHandController; // Reference to the HelperHandController
+    public bool HasInteracted { get; private set; } = false;
 
     private bool isDragging = false;
     private Vector3 startPosition;
     private Vector3 offset;
     private int originalSortingOrder;
     private SpriteRenderer spriteRenderer;
+
     public static int droppedPillowsCount = 0;
-    private static int totalPillows = 4; // Total number of pillow objects
-
-    private static bool bigPillowLeftDropped = false;
-    private static bool bigPillowRightDropped = false;
-    private static bool smallPillowLeftDropped = false;
-    private static bool smallPillowRightDropped = false;
-
-    private static bool leftSideDropped = false;
-    private static bool rightSideDropped = false;
 
     void Start()
     {
         startPosition = transform.position;
-        GetComponent<Collider2D>().enabled = false; // Disable collider initially
+        GetComponent<Collider2D>().enabled = false;
 
         if (dust != null)
         {
-            dust.SetActive(false); // Initially deactivate the dust game object
+            dust.SetActive(false);
         }
         else
         {
@@ -54,6 +50,9 @@ public class PillowDragAndDrop : MonoBehaviour
         {
             Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             transform.position = mousePosition + offset;
+
+            // If the player is interacting, stop the helper hand
+            helperHandController.StopHelperHand();
         }
     }
 
@@ -70,6 +69,9 @@ public class PillowDragAndDrop : MonoBehaviour
             {
                 spriteRenderer.sortingOrder = 10;
             }
+
+            // Stop the helper hand
+            helperHandController.StopHelperHand();
         }
     }
 
@@ -85,46 +87,81 @@ public class PillowDragAndDrop : MonoBehaviour
                 spriteRenderer.sortingOrder = originalSortingOrder;
             }
 
-            if (Vector3.Distance(transform.position, targetPosition.position) < 0.5f) // Adjust distance threshold as needed
+            if (Vector3.Distance(transform.position, targetPosition.position) < offsetValue)
             {
                 transform.position = targetPosition.position;
-                transform.rotation = Quaternion.identity; // Reset rotation to Quaternion.identity
+                transform.rotation = Quaternion.identity;
+                GetComponent<Collider2D>().enabled = false;
+                HasInteracted = true;
                 EnableNextCollider();
                 ActivateDust();
-                Debug.Log("dust activated");
-                targetPosition.gameObject.SetActive(false); // Deactivate the target game object
-                droppedPillowsCount++;
-                Debug.Log("Pillow dropped. Total dropped: " + droppedPillowsCount);
                 UpdateBedsheetSprite();
-                if (droppedPillowsCount >= totalPillows)
-                {
-                    DisableAllColliders();
-                    ChangeBedsheetSprite("bedsheet");
-                }
+                targetPosition.gameObject.SetActive(false);
+
+                // Increment the droppedPillowsCount
+                droppedPillowsCount++;
             }
             else
             {
                 transform.position = startPosition;
-                transform.rotation = Quaternion.identity; // Reset rotation to original
+                transform.rotation = Quaternion.identity;
             }
         }
     }
 
+    void OnEnable()
+    {
+        if (!HasInteracted && GetComponent<Collider2D>().enabled)
+        {
+            StartCoroutine(StartHelperHandAfterColliderEnabled());
+        }
+    }
+    private IEnumerator StartHelperHandAfterColliderEnabled()
+    {
+        // Ensure a small delay to allow the collider to be fully enabled
+        yield return new WaitForEndOfFrame();
+
+        // Debug log to confirm that the delay timer is starting
+        Debug.Log($"Delay timer started for: {gameObject.name} after collider was enabled");
+
+        if (IsBigPillow() || CorrespondingBigPillowInteracted())
+        {
+            helperHandController.ScheduleHelperHand(this);
+        }
+    }
+    private bool IsBigPillow()
+    {
+        return gameObject.name.Contains("Big");
+    }
+
+    // Helper method to check if the corresponding big pillow has been interacted with
+    private bool CorrespondingBigPillowInteracted()
+    {
+        if (gameObject.name.Contains("Small Left"))
+        {
+            var bigPillowLeft = FindObjectOfType<boyController>().pillowBigLeft.GetComponent<PillowDragAndDrop>();
+            return bigPillowLeft != null && bigPillowLeft.HasInteracted;
+        }
+        else if (gameObject.name.Contains("Small Right"))
+        {
+            var bigPillowRight = FindObjectOfType<boyController>().pillowBigRight.GetComponent<PillowDragAndDrop>();
+            return bigPillowRight != null && bigPillowRight.HasInteracted;
+        }
+        return false;
+    }
+
     private void EnableNextCollider()
     {
-        // Disable all other colliders except the next one
-        PillowDragAndDrop[] allPillows = FindObjectsOfType<PillowDragAndDrop>();
-        foreach (PillowDragAndDrop pillow in allPillows)
-        {
-            if (pillow != this && pillow.GetComponent<Collider2D>() != nextCollider)
-            {
-                pillow.GetComponent<Collider2D>().enabled = false;
-            }
-        }
-
         if (nextCollider != null)
         {
             nextCollider.enabled = true;
+            var nextPillow = nextCollider.GetComponent<PillowDragAndDrop>();
+
+            if (nextPillow != null)
+            {
+                // Schedule the helper hand for the next pillow
+                helperHandController.ScheduleNextPillow(nextPillow);
+            }
         }
     }
 
@@ -132,118 +169,59 @@ public class PillowDragAndDrop : MonoBehaviour
     {
         if (dust != null)
         {
-            dust.SetActive(true); // Activate the dust game object
+            dust.SetActive(true);
 
             Animator dustAnimator = dust.GetComponent<Animator>();
             dustAnimator.enabled = true;
             if (dustAnimator != null)
             {
-                
                 StartCoroutine(DeactivateDustAfterAnimation(dustAnimator));
             }
         }
-        }
+    }
 
-    private System.Collections.IEnumerator DeactivateDustAfterAnimation(Animator animator)
+    private IEnumerator DeactivateDustAfterAnimation(Animator animator)
     {
-        // Wait for the dusting animation to complete
         yield return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(0).length);
-        dust.SetActive(false); // Deactivate the dust game object
+        dust.SetActive(false);
     }
 
     private void UpdateBedsheetSprite()
     {
         if (bedsheet != null)
         {
-            Debug.Log("Updating bedsheet sprite...");
+            // Change the bedsheet sprite based on the number of dropped pillows
+            string spriteName = "";
 
-            if (gameObject.name == "pillow Big Left")
+            switch (droppedPillowsCount)
             {
-                bigPillowLeftDropped = true;
-                Debug.Log("Big Pillow Left Dropped");
-            }
-            else if (gameObject.name == "pillow Big right")
-            {
-                bigPillowRightDropped = true;
-                Debug.Log("Big Pillow Right Dropped");
-            }
-            else if (gameObject.name == "Pillow Small Left")
-            {
-                smallPillowLeftDropped = true;
-                Debug.Log("Small Pillow Left Dropped");
-            }
-            else if (gameObject.name == "Pillow Small Right")
-            {
-                smallPillowRightDropped = true;
-                Debug.Log("Small Pillow Right Dropped");
+                case 0:
+                    spriteName = "bedsheet3";
+                    break;
+                case 1:
+                    spriteName = "bedsheet2";
+                    break;
+                case 2:
+                    spriteName = "bedsheet1";
+                    break;
+                case 3:
+                    spriteName = "bedsheet"; // Final sprite when all pillows are dropped
+                    break;
             }
 
-            Debug.Log("bigPillowLeftDropped: " + bigPillowLeftDropped);
-            Debug.Log("bigPillowRightDropped: " + bigPillowRightDropped);
-            Debug.Log("smallPillowLeftDropped: " + smallPillowLeftDropped);
-            Debug.Log("smallPillowRightDropped: " + smallPillowRightDropped);
-
-            // Check if left side or right side pillows have been dropped
-            if (bigPillowLeftDropped && smallPillowLeftDropped)
+            if (!string.IsNullOrEmpty(spriteName))
             {
-                leftSideDropped = true;
-                Debug.Log("Left Side Dropped");
-            }
-            if (bigPillowRightDropped && smallPillowRightDropped)
-            {
-                rightSideDropped = true;
-                Debug.Log("Right Side Dropped");
-            }
-
-            Debug.Log("leftSideDropped: " + leftSideDropped);
-            Debug.Log("rightSideDropped: " + rightSideDropped);
-
-            // Update the bedsheet sprite based on the drop sequence
-            if (leftSideDropped || rightSideDropped)
-            {
-                if (droppedPillowsCount == 2)
+                Sprite newSprite = Resources.Load<Sprite>("images/" + spriteName);
+                if (newSprite != null)
                 {
-                    Debug.Log("Changing bedsheet sprite to bedsheet2");
-                    ChangeBedsheetSprite("bedsheet2");
+                    bedsheet.GetComponent<SpriteRenderer>().sprite = newSprite;
+                    Debug.Log("Bedsheet sprite updated to: " + spriteName);
                 }
-                else if (droppedPillowsCount == 3)
+                else
                 {
-                    Debug.Log("Changing bedsheet sprite to bedsheet1");
-                    ChangeBedsheetSprite("bedsheet1");
+                    Debug.LogError("Sprite not found in Resources/images: " + spriteName);
                 }
             }
-        }
-    }
-
-    private void ChangeBedsheetSprite(string spriteName)
-    {
-        SpriteRenderer bedsheetRenderer = bedsheet.GetComponent<SpriteRenderer>();
-        if (bedsheetRenderer != null)
-        {
-            // Load sprite from Resources/images folder
-            Sprite newSprite = Resources.Load<Sprite>("images/" + spriteName);
-            if (newSprite != null)
-            {
-                bedsheetRenderer.sprite = newSprite;
-                Debug.Log("Changed bedsheet sprite to: " + spriteName);
-            }
-            else
-            {
-                Debug.LogError("Sprite not found in Resources/images: " + spriteName);
-            }
-        }
-        else
-        {
-            Debug.LogError("SpriteRenderer component not found on bedsheet.");
-        }
-    }
-
-    private void DisableAllColliders()
-    {
-        PillowDragAndDrop[] allPillows = FindObjectsOfType<PillowDragAndDrop>();
-        foreach (PillowDragAndDrop pillow in allPillows)
-        {
-            pillow.GetComponent<Collider2D>().enabled = false;
         }
     }
 }

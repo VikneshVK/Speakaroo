@@ -3,30 +3,90 @@ using System.Collections;
 
 public class CardManager : MonoBehaviour
 {
-    public GameObject card1; // Reference to Card 1 GameObject
-    public GameObject card2; // Reference to Card 2 GameObject
-    public GameObject maskPrefab; // Reference to the Mask prefab
+    public GameObject card1;
+    public GameObject card2;
+    public GameObject maskPrefab;
+    public RetryButton retryButton;
 
     private bool isCard1Shaking = false;
     private bool isCard2Shaking = false;
 
     private void Start()
     {
-        // Start monitoring both cards
+        ST_AudioManager.Instance.OnRetryClicked += OnRetryButtonClicked;
+        ST_AudioManager.Instance.OnRecordingPlaybackStart += OnRecordingPlaybackStart;
+        ST_AudioManager.Instance.OnRecordingPlaybackEnd += OnRecordingPlaybackEnd;
+
         StartCoroutine(MonitorCard(card1));
         StartCoroutine(MonitorCard(card2));
     }
 
+    private void OnDestroy()
+    {
+        if (ST_AudioManager.Instance != null)
+        {
+            ST_AudioManager.Instance.OnRetryClicked -= OnRetryButtonClicked;
+            ST_AudioManager.Instance.OnRecordingPlaybackStart -= OnRecordingPlaybackStart;
+            ST_AudioManager.Instance.OnRecordingPlaybackEnd -= OnRecordingPlaybackEnd;
+        }
+    }
+
+    private void OnRetryButtonClicked()
+    {
+        if (card1 == null)
+        {
+            if (card2 != null)
+            {
+                Collider2D card2Collider = card2.GetComponent<Collider2D>();
+                if (card2Collider != null) card2Collider.enabled = false;
+
+                if (isCard2Shaking)
+                {
+                    StopCoroutine(ShakeCard(card2));
+                    isCard2Shaking = false;
+                }
+            }
+        }
+    }
+
+    private void OnRecordingPlaybackStart()
+    {
+        // Disable Card 2 interaction and shaking during Card 1's playback
+        if (card1 == null && card2 != null)
+        {
+            Collider2D card2Collider = card2.GetComponent<Collider2D>();
+            if (card2Collider != null) card2Collider.enabled = false;
+
+            if (isCard2Shaking)
+            {
+                StopCoroutine(ShakeCard(card2));
+                isCard2Shaking = false;
+            }
+        }
+    }
+
+    private void OnRecordingPlaybackEnd()
+    {
+        // Re-enable Card 2 interaction and shaking after Card 1's playback is done
+        if (card2 != null)
+        {
+            Collider2D card2Collider = card2.GetComponent<Collider2D>();
+            if (card2Collider != null) card2Collider.enabled = true;
+
+            StartCoroutine(ShakeCard(card2));
+        }
+    }
+
     private IEnumerator MonitorCard(GameObject card)
     {
-        while (card != null) // Ensure the loop exits if the card is destroyed
+        while (card != null)
         {
             Collider2D cardCollider = card.GetComponent<Collider2D>();
             if (cardCollider != null && cardCollider.enabled && !IsMaskPrefabSpawned(card))
             {
-                yield return new WaitForSeconds(2f); // Wait for 2 seconds before starting the shake
+                yield return new WaitForSeconds(2f);
 
-                if (card != null && cardCollider.enabled && !IsMaskPrefabSpawned(card)) // Check again to see if the mask is still not spawned and collider is enabled
+                if (card != null && cardCollider.enabled && !IsMaskPrefabSpawned(card))
                 {
                     if (card == card1 && !isCard1Shaking)
                     {
@@ -35,68 +95,67 @@ public class CardManager : MonoBehaviour
                     }
                     else if (card == card2 && !isCard2Shaking)
                     {
-                        isCard2Shaking = true;
-                        StartCoroutine(ShakeCard(card2));
+                        yield return new WaitUntil(() => !retryButton.retryButton.interactable);
+
+                        if (!isCard1Shaking)
+                        {
+                            isCard2Shaking = true;
+                            StartCoroutine(ShakeCard(card2));
+                        }
                     }
                 }
             }
-
             yield return null;
         }
     }
 
     private bool IsMaskPrefabSpawned(GameObject card)
     {
-        if (card == null)
-            return false;
+        if (card == null) return false; // Ensure card hasn't been destroyed
 
-        // Check if the mask prefab (or any of its instances) is a child of the card
         foreach (Transform child in card.transform)
         {
-            if (child.name == maskPrefab.name)
-            {
-                return true;
-            }
+            if (child == null) continue; // Check for null child (if the hierarchy changes)
+
+            if (child.name.Contains(maskPrefab.name)) return true;
         }
         return false;
     }
 
     private IEnumerator ShakeCard(GameObject card)
     {
-        while (card != null) // Ensure the loop exits if the card is destroyed
+        while (card != null)
         {
+            if (card == null) yield break; // Ensure card hasn't been destroyed
+
             Collider2D cardCollider = card.GetComponent<Collider2D>();
-            if (cardCollider != null && cardCollider.enabled) // Check if the collider is enabled
+            if (cardCollider != null && cardCollider.enabled)
             {
-                // Scale up the card
                 LeanTween.scale(card, card.transform.localScale * 1.2f, 0.5f).setEase(LeanTweenType.easeOutBack)
                     .setOnComplete(() =>
                     {
-                        // Scale back down to original size if the card still exists and collider is enabled
                         if (card != null && card.GetComponent<Collider2D>() != null && card.GetComponent<Collider2D>().enabled)
                         {
                             LeanTween.scale(card, card.transform.localScale / 1.2f, 0.5f).setEase(LeanTweenType.easeInBack);
                         }
                     });
 
-                yield return new WaitForSeconds(3f); // Shake every 3 seconds
+                yield return new WaitForSeconds(3f);
 
-                // Stop shaking if the mask prefab is spawned or if the collider is disabled
-                if (IsMaskPrefabSpawned(card) || cardCollider == null || !cardCollider.enabled)
+                // Check if the card is still valid before continuing
+                if (card == null || IsMaskPrefabSpawned(card) || cardCollider == null || !cardCollider.enabled)
                 {
-                    break;
+                    yield break;
                 }
             }
             else
             {
-                break; // Exit if the collider is disabled
+                yield break; // Exit the coroutine if the collider is disabled or the card is null
             }
         }
 
-        // Reset shaking flag once shaking stops
-        if (card == card1)
-            isCard1Shaking = false;
-        else if (card == card2)
-            isCard2Shaking = false;
+        // Reset shaking state if the card is no longer valid
+        if (card == card1) isCard1Shaking = false;
+        else if (card == card2) isCard2Shaking = false;
     }
 }

@@ -290,8 +290,9 @@ GameObject:
   - component: {fileID: 218784477}
   - component: {fileID: 218784475}
   - component: {fileID: 218784478}
+  - component: {fileID: 218784480}
   m_Layer: 0
-  m_Name: bus
+  m_Name: Bus
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -378,17 +379,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   correctDropZoneObject: {fileID: 2105554311}
   speechBubblePrefab: {fileID: 2720721835439482840, guid: a33b69f5cb154b44a87abb20dd604201, type: 3}
-  mechanicsPrefab: {fileID: 681227826393822397, guid: 0c81fb2adb8f5af458d93746ed7a50ee, type: 3}
-  Bus: {fileID: 218784474}
+  mechanicsPrefab: {fileID: 681227826393822397, guid: b8505e387e2818a4e87d5a833d88a2cd, type: 3}
   miniBus: {fileID: 1347302753}
-  Whale: {fileID: 717157622}
   miniWhale: {fileID: 408049180}
-  Building: {fileID: 1512471183}
   miniBuilding: {fileID: 1462803087}
   Boy: {fileID: 869779863}
   speechBubbleContainer: {fileID: 1130693788}
-  dropOffset: 0.5
-  blinkCount: 2
+  dropOffset: 1
+  blinkCount: 3
   blinkDuration: 0.1
 --- !u!61 &218784478
 BoxCollider2D:
@@ -456,6 +454,22 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &218784480
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 218784474}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c856ad9b32e6094eba6c121df466a0a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  delayBeforeHelp: 5
+  isInteracted: 0
+  needsHelp: 0
+  IsDragAndDrop: 1
 --- !u!1 &268106268
 GameObject:
   m_ObjectHideFlags: 0
@@ -967,8 +981,9 @@ GameObject:
   - component: {fileID: 717157623}
   - component: {fileID: 717157625}
   - component: {fileID: 717157626}
+  - component: {fileID: 717157628}
   m_Layer: 0
-  m_Name: whale
+  m_Name: Whale
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1055,18 +1070,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   correctDropZoneObject: {fileID: 383930596}
   speechBubblePrefab: {fileID: 2720721835439482840, guid: a33b69f5cb154b44a87abb20dd604201, type: 3}
-  mechanicsPrefab: {fileID: 681227826393822397, guid: f66cc0a68d7928a45b0cdfd426735e5d, type: 3}
-  Bus: {fileID: 218784474}
+  mechanicsPrefab: {fileID: 681227826393822397, guid: ba3ed2b463e489c448a9d466d1a2cd42, type: 3}
   miniBus: {fileID: 1347302753}
-  Whale: {fileID: 717157622}
   miniWhale: {fileID: 408049180}
-  Building: {fileID: 1512471183}
   miniBuilding: {fileID: 1462803087}
   Boy: {fileID: 869779863}
   speechBubbleContainer: {fileID: 1130693788}
-  dropOffset: 0.5
-  blinkCount: 2
-  blinkDuration: 0.1
+  dropOffset: 1
+  blinkCount: 0
+  blinkDuration: 0
 --- !u!61 &717157626
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1133,6 +1145,22 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &717157628
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 717157622}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c856ad9b32e6094eba6c121df466a0a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  delayBeforeHelp: 5
+  isInteracted: 0
+  needsHelp: 0
+  IsDragAndDrop: 1
 --- !u!1 &731790912
 GameObject:
   m_ObjectHideFlags: 0
@@ -1180,6 +1208,10 @@ PrefabInstance:
       propertyPath: mainWhale
       value: 
       objectReference: {fileID: 717157622}
+    - target: {fileID: 3958954367254653345, guid: 64d9d1640cac20f409cb264cca096a26, type: 3}
+      propertyPath: helperHand
+      value: 
+      objectReference: {fileID: 1529932820}
     - target: {fileID: 3958954367254653345, guid: 64d9d1640cac20f409cb264cca096a26, type: 3}
       propertyPath: mainBuilding
       value: 
@@ -1987,6 +2019,51 @@ Transform:
   m_Children: []
   m_Father: {fileID: 268106270}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1339362997
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1339362999}
+  - component: {fileID: 1339363000}
+  m_Layer: 0
+  m_Name: HelpPointerManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1339362999
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1339362997}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1339363000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1339362997}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1bf2923fc0c70244d8206020e523e8dc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pointer: {fileID: 1529932820}
 --- !u!1 &1347302753
 GameObject:
   m_ObjectHideFlags: 0
@@ -2265,8 +2342,9 @@ GameObject:
   - component: {fileID: 1512471186}
   - component: {fileID: 1512471184}
   - component: {fileID: 1512471187}
+  - component: {fileID: 1512471189}
   m_Layer: 0
-  m_Name: building blocks
+  m_Name: Building
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2353,18 +2431,15 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   correctDropZoneObject: {fileID: 2058754635}
   speechBubblePrefab: {fileID: 2720721835439482840, guid: a33b69f5cb154b44a87abb20dd604201, type: 3}
-  mechanicsPrefab: {fileID: 681227826393822397, guid: 05d8351dfbf6e514f9ac820565a905f5, type: 3}
-  Bus: {fileID: 218784474}
+  mechanicsPrefab: {fileID: 681227826393822397, guid: cdc49c8db49148c43b2b687df702b594, type: 3}
   miniBus: {fileID: 1347302753}
-  Whale: {fileID: 717157622}
   miniWhale: {fileID: 408049180}
-  Building: {fileID: 1512471183}
   miniBuilding: {fileID: 1462803087}
   Boy: {fileID: 869779863}
   speechBubbleContainer: {fileID: 1130693788}
-  dropOffset: 0.5
-  blinkCount: 2
-  blinkDuration: 0.1
+  dropOffset: 1
+  blinkCount: 0
+  blinkDuration: 0
 --- !u!61 &1512471187
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2431,6 +2506,27 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &1512471189
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1512471183}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7c856ad9b32e6094eba6c121df466a0a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  delayBeforeHelp: 5
+  isInteracted: 0
+  needsHelp: 0
+  IsDragAndDrop: 1
+--- !u!1 &1529932820 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 668317662352755921, guid: 7c406c4f451b7c44597c3e0d9613244d, type: 3}
+  m_PrefabInstance: {fileID: 8985607407702552690}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1581081878
 GameObject:
   m_ObjectHideFlags: 0
@@ -2613,7 +2709,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1261242162691769517, guid: 5cc33678a45eebd4eb94af593e86f318, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3220799799381724627, guid: 5cc33678a45eebd4eb94af593e86f318, type: 3}
       propertyPath: m_Pivot.x
@@ -3017,6 +3113,63 @@ Transform:
   m_Children: []
   m_Father: {fileID: 268106270}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &8985607407702552690
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 668317662352755921, guid: 7c406c4f451b7c44597c3e0d9613244d, type: 3}
+      propertyPath: m_Name
+      value: helpPointer
+      objectReference: {fileID: 0}
+    - target: {fileID: 1954783083703522029, guid: 7c406c4f451b7c44597c3e0d9613244d, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1954783083703522029, guid: 7c406c4f451b7c44597c3e0d9613244d, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1954783083703522029, guid: 7c406c4f451b7c44597c3e0d9613244d, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1954783083703522029, guid: 7c406c4f451b7c44597c3e0d9613244d, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1954783083703522029, guid: 7c406c4f451b7c44597c3e0d9613244d, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1954783083703522029, guid: 7c406c4f451b7c44597c3e0d9613244d, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1954783083703522029, guid: 7c406c4f451b7c44597c3e0d9613244d, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1954783083703522029, guid: 7c406c4f451b7c44597c3e0d9613244d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1954783083703522029, guid: 7c406c4f451b7c44597c3e0d9613244d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1954783083703522029, guid: 7c406c4f451b7c44597c3e0d9613244d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 7c406c4f451b7c44597c3e0d9613244d, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -3037,3 +3190,5 @@ SceneRoots:
   - {fileID: 2094902405}
   - {fileID: 550111664}
   - {fileID: 776928126}
+  - {fileID: 8985607407702552690}
+  - {fileID: 1339362999}

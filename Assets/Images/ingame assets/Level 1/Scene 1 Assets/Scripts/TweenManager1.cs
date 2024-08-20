@@ -29,7 +29,7 @@ public class TweenManager1 : MonoBehaviour
     private void HandlePlaybackComplete()
     {
         // Start the 5-second timer
-        StartCoroutine(Timer(5f));
+        StartCoroutine(Timer(1f));
     }
 
     private void ResetTimer()

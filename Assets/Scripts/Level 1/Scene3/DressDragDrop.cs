@@ -1,4 +1,3 @@
-using Unity.VisualScripting;
 using UnityEngine;
 
 public class DressDragDrop : MonoBehaviour
@@ -80,6 +79,7 @@ public class DressDragDrop : MonoBehaviour
                 case "School":
                     animator.Play("SchoolDress");
                     EnableDisableDresses(schoolDress, summerDress, winterDress);
+                    DisableAllDresses(); // Disable dragging and colliders on all dresses
                     break;
                 case "Summer":
                     animator.Play("red dress Sad Face Hand Movements");
@@ -99,5 +99,19 @@ public class DressDragDrop : MonoBehaviour
         activeDress.SetActive(false);
         firstInactiveDress.SetActive(true);
         secondInactiveDress.SetActive(true);
+    }
+
+    private void DisableAllDresses()
+    {
+        DressDragDrop[] allDresses = FindObjectsOfType<DressDragDrop>();
+        foreach (var dress in allDresses)
+        {
+            dress.enabled = false; // Disable dragging
+            Collider2D collider = dress.GetComponent<Collider2D>();
+            if (collider != null)
+            {
+                collider.enabled = false; // Disable collider
+            }
+        }
     }
 }

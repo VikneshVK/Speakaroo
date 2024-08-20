@@ -2,16 +2,21 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 
-public class retrybutton : MonoBehaviour
+public class RetryButton : MonoBehaviour
 {
     public Button retryButton;
-    public GameObject card2; 
-    private Image buttonImage; 
-    private Image ringImage; 
+    public GameObject card2;
+    private Image buttonImage;
+    private Image ringImage;
     private float recordLength;
 
-    private Sprite recordingSprite;
+    private Sprite playbackSprite;
     private Sprite retrySprite;
+    private Sprite defaultSprite;
+
+    private AudioSource audioSource; // AudioSource attached to the STMechanics GameObject
+    public AudioClip scratchAudioClip;
+    public AudioClip revealAudioClip;
 
     private int retryCountCard1 = 0;
     private int retryCountCard2 = 0;
@@ -19,95 +24,215 @@ public class retrybutton : MonoBehaviour
 
     private void Start()
     {
-        
-        recordingSprite = Resources.Load<Sprite>("Images/STMechanics/RetrySprite");
-        retrySprite = Resources.Load<Sprite>("Images/STMechanics/RecordingSprite");
+        // Load sprites
+        playbackSprite = Resources.Load<Sprite>("Images/STMechanics/PlaybackSprite");
+        retrySprite = Resources.Load<Sprite>("Images/STMechanics/RetrySprite");
+        defaultSprite = Resources.Load<Sprite>("Images/STMechanics/DefaultSprite");
+        scratchAudioClip = Resources.Load<AudioClip>("Audio/ScratchAudio");
+        revealAudioClip = Resources.Load<AudioClip>("Audio/RevealAudio");
 
-        
         buttonImage = retryButton.GetComponent<Image>();
         ringImage = retryButton.transform.Find("Ring").GetComponent<Image>();
-        /*RetrySprite*/
 
+        // Initialize AudioSource
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource == null)
+        {
+            Debug.LogError("AudioSource component missing on STMechanics GameObject.");
+        }
 
+        // Set initial sprite to default with alpha 20
+        buttonImage.sprite = defaultSprite;
+        SetAlpha(buttonImage, 20);
+        SetAlpha(ringImage, 20);
 
         retryButton.interactable = false;
 
         // Subscribe to events
-        ST_AudioManager.Instance.OnCard1PlaybackComplete += HandleCard1PlaybackComplete;
         ST_AudioManager.Instance.OnRecordingComplete += HandleRecordingComplete;
         ST_AudioManager.Instance.OnCard2Interaction += HandleCard2Interaction;
         ST_AudioManager.Instance.OnRecordingStart += HandleRecordingStart;
+        ST_AudioManager.Instance.OnRecordingPlaybackStart += HandleRecordingPlaybackStart;
+        ST_AudioManager.Instance.OnRecordingPlaybackEnd += HandleRecordingPlaybackEnd;
 
-        // Add a listener for the Retry button click event
         retryButton.onClick.AddListener(HandleRetryButtonClick);
 
-        // Get the recording length from the AudioManager
         recordLength = ST_AudioManager.Instance.recordLength;
     }
 
     private void OnDestroy()
     {
-        // Unsubscribe from events
-        ST_AudioManager.Instance.OnCard1PlaybackComplete -= HandleCard1PlaybackComplete;
-        ST_AudioManager.Instance.OnRecordingComplete -= HandleRecordingComplete;
-        ST_AudioManager.Instance.OnCard2Interaction -= HandleCard2Interaction;
-        ST_AudioManager.Instance.OnRecordingStart -= HandleRecordingStart;
+        if (ST_AudioManager.Instance != null)
+        {
+            // Unsubscribe from events
+            ST_AudioManager.Instance.OnRecordingComplete -= HandleRecordingComplete;
+            ST_AudioManager.Instance.OnCard2Interaction -= HandleCard2Interaction;
+            ST_AudioManager.Instance.OnRecordingStart -= HandleRecordingStart;
+            ST_AudioManager.Instance.OnRecordingPlaybackStart -= HandleRecordingPlaybackStart;
+            ST_AudioManager.Instance.OnRecordingPlaybackEnd -= HandleRecordingPlaybackEnd;
+        }
 
-        // Remove the listener for the Retry button click event
         retryButton.onClick.RemoveListener(HandleRetryButtonClick);
     }
 
-    private void HandleCard1PlaybackComplete()
+    public void PlayScratchAudio()
     {
-        HandleRecordingComplete(1);
-    }
-
-    private void HandleRecordingComplete(int cardNumber)
-    {
-        // Change the button image to the retry sprite and enable button interaction
-        buttonImage.sprite = retrySprite;
-
-        if (cardNumber == 1 && retryCountCard1 < maxRetries)
+        if (scratchAudioClip != null)
         {
-            retryButton.interactable = true;
+            audioSource.clip = scratchAudioClip;
+            audioSource.Play();
         }
-        else if (cardNumber == 2 && retryCountCard2 < maxRetries)
+        else
         {
-            retryButton.interactable = true;
+            Debug.LogError("Scratch audio clip is not assigned.");
         }
     }
 
-    private void HandleCard2Interaction()
+    public void PlayRevealAudio()
     {
-       
-        buttonImage.sprite = retrySprite;
-
-        if (retryCountCard2 < maxRetries)
+        if (revealAudioClip != null)
         {
-            retryButton.interactable = true;
+            StartCoroutine(PlayRevealAudioWithDelay());
         }
+        else
+        {
+            Debug.LogError("Reveal audio clip is not assigned.");
+        }
+    }
+
+    private IEnumerator PlayRevealAudioWithDelay()
+    {
+        audioSource.clip = revealAudioClip;
+        audioSource.Play();
+        yield return new WaitForSeconds(2f); // Wait for 2 seconds
+        // Add any additional logic after reveal audio here
+    }
+
+    public void PlayRevealAudioWithCardAudio(string cardTag)
+    {
+        StartCoroutine(PlayRevealAndCardAudioCoroutine(cardTag));
+    }
+
+    private IEnumerator PlayRevealAndCardAudioCoroutine(string cardTag)
+    {
+        // Play the reveal audio
+        if (revealAudioClip != null)
+        {
+            audioSource.clip = revealAudioClip;
+            audioSource.Play();
+            yield return new WaitForSeconds(revealAudioClip.length); // Wait for the reveal audio to finish
+        }
+        else
+        {
+            Debug.LogError("Reveal audio clip is not assigned.");
+        }
+
+        // Now play the original card audio
+        ST_AudioManager.Instance.PlayAudioAfterDestroy(cardTag);
     }
 
     private void HandleRecordingStart()
     {
-        // Change the button image to the recording sprite and disable button interaction
-        buttonImage.sprite = recordingSprite;
+        // Change the button image to the retry sprite with full opacity
+        buttonImage.sprite = retrySprite;
+        SetAlpha(buttonImage, 255);
+        SetAlpha(ringImage, 255);
         retryButton.interactable = false;
-        
+
+        // Start filling the ring during recording
         ringImage.fillAmount = 1f;
-        
         LeanTween.value(gameObject, 1f, 0f, recordLength)
             .setOnUpdate((float val) => { ringImage.fillAmount = val; })
-            .setEase(LeanTweenType.linear)
-            .setOnComplete(() =>
-            {                
-                HandleRecordingComplete(0);
-            });
+            .setEase(LeanTweenType.linear);
+    }
+
+    private void HandleRecordingComplete(int cardNumber)
+    {
+        // Keep the button image as retry sprite
+        buttonImage.sprite = retrySprite;
+        retryButton.interactable = true;
+    }
+
+    private void HandleRecordingPlaybackStart()
+    {
+        // Ensure the recordedAudioSource and its clip are valid before proceeding
+        if (ST_AudioManager.Instance.recordedAudioSource != null && ST_AudioManager.Instance.recordedAudioSource.clip != null)
+        {
+            // Change the button image to the playback sprite
+            buttonImage.sprite = playbackSprite;
+
+            // Start filling the ring during playback
+            ringImage.fillAmount = 1f;
+            LeanTween.value(gameObject, 1f, 0f, ST_AudioManager.Instance.recordedAudioSource.clip.length)
+                .setOnUpdate((float val) => { ringImage.fillAmount = val; })
+                .setEase(LeanTweenType.linear);
+
+            // Play the recorded audio
+            ST_AudioManager.Instance.recordedAudioSource.Play();
+        }
+        else
+        {
+            Debug.LogError("Recorded audio source or clip is not set.");
+        }
+    }
+
+    private void HandleRecordingPlaybackEnd()
+    {
+        StartCoroutine(HandlePostPlaybackActions());
+    }
+
+    private IEnumerator HandlePostPlaybackActions()
+    {
+
+        retryButton.interactable = true;
+        yield return new WaitForSeconds(4f);
+
+        // After 4-second delay
+        retryButton.interactable = false;
+
+        if (retryCountCard1 < maxRetries)
+        {
+
+            EnableCard2();
+        }
+        else if (retryCountCard2 < maxRetries)
+        {
+
+            ST_AudioManager.Instance.TriggerOnPlaybackComplete();
+        }
+    }
+
+    private void EnableCard2()
+    {
+
+        if (card2 != null)
+        {
+            Collider2D card2Collider = card2.GetComponent<Collider2D>();
+            if (card2Collider != null)
+            {
+                card2Collider.enabled = true;
+            }
+        }
+
+        buttonImage.sprite = defaultSprite;
+        SetAlpha(buttonImage, 20);
+        SetAlpha(ringImage, 20);
+    }
+
+    private void HandleCard2Interaction()
+    {
+
+        buttonImage.sprite = defaultSprite;
+        SetAlpha(buttonImage, 20);
+        SetAlpha(ringImage, 20);
+        retryButton.interactable = false;
     }
 
     private void HandleRetryButtonClick()
     {
-        
+
+        StopAllCoroutines();
+
         if (card2 != null)
         {
             Collider2D card2Collider = card2.GetComponent<Collider2D>();
@@ -130,7 +255,7 @@ public class retrybutton : MonoBehaviour
             Debug.Log($"Retry Button Used for Card 2: {retryCountCard2} times.");
         }
 
-        // If the retry count reaches the limit, disable the button
+        // Disable the button if maximum retries are reached
         if ((cardTag == "Card_1" && retryCountCard1 >= maxRetries) ||
             (cardTag == "Card_2" && retryCountCard2 >= maxRetries))
         {
@@ -139,9 +264,11 @@ public class retrybutton : MonoBehaviour
         }
         else
         {
-            // Change the button image to the recording sprite and disable button interaction
-            buttonImage.sprite = recordingSprite;
-            retryButton.interactable = false;           
+            // Change the button image to the retry sprite and disable interaction
+            buttonImage.sprite = retrySprite;
+            retryButton.interactable = false;
+
+            // Start the process of waiting for the audio to finish and then starting the recording
             StartCoroutine(WaitForAudioPlaybackAndStartRecording());
         }
     }
@@ -154,28 +281,31 @@ public class retrybutton : MonoBehaviour
         if (cardTag == "Card_1")
         {
             ST_AudioManager.Instance.PlayAudioAfterDestroy("Card_1");
+            yield return new WaitForSeconds(ST_AudioManager.Instance.audioSourceCard1.clip.length);
         }
         else if (cardTag == "Card_2")
         {
             ST_AudioManager.Instance.PlayAudioAfterDestroy("Card_2");
+            yield return new WaitForSeconds(ST_AudioManager.Instance.audioSourceCard2.clip.length);
         }
 
-       
-        yield return new WaitForSeconds(ST_AudioManager.Instance.audioSourceCard1.clip.length);
-
-        
         ST_AudioManager.Instance.TriggerRecordingStart();
 
-        
         ringImage.fillAmount = 1f;
 
-        // Start reducing the ring's fill amount over the recording duration
         LeanTween.value(gameObject, 1f, 0f, recordLength)
             .setOnUpdate((float val) => { ringImage.fillAmount = val; })
             .setEase(LeanTweenType.linear)
             .setOnComplete(() =>
-            {                
+            {
                 HandleRecordingComplete(0);
             });
+    }
+
+    private void SetAlpha(Image image, float alphaValue)
+    {
+        Color color = image.color;
+        color.a = alphaValue / 255f;
+        image.color = color;
     }
 }

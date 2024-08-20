@@ -14,6 +14,7 @@ public class BoyAnimationController : MonoBehaviour
     public Transform speechBubbleContainer;
 
     private float originalOrthographicSize;
+    private AnchorGameObject AnchorGameObject;
     private CameraViewportHandler viewportHandler;
 
     private void Start()
@@ -33,9 +34,11 @@ public class BoyAnimationController : MonoBehaviour
             return;
         }
 
+        AnchorGameObject = GetComponent<AnchorGameObject>();
         viewportHandler = mainCamera.GetComponent<CameraViewportHandler>();
         originalOrthographicSize = mainCamera.orthographicSize;
         targetPosition = new Vector3(0, transform.position.y, transform.position.z); // Center of the viewport
+        AnchorGameObject.enabled = false;
 
         // Start the scene by walking to the center
         StartCoroutine(WalkToCenter());
@@ -56,6 +59,7 @@ public class BoyAnimationController : MonoBehaviour
 
         transform.position = targetPosition;
         animator.SetBool("isWalking", false);
+        AnchorGameObject.enabled = true;
 
         // Transition from Idle to Talking controlled by exit time
         yield return new WaitForSeconds(1f); // Allow time for transition to idle

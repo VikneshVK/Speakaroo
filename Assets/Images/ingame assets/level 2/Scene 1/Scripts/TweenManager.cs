@@ -29,7 +29,7 @@ public class TweenManager : MonoBehaviour
     private void HandlePlaybackComplete()
     {
         // Start the 5-second timer
-        StartCoroutine(Timer(5f));
+        StartCoroutine(Timer(1f));
     }
 
     private void ResetTimer()
@@ -63,7 +63,7 @@ public class TweenManager : MonoBehaviour
         // Wait for the children to finish tweening
         LeanTween.delayedCall(0.5f, () =>
         {
-             speechTherapyCompleted = true;
+            speechTherapyCompleted = true;
             // Set the animator parameters for the bird
             if (birdAnimator != null)
             {
@@ -79,4 +79,3 @@ public class TweenManager : MonoBehaviour
         });
     }
 }
-

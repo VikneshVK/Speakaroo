@@ -119,12 +119,29 @@ public class ParrotController : MonoBehaviour
     private void ReturnToStart()
     {
         transform.position = Vector3.MoveTowards(transform.position, startPosition, speed * Time.deltaTime);
+
         if (transform.position == startPosition)
         {
             ResetAnimatorBooleans();
-            /*spriteRenderer.flipX = true;*/
             anchor.enabled = true;
             isReturning = false;
+
+            // Reset the interaction timer and start tracking for the next objects
+            ResetTimersForNextObjects();
+        }
+    }
+    private void ResetTimersForNextObjects()
+    {
+        var otherKeys = mainObjects.Keys.Where(k => !pushedObjects.Contains(k)).ToList();
+
+        foreach (var key in otherKeys)
+        {
+            var interactable = mainObjects[key].GetComponent<InteractableObject>();
+            if (interactable != null)
+            {
+                interactable.EnableInteractionTracking();  // This will reset the timer and start tracking
+                Debug.Log($"Timer reset and tracking started for {key} after Kiki returned.");
+            }
         }
     }
 
@@ -145,8 +162,18 @@ public class ParrotController : MonoBehaviour
         {
             if (!pushedObjects.Contains(key))
             {
-                mainObjects[key].GetComponent<Collider2D>().enabled = true;
+                var gameObject = mainObjects[key];
+                gameObject.GetComponent<Collider2D>().enabled = true;
+
+                // Start interaction tracking for the newly enabled object
+                InteractableObject interactable = gameObject.GetComponent<InteractableObject>();
+                if (interactable != null)
+                {
+                    interactable.EnableInteractionTracking(); // This already resets the timer
+                    Debug.Log($"Collider enabled and tracking started for {key}");
+                }
             }
         }
     }
+
 }

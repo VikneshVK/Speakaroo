@@ -22,17 +22,21 @@ public class boyController : MonoBehaviour
     private bool hasReachedStopPosition = false;
     private bool shouldContinueWalking = false;
 
+    private HelperHandController helperHandController;
+
     void Start()
     {
         animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
+
+        helperHandController = FindObjectOfType<HelperHandController>();
 
         if (stopPosition == null)
         {
             Debug.LogError("Stop position not set for BoyController.");
         }
 
-        // Initially disable colliders for the interactive objects
+        // Initially disable colliders for all interactive objects
         DisableColliders();
     }
 
@@ -53,17 +57,14 @@ public class boyController : MonoBehaviour
         if (animator.GetCurrentAnimatorStateInfo(0).IsName("Talk") &&
             animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.96f)
         {
-            EnableColliders();
+            EnableBigPillowColliders();
         }
 
         // Check if all pillows have been dropped and trigger the allDone animation parameter
-        if (PillowDragAndDrop.droppedPillowsCount == 4)  // Accessing static variable correctly
+        if (PillowDragAndDrop.droppedPillowsCount == 4)  // Assuming you are tracking with droppedPillowsCount
         {
             animator.SetBool("allDone", true);
         }
-
-        /*Debug.Log("Current state: " + animator.GetCurrentAnimatorStateInfo(0).IsName("Talk 0"));
-        Debug.Log("Normalized time: " + animator.GetCurrentAnimatorStateInfo(0).normalizedTime);*/
 
         if (animator.GetCurrentAnimatorStateInfo(0).IsName("Talk 0") && animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.9f)
         {
@@ -72,22 +73,14 @@ public class boyController : MonoBehaviour
 
         if (shouldContinueWalking)
         {
-            Debug.Log("Attempting to move left");
             animator.SetBool("canWalk", true);
             spriteRenderer.flipX = false;
-            Debug.Log("Current position: " + transform.position);
-            Debug.Log("Walk speed: " + walkSpeed);
-
             transform.position += Vector3.left * walkSpeed * Time.deltaTime;
-            Debug.Log("New position: " + transform.position);
         }
-
     }
-
 
     private void MoveToStopPosition()
     {
-        // Flip the sprite to face right
         spriteRenderer.flipX = true;
 
         Vector3 targetPosition = new Vector3(stopPosition.position.x, transform.position.y, transform.position.z);
@@ -109,13 +102,29 @@ public class boyController : MonoBehaviour
         if (pillowBigLeft != null) pillowBigLeft.GetComponent<Collider2D>().enabled = false;
         if (pillowSmallLeft != null) pillowSmallLeft.GetComponent<Collider2D>().enabled = false;
         if (pillowSmallRight != null) pillowSmallRight.GetComponent<Collider2D>().enabled = false;
-
     }
 
-    private void EnableColliders()
+    private void EnableBigPillowColliders()
     {
-        if (pillowBigRight != null) pillowBigRight.GetComponent<Collider2D>().enabled = true;
-        if (pillowBigLeft != null) pillowBigLeft.GetComponent<Collider2D>().enabled = true;
-        Debug.Log("Colliders enabled for interactive objects.");
+        if (pillowBigRight != null)
+        {
+            pillowBigRight.GetComponent<Collider2D>().enabled = true;
+            var pillowRightScript = pillowBigRight.GetComponent<PillowDragAndDrop>();
+            if (pillowRightScript != null)
+            {
+                helperHandController.ScheduleHelperHand(pillowRightScript);
+            }
+        }
+
+        if (pillowBigLeft != null)
+        {
+            pillowBigLeft.GetComponent<Collider2D>().enabled = true;
+            var pillowLeftScript = pillowBigLeft.GetComponent<PillowDragAndDrop>();
+            if (pillowLeftScript != null)
+            {
+                helperHandController.ScheduleHelperHand(pillowLeftScript);
+            }
+        }
     }
+
 }

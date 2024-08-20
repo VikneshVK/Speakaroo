@@ -49,29 +49,34 @@ public class Brush1 : MonoBehaviour
         originalCameraPosition = mainCamera.transform.position;
         viewportHandler = mainCamera.GetComponent<CameraViewportHandler>();
 
-        StartCoroutine(ZoomAndMove(brushingPlace.transform.position));
+        // Calculate the target position for the brush
+        Vector3 brushTargetPosition = brushingPlace.transform.position;
+
+        StartCoroutine(ZoomAndMove(brushTargetPosition));
     }
 
-    IEnumerator ZoomAndMove(Vector3 targetPosition)
+
+    IEnumerator ZoomAndMove(Vector3 brushTargetPosition)
     {
         viewportHandler.enabled = false;
+
         // Smoothly change the orthographic size to zoom in
         LeanTween.value(gameObject, mainCamera.orthographicSize, zoomSize, zoomDuration)
             .setOnUpdate((float val) => mainCamera.orthographicSize = val)
             .setEase(LeanTweenType.easeInOutQuad);
 
-        // Smoothly move the camera to the new position
-        Vector3 newCameraPosition = new Vector3(0, -2, -10);
-        LeanTween.move(mainCamera.gameObject, newCameraPosition, zoomDuration)
+        // Smoothly move the camera to the teeth's position
+        LeanTween.move(mainCamera.gameObject, new Vector3(teeth.transform.position.x, teeth.transform.position.y, mainCamera.transform.position.z), zoomDuration)
             .setEase(LeanTweenType.easeInOutQuad);
 
-        // Move the brush to the target position
-        LeanTween.move(gameObject, targetPosition, zoomDuration)
+        // Smoothly move the brush to its own target position
+        LeanTween.move(gameObject, brushTargetPosition, zoomDuration)
             .setEase(LeanTweenType.easeInOutQuad)
             .setOnComplete(() => isDraggable = true);
 
         yield return new WaitForSeconds(zoomDuration);
     }
+
 
     void Update()
     {
@@ -94,7 +99,26 @@ public class Brush1 : MonoBehaviour
         {
             Vector3 mousePos = mainCamera.ScreenToWorldPoint(Input.mousePosition);
             mousePos.z = 0; // Ensure the z position is not altered
-            transform.position = mousePos + dragOffset;
+            Vector3 targetPosition = mousePos + dragOffset;
+
+            // Calculate the bounds based on the orthographic size and the camera's aspect ratio
+            float cameraHeight = mainCamera.orthographicSize * 2f;
+            float cameraWidth = cameraHeight * mainCamera.aspect;
+
+            // Calculate the draggable area below the center and within the center horizontally
+            float horizontalLimit = cameraWidth * 0.5f;  // Full width of the viewport
+            float verticalLimit = 0f;  // Center of the viewport is the upper limit
+            float lowerLimit = -cameraHeight * 0.5f; // Bottom of the viewport
+
+            // Apply the same 50% limit horizontally
+            float leftLimit = -horizontalLimit * 0.5f;
+            float rightLimit = horizontalLimit * 0.5f;
+
+            // Clamp the position within the bounds
+            targetPosition.x = Mathf.Clamp(targetPosition.x, leftLimit, rightLimit);
+            targetPosition.y = Mathf.Clamp(targetPosition.y, lowerLimit, verticalLimit);
+
+            transform.position = targetPosition;
 
             RaycastHit2D[] hits = Physics2D.RaycastAll(transform.position, Vector2.zero);
             bool currentlyHovering = false;
@@ -145,6 +169,8 @@ public class Brush1 : MonoBehaviour
             }
         }
     }
+
+
 
     IEnumerator HandleHover()
     {
