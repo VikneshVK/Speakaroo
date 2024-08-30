@@ -69,6 +69,7 @@ public class boy_Controlelr : MonoBehaviour
                 
                
             }
+           
         }
     }
     private void HandleTalkCompletion()

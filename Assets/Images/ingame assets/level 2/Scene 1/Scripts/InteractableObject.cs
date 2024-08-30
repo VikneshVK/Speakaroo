@@ -18,8 +18,6 @@ public class InteractableObject : MonoBehaviour
 
     void Update()
     {
-        /*Debug.Log($"{gameObject.name}: Timer: {interactionTimer}, isInteracted: {isInteracted}, needsHelp: {needsHelp}, ColliderEnabled: {ColliderIsEnabled()}");
-*/
         if (ColliderIsEnabled() && !isInteracted && isTrackingEnabled)
         {
             interactionTimer += Time.deltaTime;

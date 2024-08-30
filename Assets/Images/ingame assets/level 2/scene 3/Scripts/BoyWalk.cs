@@ -14,12 +14,18 @@ public class BoyWalk : MonoBehaviour
     private bool birdFinishedTalking = false;
     private bool boyFinishedTalking = false;
     private Collider2D bagCollider;
+    private HelperPointer helperPointer;
 
     void Start()
     {
         boyAnimator = GetComponent<Animator>();
         bagCollider = Bag.GetComponent<Collider2D>();
         bagCollider.enabled = false; // Ensure it's disabled initially
+        helperPointer = FindObjectOfType<HelperPointer>();  // Find the HelperPointer in the scene
+        if (helperPointer == null)
+        {
+            Debug.LogError("HelperPointer not found in the scene. Please ensure a HelperPointer script is attached to a GameObject.");
+        }
     }
 
     void Update()
@@ -58,7 +64,14 @@ public class BoyWalk : MonoBehaviour
             boyFinishedTalking = true;
             birdAnimator.SetTrigger("bagTalk");
             dragManager.OnTriggerActivated("bagTalk");  // Notify DragManager
+            dragManager.PlayAudio(0);
             bagCollider.enabled = true;
+            var bagDragHandler = Bag.GetComponent<DragHandler>();
+            if (bagDragHandler != null && helperPointer != null)
+            {
+                helperPointer.ScheduleHelperHand(bagDragHandler, dragManager);
+            }
+        
         }
     }
 

@@ -1,38 +1,42 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Jojo_action : MonoBehaviour
 {
     public Transform stopPosition;
+    public Transform offScreenPosition;
     public float walkSpeed = 2f;
-    public GameObject Bird;
-    public List<GameObject> objectsToEnable; // List to hold objects whose colliders will be enabled
-
+    public bool hasReachedOffScreen = false; // New boolean to track off-screen position
+    public List<GameObject> objectsToEnable;
+    public static event Action<GameObject[]> OnCollidersEnabled;
 
     private Animator animator;
-    private Animator birdAnimator;
     private SpriteRenderer spriteRenderer;
-    
+
     private bool isWalking = false;
     private bool isIdleCompleted = false;
     private bool collidersEnabled = false; // To ensure colliders are enabled only once
+    private bool isReturning = false; // Flag for return trip
+
+    private Vector3 targetPosition; // Store the current target position
 
     void Start()
     {
         animator = GetComponent<Animator>();
-        birdAnimator = Bird.GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
-        
     }
 
     void Update()
     {
-        HandleIdleCompletion();
-        HandleWalking();
-        CheckAndEnableColliders();
-
-
+        if (isWalking)
+        {
+            WalkToPosition(targetPosition);
+        }
+        else if (!isReturning)
+        {
+            HandleIdleCompletion();
+        }
     }
 
     private void HandleIdleCompletion()
@@ -41,55 +45,84 @@ public class Jojo_action : MonoBehaviour
             animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
         {
             isIdleCompleted = true;
-            spriteRenderer.flipX = true;
-            isWalking = true;
-            animator.SetBool("canWalk", true);
+            MoveToStopPosition(); // Start moving to the stop position after idle completes
         }
     }
 
-    private void HandleWalking()
+    public void MoveToStopPosition()
     {
-        if (isWalking)
-        {
-            WalkToStopPosition();
-        }
+        spriteRenderer.flipX = true; // Ensure sprite is facing correct direction
+        animator.SetBool("canWalk", true);
+        targetPosition = stopPosition.position;
+        isWalking = true;
+        isReturning = false;
+        
     }
 
-    private void WalkToStopPosition()
+    public void MoveOffScreen()
     {
-        if (stopPosition != null)
-        {
-            Vector3 targetPosition = new Vector3(stopPosition.position.x, transform.position.y, transform.position.z);
-            transform.position = Vector3.MoveTowards(transform.position, targetPosition, walkSpeed * Time.deltaTime);
+        spriteRenderer.flipX = false; // Flip X to true when walking off-screen
+        animator.SetBool("canWalk", true);
+        targetPosition = offScreenPosition.position;
+        isWalking = true;
+    }
 
-            if (Mathf.Abs(transform.position.x - stopPosition.position.x) <= 0.1f)
+    public void ReturnToStopPosition()
+    {
+        spriteRenderer.flipX = true; // Flip X to false when returning to stop position
+        isReturning = true;
+        animator.SetBool("canWalk", true);
+        targetPosition = stopPosition.position;
+        isWalking = true;
+    }
+
+    private void WalkToPosition(Vector3 targetPosition)
+    {
+        transform.position = Vector3.MoveTowards(transform.position, targetPosition, walkSpeed * Time.deltaTime);
+        if (Vector3.Distance(transform.position, targetPosition) <= 0.1f)
+        {
+            isWalking = false; // Stop walking
+            
+            animator.SetBool("canWalk", false);
+            animator.SetBool("canTalk", true);
+            spriteRenderer.flipX = false;
+            if (targetPosition == offScreenPosition.position)
             {
-                isWalking = false;
-                spriteRenderer.flipX = false;
-                animator.SetBool("canWalk", false);
-                animator.SetBool("canTalk", true);
+                hasReachedOffScreen = true; // Set the boolean to true when reaching off-screen
+            }
+            else if (targetPosition == stopPosition.position)
+            {
+                CheckAndEnableColliders();
             }
         }
     }
+
+
 
     private void CheckAndEnableColliders()
     {
-        if (!collidersEnabled && animator.GetCurrentAnimatorStateInfo(0).IsName("Walk") &&
-            animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.9f)
+        if (!collidersEnabled)
         {
-            Debug.Log("enable Colliders");
             foreach (GameObject obj in objectsToEnable)
             {
-                Collider2D collider = obj.GetComponent<Collider2D>();
-                if (collider != null)
+                ItemDragHandler item = obj.GetComponent<ItemDragHandler>();
+                if (item != null /*&& item.isDry*/)
                 {
-                    collider.enabled = true;
+                    Collider2D collider = obj.GetComponent<Collider2D>();
+                    if (collider != null)
+                    {
+                        collider.enabled = true;
+                    }
                 }
             }
-            collidersEnabled = true; // Prevents multiple enabling
+            collidersEnabled = true;
+
+            // Notify the HelpHandController for Jojo's action
+            HelpHandController helperHand = FindObjectOfType<HelpHandController>();
+            if (helperHand != null)
+            {
+                helperHand.StartHelperHandRoutineForJojo(objectsToEnable.ToArray());
+            }
         }
     }
-
-
-
 }

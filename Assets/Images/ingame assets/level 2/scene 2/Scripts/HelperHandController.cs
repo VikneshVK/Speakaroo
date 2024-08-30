@@ -12,6 +12,24 @@ public class HelperHandController : MonoBehaviour
     private PillowDragAndDrop bigPillowLeft;
     private PillowDragAndDrop bigPillowRight;
 
+    private AudioSource audioSource;
+    private AudioClip audioClipBigPillow;
+    private AudioClip audioClipSmallPillow;
+
+    private void Awake()
+    {
+        audioSource = GetComponent<AudioSource>();  // Get the AudioSource component attached to the game object
+
+        // Load the audio clips from the Resources folder
+        audioClipBigPillow = Resources.Load<AudioClip>("Audio/Helper Audio/BigPillowAudio");
+        audioClipSmallPillow = Resources.Load<AudioClip>("Audio/Helper Audio/SmallPillowAudio");
+
+        if (audioClipBigPillow == null || audioClipSmallPillow == null)
+        {
+            Debug.LogError("Audio clips not found in Resources. Please check the paths.");
+        }
+    }
+
     public void InitializePillows(PillowDragAndDrop left, PillowDragAndDrop right)
     {
         bigPillowLeft = left;
@@ -39,6 +57,8 @@ public class HelperHandController : MonoBehaviour
 
         currentPillow = pillow;
         helperHandInstance = Instantiate(helperHandPrefab, pillow.transform.position, Quaternion.identity);
+
+        PlayAudioForPillow(pillow);  // Play the appropriate audio clip once
 
         LeanTween.move(helperHandInstance, pillow.targetPosition.position, helperMoveDuration)
             .setOnComplete(() =>
@@ -83,8 +103,39 @@ public class HelperHandController : MonoBehaviour
         CancelInvoke(nameof(StartHelperHandInternal));
     }
 
+
     public void ScheduleNextPillow(PillowDragAndDrop nextPillow)
     {
         ScheduleHelperHand(nextPillow);
+    }
+
+    public void ResetAndScheduleHelperHand(PillowDragAndDrop pillow)
+    {
+        // Stop the current helper hand
+        StopHelperHand();
+
+        // Schedule the helper hand with a delay for the given pillow
+        Invoke(nameof(ScheduleHelperHand), 10f);
+    }
+
+
+    private void PlayAudioForPillow(PillowDragAndDrop pillow)
+    {
+        if (audioSource != null)
+        {
+            if (pillow.IsBigPillow())  // Assuming you have a way to determine if a pillow is big
+            {
+                audioSource.clip = audioClipBigPillow;
+            }
+            else
+            {
+                audioSource.clip = audioClipSmallPillow;
+            }
+
+            if (!audioSource.isPlaying)  // Ensure the audio only plays once
+            {
+                audioSource.Play();
+            }
+        }
     }
 }

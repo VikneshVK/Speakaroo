@@ -6,19 +6,19 @@ public class TapControl : MonoBehaviour
     public ParticleSystem waterParticleSystem;
     public float duration = 10f;  // Duration to play the particle system
     public bool isFirstTime = true;
-    public GameObject hose; 
+    public GameObject hose;
     public Transform targetPosition;
     public float resetDelay = 2f; // Delay before resetting position
     public float gravityModifierValue = 1f; // Gravity modifier to apply when conditions are met
 
     private Collider2D hoseCollider;
-    private DragScript dragScript; 
+    private DragScript dragScript;
 
     private void Start()
     {
         if (waterParticleSystem != null)
         {
-            waterParticleSystem.Stop(); 
+            waterParticleSystem.Stop();
         }
 
         if (hose != null)
@@ -35,6 +35,13 @@ public class TapControl : MonoBehaviour
             if (isFirstTime)
             {
                 StartCoroutine(PlayWaterEffectForDuration());
+
+                // Reset the helper hand after the tap is interacted with
+                Helper_PointerController helperController = FindObjectOfType<Helper_PointerController>();
+                if (helperController != null)
+                {
+                    helperController.ResetHelperHand();
+                }
             }
             else
             {
@@ -45,9 +52,9 @@ public class TapControl : MonoBehaviour
 
     private IEnumerator PlayWaterEffectForDuration()
     {
+        Debug.Log("Tap interacted, setting isFirstTime to false");
         waterParticleSystem.Play();
         yield return new WaitForSeconds(duration);
-        waterParticleSystem.Stop();
 
         if (hoseCollider != null)
         {
@@ -56,18 +63,20 @@ public class TapControl : MonoBehaviour
 
         if (targetPosition != null && hose != null)
         {
-            
             if (dragScript != null)
             {
                 dragScript.canDrag = false;
                 dragScript.enabled = false;
             }
 
-            
             yield return new WaitForSeconds(resetDelay);
 
             // Move the hose (tap_gun) to the target position
             hose.transform.position = targetPosition.position;
+
+            // Change the gravity modifier of the water particle system here
+            var mainModule = waterParticleSystem.main;
+            mainModule.gravityModifier = gravityModifierValue; // Set gravity modifier
         }
 
         isFirstTime = false;
@@ -81,8 +90,6 @@ public class TapControl : MonoBehaviour
         }
         else
         {
-            var mainModule = waterParticleSystem.main;
-            mainModule.gravityModifier = isFirstTime ? 0f : gravityModifierValue; // Set gravity modifier
             waterParticleSystem.Play();
         }
     }

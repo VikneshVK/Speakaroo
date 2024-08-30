@@ -5,6 +5,7 @@ public class TweenManager1 : MonoBehaviour
 {
     public bool speechTherapyCompleted = false;
     private Animator birdAnimator;
+    /*private Bird_Controller birdController;*/
     private bool isRetryClicked = false;
 
     private void Start()
@@ -17,6 +18,7 @@ public class TweenManager1 : MonoBehaviour
         if (bird != null)
         {
             birdAnimator = bird.GetComponent<Animator>();
+            /*birdController = bird.GetComponent<Bird_Controller>();*/
         }
     }
 
@@ -68,6 +70,7 @@ public class TweenManager1 : MonoBehaviour
             if (birdAnimator != null)
             {
                 birdAnimator.SetBool("isFlying", true);
+                /*birdController.isFlying = true;*/
                 /*birdAnimator.SetBool("resetPosition", false);*/
             }
 

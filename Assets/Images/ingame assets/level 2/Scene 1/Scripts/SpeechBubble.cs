@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 using System.Collections.Generic; // Required for Dictionary
 
 public class SpeechBubble : MonoBehaviour
@@ -7,10 +8,24 @@ public class SpeechBubble : MonoBehaviour
     private DragAndDropController controller;
     private Dictionary<Transform, Vector3> originalScales = new Dictionary<Transform, Vector3>();
 
+    private GameObject buttonToDeactivate;
+
     public void Setup(GameObject prefab, DragAndDropController dragAndDropController)
     {
         mechanicsPrefab = prefab;
         controller = dragAndDropController;
+
+        // Find the UICanvas and the Button within it
+        GameObject uiCanvas = GameObject.FindGameObjectWithTag("UICanvas");
+        if (uiCanvas != null)
+        {
+            buttonToDeactivate = uiCanvas.transform.Find("Button").gameObject; // Replace "ButtonName" with the actual name of your button
+        }
+
+        if (buttonToDeactivate != null)
+        {
+            buttonToDeactivate.SetActive(false); // Deactivate the button when the speech bubble is clicked
+        }
     }
 
     void OnMouseDown()

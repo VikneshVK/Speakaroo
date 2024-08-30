@@ -19,6 +19,11 @@ public class PillowDragAndDrop : MonoBehaviour
 
     public static int droppedPillowsCount = 0;
 
+    private AudioSource feedbackAudioSource;
+    private AudioClip positiveAudio1;
+    private AudioClip positiveAudio2;
+    private AudioClip negativeAudio;
+
     void Start()
     {
         startPosition = transform.position;
@@ -41,6 +46,22 @@ public class PillowDragAndDrop : MonoBehaviour
         else
         {
             Debug.LogError("SpriteRenderer component not found.");
+        }
+
+        // Load audio clips from Resources
+        positiveAudio1 = Resources.Load<AudioClip>("Audio/FeedbackAudio/Audio1");
+        positiveAudio2 = Resources.Load<AudioClip>("Audio/FeedbackAudio/Audio2");
+        negativeAudio = Resources.Load<AudioClip>("Audio/FeedbackAudio/Audio3");
+
+        // Find the audio source with the tag "FeedbackAudio"
+        GameObject audioObject = GameObject.FindGameObjectWithTag("FeedbackAudio");
+        if (audioObject != null)
+        {
+            feedbackAudioSource = audioObject.GetComponent<AudioSource>();
+        }
+        else
+        {
+            Debug.LogError("No GameObject with the tag 'FeedbackAudio' found.");
         }
     }
 
@@ -89,24 +110,49 @@ public class PillowDragAndDrop : MonoBehaviour
 
             if (Vector3.Distance(transform.position, targetPosition.position) < offsetValue)
             {
-                transform.position = targetPosition.position;
-                transform.rotation = Quaternion.identity;
-                GetComponent<Collider2D>().enabled = false;
-                HasInteracted = true;
-                EnableNextCollider();
-                ActivateDust();
-                UpdateBedsheetSprite();
-                targetPosition.gameObject.SetActive(false);
+                // Play a random positive audio clip
+                PlayPositiveFeedbackAudio();
 
-                // Increment the droppedPillowsCount
-                droppedPillowsCount++;
+                // Tween to the target position
+                LeanTween.move(gameObject, targetPosition.position, 0.5f).setOnComplete(() =>
+                {
+                    transform.rotation = Quaternion.identity;
+                    GetComponent<Collider2D>().enabled = false;
+                    HasInteracted = true;
+                    EnableNextCollider();
+                    ActivateDust();
+                    UpdateBedsheetSprite();
+                    targetPosition.gameObject.SetActive(false);
+
+                    // Increment the droppedPillowsCount
+                    droppedPillowsCount++;
+                });
             }
             else
             {
+                // Play the negative audio clip
+                PlayNegativeFeedbackAudio();
+
+                // Reset the position if the drop was incorrect
                 transform.position = startPosition;
                 transform.rotation = Quaternion.identity;
+
+                // Reset the interaction status and reschedule the helper hand after a delay
+                HasInteracted = false;
+                helperHandController.ScheduleHelperHand(this);
+
+                // If you need a delay, use a coroutine instead of Invoke:
+                StartCoroutine(DelayedScheduleHelperHand());
+
+               
             }
         }
+    }
+
+    private IEnumerator DelayedScheduleHelperHand()
+    {
+        yield return new WaitForSeconds(10f);
+        helperHandController.ScheduleHelperHand(this);
     }
 
     void OnEnable()
@@ -116,6 +162,7 @@ public class PillowDragAndDrop : MonoBehaviour
             StartCoroutine(StartHelperHandAfterColliderEnabled());
         }
     }
+
     private IEnumerator StartHelperHandAfterColliderEnabled()
     {
         // Ensure a small delay to allow the collider to be fully enabled
@@ -129,7 +176,8 @@ public class PillowDragAndDrop : MonoBehaviour
             helperHandController.ScheduleHelperHand(this);
         }
     }
-    private bool IsBigPillow()
+
+    public bool IsBigPillow()
     {
         return gameObject.name.Contains("Big");
     }
@@ -222,6 +270,25 @@ public class PillowDragAndDrop : MonoBehaviour
                     Debug.LogError("Sprite not found in Resources/images: " + spriteName);
                 }
             }
+        }
+    }
+
+    private void PlayPositiveFeedbackAudio()
+    {
+        if (feedbackAudioSource != null)
+        {
+            AudioClip[] positiveAudios = new AudioClip[] { positiveAudio1, positiveAudio2 };
+            feedbackAudioSource.clip = positiveAudios[Random.Range(0, positiveAudios.Length)];
+            feedbackAudioSource.Play();
+        }
+    }
+
+    private void PlayNegativeFeedbackAudio()
+    {
+        if (feedbackAudioSource != null)
+        {
+            feedbackAudioSource.clip = negativeAudio;
+            feedbackAudioSource.Play();
         }
     }
 }

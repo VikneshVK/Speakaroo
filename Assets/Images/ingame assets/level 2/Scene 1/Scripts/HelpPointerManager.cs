@@ -1,19 +1,18 @@
 using UnityEngine;
-using System.Collections.Generic;
 
 public class HelpPointerManager : MonoBehaviour
 {
     public static HelpPointerManager Instance;
     public static bool IsAnyObjectBeingInteracted = false;
     public GameObject pointer;
-    private List<InteractableObject> objectsNeedingHelp = new List<InteractableObject>();
-    private InteractableObject currentObject = null;
+    private AudioSource audioSource;
 
-    void Awake()
+    private void Awake()
     {
         if (Instance == null)
         {
             Instance = this;
+            audioSource = GetComponent<AudioSource>();  // Get the AudioSource component attached to the game object
         }
         else
         {
@@ -27,66 +26,56 @@ public class HelpPointerManager : MonoBehaviour
 
         if (interactable != null && !interactable.isInteracted)
         {
-            Collider2D objectCollider = reactivatedObject.GetComponent<Collider2D>();
-            if (objectCollider != null && objectCollider.enabled)
+            pointer.transform.position = interactable.transform.position;  // Start at the object's position
+            pointer.SetActive(true);  // Activate the pointer
+
+            // Play the audio when the helper hand is activated
+            if (audioSource != null)
             {
-                if (!objectsNeedingHelp.Contains(interactable))
+                audioSource.Play();
+            }
+
+            // Assuming this is for drag-and-drop objects
+            if (interactable.IsDragAndDrop)
+            {
+                Vector3 dropPosition = interactable.GetDropLocation();  // Get the drop location
+
+                // Start the looping tween
+                void LoopTween()
                 {
-                    objectsNeedingHelp.Add(interactable);
+                    LeanTween.move(pointer, dropPosition, 1f)
+                        .setEase(LeanTweenType.easeInOutSine)
+                        .setOnComplete(() =>
+                        {
+                            pointer.transform.position = interactable.transform.position;  // Teleport back to the initial position
+                            LoopTween();  // Start the tween again
+                        });
                 }
 
-                Debug.Log($"Activating help pointer for {interactable.gameObject.name}");
-                ShowHelpForSpecificObject(interactable);
+                LoopTween();  // Start the first tween
             }
         }
-    }
-
-    private void ShowHelpForSpecificObject(InteractableObject interactable)
-    {
-        if (IsAnyObjectBeingInteracted) return;
-
-        Debug.Log($"Showing help pointer for {interactable.gameObject.name}");
-        pointer.transform.position = interactable.transform.position;  // Start at the object's position
-        pointer.SetActive(true);  // Activate the pointer
-
-        if (interactable.IsDragAndDrop)  // If the object is draggable
-        {
-            Vector3 dropPosition = interactable.GetDropLocation();  // Get the drop location
-
-            // Start the looping tween
-            void LoopTween()
-            {
-                LeanTween.move(pointer, dropPosition, 1f)
-                    .setEase(LeanTweenType.easeInOutSine)
-                    .setOnComplete(() =>
-                    {
-                        pointer.transform.position = interactable.transform.position;  // Teleport back to the initial position
-                        LoopTween();  // Start the tween again
-                    });
-            }
-
-            LoopTween();  // Start the first tween
-        }
-        else
-        {
-            Debug.Log("Object is not draggable, no further movement.");
-        }
-    }
-
-
-
-    public void StopHelpPointer()
-    {
-        LeanTween.cancel(pointer);  // Stop any ongoing tween
-        pointer.SetActive(false);  // Deactivate the helping hand
-        Debug.Log("Help pointer deactivated");
     }
 
     public void ClearHelpRequest(InteractableObject interactable)
     {
-        if (objectsNeedingHelp.Contains(interactable))
+        // If the pointer is currently showing help for this object, stop it
+        if (pointer.activeInHierarchy && pointer.transform.position == interactable.transform.position)
         {
-            objectsNeedingHelp.Remove(interactable);
+            StopHelpPointer();
         }
+    }
+
+    public void StopHelpPointer()
+    {
+        LeanTween.cancel(pointer);  // Stop any ongoing tween
+        pointer.SetActive(false);   // Deactivate the pointer
+
+        if (audioSource != null)
+        {
+            audioSource.Stop();  // Stop the audio if the helper hand is deactivated
+        }
+
+        Debug.Log("Help pointer deactivated");
     }
 }

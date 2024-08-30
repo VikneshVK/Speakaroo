@@ -2,7 +2,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-
 public class DragAndDropController : MonoBehaviour
 {
     public GameObject correctDropZoneObject;
@@ -11,6 +10,9 @@ public class DragAndDropController : MonoBehaviour
     public GameObject miniBus;
     public GameObject miniWhale;
     public GameObject miniBuilding;
+    public GameObject Bus;
+    public GameObject Whale;
+    public GameObject Building;
     public GameObject Boy;
     public Transform speechBubbleContainer;
 
@@ -19,12 +21,18 @@ public class DragAndDropController : MonoBehaviour
     public float blinkDuration;
 
     private Animator boyAnimator;
+    private Animator animator;
     private bool isDragging = false;
     private Vector3 offset;
-    private Dictionary<GameObject, bool> interactionStatus = new Dictionary<GameObject, bool>();    
+    private Dictionary<GameObject, bool> interactionStatus = new Dictionary<GameObject, bool>();
     private Vector3 originalPosition;
     private Quaternion originalRotation;
     private SpriteRenderer objectRenderer;
+
+    private AudioSource feedbackAudioSource;
+    private AudioClip positiveAudio1;
+    private AudioClip positiveAudio2;
+    private AudioClip negativeAudio;
 
     void Start()
     {
@@ -38,6 +46,23 @@ public class DragAndDropController : MonoBehaviour
         miniWhale.GetComponent<Collider2D>().enabled = false;
         miniBuilding.GetComponent<Collider2D>().enabled = false;
         objectRenderer = GetComponent<SpriteRenderer>();
+        animator = GetComponent<Animator>();
+
+        // Load audio clips from Resources
+        positiveAudio1 = Resources.Load<AudioClip>("Audio/FeedbackAudio/Audio1");
+        positiveAudio2 = Resources.Load<AudioClip>("Audio/FeedbackAudio/Audio2");
+        negativeAudio = Resources.Load<AudioClip>("Audio/FeedbackAudio/Audio3");
+
+        // Find the audio source with the tag "FeedbackAudio"
+        GameObject audioObject = GameObject.FindGameObjectWithTag("FeedbackAudio");
+        if (audioObject != null)
+        {
+            feedbackAudioSource = audioObject.GetComponent<AudioSource>();
+        }
+        else
+        {
+            Debug.LogError("No GameObject with the tag 'FeedbackAudio' found.");
+        }
     }
 
     void Update()
@@ -80,17 +105,93 @@ public class DragAndDropController : MonoBehaviour
         if (IsCorrectDropZone())
         {
             boyAnimator.SetBool("isRightDrop", true);
-            transform.position = correctDropZoneObject.transform.position;
-            transform.rotation = Quaternion.identity;
-            InstantiateSpeechBubble(); // Spawn speech bubble after successful drop
 
-            EnableMiniatureCollider();
-            MarkAsInteracted(gameObject);
+            // Play a random positive audio clip
+            PlayPositiveFeedbackAudio();
+
+            // Tween to the correct drop zone's position
+            LeanTween.move(gameObject, correctDropZoneObject.transform.position, 0.5f).setOnComplete(() =>
+            {
+                transform.rotation = Quaternion.identity;
+                animator.SetTrigger("isRightDrop");
+
+                // Start coroutine to instantiate prefab after audio is done
+                StartCoroutine(InstantiateSpeechBubbleAfterAudio());
+
+                // Disable all colliders
+                DisableAllColliders();
+
+                // Disable the SpriteRenderer of the correctDropZoneObject
+                correctDropZoneObject.GetComponent<SpriteRenderer>().enabled = false;
+
+                EnableMiniatureCollider();
+                MarkAsInteracted(gameObject);
+            });
         }
         else
         {
+            // Play the negative audio clip
+            PlayNegativeFeedbackAudio();
+
+            // Reset interaction status
+            ResetInteractionStatus();
+
             ResetObjectPosition();
         }
+    }
+
+    void ResetInteractionStatus()
+    {
+        if (interactionStatus.ContainsKey(gameObject))
+        {
+            interactionStatus[gameObject] = false;
+        }
+
+        // Restart the interaction tracking in the InteractableObject script
+        InteractableObject interactableObject = GetComponent<InteractableObject>();
+        if (interactableObject != null)
+        {
+            interactableObject.EnableInteractionTracking();
+        }
+    }
+
+
+    private void PlayPositiveFeedbackAudio()
+    {
+        if (feedbackAudioSource != null)
+        {
+            AudioClip[] positiveAudios = new AudioClip[] { positiveAudio1, positiveAudio2 };
+            feedbackAudioSource.clip = positiveAudios[Random.Range(0, positiveAudios.Length)];
+            feedbackAudioSource.Play();
+        }
+    }
+
+    private void PlayNegativeFeedbackAudio()
+    {
+        if (feedbackAudioSource != null)
+        {
+            feedbackAudioSource.clip = negativeAudio;
+            feedbackAudioSource.Play();
+        }
+    }
+
+    private void DisableAllColliders()
+    {
+        if (Bus != null && Whale != null && Building != null)
+        {
+            Bus.GetComponent<Collider2D>().enabled = false;
+            Whale.GetComponent<Collider2D>().enabled = false;
+            Building.GetComponent<Collider2D>().enabled = false;
+        }
+    }
+
+    IEnumerator InstantiateSpeechBubbleAfterAudio()
+    {
+        // Wait until the audio has finished playing
+        yield return new WaitUntil(() => !feedbackAudioSource.isPlaying);
+
+        // Instantiate the speech bubble prefab
+        InstantiateSpeechBubble();
     }
 
     void InstantiateSpeechBubble()

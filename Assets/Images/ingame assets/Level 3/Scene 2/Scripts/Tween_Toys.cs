@@ -16,17 +16,16 @@ public class Tween_Toys : MonoBehaviour
     public Transform basketFinalPosition;
 
     private TapControl tapControl;
+    private Helper_PointerController helperPointerController;
+    private int currentToyIndex = 0;
     private bool hasTweened = false;
 
     void Start()
     {
         tapControl = pipe.GetComponent<TapControl>();
+        helperPointerController = FindObjectOfType<Helper_PointerController>();
 
-        // Initially disable the colliders of the GameObjects
-        DisableColliders(teddy);
-        DisableColliders(dino);
-        DisableColliders(bunny);
-        DisableColliders(basket);
+        DisableAllColliders();
     }
 
     void Update()
@@ -34,10 +33,6 @@ public class Tween_Toys : MonoBehaviour
         if (!tapControl.isFirstTime && !hasTweened)
         {
             TweenGameObjects();
-            EnableColliders(teddy);
-            EnableColliders(dino);
-            EnableColliders(bunny);
-            EnableColliders(basket);
             hasTweened = true;
         }
     }
@@ -47,18 +42,88 @@ public class Tween_Toys : MonoBehaviour
         LeanTween.move(teddy, teddyFinalPosition.position, 1f).setEase(LeanTweenType.easeInOutQuad);
         LeanTween.move(dino, dinoFinalPosition.position, 1f).setEase(LeanTweenType.easeInOutQuad);
         LeanTween.move(bunny, bunnyFinalPosition.position, 1f).setEase(LeanTweenType.easeInOutQuad);
-        LeanTween.move(basket, basketFinalPosition.position, 1f).setEase(LeanTweenType.easeInOutQuad);
+        LeanTween.move(basket, basketFinalPosition.position, 1f).setEase(LeanTweenType.easeInOutQuad)
+                .setOnComplete(() =>
+                {
+                    EnableColliderForCurrentToy();
+                    StartCoroutine(HandleHelperHandForCurrentToy());
+                });
     }
 
-    private void DisableColliders(GameObject obj)
+    private void DisableAllColliders()
+    {
+        DisableCollider(teddy);
+        DisableCollider(dino);
+        DisableCollider(bunny);
+        DisableCollider(basket);
+    }
+
+    private void EnableColliderForCurrentToy()
+    {
+        DisableAllColliders();
+
+        switch (currentToyIndex)
+        {
+            case 0:
+                EnableCollider(teddy);
+                break;
+            case 1:
+                EnableCollider(dino);
+                break;
+            case 2:
+                EnableCollider(bunny);
+                break;
+        }
+    }
+
+    private void DisableCollider(GameObject obj)
     {
         Collider2D collider = obj.GetComponent<Collider2D>();
         collider.enabled = false;
     }
 
-    private void EnableColliders(GameObject obj)
+    private void EnableCollider(GameObject obj)
     {
         Collider2D collider = obj.GetComponent<Collider2D>();
         collider.enabled = true;
+    }
+
+    private IEnumerator HandleHelperHandForCurrentToy()
+    {
+        yield return new WaitForSeconds(helperPointerController.toyDragDelay);
+
+        GameObject currentToy = GetCurrentToy();
+        drag_Toys toyScript = currentToy.GetComponent<drag_Toys>();
+
+        if (!toyScript.IsInteracted())
+        {
+            helperPointerController.SpawnHelperHand(currentToy.transform.position);
+            helperPointerController.TweenHelperHandToParticlesPosition(currentToyIndex);
+        }
+
+        while (!toyScript.IsInteracted())
+        {
+            yield return null;
+        }
+
+        helperPointerController.ResetHelperHand();
+
+        currentToyIndex++;
+        if (currentToyIndex < 3)
+        {
+            EnableColliderForCurrentToy();
+            StartCoroutine(HandleHelperHandForCurrentToy());
+        }
+    }
+
+    private GameObject GetCurrentToy()
+    {
+        switch (currentToyIndex)
+        {
+            case 0: return teddy;
+            case 1: return dino;
+            case 2: return bunny;
+            default: return null;
+        }
     }
 }

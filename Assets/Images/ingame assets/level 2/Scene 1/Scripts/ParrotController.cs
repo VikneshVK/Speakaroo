@@ -111,7 +111,6 @@ public class ParrotController : MonoBehaviour
 
     private void OnCompleteMove()
     {
-       /* spriteRenderer.flipX = false;*/ // Prepare sprite for walk back
         animator.SetBool("walkBack", true);
         isReturning = true;
     }
@@ -126,10 +125,42 @@ public class ParrotController : MonoBehaviour
             anchor.enabled = true;
             isReturning = false;
 
-            // Reset the interaction timer and start tracking for the next objects
+            // Re-enable the correct colliders based on which objects have been dropped
+            EnableCorrectColliders();
+
+            // Reset timers for the next objects
             ResetTimersForNextObjects();
         }
     }
+
+
+    private void EnableCorrectColliders()
+    {
+        bool busDropped = pushedObjects.Contains("bus S");
+        bool whaleDropped = pushedObjects.Contains("whale s");
+        bool buildingDropped = pushedObjects.Contains("building blocks s");
+
+        // Enable colliders based on the state of other objects
+        if (busDropped && whaleDropped && !buildingDropped)
+        {
+            mainBuilding.GetComponent<Collider2D>().enabled = true;
+        }
+        else if (busDropped && !whaleDropped && buildingDropped)
+        {
+            mainWhale.GetComponent<Collider2D>().enabled = true;
+        }
+        else if (!busDropped && whaleDropped && buildingDropped)
+        {
+            mainBus.GetComponent<Collider2D>().enabled = true;
+        }
+        else
+        {
+            if (!busDropped) mainBus.GetComponent<Collider2D>().enabled = true;
+            if (!whaleDropped) mainWhale.GetComponent<Collider2D>().enabled = true;
+            if (!buildingDropped) mainBuilding.GetComponent<Collider2D>().enabled = true;
+        }
+    }
+
     private void ResetTimersForNextObjects()
     {
         var otherKeys = mainObjects.Keys.Where(k => !pushedObjects.Contains(k)).ToList();

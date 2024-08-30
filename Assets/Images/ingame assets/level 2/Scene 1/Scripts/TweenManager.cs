@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class TweenManager : MonoBehaviour
@@ -6,6 +7,7 @@ public class TweenManager : MonoBehaviour
     public bool speechTherapyCompleted = false;
     private Animator birdAnimator;
     private bool isRetryClicked = false;
+    private GameObject buttonToActivate;
 
     private void Start()
     {
@@ -18,6 +20,18 @@ public class TweenManager : MonoBehaviour
         {
             birdAnimator = bird.GetComponent<Animator>();
         }
+
+        // Find the UICanvas and the Button within it
+        GameObject uiCanvas = GameObject.FindGameObjectWithTag("UICanvas");
+        if (uiCanvas != null)
+        {
+            buttonToActivate = uiCanvas.transform.Find("Button").gameObject; // Replace "ButtonName" with the actual name of your button
+        }
+
+        if (buttonToActivate == null)
+        {
+            Debug.LogWarning("Button not found inside the UICanvas.");
+        }
     }
 
     private void OnDestroy()
@@ -28,7 +42,6 @@ public class TweenManager : MonoBehaviour
 
     private void HandlePlaybackComplete()
     {
-        // Start the 5-second timer
         StartCoroutine(Timer(1f));
     }
 
@@ -52,6 +65,12 @@ public class TweenManager : MonoBehaviour
 
             counter += Time.deltaTime;
             yield return null;
+        }
+
+        // Reactivate the button
+        if (buttonToActivate != null)
+        {
+            buttonToActivate.SetActive(true);
         }
 
         // Tween all children to scale 0

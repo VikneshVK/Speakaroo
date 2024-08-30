@@ -37,10 +37,22 @@ public class CloudManager : MonoBehaviour
 
     private void SpawnCloud(GameObject cloudPrefab)
     {
-        
+
         GameObject cloud = Instantiate(cloudPrefab, startPoint.position, Quaternion.identity);
         InitializeCloud(cloud);
     }
+    public void UpdateCloudSpeeds()
+    {
+        CloudMovement[] activeClouds = FindObjectsOfType<CloudMovement>();
+
+        foreach (CloudMovement cloud in activeClouds)
+        {
+            cloud.speed = Random.Range(minSpeed, maxSpeed);
+            Debug.Log($"Updated cloud speed to: {cloud.speed}");
+        }
+    }
+
+
 }
 
 public class CloudMovement : MonoBehaviour
@@ -58,15 +70,16 @@ public class CloudMovement : MonoBehaviour
 
     private void Update()
     {
-        
+
         transform.position = Vector3.MoveTowards(transform.position, endPoint.position, speed * Time.deltaTime);
 
-       
+
         if (Vector3.Distance(transform.position, endPoint.position) < 0.1f)
         {
-           
+
             cloudManager.OnCloudDestroyed(gameObject);
             Destroy(gameObject);
         }
     }
+
 }

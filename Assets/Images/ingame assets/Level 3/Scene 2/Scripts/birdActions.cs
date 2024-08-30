@@ -8,24 +8,27 @@ public class birdActions : MonoBehaviour
     public Transform finalStopPosition;
     public float flyspeed = 2f;
     public GameObject pipe;
-    public List<GameObject> objectsToEnable; // List to hold objects whose colliders will be enabled
+    public List<GameObject> objectsToEnable;
+    public float helperHandDelay = 5f;
 
     private Animator animator;
     private TapControl tapControl;
     private SpriteRenderer spriteRenderer;
 
     private bool isFlying = false;
-    private bool isIdleCompleted = false;    
-    private bool collidersEnabled = false; // To ensure colliders are enabled only once
+    private bool isIdleCompleted = false;
+    private bool collidersEnabled = false;
+
+    private Helper_PointerController helperPointerController;
 
     void Start()
     {
         animator = GetComponent<Animator>();
         tapControl = pipe.GetComponent<TapControl>();
-        spriteRenderer = GetComponent<SpriteRenderer>();    
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        helperPointerController = FindObjectOfType<Helper_PointerController>();
     }
 
-    // Update is called once per frame
     void Update()
     {
         HandleIdleCompletion();
@@ -54,7 +57,7 @@ public class birdActions : MonoBehaviour
 
             if (Mathf.Abs(birdStopPosition.position.x - transform.position.x) <= 0.1f)
             {
-                isFlying = false;                
+                isFlying = false;
                 animator.SetBool("canFly", false);
             }
         }
@@ -65,7 +68,6 @@ public class birdActions : MonoBehaviour
         if (!collidersEnabled && animator.GetCurrentAnimatorStateInfo(0).IsName("Bird Talk") &&
             animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.9f)
         {
-            Debug.Log("enable Colliders");
             foreach (GameObject obj in objectsToEnable)
             {
                 Collider2D collider = obj.GetComponent<Collider2D>();
@@ -74,17 +76,23 @@ public class birdActions : MonoBehaviour
                     collider.enabled = true;
                 }
             }
-            collidersEnabled = true; // Prevents multiple enabling
+
+            collidersEnabled = true;
+
+            // Call the EnableCollidersAndStartTimer method from the Helper_PointerController
+            if (helperPointerController != null)
+            {
+                helperPointerController.EnableCollidersAndStartTimer();
+            }
         }
     }
+
     private void OnParticleCollision(GameObject other)
     {
-        // Check if the colliding particle system is the water particles
-        if (other.CompareTag("spray")) // Make sure the particle system object has the tag "WaterParticles"
+        if (other.CompareTag("spray"))
         {
             animator.SetBool("waterPlay", true);
         }
-
     }
 
     private void HandleWaterPlay()

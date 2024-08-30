@@ -8,7 +8,7 @@ public class DragScript : MonoBehaviour
     public bool canDrag = true; // Flag to control dragging
 
     // Define the allowed drag area in normalized viewport coordinates (25% margins)
-    private float minX = 0.1f; // 25% from the left of the viewport
+    private float minX = 0.25f; // 25% from the left of the viewport
     private float maxX = 0.5f; // 25% from the right of the viewport
     private float minY = 0.1f; // 25% from the bottom of the viewport
     private float maxY = 0.75f; // 25% from the top of the viewport

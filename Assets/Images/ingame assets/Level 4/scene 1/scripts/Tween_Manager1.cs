@@ -7,6 +7,7 @@ public class Tween_Manager1 : MonoBehaviour
     public bool speechTherapyCompleted = false;
     private Animator birdAnimator;
     private bool isRetryClicked = false;
+    
 
     private void Start()
     {
