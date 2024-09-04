@@ -21,8 +21,8 @@ public class ItemDragHandler : MonoBehaviour
     private Vector3 startPosition;
     private Animator boyAnimator;
 
-    public static int clothesOnLine = 6;  // Variable to track the number of cloth and toy objects on the line
-    public static int toysDryed = 0;      // Static variable to track the number of dry toys placed in the cloth basket
+    public static int clothesOnLine ;  // Variable to track the number of cloth and toy objects on the line
+    public static int toysDryed ;      // Static variable to track the number of dry toys placed in the cloth basket
     private bool isTransitionComplete = false; // Tracks if the dry-to-wet transition is complete
     private bool tweenstarted = true;
 
@@ -61,7 +61,11 @@ public class ItemDragHandler : MonoBehaviour
         bunnyResetPosition = bunnyInitialPosition.transform;
         startPosition = transform.position;
         boyAnimator = boy.GetComponent<Animator>();
-        DisableToyPositionColliders();
+        DisableToyPositionColliders();       
+        clothesOnLine = 6;
+        toysDryed = 0;
+        Debug.Log("clothsOnLine" + clothesOnLine);
+        Debug.Log("Toys Dryed" + toysDryed);
     }
 
     private void Update()
@@ -299,17 +303,21 @@ public class ItemDragHandler : MonoBehaviour
     {
         string spriteName = "";
 
-        if (clothesOnLine <= 2)
+        if (clothesOnLine < 2)
         {
             spriteName = "laundry-pile";
         }
-        else if (clothesOnLine == 4)
+        else if (clothesOnLine == 2)
         {
             spriteName = "laundry-pile-2";
         }
-        else if (clothesOnLine == 5)
+        else if (clothesOnLine == 4)
         {
             spriteName = "laundry-pile-3";
+        }
+        else if (clothesOnLine == 6)
+        {
+            spriteName = "laundry-pile-4";
         }
 
         if (!string.IsNullOrEmpty(spriteName))

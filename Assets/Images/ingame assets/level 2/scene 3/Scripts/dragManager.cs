@@ -3,7 +3,7 @@ using System.Collections;
 
 public class dragManager : MonoBehaviour
 {
-    public static int totalCorrectDrops = 0;
+    public static int totalCorrectDrops;
     public AudioSource audioSource;  // The AudioSource attached to the dragManager GameObject
     public AudioSource feedbackAudioSource;  // The AudioSource attached to the InteractionAudio GameObject
     public AudioClip[] objectAudioClips;  // Array to hold the audio clips for each game object
@@ -29,6 +29,7 @@ public class dragManager : MonoBehaviour
                 helperPointer.ScheduleHelperHand(firstDragHandler, this);
             }
         }
+        totalCorrectDrops = 0;
     }
 
     void Update()

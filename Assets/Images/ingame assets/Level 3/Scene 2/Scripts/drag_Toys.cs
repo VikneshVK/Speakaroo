@@ -10,7 +10,7 @@ public class drag_Toys : MonoBehaviour
     public float moveTime = 1f;
     public float scaleTime = 0.5f;
     public float scaleDownFactor = 0.85f;
-    public static int completedTweens = 0;
+    public static int completedTweens;
     public GameObject Jojo;
     public bool isDragging = false;
 
@@ -30,6 +30,7 @@ public class drag_Toys : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
         toysCollider = GetComponent<Collider2D>();
         jojoAnimator = Jojo.GetComponent<Animator>();
+        completedTweens = 0;
     }
 
     void Update()

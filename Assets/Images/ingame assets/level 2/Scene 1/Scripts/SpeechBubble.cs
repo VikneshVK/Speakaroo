@@ -10,6 +10,9 @@ public class SpeechBubble : MonoBehaviour
 
     private GameObject buttonToDeactivate;
 
+    // List to hold all sprite masks with the tag "SpriteMask"
+   
+
     public void Setup(GameObject prefab, DragAndDropController dragAndDropController)
     {
         mechanicsPrefab = prefab;
@@ -26,10 +29,15 @@ public class SpeechBubble : MonoBehaviour
         {
             buttonToDeactivate.SetActive(false); // Deactivate the button when the speech bubble is clicked
         }
+
+        
     }
 
     void OnMouseDown()
     {
+        
+        SpriteMaskManager.Instance.DeactivateMasks();
+
         SpawnAndAnimateMechanicsPrefab();
         Destroy(gameObject); // Destroy the speech bubble after spawning the prefab
     }

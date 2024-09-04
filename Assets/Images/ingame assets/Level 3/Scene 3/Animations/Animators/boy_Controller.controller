@@ -30,7 +30,7 @@ AnimatorState:
 --- !u!1102 &-8040520934037068462
 AnimatorState:
   serializedVersion: 6
-  m_ObjectHideFlags: 1
+  m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
@@ -108,7 +108,7 @@ AnimatorStateTransition:
 --- !u!1102 &-1844616459957090095
 AnimatorState:
   serializedVersion: 6
-  m_ObjectHideFlags: 1
+  m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
@@ -225,7 +225,7 @@ AnimatorStateMachine:
     m_Position: {x: 370, y: 520, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -1844616459957090095}
-    m_Position: {x: 360, y: 680, z: 0}
+    m_Position: {x: 370, y: 650, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions: []
   m_EntryTransitions: []
@@ -301,6 +301,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sceneToLoad: LevelSelect
+  booleanToReset: allDryed
 --- !u!1102 &8104124720504377184
 AnimatorState:
   serializedVersion: 6

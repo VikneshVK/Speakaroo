@@ -14,6 +14,8 @@ public class ParrotController : MonoBehaviour
     public Transform finalPositionBuilding;
     public Boolean cleaningCompleted;
     public float speed = 5.0f;
+    public AudioSource audioSource;
+    public GameObject referenceContainer;
 
     private AnchorGameObject anchor;
     private Animator animator;
@@ -24,7 +26,10 @@ public class ParrotController : MonoBehaviour
     private List<string> pushedObjects = new List<string>();
     private Dictionary<string, GameObject> mainObjects;
     private List<string> requiredObjects = new List<string> { "bus S", "whale s", "building blocks s" };
-
+    private bool isWalkingCoroutineRunning = false;
+    private bool audioPlayed = false;
+    private bool stopWalking = false;
+    private AudioSource ReferenceaudioSource;
 
     void Start()
     {
@@ -32,8 +37,11 @@ public class ParrotController : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
         startPosition = transform.position;
         anchor = GetComponent<AnchorGameObject>();
+        audioSource = GetComponent<AudioSource>();
+        ReferenceaudioSource= referenceContainer.GetComponent<AudioSource>();
         cleaningCompleted = false;
-        
+
+
         mainObjects = new Dictionary<string, GameObject>
         {
             {"bus S", mainBus},
@@ -50,8 +58,7 @@ public class ParrotController : MonoBehaviour
     {
         if (animator.GetBool("startWalking") && !isReturning)
         {
-            anchor.enabled = false;
-            transform.Translate(speed * Time.deltaTime, 0, 0); // Move the parrot to the right
+            StartCoroutine(WaitAndWalk());
         }
 
         if (isReturning)
@@ -65,10 +72,33 @@ public class ParrotController : MonoBehaviour
         }
     }
 
+    IEnumerator WaitAndWalk()
+    {
+        isWalkingCoroutineRunning = true;
+        anchor.enabled = false;
+        yield return new WaitForSeconds(1f);
+
+        float duration = 0.5f; // Set the duration for the movement
+        float elapsedTime = 0f;
+        Vector3 startPosition = transform.position;
+        Vector3 targetPosition = transform.position + new Vector3(1f, 0f, 0f); // Move by 1 unit on the x-axis
+
+        while (elapsedTime < duration)
+        {
+            transform.position = Vector3.Lerp(startPosition, targetPosition, elapsedTime / duration);
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
+
+        transform.position = targetPosition; // Ensure the final position is exactly the target position
+        isWalkingCoroutineRunning = false;
+    }
+
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.gameObject.CompareTag("Pushable") && !pushedObjects.Contains(other.gameObject.name))
         {
+            stopWalking = true; // Stop the WaitAndWalk movement
             animator.SetBool("startWalking", false);
             animator.SetTrigger("canKnock");
             pushedGameObject = other.gameObject;
@@ -113,6 +143,7 @@ public class ParrotController : MonoBehaviour
     {
         animator.SetBool("walkBack", true);
         isReturning = true;
+
     }
 
     private void ReturnToStart()
@@ -121,9 +152,15 @@ public class ParrotController : MonoBehaviour
 
         if (transform.position == startPosition)
         {
+            if(pushedObjects.Count < requiredObjects.Count)
+            {
+                ReferenceaudioSource.Play();
+            }
+            
             ResetAnimatorBooleans();
             anchor.enabled = true;
             isReturning = false;
+            stopWalking = false;
 
             // Re-enable the correct colliders based on which objects have been dropped
             EnableCorrectColliders();
@@ -207,4 +244,27 @@ public class ParrotController : MonoBehaviour
         }
     }
 
+    // This method will be called by the Animation Event
+    public void PlayAnimationAudio(AudioClip clip)
+    {
+        if (audioSource != null && clip != null && !audioPlayed)
+        {
+            audioSource.clip = clip;
+            audioSource.loop = false; // Ensure that the audio does not loop
+            audioSource.Play();
+            audioPlayed = true; // Set the flag to true after playing the audio
+        }
+        else if (audioPlayed)
+        {
+            Debug.Log("Audio has already been played once.");
+        }
+        else
+        {
+            Debug.LogWarning("AudioSource or AudioClip is missing.");
+        }
+    }
+    public void ResetAudioPlayed()
+    {
+        audioPlayed = false;
+    }
 }

@@ -17,7 +17,7 @@ public class PillowDragAndDrop : MonoBehaviour
     private int originalSortingOrder;
     private SpriteRenderer spriteRenderer;
 
-    public static int droppedPillowsCount = 0;
+    public static int droppedPillowsCount;
 
     private AudioSource feedbackAudioSource;
     private AudioClip positiveAudio1;
@@ -28,7 +28,7 @@ public class PillowDragAndDrop : MonoBehaviour
     {
         startPosition = transform.position;
         GetComponent<Collider2D>().enabled = false;
-
+        droppedPillowsCount = 0;
         if (dust != null)
         {
             dust.SetActive(false);
@@ -110,8 +110,11 @@ public class PillowDragAndDrop : MonoBehaviour
 
             if (Vector3.Distance(transform.position, targetPosition.position) < offsetValue)
             {
-                // Play a random positive audio clip
-                PlayPositiveFeedbackAudio();
+                // Play a random positive audio clip only if droppedPillowsCount is less than 4
+                if (droppedPillowsCount < 4)
+                {
+                    PlayPositiveFeedbackAudio();
+                }
 
                 // Tween to the target position
                 LeanTween.move(gameObject, targetPosition.position, 0.5f).setOnComplete(() =>
@@ -130,8 +133,11 @@ public class PillowDragAndDrop : MonoBehaviour
             }
             else
             {
-                // Play the negative audio clip
-                PlayNegativeFeedbackAudio();
+                // Play the negative audio clip only if droppedPillowsCount is less than 4
+                if (droppedPillowsCount < 4)
+                {
+                    PlayNegativeFeedbackAudio();
+                }
 
                 // Reset the position if the drop was incorrect
                 transform.position = startPosition;
@@ -143,8 +149,6 @@ public class PillowDragAndDrop : MonoBehaviour
 
                 // If you need a delay, use a coroutine instead of Invoke:
                 StartCoroutine(DelayedScheduleHelperHand());
-
-               
             }
         }
     }

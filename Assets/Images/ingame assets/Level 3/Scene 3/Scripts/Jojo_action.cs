@@ -25,6 +25,8 @@ public class Jojo_action : MonoBehaviour
     {
         animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
+        /*animator.SetBool("allDryed", false);
+        Debug.Log("animation parameter set to false" );*/
     }
 
     void Update()

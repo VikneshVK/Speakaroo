@@ -53,6 +53,7 @@ TagManager:
   - FeedbackAudio
   - UICanvas
   - Sky
+  - SpriteMask
   layers:
   - Default
   - TransparentFX
@@ -89,4 +90,10 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: CardLayer
+    uniqueID: 3991523819
+    locked: 0
+  - name: EyeLayer
+    uniqueID: 1131610843
     locked: 0

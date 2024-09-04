@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using System.Collections.Generic;
 
 public class TweenManager : MonoBehaviour
 {
@@ -8,6 +9,7 @@ public class TweenManager : MonoBehaviour
     private Animator birdAnimator;
     private bool isRetryClicked = false;
     private GameObject buttonToActivate;
+    private List<GameObject> spriteMasks = new List<GameObject>();
 
     private void Start()
     {
@@ -32,6 +34,9 @@ public class TweenManager : MonoBehaviour
         {
             Debug.LogWarning("Button not found inside the UICanvas.");
         }
+        GameObject[] masks = GameObject.FindGameObjectsWithTag("SpriteMask");
+        spriteMasks.AddRange(masks);
+        Debug.Log("Number of sprite masks found: " + spriteMasks.Count);
     }
 
     private void OnDestroy()
@@ -82,6 +87,8 @@ public class TweenManager : MonoBehaviour
         // Wait for the children to finish tweening
         LeanTween.delayedCall(0.5f, () =>
         {
+            Debug.Log("Tween completed, activating masks...");
+            SpriteMaskManager.Instance.ActivateMasks();
             speechTherapyCompleted = true;
             // Set the animator parameters for the bird
             if (birdAnimator != null)
