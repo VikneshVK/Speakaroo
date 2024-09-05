@@ -106,7 +106,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 12
+  m_SortingOrder: 14
   m_Sprite: {fileID: 5599649750985158311, guid: 8a81a7705f4c59b4ea25c6de88fb5c5c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -202,6 +202,7 @@ Transform:
   m_Children:
   - {fileID: 5796880851872881075}
   - {fileID: 7750904962155065117}
+  - {fileID: 2057072061792272527}
   m_Father: {fileID: 580603671690366356}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2075373689553095894
@@ -773,6 +774,37 @@ MonoBehaviour:
     m_Extent: {x: 0.577765, y: 0.60614014, z: 0}
   m_AlwaysUpdate: 1
   m_AutoRebind: 0
+--- !u!1 &2807560436860567172
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2057072061792272527}
+  m_Layer: 0
+  m_Name: LeafPosition
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2057072061792272527
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2807560436860567172}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -3.89, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3254445578018547975}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2822503966255702749
 GameObject:
   m_ObjectHideFlags: 0
@@ -1126,7 +1158,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 11
+  m_SortingOrder: 13
   m_Sprite: {fileID: -8490867966550218330, guid: 8a81a7705f4c59b4ea25c6de88fb5c5c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -1359,7 +1391,7 @@ Transform:
   m_GameObject: {fileID: 5063019661773059823}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -2.17, y: -0.66, z: 0.5800897}
+  m_LocalPosition: {x: -2.03, y: -1, z: 0.5800897}
   m_LocalScale: {x: 0.50000006, y: 0.50000006, z: 0.5}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1890,7 +1922,7 @@ GameObject:
   - component: {fileID: 5067593107644868069}
   m_Layer: 0
   m_Name: Kiki 1
-  m_TagString: Untagged
+  m_TagString: Bird
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1945,17 +1977,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6258aa5acec85f348935049de91a5e2e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  birdStopPosition: {fileID: 0}
-  targets:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  flyspeed: 10
-  Boy: {fileID: 0}
-  objectsToEnable:
-  - {fileID: 0}
-  - {fileID: 0}
-  isFlying: 0
+  initialPosition: {fileID: 0}
+  target1: {fileID: 0}
+  target2: {fileID: 0}
+  dustbinCollider: {fileID: 0}
+  birdAnimator: {fileID: 116830765567261883}
+  bigLeaf1Collider: {fileID: 0}
+  bigLeaf2Collider: {fileID: 0}
 --- !u!1 &7892571959456327911
 GameObject:
   m_ObjectHideFlags: 0

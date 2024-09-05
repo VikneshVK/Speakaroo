@@ -3,42 +3,22 @@ using System.Collections;
 
 public class DragHandler : MonoBehaviour
 {
-    public Transform targetPosition;
-    public GameObject nextGameObject;
-    public Animator birdAnimator;
-    public dragManager dragManager;
-
-    private Vector2 originalPosition;
-    private bool isDragging = false;
-    private Collider2D objectCollider;
+    public Transform targetPosition;  // The correct target position for the object
+    public GameObject nextGameObject;  // Reference to the next object to be activated
+    public dragManager dragManager;  // Reference to the dragManager
+    private Collider2D objectCollider;  // Collider for this object
+    private bool isDragging = false;  // Whether the object is being dragged
+    private Vector2 originalPosition;  // The original position of the object
+    private bool isDroppedSuccessfully = false;  // To prevent multiple drops
+    public bool IsDragged => isDragging;
     private AnchorGameObject anchor;
     private HelperPointer helperPointer;
 
-    private AudioSource feedbackAudioSource;
-    private AudioClip positiveAudio1;
-    private AudioClip positiveAudio2;
-    private AudioClip negativeAudio;
-
-    private bool isDroppedSuccessfully = false;
-
-    public bool IsDragged => isDragging;
-
     void Awake()
     {
-        // Assign the collider and HelperPointer in Awake to ensure they're ready before OnEnable
         objectCollider = GetComponent<Collider2D>();
         anchor = GetComponent<AnchorGameObject>();
         helperPointer = FindObjectOfType<HelperPointer>();
-
-        if (helperPointer == null)
-        {
-            Debug.LogError("HelperPointer not found in the scene. Please ensure a HelperPointer script is attached to a GameObject.");
-        }
-        positiveAudio1 = Resources.Load<AudioClip>("Audio/FeedbackAudio/Audio1");
-        positiveAudio2 = Resources.Load<AudioClip>("Audio/FeedbackAudio/Audio2");
-        negativeAudio = Resources.Load<AudioClip>("Audio/FeedbackAudio/Audio3");
-        GameObject audioObject = GameObject.FindGameObjectWithTag("FeedbackAudio");
-        feedbackAudioSource = audioObject.GetComponent<AudioSource>();
     }
 
     void OnEnable()
@@ -52,7 +32,8 @@ public class DragHandler : MonoBehaviour
 
     void Start()
     {
-        objectCollider.enabled = false;  // Initially disable all colliders
+        objectCollider.enabled = false;  // Initially disable all colliders until activated by dragManager
+        anchor = GetComponent<AnchorGameObject>();
     }
 
     void Update()
@@ -74,102 +55,97 @@ public class DragHandler : MonoBehaviour
     void OnMouseDown()
     {
         Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        if (objectCollider == Physics2D.OverlapPoint(mousePosition))
+        if (objectCollider.enabled && objectCollider == Physics2D.OverlapPoint(mousePosition))
         {
             isDragging = true;
             originalPosition = transform.position;
-            if (anchor != null)
-            {
-                anchor.enabled = false;
-            }
-
-            // Stop the helper hand when the object is being interacted with
-            helperPointer?.StopHelperHand();
+            Debug.Log($"{gameObject.name} collider is active and interaction started.");
+            anchor.enabled = false;
+            helperPointer?.StopHelperHand();  // Stop the helper hand when dragging starts
+        }
+        else
+        {
+            Debug.LogWarning($"{gameObject.name}'s collider is not being detected or is disabled.");
         }
     }
 
     void OnMouseDrag()
     {
+        if (!isDragging) return;
+
+        // Get the current mouse position in world coordinates
         Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
+        // Move the object to follow the mouse
         transform.position = new Vector2(mousePosition.x, mousePosition.y);
+
+        Debug.Log($"{gameObject.name} is being dragged to position {transform.position}");
     }
 
     void OnMouseUp()
     {
         isDragging = false;
-        Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        if (Vector2.Distance(mousePosition, targetPosition.position) < 3f)  // Adjust the threshold as needed
+
+        // Check if the object is close enough to the target position for a correct drop
+        if (Vector2.Distance(transform.position, targetPosition.position) < 2.0f)  // Adjust threshold as needed
         {
-            if (!isDroppedSuccessfully)  // Check if already successfully dropped
+            if (!isDroppedSuccessfully)
             {
-                PlayPositiveFeedbackAudio();
-                LeanTween.move(gameObject, targetPosition.position, 0.5f).setOnComplete(() =>
-                {
-                    OnSuccessfulDrop();
-                });
+                OnSuccessfulDrop();  // Handle successful drop
             }
         }
         else
         {
-            PlayNegativeFeedbackAudio();
-            LeanTween.move(gameObject, originalPosition, 0.5f).setOnComplete(OnFailedDrop);
+            OnFailedDrop();  // Handle failed drop
         }
+    }
+
+    void OnSuccessfulDrop()
+    {
+        if (isDroppedSuccessfully) return;  // Prevent multiple drops
+
+        isDroppedSuccessfully = true;
+        objectCollider.enabled = false;  // Disable this object's collider to prevent re-triggering
+
+        // Move object to the target position
+        LeanTween.move(gameObject, targetPosition.position, 0.5f).setEaseInOutQuad().setOnComplete(() =>
+        {
+            dragManager.OnItemDropped(true);  // Inform dragManager of successful drop
+            Debug.Log($"{gameObject.name} dropped successfully.");
+        });
+
+        // Activate the next object if there is one
+        if (nextGameObject != null)
+        {
+            nextGameObject.GetComponent<Collider2D>().enabled = true;  // Enable the next object's collider (Sheet)
+            Debug.Log($"{nextGameObject.name} is now active for dragging.");
+
+            // Schedule helper hand for the next object (after successful drop)
+            var nextDragHandler = nextGameObject.GetComponent<DragHandler>();
+            if (nextDragHandler != null && helperPointer != null)
+            {
+                helperPointer.ScheduleHelperHand(nextDragHandler, dragManager);  // Schedule the helper hand for the next object
+            }
+        }
+
+        Destroy(targetPosition.gameObject);  // Clean up target position
     }
 
     void OnFailedDrop()
     {
-        // Logic for handling a failed drop, rescheduling helper hand
+        // Return object to its original position if the drop fails
+        LeanTween.move(gameObject, originalPosition, 0.5f).setEaseInOutQuad().setOnComplete(() =>
+        {
+            dragManager.OnItemDropped(false);  // Inform dragManager of failed drop
+            Debug.Log($"{gameObject.name} failed to drop correctly.");
+        });
+
+        // Reschedule helper hand after failed drop
         if (helperPointer != null)
         {
             helperPointer.ScheduleHelperHand(this, dragManager, 10f);  // Reschedule helper hand after 10 seconds
         }
 
-        // Resetting the object's position or any other necessary state reset
         Debug.Log("Drop failed, retry.");
-    }
-
-    void OnSuccessfulDrop()
-    {
-        if (isDroppedSuccessfully) return;  // Prevent duplicate drops
-        isDroppedSuccessfully = true;
-
-        Debug.Log("Successful drop confirmed at: " + Time.time);
-        objectCollider.enabled = false;  // Disable collider to prevent re-triggering
-
-        // Increment the correct drop count here, which will also handle the audio playback
-        dragManager.OnItemDropped();
-
-        if (nextGameObject != null)
-        {
-            nextGameObject.GetComponent<Collider2D>().enabled = true;
-
-            // Schedule the helper hand for the next object
-            var nextDragHandler = nextGameObject.GetComponent<DragHandler>();
-            if (nextDragHandler != null && helperPointer != null)
-            {
-                helperPointer.ScheduleHelperHand(nextDragHandler, dragManager);
-            }
-        }
-
-        Destroy(targetPosition.gameObject);
-    }
-
-    private void PlayPositiveFeedbackAudio()
-    {
-        if (feedbackAudioSource != null)
-        {
-            AudioClip[] positiveAudios = new AudioClip[] { positiveAudio1, positiveAudio2 };
-            feedbackAudioSource.clip = positiveAudios[Random.Range(0, positiveAudios.Length)];
-            feedbackAudioSource.Play();
-        }
-    }
-
-    private void PlayNegativeFeedbackAudio()
-    {
-        if (feedbackAudioSource != null)
-        {
-            feedbackAudioSource.clip = negativeAudio;
-            feedbackAudioSource.Play();
-        }
     }
 }

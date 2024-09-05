@@ -13,25 +13,36 @@ public class HelperPointer : MonoBehaviour
 
     public void ScheduleHelperHand(DragHandler dragHandler, dragManager manager, float delay = 0f)
     {
+        // Cancel any existing helper hand
+        StopHelperHand();
+
+        // Set the new current DragHandler and dragManager
         currentDragHandler = dragHandler;
-        currentDragManager = manager;  // Store the dragManager instance
+        currentDragManager = manager;
+
+        // Schedule the helper hand to appear after the delay
         CancelInvoke(nameof(StartHelperHand));
         Invoke(nameof(StartHelperHand), helperDelay + delay);  // Add delay parameter
     }
 
     private void StartHelperHand()
     {
+        // Destroy any existing helper hand instance
         if (helperHandInstance != null)
         {
             Destroy(helperHandInstance);
         }
 
+        // Only show the helper hand if the current DragHandler is not already being dragged and its collider is enabled
         if (currentDragHandler != null && currentDragHandler.GetComponent<Collider2D>().enabled && !currentDragHandler.IsDragged)
         {
+            // Instantiate the helper hand at the DragHandler's position
             helperHandInstance = Instantiate(helperHandPrefab, currentDragHandler.transform.position, Quaternion.identity);
+
+            // Start the helper hand's movement to the target position with looping
             StartHelperHandTween(currentDragHandler);
 
-            // Use the AudioSource attached to the HelperPointer itself
+            // Play the audio for the helper hand using the AudioSource on HelperPointer
             if (audioSource != null && currentDragManager != null && currentDragManager.audioSource != null)
             {
                 audioSource.clip = currentDragManager.audioSource.clip;  // Set the same clip from dragManager
@@ -47,24 +58,29 @@ public class HelperPointer : MonoBehaviour
 
     private void StartHelperHandTween(DragHandler dragHandler)
     {
+        // Move the helper hand to the target position (object drop location)
         if (helperHandInstance != null)
         {
-            LeanTween.move(helperHandInstance, dragHandler.targetPosition.position, helperMoveDuration).setOnComplete(() =>
-            {
-                helperHandInstance.transform.position = dragHandler.transform.position;
-                StartHelperHandTween(dragHandler);
-            });
+            LeanTween.move(helperHandInstance, dragHandler.targetPosition.position, helperMoveDuration)
+                .setEaseInOutQuad()
+                .setLoopClamp()  // Make the tween loop infinitely without resetting
+                .setOnComplete(() =>
+                {
+                    Debug.Log("Helper hand is looping between positions.");
+                });
         }
     }
 
     public void StopHelperHand()
     {
+        // Cancel any active tweens and destroy the helper hand
         if (helperHandInstance != null)
         {
-            LeanTween.cancel(helperHandInstance);
-            Destroy(helperHandInstance);
+            LeanTween.cancel(helperHandInstance);  // Cancel any active tween
+            Destroy(helperHandInstance);  // Destroy the helper hand instance
         }
 
+        // Cancel any scheduled invocation of StartHelperHand
         CancelInvoke(nameof(StartHelperHand));
     }
 }

@@ -1,6 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Xml.Serialization;
 using UnityEngine;
 
 public class boyController1 : MonoBehaviour
@@ -31,6 +30,8 @@ public class boyController1 : MonoBehaviour
     private bool isFinalWalk = false;
 
     private HelperHandController helperHandController;
+
+    private bool hasPlayedAudio = false; // To ensure audio is played only once
 
     void Start()
     {
@@ -74,22 +75,18 @@ public class boyController1 : MonoBehaviour
             EnableBigPillowColliders();
         }
 
-        if (PillowDragAndDrop.droppedPillowsCount == 4)
+        if (PillowDragAndDrop.droppedPillowsCount == 4 && !hasPlayedAudio)
         {
-            normalAnimator.SetTrigger("CanTalk"); // Set trigger to transition to Dialoge 1 state
-            audioSource.Stop(); // Stop any currently playing audio
-            audioSource.Play(); // Play the audio at the start of Dialoge 1
-        }
+            PlayAudioOnPillowsDropped();
+            hasPlayedAudio = true; // Ensure the audio only plays once
+            normalAnimator.SetTrigger("CanTalk"); // Set trigger to transition to Dialoge 1 state            
+        }        
 
         if (normalAnimator.GetCurrentAnimatorStateInfo(0).IsName("Dialoge 1") &&
             normalAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.99f) // When Dialoge 1 is about to end
         {
-            
             normalRig.SetActive(false); // Switch to the walking rig
             walkingRig.SetActive(true);
-            walkingAnimator.SetTrigger("canWalk2");
-
-            // Trigger the walking animation
             isWalking = true;
             isFinalWalk = true;
         }
@@ -99,8 +96,22 @@ public class boyController1 : MonoBehaviour
             movetoEnd();
         }
     }
+
+    private void PlayAudioOnPillowsDropped()
+    {
+        if (audioSource != null)
+        {
+            audioSource.Play();
+        }
+        else
+        {
+            Debug.LogWarning("AudioSource is not assigned.");
+        }
+    }
+
     private void movetoEnd()
     {
+        walkingAnimator.SetTrigger("canWalk2");
         Vector3 targetPosition = new Vector3(stopPosition2.position.x, transform.position.y, transform.position.z);
         transform.position = Vector3.MoveTowards(transform.position, targetPosition, walkSpeed * Time.deltaTime);
     }

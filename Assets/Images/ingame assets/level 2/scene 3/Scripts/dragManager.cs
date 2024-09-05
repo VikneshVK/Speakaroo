@@ -3,15 +3,18 @@ using System.Collections;
 
 public class dragManager : MonoBehaviour
 {
-    public static int totalCorrectDrops;
-    public AudioSource audioSource;  // The AudioSource attached to the dragManager GameObject
-    public AudioSource feedbackAudioSource;  // The AudioSource attached to the InteractionAudio GameObject
-    public AudioClip[] objectAudioClips;  // Array to hold the audio clips for each game object
+    public static int totalCorrectDrops;  // Track the number of correct drops
+    public AudioSource audioSource;  // The AudioSource for playing object-specific audios
+    public AudioSource feedbackAudioSource;  // The AudioSource for playing feedback audios
+    public AudioClip[] objectAudioClips;  // Array for each object's audio clip
+    public AudioClip[] feedbackClips;  // Array for feedback audios (2 correct, 1 wrong)
 
     public Animator birdAnimator;
-    public GameObject[] gameObjects;
-    public string[] triggerNames = { "bagTalk", "sheetTalk", "rugTalk", "pillowTalk", "shoeTalk", "teddyTalk" };
-    public string allDoneBool = "allDone";
+    public GameObject[] gameObjects;  // The 6 game objects
+    public string[] triggerNames = { "bagTalk", "sheetTalk", "rugTalk", "pillowTalk", "shoeTalk", "teddyTalk" };  // Triggers for each game object
+    public string[] feedbackTriggers = { "rightDrop1", "rightDrop2", "wrongDrop" };  // Triggers for feedback audios
+    public bool allDone = false;  // Flag to indicate all drops are done
+    public AudioSource kikiAudio;
 
     private HelperPointer helperPointer;
     private GameObject parrot;
@@ -21,158 +24,130 @@ public class dragManager : MonoBehaviour
         parrot = GameObject.FindGameObjectWithTag("Bird");
         helperPointer = FindObjectOfType<HelperPointer>();
         InitializeGameObjects();
+
+        // Make sure the first object is active
         if (gameObjects.Length > 0)
         {
-            var firstDragHandler = gameObjects[0].GetComponent<DragHandler>();
-            if (firstDragHandler != null && helperPointer != null && gameObjects[0].GetComponent<Collider2D>().enabled)
-            {
-                helperPointer.ScheduleHelperHand(firstDragHandler, this);
-            }
+            ActivateNextObject(0);  // Activate the first object
         }
+
+        Debug.Log("Game Initialized. Ready to start.");
         totalCorrectDrops = 0;
     }
 
-    void Update()
-    {
-        if (Input.GetMouseButtonDown(0))
-        {
-            DetectParrotClick();
-        }
-    }
-
+    // Initialize all game objects
     void InitializeGameObjects()
     {
         foreach (GameObject obj in gameObjects)
         {
-            obj.GetComponent<Collider2D>().enabled = false;
-            obj.GetComponent<DragHandler>().dragManager = this;
-        }
-        if (gameObjects.Length > 0)
-        {
-            gameObjects[0].GetComponent<Collider2D>().enabled = true;
+            obj.GetComponent<Collider2D>().enabled = false;  // Disable all objects initially
+            obj.GetComponent<DragHandler>().dragManager = this;  // Link dragManager
         }
 
-        // Ensure no triggers are active at the start
-        birdAnimator.ResetTrigger("bagTalk");
-        birdAnimator.ResetTrigger("sheetTalk");
-        birdAnimator.ResetTrigger("rugTalk");
-        birdAnimator.ResetTrigger("pillowTalk");
-        birdAnimator.ResetTrigger("shoeTalk");
-        birdAnimator.ResetTrigger("teddyTalk");
-        birdAnimator.SetBool(allDoneBool, false);
+        // Reset all triggers
+        foreach (string trigger in triggerNames)
+        {
+            birdAnimator.ResetTrigger(trigger);
+        }
+
+        birdAnimator.SetBool("allDone", false);
     }
 
-    public void OnItemDropped()
+    // Called by DragHandler after a successful drop
+    public void OnItemDropped(bool isCorrectDrop)
     {
-        totalCorrectDrops++;
-
-        // Set the audio clip based on the current object
-        if (totalCorrectDrops < objectAudioClips.Length)
+        if (isCorrectDrop)
         {
-            audioSource.clip = objectAudioClips[totalCorrectDrops];
-        }
+            totalCorrectDrops++;  // Increment the correct drop counter
 
-        // Now play the feedback audio and then play the next audio
-        StartCoroutine(PlayManagerAudioAfterFeedback());
+            Debug.Log("Total Correct Drops: " + totalCorrectDrops);
 
-        Debug.Log("Total Correct Drops: " + totalCorrectDrops);
-
-        if (totalCorrectDrops < gameObjects.Length)
-        {
-            birdAnimator.SetTrigger(triggerNames[totalCorrectDrops]);
-        }
-        else
-        {
-            birdAnimator.SetBool(allDoneBool, true);
-        }
-    }
-
-    private IEnumerator PlayManagerAudioAfterFeedback()
-    {
-        // Play feedback audio from InteractionAudio GameObject
-        if (feedbackAudioSource != null && feedbackAudioSource.clip != null)
-        {
-            feedbackAudioSource.Play();
-            Debug.Log("Playing feedback audio from InteractionAudio.");
-        }
-        else
-        {
-            Debug.LogWarning("feedbackAudioSource or clip is not set.");
-        }
-
-        // Wait until the feedback audio finishes playing
-        yield return new WaitUntil(() => !feedbackAudioSource.isPlaying);
-
-        // Play the next audio from the dragManager's AudioSource after the feedback audio has completed
-        if (audioSource != null && audioSource.clip != null)
-        {
-            audioSource.Play();
-            Debug.Log("Playing dragManager audio after feedback audio.");
-
-            // Trigger the animation associated with the current totalCorrectDrops index
-            OnTriggerActivated(triggerNames[totalCorrectDrops]);
-        }
-        else
-        {
-            Debug.LogWarning("dragManager audioSource or clip is not set.");
-        }
-    }
-
-    public void OnTriggerActivated(string triggerName)
-    {
-        int index = System.Array.IndexOf(triggerNames, triggerName);
-        if (index >= 0 && index < gameObjects.Length)
-        {
-            AnimateGameObject(gameObjects[index]);
-        }
-    }
-
-    void DetectParrotClick()
-    {
-        Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        Collider2D collider = Physics2D.OverlapPoint(mousePosition);
-
-        if (collider != null && collider.gameObject == parrot)
-        {
-            OnParrotClicked();
-        }
-    }
-
-    public void OnParrotClicked()
-    {
-        // Logic when the parrot is clicked
-        if (birdAnimator.GetCurrentAnimatorStateInfo(0).IsName("Idle0"))
-        {
             if (totalCorrectDrops < triggerNames.Length)
             {
-                AnimateGameObject(gameObjects[totalCorrectDrops]);
-                birdAnimator.SetTrigger(triggerNames[totalCorrectDrops]);
-                PlayAudio(totalCorrectDrops);  // Play the audio for the current object
+                // Play feedback audio for the right drop (either rightDrop1 or rightDrop2)
+                StartCoroutine(PlayFeedbackAndAdvance(true));
             }
+            else
+            {
+                // If all items are dropped, trigger the end condition
+                birdAnimator.SetBool("alldone", true);
+                kikiAudio.Play();
+                allDone = true;
+                Debug.Log("All items dropped successfully.");
+            }
+        }
+        else
+        {
+            // Handle incorrect drop
+            StartCoroutine(PlayFeedbackAndAdvance(false));
         }
     }
 
-    public void PlayAudio(int index)
+    // Play feedback and advance to the next object
+    private IEnumerator PlayFeedbackAndAdvance(bool isCorrectDrop)
+    {
+        if (isCorrectDrop)
+        {
+            // Randomly select one of the two positive feedback audios
+            int randomIndex = Random.Range(0, 2);  // Select either rightDrop1 or rightDrop2
+            feedbackAudioSource.clip = feedbackClips[randomIndex];
+            birdAnimator.SetTrigger(feedbackTriggers[randomIndex]);  // Trigger corresponding feedback animation
+
+            feedbackAudioSource.Play();
+            yield return new WaitUntil(() => !feedbackAudioSource.isPlaying);
+
+            // Play the object-specific audio after feedback finishes
+            PlayObjectAudio(totalCorrectDrops);
+
+            // Enable the next object
+            if (totalCorrectDrops < gameObjects.Length)
+            {
+                ActivateNextObject(totalCorrectDrops);  // Activate the next object
+            }
+        }
+        else
+        {
+            // Play wrong drop audio and trigger the wrong drop animation
+            feedbackAudioSource.clip = feedbackClips[2];  // Wrong feedback audio
+            birdAnimator.SetTrigger(feedbackTriggers[2]);  // Trigger wrong feedback animation
+
+            feedbackAudioSource.Play();
+            yield return new WaitUntil(() => !feedbackAudioSource.isPlaying);
+        }
+    }
+
+    // Activate the next object by enabling its collider
+    private void ActivateNextObject(int index)
+    {
+        if (index < gameObjects.Length)
+        {
+            gameObjects[index].GetComponent<Collider2D>().enabled = true;
+            Debug.Log($"Activated {gameObjects[index].name} for dragging.");
+        }
+    }
+
+    // Play the audio associated with the current object based on totalCorrectDrops
+    public void PlayObjectAudio(int index)
     {
         if (index < objectAudioClips.Length && audioSource != null)
         {
             audioSource.clip = objectAudioClips[index];
             audioSource.Play();
-            Debug.Log($"Playing audio for object {index}: {objectAudioClips[index].name}");
+            birdAnimator.SetTrigger(triggerNames[index]);  // Trigger the animation for the current object
+            Debug.Log($"Playing audio for {triggerNames[index]}");
         }
         else
         {
-            Debug.LogWarning("Invalid audio index or audioSource not set.");
+            Debug.LogWarning("Invalid index or audioSource not set.");
         }
     }
 
-    void AnimateGameObject(GameObject obj)
+    // Called by DragHandler on an incorrect drop
+    public void OnWrongDrop()
     {
-        Vector3 originalScale = obj.transform.localScale;
-        Vector3 targetScale = originalScale + new Vector3(0.35f, 0.35f, 0.35f);
-        LeanTween.scale(obj, targetScale, 0.5f).setEaseInOutQuad().setOnComplete(() =>
-        {
-            LeanTween.scale(obj, originalScale, 0.5f).setEaseInOutQuad();
-        });
+        Debug.Log("Wrong drop made. Playing wrong feedback.");
+        StartCoroutine(PlayFeedbackAndAdvance(false));
     }
+
+    
 }

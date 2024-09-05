@@ -1,23 +1,28 @@
 using UnityEngine;
+using System.Collections;
 
 public class Bird_Controller : MonoBehaviour
 {
     public Transform initialPosition; // Reference to the initial position from the Inspector
     public Transform target1; // Reference to the first small leaf (target 1)
     public Transform target2; // Reference to the second small leaf (target 2)
-    public Transform dustbinPosition; // Reference to the dustbin position
+    public Collider2D dustbinCollider;
     public Animator birdAnimator;
+    public Animator trashBinAnimator;
+    public GameObject boyController;
 
     public Collider2D bigLeaf1Collider; // Reference to the Big Leaf 1 collider
     public Collider2D bigLeaf2Collider; // Reference to the Big Leaf 2 collider
 
-    private static int totalLeaves = 2; // Static variable to keep track of the number of small leaves
+    private static int totalLeaves; // Static variable to keep track of the number of small leaves
     private Transform currentTarget; // To track the current target position
+    private JojoController1 boycontrolscript;
 
-    private bool isTalking = false;
-    private bool isPickingLeaves = false;
-    private bool isDroppingLeaves = false;
-    private bool isReturningToInitialPosition = false;
+    private bool isTalking ;
+    private bool isPickingLeaves ;
+    private bool isDroppingLeaves;
+    private bool isReturningToInitialPosition;
+    private bool IsleavesDropped;
 
     private void Awake()
     {
@@ -30,6 +35,13 @@ public class Bird_Controller : MonoBehaviour
         birdAnimator.SetBool("isFlying", true);
         birdAnimator.SetBool("canLand", false);
         MoveToPosition(initialPosition.position, "Idle");
+        isTalking = false;
+        isPickingLeaves = false;
+        isDroppingLeaves = false;
+        isReturningToInitialPosition = false;
+        IsleavesDropped = false;
+        totalLeaves = 2;
+        boycontrolscript = boyController.GetComponent<JojoController1>();
     }
 
     void Update()
@@ -59,7 +71,7 @@ public class Bird_Controller : MonoBehaviour
 
         if (stateInfo.IsName("Kiki_Takeoff_mouth open") && stateInfo.normalizedTime >= 0.95f)
         {
-            Debug.Log("Bird is flying to the dustbin with leaves.");
+            // Bird is flying to the dustbin with leaves.
         }
 
         if (stateInfo.IsName("Kiki_flying_mouth open") && stateInfo.normalizedTime >= 0.95f)
@@ -87,13 +99,17 @@ public class Bird_Controller : MonoBehaviour
         {
             OnReturnToInitialPositionComplete();
         }
+
+        if(stateInfo.IsName("Idle1") && totalLeaves == 0)
+        {
+            birdAnimator.SetBool("levelComplete", true) ;
+        }
     }
 
     void MoveToPosition(Vector3 targetPosition, string nextState)
     {
-        LeanTween.move(gameObject, targetPosition, 2f).setOnComplete(() =>
+        LeanTween.move(gameObject, targetPosition, 5f).setOnComplete(() =>
         {
-            Debug.Log($"Reached {targetPosition}, transitioning to {nextState}");
             if (nextState == "Idle")
             {
                 birdAnimator.SetBool("isFlying", false);
@@ -119,117 +135,131 @@ public class Bird_Controller : MonoBehaviour
         });
     }
 
-    void EnableBigLeavesColliders()
+    public void EnableBigLeavesColliders()
     {
         if (bigLeaf1Collider != null && bigLeaf2Collider != null)
         {
             bigLeaf1Collider.enabled = true;
             bigLeaf2Collider.enabled = true;
-        }
-        else
-        {
-            Debug.LogError("Big leaf colliders are not assigned in the inspector!");
+
+            // Start the inactivity timer in HP_HelperpointerController
+            FindObjectOfType<HP_HelperpointerController>().StartInactivityTimer();
         }
     }
 
+
     public void OnBigLeafDropped()
     {
-        Debug.Log("Big leaf dropped, determining next target");
         birdAnimator.SetBool("isFlying", true);
+        IsleavesDropped = false;
         DetermineNextTarget();
     }
 
     void DetermineNextTarget()
     {
-        if (totalLeaves == 2)
+        if (totalLeaves == 2 && !IsleavesDropped)
         {
             currentTarget = target1;
         }
-        else if (totalLeaves == 1)
+        else if (totalLeaves == 1 && !IsleavesDropped)
         {
             currentTarget = target2;
         }
 
-        Debug.Log($"Next target determined: {currentTarget.name}");
         MoveToPosition(currentTarget.position, "Pick leaves");
     }
 
-    public void OnPickLeavesComplete()
+    void OnPickLeavesComplete()
     {
         if (currentTarget != null && isPickingLeaves)
         {
-            Debug.Log($"Picking leaves complete, setting {currentTarget.name} as child of bird");
-
             // Deactivate the Anchor script on the current target (leaves)
             var anchorScript = currentTarget.GetComponent<AnchorGameObject>();
             if (anchorScript != null)
             {
                 anchorScript.enabled = false;
-                Debug.Log("Anchor script deactivated on " + currentTarget.name);
             }
-            else
+
+            // Find the 'Mouth' GameObject within the bird's hierarchy
+            Transform mouthTransform = transform.Find("RootBone/HeadBone/Mouth/LeafPosition");
+            if (mouthTransform != null)
             {
-                Debug.LogWarning("Anchor script not found on " + currentTarget.name);
+                currentTarget.SetParent(mouthTransform);
+                currentTarget.localPosition = Vector3.zero;
             }
 
-            // Make the small leaves a child of the bird
-            currentTarget.SetParent(this.transform);
-
-            // Update flags and set Animator parameters to transition to Kiki_Takeoff_mouth open
-            isPickingLeaves = false;
-            birdAnimator.SetBool("isFlying", true);
-            birdAnimator.SetBool("canLand", false);
-
-            MoveToPosition(dustbinPosition.position, "Kiki_Takeoff_mouth open");
+            // Add a 1-second delay before updating the booleans
+            StartCoroutine(DelayBeforeBooleanChange());
         }
-        else
-        {
-            Debug.LogError("currentTarget is null during OnPickLeavesComplete or isPickingLeaves is false");
-        }
+    }
+
+    IEnumerator DelayBeforeBooleanChange()
+    {
+        yield return new WaitForSeconds(1f); // Wait for 1 second
+
+        // Update flags and set Animator parameters to transition to Kiki_Takeoff_mouth open
+        isPickingLeaves = false;
+        birdAnimator.SetBool("isFlying", true);
+        birdAnimator.SetBool("canLand", false);
+        trashBinAnimator.SetBool("binOpen", true);
+
+        MoveToPosition(dustbinCollider.bounds.center, "Kiki_Takeoff_mouth open");
     }
 
     public void OnDropLeavesComplete()
     {
         if (currentTarget != null)
         {
-            Debug.Log("Dropping leaves complete, disabling currentTarget SpriteRenderer and removing from bird");
-
             // Disable the SpriteRenderer to make the current target invisible
             SpriteRenderer spriteRenderer = currentTarget.GetComponent<SpriteRenderer>();
             if (spriteRenderer != null)
             {
                 spriteRenderer.enabled = false;
             }
-            else
-            {
-                Debug.LogWarning("SpriteRenderer not found on " + currentTarget.name);
-            }
 
             // Remove the currentTarget from being a child of the bird
             currentTarget.SetParent(null);
 
-            // Decrement the total leaves counter
-            totalLeaves--;
+            if (!IsleavesDropped)
+            {
+                totalLeaves--;
+                IsleavesDropped = true;
+            }
+
+
+            // Log the change in totalLeaves
+            Debug.Log($"Total leaves remaining: {totalLeaves}");
 
             // Reset the target to the initial position and prepare for the next cycle
             currentTarget = initialPosition;
 
-            // Update Animator parameters to transition to KIKI_tackup state
-            birdAnimator.SetBool("canLand", false);
-            birdAnimator.SetBool("isFlying", true);
+            // Add a 1-second delay before updating the booleans
+            StartCoroutine(DelayBeforeBooleanChangeAfterDrop());
+        }
+    }
 
-            // Move the bird back to the initial position
-            MoveToPosition(initialPosition.position, "Kiki_flying_mouth open_turn");
-        }
-        else
-        {
-            Debug.LogError("currentTarget is null during OnDropLeavesComplete");
-        }
+    IEnumerator DelayBeforeBooleanChangeAfterDrop()
+    {
+        yield return new WaitForSeconds(1f); // Wait for 1 second
+
+        // Update Animator parameters to transition to KIKI_takeoff state
+        birdAnimator.SetBool("canLand", false);
+        birdAnimator.SetBool("isFlying", true);
+        trashBinAnimator.SetBool("binOpen", false);
+
+        // Move the bird back to the initial position
+        MoveToPosition(initialPosition.position, "Kiki_flying_mouth open_turn");
     }
 
     public void OnReachedInitialPosition()
     {
-        Debug.Log("Bird has returned to the initial position.");
+        // Add a 1-second delay before setting the Animator parameters
+        StartCoroutine(DelayBeforeReachedInitialPosition());
+    }
+
+    IEnumerator DelayBeforeReachedInitialPosition()
+    {
+        yield return new WaitForSeconds(1f); // Wait for 1 second
 
         // Set Animator parameters to transition to Kiki_landing_Turn
         birdAnimator.SetBool("isFlying", false);
@@ -240,16 +270,18 @@ public class Bird_Controller : MonoBehaviour
     {
         birdAnimator.SetBool("canTalk", true);
         isReturningToInitialPosition = false;
-        Debug.Log("Returned to initial position, ready to talk again");
     }
 
     public void OnTalkComplete()
     {
-        Debug.Log("Talk animation completed. Enabling big leaf colliders.");
-
-        // Enable the colliders of the big leaves
-        EnableBigLeavesColliders();
-
-        // No need to change 'canTalk' or other Animator parameters here
+        // Start the coroutine to add a 2-second delay before enabling the big leaves colliders
+        StartCoroutine(DelayedEnableBigLeavesColliders());
     }
+
+    IEnumerator DelayedEnableBigLeavesColliders()
+    {
+        yield return new WaitForSeconds(2f); // Wait for 2 seconds
+        EnableBigLeavesColliders(); // Call the method to enable the colliders
+    }
+    
 }

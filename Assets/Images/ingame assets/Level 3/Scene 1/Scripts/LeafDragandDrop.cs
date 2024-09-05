@@ -1,5 +1,5 @@
 using UnityEngine;
-using System.Collections; // Include to use Coroutines
+using System.Collections;
 
 public class LeafDragAndDrop : MonoBehaviour
 {
@@ -13,11 +13,14 @@ public class LeafDragAndDrop : MonoBehaviour
     private Animator leavesAnimator;
     private Animator smokeAnimator;
     private Animator binAnimator;
-    private bool dragging = false;
+    public bool dragging = false; // Changed to public
+
     private Vector3 offset;
     private Vector3 startPosition;
 
-    
+    public Collider2D leaves1Collider; // Reference to leaves1 Collider
+    public Collider2D leaves2Collider; // Reference to leaves2 Collider
+
     private AnchorGameObject anchorGameObjectScript;
 
     private void Start()
@@ -27,8 +30,7 @@ public class LeafDragAndDrop : MonoBehaviour
         leavesAnimator = spareLeaves.GetComponent<Animator>();
         smokeAnimator = trashCanSmoke.GetComponent<Animator>();
 
-        
-        anchorGameObjectScript = GetComponent<AnchorGameObject>(); 
+        anchorGameObjectScript = GetComponent<AnchorGameObject>();
     }
 
     private void Update()
@@ -49,7 +51,6 @@ public class LeafDragAndDrop : MonoBehaviour
             offset = transform.position - Camera.main.ScreenToWorldPoint(mousePosition);
             dragging = true;
 
-            
             if (anchorGameObjectScript != null)
             {
                 anchorGameObjectScript.enabled = false;
@@ -62,18 +63,40 @@ public class LeafDragAndDrop : MonoBehaviour
         dragging = false;
         binAnimator.SetBool("binOpen", false);
 
+        // If the leaf is dropped correctly in the bin
         if (bin && gameObject.GetComponent<Collider2D>().bounds.Intersects(bin.GetComponent<Collider2D>().bounds))
         {
+            // Apply dropOffset for correct positioning and play animations
             transform.position += dropOffset;
             leavesAnimator.SetTrigger("onDust");
             smokeAnimator.SetTrigger("onDust");
+
+            // Disable colliders for both leaves
+            DisableColliders();
+
+            // Disable the current leaf's object
             DisableObject();
 
             StartCoroutine(DelayedInstantiate(1.5f)); // Delay instantiation by 1.5 seconds
         }
         else
         {
+            // If drop is incorrect, return the object to the start position
             transform.position = startPosition;
+        }
+    }
+
+    // Disables both leaves1 and leaves2 colliders when a correct drop occurs
+    private void DisableColliders()
+    {
+        if (leaves1Collider != null)
+        {
+            leaves1Collider.enabled = false;
+        }
+
+        if (leaves2Collider != null)
+        {
+            leaves2Collider.enabled = false;
         }
     }
 
@@ -81,16 +104,20 @@ public class LeafDragAndDrop : MonoBehaviour
     {
         SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
         if (spriteRenderer != null)
+        {
             spriteRenderer.enabled = false;
+        }
 
         Collider2D collider = GetComponent<Collider2D>();
         if (collider != null)
+        {
             collider.enabled = false;
+        }
     }
 
     private IEnumerator DelayedInstantiate(float delay)
     {
-        yield return new WaitForSeconds(delay); // Wait for specified delay
+        yield return new WaitForSeconds(delay); // Wait for the specified delay
         if (spawnPrefab != null && spawnLocation != null)
         {
             Instantiate(spawnPrefab, spawnLocation.position, Quaternion.identity);
