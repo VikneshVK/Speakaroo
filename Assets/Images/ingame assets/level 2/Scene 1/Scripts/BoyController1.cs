@@ -12,6 +12,7 @@ public class BoyController1 : MonoBehaviour
     public GameObject Whale;
     public GameObject Building;
     public AudioSource jojoAudio;
+    public AudioSource kikiAudio; //temp addition,please change later
     public AudioClip[] audioClips; // Array to hold the audio clips
 
     private Animator frontViewAnimator;
@@ -23,6 +24,10 @@ public class BoyController1 : MonoBehaviour
     private bool isTalking = false;
     private bool collidersEnabled = false;
     private bool isReturning = false;
+
+
+    //for final audio
+    private bool hasFinalAudioPlayed;
 
     void Start()
     {
@@ -99,6 +104,8 @@ public class BoyController1 : MonoBehaviour
                 frontViewAnimator.SetTrigger("CanTalk");
                 PlayAudioByIndex(0);
                 Debug.Log("Walking complete, switching back to front view.");
+                
+
             }
         }
     }
@@ -112,6 +119,7 @@ public class BoyController1 : MonoBehaviour
         {
             isTalking = true;
             birdAnimator.SetBool("can talk", true);
+            PlayAudioByIndex(3); //added temp, change after
         }
     }
 
@@ -151,9 +159,14 @@ public class BoyController1 : MonoBehaviour
         if (birdAnimator.GetCurrentAnimatorStateInfo(0).IsName("bird talk_") &&
             birdAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
         {
-            PlayAudioByIndex(2);
-            frontViewAnimator.SetTrigger("cleaningComplete");
-            
+            if (!hasFinalAudioPlayed)
+            {
+                frontViewAnimator.SetTrigger("cleaningComplete");
+                PlayAudioByIndex(2);  // Play audio
+                hasFinalAudioPlayed = true; // Mark as played
+                Debug.Log("final audio playing once");
+            }
+
         }
 
         if (frontViewAnimator.GetCurrentAnimatorStateInfo(0).IsName("Dialouge 2") &&
@@ -182,13 +195,17 @@ public class BoyController1 : MonoBehaviour
     {
         if (jojoAudio != null && audioClips != null && index >= 0 && index < audioClips.Length)
         {
+            
             jojoAudio.clip = audioClips[index];
             jojoAudio.loop = false; // Ensure that the audio does not loop
             jojoAudio.Play();
+
         }
         else
         {
             Debug.LogWarning("AudioSource is missing, audio clip is out of range, or index is invalid.");
         }
     }
+
+    
 }

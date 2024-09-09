@@ -56,6 +56,8 @@ public class dragManager : MonoBehaviour
     // Called by DragHandler after a successful drop
     public void OnItemDropped(bool isCorrectDrop)
     {
+        
+
         if (isCorrectDrop)
         {
             totalCorrectDrops++;  // Increment the correct drop counter
@@ -70,9 +72,16 @@ public class dragManager : MonoBehaviour
             else
             {
                 // If all items are dropped, trigger the end condition
+                
                 birdAnimator.SetBool("alldone", true);
                 kikiAudio.Play();
                 allDone = true;
+
+
+                //Invoke("FinishLevelAfterDelay", 15); //test purpose only
+                //Debug.Log("try invoke with delay");
+
+
                 Debug.Log("All items dropped successfully.");
             }
         }
@@ -149,5 +158,10 @@ public class dragManager : MonoBehaviour
         StartCoroutine(PlayFeedbackAndAdvance(false));
     }
 
-    
+
+
+    public void FinishLevelAfterDelay()
+    {
+        allDone = true;
+    }
 }

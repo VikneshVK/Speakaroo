@@ -153,7 +153,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   stopPosition: {fileID: 731790913}
-  walkSpeed: 5
+  walkSpeed: 10
   FrontView: {fileID: 380547523}
   SideView: {fileID: 1977387668}
   Bird: {fileID: 1427923228}
@@ -161,10 +161,12 @@ MonoBehaviour:
   Whale: {fileID: 717157622}
   Building: {fileID: 1512471183}
   jojoAudio: {fileID: 0}
+  kikiAudio: {fileID: 1427923235}
   audioClips:
   - {fileID: 8300000, guid: f2b972ab59f539d46921ebc40ca921a6, type: 3}
   - {fileID: 8300000, guid: 8e32b4ff79e0d2f4d9e2f2deb84398fc, type: 3}
   - {fileID: 8300000, guid: 0174a047ded0c9245a723df156bc783a, type: 3}
+  - {fileID: 8300000, guid: ea8ec19e63f1f65459517d2357956d41, type: 3}
 --- !u!4 &36974618
 Transform:
   m_ObjectHideFlags: 0
@@ -3375,7 +3377,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1417424425826969613, guid: cc9e7719e7a23854a9a3f5301f60b023, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2450302290695733010, guid: cc9e7719e7a23854a9a3f5301f60b023, type: 3}
       propertyPath: m_Name
@@ -3439,11 +3441,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5420177452595299024, guid: cc9e7719e7a23854a9a3f5301f60b023, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5960970852259147549, guid: cc9e7719e7a23854a9a3f5301f60b023, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6479328700288043183, guid: cc9e7719e7a23854a9a3f5301f60b023, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.674788
+      objectReference: {fileID: 0}
+    - target: {fileID: 8418321714528697975, guid: cc9e7719e7a23854a9a3f5301f60b023, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1.674788
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

@@ -104,4 +104,10 @@ public class TweenManager : MonoBehaviour
             });
         });
     }
+
+    public void SkipButton()
+    {
+        StartCoroutine(Timer(0f));
+        speechTherapyCompleted = true;
+    }
 }

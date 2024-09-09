@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 public class HelperHandController : MonoBehaviour
@@ -15,6 +16,10 @@ public class HelperHandController : MonoBehaviour
     private AudioSource audioSource;
     private AudioClip audioClipBigPillow;
     private AudioClip audioClipSmallPillow;
+
+    [SerializeField]
+    private float helperAudioDelay;
+    private bool canPlayHelperAudioAfterDelay;
 
     private void Awake()
     {
@@ -58,8 +63,12 @@ public class HelperHandController : MonoBehaviour
         currentPillow = pillow;
         helperHandInstance = Instantiate(helperHandPrefab, pillow.transform.position, Quaternion.identity);
 
-        PlayAudioForPillow(pillow);  // Play the appropriate audio clip once
 
+        //canPlayHelperAudioAfterDelay = true;  
+        PlayAudioForPillow(pillow);  // Play the appropriate audio clip once
+        Debug.Log("check how many times this is calling");
+            
+    
         LeanTween.move(helperHandInstance, pillow.targetPosition.position, helperMoveDuration)
             .setOnComplete(() =>
             {
@@ -125,6 +134,7 @@ public class HelperHandController : MonoBehaviour
         {
             if (pillow.IsBigPillow())  // Assuming you have a way to determine if a pillow is big
             {
+                //StartCoroutine(PlayHelperHandAudioPeriodically(helperAudioDelay));
                 audioSource.clip = audioClipBigPillow;
             }
             else
@@ -136,6 +146,18 @@ public class HelperHandController : MonoBehaviour
             {
                 audioSource.Play();
             }
+
+
         }
     }
+
+    //private IEnumerator PlayHelperHandAudioPeriodically(float helperAudioDelay)
+    //{
+    //    canPlayHelperAudioAfterDelay = false;// Prevent further audio from playing until after the delay
+    //    yield return new WaitForSeconds(helperAudioDelay);  // Wait for the delay                                                  // Play the helper hand audio here
+    //    Debug.Log("Playing helper hand audio after delay" + helperAudioDelay);
+    //    // Example: PlayAudio(helperHandAudioClip);
+    //    canPlayHelperAudioAfterDelay = true;  // Allow the audio to play again after the delay
+    //}
+
 }
