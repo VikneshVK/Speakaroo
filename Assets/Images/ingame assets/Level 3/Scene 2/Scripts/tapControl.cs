@@ -12,6 +12,7 @@ public class TapControl : MonoBehaviour
     public float gravityModifierValue = 1f; // Gravity modifier to apply when conditions are met
 
     private Collider2D hoseCollider;
+    private Collider2D tapCollider;
     private DragScript dragScript;
 
     private void Start()
@@ -24,6 +25,7 @@ public class TapControl : MonoBehaviour
         if (hose != null)
         {
             hoseCollider = hose.GetComponent<Collider2D>();
+            tapCollider = GetComponent<Collider2D>();
             dragScript = hose.GetComponent<DragScript>();
         }
     }
@@ -34,8 +36,9 @@ public class TapControl : MonoBehaviour
         {
             if (isFirstTime)
             {
+                tapCollider.enabled = false;
                 StartCoroutine(PlayWaterEffectForDuration());
-
+                
                 // Reset the helper hand after the tap is interacted with
                 Helper_PointerController helperController = FindObjectOfType<Helper_PointerController>();
                 if (helperController != null)

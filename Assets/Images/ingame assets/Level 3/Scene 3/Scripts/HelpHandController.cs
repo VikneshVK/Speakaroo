@@ -6,6 +6,7 @@ public class HelpHandController : MonoBehaviour
     public GameObject helpPointerPrefab; // Prefab for the helper hand
     public float delayTimer = 5f; // Timer duration before showing the helper hand
     public float tweenDuration = 1f; // Duration of the tween animation
+    public Animator birdAnimator; // Reference to the bird's Animator
 
     private GameObject[] targetObjects; // Objects to monitor for interaction
     private GameObject currentHelpPointer; // Current instance of the helper hand
@@ -17,6 +18,17 @@ public class HelpHandController : MonoBehaviour
 
     private bool isForJojo; // Tracks whether the current routine is for Jojo or Kiki
 
+    // AudioSource and Audio Clips
+    private AudioSource audioSource;
+    public AudioClip audioClip1; // Audio for Jojo
+    public AudioClip audioClip2; // Audio for Kiki
+
+    void Start()
+    {
+        // Get the AudioSource component attached to the same GameObject
+        audioSource = GetComponent<AudioSource>();
+    }
+
     // Method triggered by Jojo_action
     public void StartHelperHandRoutineForJojo(GameObject[] objectsToMonitor)
     {
@@ -24,6 +36,7 @@ public class HelpHandController : MonoBehaviour
         currentTargetIndex = 0;
         isHelperHandActive = false;
         isForJojo = true; // Set context for Jojo
+
         StartCoroutine(CheckNextTarget(isForJojo));
     }
 
@@ -34,6 +47,7 @@ public class HelpHandController : MonoBehaviour
         currentTargetIndex = 0;
         isHelperHandActive = false;
         isForJojo = false; // Set context for Kiki
+
         StartCoroutine(CheckNextTarget(isForJojo));
     }
 
@@ -72,6 +86,20 @@ public class HelpHandController : MonoBehaviour
             initialPosition = targetObject.transform.position;
             currentHelpPointer = Instantiate(helpPointerPrefab, initialPosition, Quaternion.identity);
             isHelperHandActive = true;
+
+            // Play audio based on whether it's for Jojo or Kiki
+            if (isForJojo && audioClip1 != null)
+            {
+                audioSource.clip = audioClip1;
+                audioSource.Play();
+                birdAnimator.SetTrigger("helper1"); // Trigger "helper1" for Jojo
+            }
+            else if (!isForJojo && audioClip2 != null)
+            {
+                audioSource.clip = audioClip2;
+                audioSource.Play();
+                birdAnimator.SetTrigger("helper2"); // Trigger "helper2" for Kiki
+            }
 
             // Determine the target position for the tween based on the game object name and the action script that triggered the method
             if (isForJojo)
@@ -167,7 +195,6 @@ public class HelpHandController : MonoBehaviour
         }
     }
 
-
     private IEnumerator ResetTimerAndSpawnHelperHand()
     {
         // Wait for the delay timer before showing the helper hand again
@@ -176,7 +203,6 @@ public class HelpHandController : MonoBehaviour
         // Spawn the helper hand for the current target object again
         CheckInteraction(isForJojo);
     }
-
 
     private void DestroyHelperHand()
     {

@@ -16,18 +16,20 @@ public class Kiki_actions : MonoBehaviour
     public bool hasReachedOffScreen = false; // Boolean to track off-screen position
 
     private Animator animator;
-    private SpriteRenderer spriteRenderer;
+    /*private SpriteRenderer spriteRenderer;*/
 
     private bool isFlying = false;
     private bool isIdleCompleted = false;
     public bool isReturning = false; // Flag for return trip
 
     private Vector3 targetPosition; // Store the current target position
+    private AudioSource kikiAudio;
 
     void Start()
     {
         animator = GetComponent<Animator>();
-        spriteRenderer = GetComponent<SpriteRenderer>();
+        kikiAudio = GetComponent<AudioSource>();    
+        /*spriteRenderer = GetComponent<SpriteRenderer>();*/
     }
 
     void Update()
@@ -54,7 +56,7 @@ public class Kiki_actions : MonoBehaviour
 
     public void MoveToStopPosition()
     {
-        spriteRenderer.flipX = true; // Ensure sprite is facing correct direction
+        /*spriteRenderer.flipX = true; // Ensure sprite is facing correct direction*/
         animator.SetBool("canFly", true);
         targetPosition = birdStopPosition.position;
         isFlying = true;
@@ -63,15 +65,16 @@ public class Kiki_actions : MonoBehaviour
 
     public void MoveOffScreen()
     {
-        spriteRenderer.flipX = false; // Flip X to true when flying off-screen
-        animator.SetBool("canFly", true);
+        /*spriteRenderer.flipX = false; // Flip X to true when flying off-screen*/
+        animator.SetTrigger("canFly2");
         targetPosition = offScreenPosition.position;
+        kikiAudio.Play();
         isFlying = true;
     }
 
     public void ReturnToStopPosition()
     {
-        spriteRenderer.flipX = true; // Flip X to false when returning to stop position
+        /*spriteRenderer.flipX = true; // Flip X to false when returning to stop position*/
         isReturning = true;
         animator.SetBool("canFly", true);
         targetPosition = birdStopPosition.position;

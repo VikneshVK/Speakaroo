@@ -27,7 +27,7 @@ public class ItemDragHandler : MonoBehaviour
     private bool tweenstarted = true;
 
     public Kiki_actions kikiActions;
-    public Jojo_action jojoActions;
+    public Jojo_action1 jojoActions;
     public float timerDuration;
     public GameObject teddyPositionObject;
     public GameObject dinoPositionObject;
@@ -40,7 +40,8 @@ public class ItemDragHandler : MonoBehaviour
     public Transform sunTargetPosition;
     public GameObject boy;
     public SpriteRenderer clothBasketSpriteRenderer; // Reference to the sprite renderer of the cloth basket
-
+    public AudioSource finalaudio;
+    private bool finalaudioplayed;
     private float originalMinSpeed;
     private float originalMaxSpeed;
 
@@ -66,6 +67,7 @@ public class ItemDragHandler : MonoBehaviour
         toysDryed = 0;
         Debug.Log("clothsOnLine" + clothesOnLine);
         Debug.Log("Toys Dryed" + toysDryed);
+        finalaudioplayed = false;
     }
 
     private void Update()
@@ -101,6 +103,11 @@ public class ItemDragHandler : MonoBehaviour
         if (clothesOnLine == 0 && toysDryed == 3)
         {
             boyAnimator.SetBool("allDryed", true);
+            if (!finalaudioplayed)
+            {
+                finalaudio.Play();
+                finalaudioplayed = true;
+            }
         }
 
         // After the transition (removing dry clothes and adding wet toys) is complete

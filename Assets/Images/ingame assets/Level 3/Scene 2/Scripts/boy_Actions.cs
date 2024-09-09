@@ -69,8 +69,7 @@ public class BoyActions : MonoBehaviour
         if (other.CompareTag("spray")) // Make sure the particle system object has the tag "WaterParticles"
         {
             animator.SetBool("waterPlay", true);
-        }
-        
+        }        
     }
     private void HandleWaterPlay()
     {

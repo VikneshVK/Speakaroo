@@ -11,8 +11,10 @@ public class drag_Toys : MonoBehaviour
     public float scaleTime = 0.5f;
     public float scaleDownFactor = 0.85f;
     public static int completedTweens;
-    public GameObject Jojo;
+    public GameObject kiki;
+    public GameObject jojo;
     public bool isDragging = false;
+    public AudioSource tapAudiosource;
 
     public static bool isTeddyInteracted = false;
     public static bool isDinoInteracted = false;
@@ -23,13 +25,17 @@ public class drag_Toys : MonoBehaviour
     private bool spriteChanged = false;
     private SpriteRenderer spriteRenderer;
     private Collider2D toysCollider;
+    private Animator kikiAnimator;
     private Animator jojoAnimator;
+    public bool audioplayed = false;
+
 
     void Start()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
         toysCollider = GetComponent<Collider2D>();
-        jojoAnimator = Jojo.GetComponent<Animator>();
+        kikiAnimator = kiki.GetComponent<Animator>();
+        jojoAnimator = jojo.GetComponent<Animator>();   
         completedTweens = 0;
     }
 
@@ -151,7 +157,14 @@ public class drag_Toys : MonoBehaviour
                                                    if (completedTweens >= 3)
                                                    {
                                                        waterParticleSystem.Stop();
+                                                       kikiAnimator.SetBool("toysWashed", true);
                                                        jojoAnimator.SetBool("toysWashed", true);
+                                                       if (!audioplayed)
+                                                       {
+                                                           tapAudiosource.Play();
+                                                           audioplayed = true;
+                                                       }
+
                                                    }
                                                });
                                   });

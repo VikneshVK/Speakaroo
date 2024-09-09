@@ -97,7 +97,8 @@ public class Tween_Toys : MonoBehaviour
 
         if (!toyScript.IsInteracted())
         {
-            helperPointerController.SpawnHelperHand(currentToy.transform.position);
+            // Pass false to indicate that this is for the toy, not the tap position
+            helperPointerController.SpawnHelperHand(currentToy.transform.position, false);
             helperPointerController.TweenHelperHandToParticlesPosition(currentToyIndex);
         }
 

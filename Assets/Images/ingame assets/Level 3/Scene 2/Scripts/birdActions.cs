@@ -13,20 +13,27 @@ public class birdActions : MonoBehaviour
 
     private Animator animator;
     private TapControl tapControl;
-    private SpriteRenderer spriteRenderer;
+    /*private SpriteRenderer spriteRenderer;*/
+    private AudioSource kikiAudiosource;
 
     private bool isFlying = false;
     private bool isIdleCompleted = false;
     private bool collidersEnabled = false;
+    private bool hasPlayedAudioClip2 = false;
 
     private Helper_PointerController helperPointerController;
+    private AudioClip audioClip1;
+    private AudioClip audioClip2;
 
     void Start()
     {
         animator = GetComponent<Animator>();
         tapControl = pipe.GetComponent<TapControl>();
-        spriteRenderer = GetComponent<SpriteRenderer>();
+        /*spriteRenderer = GetComponent<SpriteRenderer>();*/
         helperPointerController = FindObjectOfType<Helper_PointerController>();
+        kikiAudiosource = GetComponent<AudioSource>();
+        audioClip1 = Resources.Load<AudioClip>("audio/Lvl3sc2/Mom told us to wash our toys");
+        audioClip2 = Resources.Load<AudioClip>("audio/Lvl3sc2/Now show your toys under the water");
     }
 
     void Update()
@@ -59,6 +66,9 @@ public class birdActions : MonoBehaviour
             {
                 isFlying = false;
                 animator.SetBool("canFly", false);
+                kikiAudiosource.clip = audioClip1;
+                kikiAudiosource.Play();
+
             }
         }
     }
@@ -99,18 +109,24 @@ public class birdActions : MonoBehaviour
     {
         if (tapControl != null && !tapControl.isFirstTime)
         {
-            spriteRenderer.flipX = true;
+            /*spriteRenderer.flipX = true;*/
             animator.SetBool("waterPlay", false);
             animator.SetBool("canFly", true);
 
             Vector3 newtargetPosition = new Vector3(finalStopPosition.position.x, finalStopPosition.position.y, transform.position.z);
             transform.position = Vector3.MoveTowards(transform.position, newtargetPosition, flyspeed * Time.deltaTime);
-
+            
             if (Mathf.Abs(finalStopPosition.position.y - transform.position.y) <= 0.1f)
             {
-                spriteRenderer.flipX = false;
+                /*spriteRenderer.flipX = false;*/
                 isFlying = false;
                 animator.SetBool("canFly", false);
+                if (!hasPlayedAudioClip2 && audioClip2 != null)
+                {
+                    kikiAudiosource.clip = audioClip2;
+                    kikiAudiosource.Play();
+                    hasPlayedAudioClip2 = true; // Mark that the second audio has been played
+                }
             }
         }
     }
