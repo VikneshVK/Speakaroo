@@ -21,7 +21,10 @@ public class HelpHandController : MonoBehaviour
     private AudioSource audioSource;
     public AudioClip audioClip1;
     public AudioClip audioClip2;
-    public AudioClip audioClip3; 
+    public AudioClip audioClip3;
+
+    // New flag to prevent audio from playing twice
+    private bool hasAudioPlayed = false;
 
     void Start()
     {
@@ -34,6 +37,7 @@ public class HelpHandController : MonoBehaviour
         currentTargetIndex = 0;
         isHelperHandActive = false;
         isForJojo = true;
+        hasAudioPlayed = false; // Reset flag for Jojo
 
         StartCoroutine(CheckNextTarget(isForJojo));
     }
@@ -44,6 +48,7 @@ public class HelpHandController : MonoBehaviour
         currentTargetIndex = 0;
         isHelperHandActive = false;
         isForJojo = false;
+        hasAudioPlayed = false; // Reset flag for Kiki
 
         StartCoroutine(CheckNextTarget(isForJojo));
     }
@@ -59,6 +64,7 @@ public class HelpHandController : MonoBehaviour
         if (currentTargetIndex < targetObjects.Length)
         {
             isHelperHandActive = false;
+            hasAudioPlayed = false; // Reset flag when moving to next target
             Debug.Log("Delay timer started for next object.");
             yield return new WaitForSeconds(delayTimer);
             CheckInteraction(isForJojo);
@@ -105,12 +111,11 @@ public class HelpHandController : MonoBehaviour
         }
     }
 
-
     private void SpawnHelperHand(GameObject targetObject, ItemDragHandler itemDragHandler, bool isForJojo)
     {
         if (helpPointerPrefab != null)
         {
-            // Reset audio before spawning the helper hand
+            // Ensure the audio stops if it's playing before spawning a new helper hand
             if (audioSource != null && audioSource.isPlaying)
             {
                 audioSource.Stop();
@@ -120,8 +125,11 @@ public class HelpHandController : MonoBehaviour
             currentHelpPointer = Instantiate(helpPointerPrefab, initialPosition, Quaternion.identity);
             isHelperHandActive = true;
 
-            // Play audio only if the object is valid and the helper hand is spawned
-            PlayAudioForHelperHand(targetObject, isForJojo);
+            // Play audio once when helper hand is spawned
+            if (!hasAudioPlayed)
+            {
+                PlayAudioForHelperHand(targetObject, isForJojo);
+            }
 
             targetPosition = GetTargetPosition(itemDragHandler, targetObject, isForJojo);
             StartTweenLoop();
@@ -130,9 +138,9 @@ public class HelpHandController : MonoBehaviour
 
     private void PlayAudioForHelperHand(GameObject targetObject, bool isForJojo)
     {
-        // Play audio based on whether it's for Jojo or Kiki, but only once
-        if (audioSource != null && !audioSource.isPlaying)
+        if (audioSource != null && !hasAudioPlayed)
         {
+            // Play appropriate audio based on Jojo or Kiki
             if (isForJojo)
             {
                 if (audioClip3 != null && (targetObject.name == "wet kuma" || targetObject.name == "wet dino" || targetObject.name == "wet bunny"))
@@ -149,19 +157,23 @@ public class HelpHandController : MonoBehaviour
                 audioSource.clip = audioClip2;
             }
 
+            // Play audio and ensure it plays only once
             if (audioSource.clip != null)
             {
+                audioSource.loop = false; // Disable looping
                 audioSource.Play();
+                hasAudioPlayed = true; // Mark the audio as played to prevent it from playing again
             }
         }
     }
 
-
     private Vector3 GetTargetPosition(ItemDragHandler itemDragHandler, GameObject targetObject, bool isForJojo)
     {
         Vector3 position = Vector3.zero;
+
         if (isForJojo)
         {
+            // Define positions for Jojo's interaction with specific objects
             switch (targetObject.name)
             {
                 case "wet kuma":
@@ -174,12 +186,13 @@ public class HelpHandController : MonoBehaviour
                     position = itemDragHandler.bunnyPositionObject.transform.position;
                     break;
                 default:
-                    position = itemDragHandler.basketTransform.position;
+                    position = itemDragHandler.basketTransform.position; // Default to basket position
                     break;
             }
         }
         else
         {
+            // Define positions for Kiki's interaction with specific objects
             switch (targetObject.name)
             {
                 case "wet kuma":
@@ -192,10 +205,11 @@ public class HelpHandController : MonoBehaviour
                     position = itemDragHandler.bunnyInitialPosition.transform.position;
                     break;
                 default:
-                    position = itemDragHandler.basketTransform.position;
+                    position = itemDragHandler.basketTransform.position; // Default to basket position
                     break;
             }
         }
+
         return position;
     }
 
@@ -213,6 +227,13 @@ public class HelpHandController : MonoBehaviour
 
     public void OnObjectInteracted(GameObject interactedObject, bool isCorrectDrop)
     {
+        // Check if currentTargetIndex is within bounds
+        if (currentTargetIndex >= targetObjects.Length)
+        {
+            Debug.LogWarning("currentTargetIndex is out of bounds in OnObjectInteracted. Ending interaction.");
+            return; // Prevent out-of-bounds access
+        }
+
         if (isHelperHandActive && interactedObject == targetObjects[currentTargetIndex])
         {
             if (isCorrectDrop)
@@ -220,7 +241,16 @@ public class HelpHandController : MonoBehaviour
                 DestroyHelperHand();
                 currentTargetIndex++;
                 Debug.Log("Object interacted, moving to next target and resetting timer.");
-                StartCoroutine(CheckNextTarget(isForJojo)); // Restart timer
+
+                // Check if the new currentTargetIndex is within bounds before proceeding
+                if (currentTargetIndex < targetObjects.Length)
+                {
+                    StartCoroutine(CheckNextTarget(isForJojo)); // Restart timer
+                }
+                else
+                {
+                    Debug.Log("No more target objects to process.");
+                }
             }
             else
             {
@@ -237,9 +267,19 @@ public class HelpHandController : MonoBehaviour
             }
 
             currentTargetIndex++;
-            StartCoroutine(CheckNextTarget(isForJojo)); // Restart timer for next object
+
+            // Check if the new currentTargetIndex is within bounds before proceeding
+            if (currentTargetIndex < targetObjects.Length)
+            {
+                StartCoroutine(CheckNextTarget(isForJojo)); // Restart timer for next object
+            }
+            else
+            {
+                Debug.Log("No more target objects to process.");
+            }
         }
     }
+
 
     private IEnumerator ResetTimerAndSpawnHelperHand()
     {
@@ -247,7 +287,6 @@ public class HelpHandController : MonoBehaviour
         yield return new WaitForSeconds(delayTimer);
         CheckInteraction(isForJojo);
     }
-
 
     private void DestroyHelperHand()
     {

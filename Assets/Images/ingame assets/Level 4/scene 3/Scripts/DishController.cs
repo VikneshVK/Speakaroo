@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class DishController : MonoBehaviour
 {
-    public GameObject maskPrefab; // The mask prefab to spawn when scrubbing
+    public GameObject maskPrefab; // The prefab to spawn during scrubbing
     private bool isSpawning = false;
     private GameObject instantiatedMask;
 
@@ -22,7 +22,7 @@ public class DishController : MonoBehaviour
     {
         if (isSpawning || isScrubbing) return;
 
-        // Tween the dish to the center of the viewport and scale it to 120%
+        // Tween the dish to the center of the viewport and scale it up slightly
         LeanTween.move(gameObject, Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, Camera.main.nearClipPlane + 5f)), 0.5f);
         LeanTween.scale(gameObject, originalScale * 1.2f, 0.5f);
     }
@@ -32,48 +32,48 @@ public class DishController : MonoBehaviour
         if (!isScrubbing)
         {
             isScrubbing = true;
-            StartCoroutine(SpawnPrefabs(transform));
+            StartCoroutine(SpawnPrefabs());
         }
     }
 
-    private IEnumerator SpawnPrefabs(Transform dishTransform)
+    private IEnumerator SpawnPrefabs()
     {
         Debug.Log("Spawning prefabs started.");
         isSpawning = true;
 
-        // Simulate scrubbing for a set amount of time (e.g., 5 seconds)
+        // Simulate scrubbing for a set amount of time (5 seconds)
         for (float timer = 0; timer < 5f; timer += Time.deltaTime)
         {
             Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             Vector2 mousePos2D = new Vector2(mousePos.x, mousePos.y);
 
             RaycastHit2D hit = Physics2D.Raycast(mousePos2D, Vector2.zero);
-            if (hit.collider != null && hit.collider.transform == dishTransform)
+            if (hit.collider != null && hit.collider.gameObject == gameObject)
             {
-                Vector3 spawnPos = new Vector3(hit.point.x, hit.point.y, hit.collider.transform.position.z);
-                if (!AlreadyHasMaskAtPoint(spawnPos, hit.collider.transform))
+                // Find the child with the "D" prefix
+                Transform dChild = FindDChild();
+                if (dChild != null)
                 {
-                    instantiatedMask = Instantiate(maskPrefab, spawnPos, Quaternion.identity);
-                    instantiatedMask.transform.SetParent(hit.collider.transform);
+                    Vector3 spawnPos = new Vector3(mousePos.x, mousePos.y, dChild.position.z);
+                    if (!AlreadyHasMaskAtPoint(spawnPos, dChild))
+                    {
+                        instantiatedMask = Instantiate(maskPrefab, spawnPos, Quaternion.identity);
+                        instantiatedMask.transform.SetParent(dChild); // Attach the mask to the D-prefixed child
+                    }
                 }
             }
 
             yield return null;
         }
 
-        
         isSpawning = false;
         Debug.Log("Spawning prefabs ended.");
 
-        
-        SpriteRenderer sr = dishTransform.GetComponent<SpriteRenderer>();
-        if (sr != null) sr.enabled = false;
-
-        // Destroy the D-prefixed child object after a delay
-        Transform dChild = FindDChild();
-        if (dChild != null)
+        // Destroy the D-prefixed child object after scrubbing is complete
+        Transform dChildToDestroy = FindDChild();
+        if (dChildToDestroy != null)
         {
-            StartCoroutine(CleanDishAfterDelay(dChild.gameObject));
+            StartCoroutine(CleanDishAfterDelay(dChildToDestroy.gameObject));
         }
     }
 
@@ -93,10 +93,10 @@ public class DishController : MonoBehaviour
     {
         foreach (Transform child in parent)
         {
-            if (!string.IsNullOrEmpty(child.tag) && child.CompareTag("Mask"))
+            if (child.CompareTag("Mask"))
             {
                 float distance = Vector3.Distance(child.position, point);
-                if (distance < 0.01f) // Adjust this threshold as necessary
+                if (distance < 0.01f) // Adjust the threshold if necessary
                     return true;
             }
         }
@@ -105,17 +105,16 @@ public class DishController : MonoBehaviour
 
     private IEnumerator CleanDishAfterDelay(GameObject dChild)
     {
-        yield return new WaitForSeconds(2f);
-        Destroy(dChild);
-
-        // Inform the manager that this dish has been cleaned
-        DishWashingManager.DishWashed();
+        yield return new WaitForSeconds(2f); // Delay before cleaning
+        Destroy(dChild); // Destroy the D-prefixed child
 
         // Tween the dish back to its original position and scale
         LeanTween.move(gameObject, originalPosition, 0.5f).setOnComplete(() =>
         {
-            transform.localScale = originalScale;
-            isScrubbing = false;
+            transform.localScale = originalScale; // Reset the scale
+            isScrubbing = false; // Allow interaction again
         });
+
+        Debug.Log("Dish cleaned and moved back to original position.");
     }
 }

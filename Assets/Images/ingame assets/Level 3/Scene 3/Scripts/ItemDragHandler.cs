@@ -193,7 +193,7 @@ public class ItemDragHandler : MonoBehaviour
             }
             else if (gameObject.tag == "Toy")
             {
-                if (isDry && (selectedTarget == teddyInitialPosition || selectedTarget == dinoInitalPosition || selectedTarget == bunnyInitialPosition))
+                if (isDry && (selectedTarget == teddyInitialPosition.transform || selectedTarget == dinoInitalPosition.transform || selectedTarget == bunnyInitialPosition.transform))
                 {
                     IncrementToysDryed();
                     DecrementClothesCount();

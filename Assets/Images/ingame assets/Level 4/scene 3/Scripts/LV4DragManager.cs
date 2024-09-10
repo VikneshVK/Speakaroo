@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class LV4DragManager : MonoBehaviour
@@ -72,34 +73,48 @@ public class LV4DragManager : MonoBehaviour
 
     void SpawnPrefab()
     {
+        
         GameObject spawnedObject = Instantiate(yourPrefab, spawnPosition, Quaternion.identity);
 
         
         Transform floor = spawnedObject.transform.Find("floor");
         Transform sink = spawnedObject.transform.Find("sink");
 
-       
+        
         Vector3 floorOriginalScale = floor.localScale;
         Vector3 sinkOriginalScale = sink.localScale;
 
-       
+        
         floor.localScale = Vector3.zero;
         sink.localScale = Vector3.zero;
 
         
+        Dictionary<Transform, Vector3> dishOriginalScales = new Dictionary<Transform, Vector3>();
+
+        
+        foreach (Transform dish in sink)
+        {
+            dishOriginalScales[dish] = dish.localScale; // Save the original scale
+            dish.localScale = Vector3.zero; // Set initial scale to zero
+        }
+
+        
         LeanTween.scale(floor.gameObject, floorOriginalScale, 0.5f).setEase(LeanTweenType.easeOutBounce).setOnComplete(() =>
         {
-           
+            
             LeanTween.scale(sink.gameObject, sinkOriginalScale, 0.5f).setEase(LeanTweenType.easeOutBounce).setOnComplete(() =>
             {
-               
-                foreach (Transform dish in sink)
+                
+                foreach (Transform dish in dishOriginalScales.Keys)
                 {
-                    Vector3 dishOriginalScale = dish.localScale; // Store dish's original scale
-                    dish.localScale = Vector3.zero; // Set initial scale of the dish to zero
+                    Vector3 dishOriginalScale = dishOriginalScales[dish]; 
+
+                    
                     LeanTween.scale(dish.gameObject, dishOriginalScale, 0.5f).setEase(LeanTweenType.easeOutBounce);
                 }
             });
         });
     }
+
+
 }
