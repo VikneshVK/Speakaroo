@@ -158,8 +158,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: -14, y: -344}
-  m_SizeDelta: {x: 1500, y: 1000}
+  m_AnchoredPosition: {x: 0, y: -115}
+  m_SizeDelta: {x: 1200, y: 130}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &22780100
 MonoBehaviour:
@@ -181,7 +181,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Texture: {fileID: 2800000, guid: a7537ff0fc9f24886b001414bb62da9a, type: 3}
+  m_Texture: {fileID: 2800000, guid: 885d114c0569e4e71a9f096afb311dbf, type: 3}
   m_UVRect:
     serializedVersion: 2
     x: 0
@@ -395,6 +395,7 @@ GameObject:
   - component: {fileID: 376860514}
   - component: {fileID: 376860513}
   - component: {fileID: 376860512}
+  - component: {fileID: 376860515}
   m_Layer: 5
   m_Name: HouseHoldImages
   m_TagString: Untagged
@@ -459,6 +460,23 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 500, y: 500}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &376860515
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 376860511}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0848bff101191904ead4bb831f7084db, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_BlurFactor: 1
+  m_Style: 2
+  m_EffectColor: {r: 1, g: 1, b: 1, a: 1}
+  m_EffectDistance: {x: 1, y: -1}
+  m_UseGraphicAlpha: 1
 --- !u!1 &431494862
 GameObject:
   m_ObjectHideFlags: 0
@@ -1167,8 +1185,8 @@ Camera:
   m_GameObject: {fileID: 1316902833}
   m_Enabled: 1
   serializedVersion: 2
-  m_ClearFlags: 1
-  m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
+  m_ClearFlags: 2
+  m_BackGroundColor: {r: 0.79564357, g: 0.7162246, b: 0.8207547, a: 0}
   m_projectionMatrixMode: 1
   m_GateFitMode: 2
   m_FOVAxisMode: 0
@@ -11385,7 +11403,7 @@ RectTransform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1874534993}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -11394,8 +11412,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: 0.99998665, y: -335}
-  m_SizeDelta: {x: 1500, y: 1000}
+  m_AnchoredPosition: {x: -0.9417, y: -65}
+  m_SizeDelta: {x: 1216.1167, y: 130}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1874534995
 MonoBehaviour:
@@ -11417,7 +11435,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 601cd7817c0404294a6c229fe6c0dbd6, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 523ac3c45a0de4cafbb51f42cb73e3e5, type: 3}
   m_Type: 3
   m_PreserveAspect: 0
   m_FillCenter: 1
