@@ -66,9 +66,9 @@ public class Kiki_actions : MonoBehaviour
     public void MoveOffScreen()
     {
         /*spriteRenderer.flipX = false; // Flip X to true when flying off-screen*/
-        animator.SetTrigger("canFly2");
+        animator.SetBool("canFly2", true);
         targetPosition = offScreenPosition.position;
-        kikiAudio.Play();
+        /*kikiAudio.Play();*/
         isFlying = true;
     }
 
@@ -88,6 +88,7 @@ public class Kiki_actions : MonoBehaviour
         {
             isFlying = false; // Stop flying
             animator.SetBool("canFly", false);
+            animator.SetBool("canFly2", false);
 
             if (isReturning)
             {

@@ -295,6 +295,16 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 7858792698623254911, guid: 85f6e187413e1874c867f63abf871ab5, type: 3}
   m_PrefabInstance: {fileID: 1786206411}
   m_PrefabAsset: {fileID: 0}
+--- !u!95 &279622443 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 2656597240842119264, guid: 85f6e187413e1874c867f63abf871ab5, type: 3}
+  m_PrefabInstance: {fileID: 1786206411}
+  m_PrefabAsset: {fileID: 0}
+--- !u!82 &279622445 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 1708946441714153709, guid: 85f6e187413e1874c867f63abf871ab5, type: 3}
+  m_PrefabInstance: {fileID: 1786206411}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &301199582
 GameObject:
   m_ObjectHideFlags: 0
@@ -1044,6 +1054,7 @@ MonoBehaviour:
   helperDelay: 5
   helperMoveDuration: 1
   helperAudioDelay: 8
+  birdAnimator: {fileID: 279622443}
 --- !u!4 &912389237
 Transform:
   m_ObjectHideFlags: 0
@@ -3029,37 +3040,9 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 973270180635490671, guid: 85f6e187413e1874c867f63abf871ab5, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.7704668
-      objectReference: {fileID: 0}
-    - target: {fileID: 973270180635490671, guid: 85f6e187413e1874c867f63abf871ab5, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0.6374802
-      objectReference: {fileID: 0}
-    - target: {fileID: 1362527429733915226, guid: 85f6e187413e1874c867f63abf871ab5, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 0.65391153
-      objectReference: {fileID: 0}
-    - target: {fileID: 1362527429733915226, guid: 85f6e187413e1874c867f63abf871ab5, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: -0.7565711
-      objectReference: {fileID: 0}
-    - target: {fileID: 2656597240842119264, guid: 85f6e187413e1874c867f63abf871ab5, type: 3}
-      propertyPath: m_Controller
-      value: 
-      objectReference: {fileID: 9100000, guid: 79af386e1cfcd7d48952358e2b5c17b5, type: 2}
-    - target: {fileID: 6120322812427231483, guid: 85f6e187413e1874c867f63abf871ab5, type: 3}
-      propertyPath: m_LocalScale.x
-      value: 0.4
-      objectReference: {fileID: 0}
-    - target: {fileID: 6120322812427231483, guid: 85f6e187413e1874c867f63abf871ab5, type: 3}
-      propertyPath: m_LocalScale.y
-      value: 0.4
-      objectReference: {fileID: 0}
-    - target: {fileID: 6120322812427231483, guid: 85f6e187413e1874c867f63abf871ab5, type: 3}
-      propertyPath: m_LocalScale.z
-      value: 0.4
+    - target: {fileID: 1708946441714153709, guid: 85f6e187413e1874c867f63abf871ab5, type: 3}
+      propertyPath: m_PlayOnAwake
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6120322812427231483, guid: 85f6e187413e1874c867f63abf871ab5, type: 3}
       propertyPath: m_LocalPosition.x
@@ -3100,10 +3083,6 @@ PrefabInstance:
     - target: {fileID: 6120322812427231483, guid: 85f6e187413e1874c867f63abf871ab5, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6120322812427231483, guid: 85f6e187413e1874c867f63abf871ab5, type: 3}
-      propertyPath: m_ConstrainProportionsScale
-      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7858792698623254911, guid: 85f6e187413e1874c867f63abf871ab5, type: 3}
       propertyPath: m_Name
@@ -3203,6 +3182,7 @@ MonoBehaviour:
   walkingRig: {fileID: 2089979208}
   normalRig: {fileID: 1069423223}
   Bird: {fileID: 279622442}
+  birdAudiosource: {fileID: 279622445}
   pillowDragAndDrop: {fileID: 391338652}
 --- !u!82 &1862408398
 AudioSource:

@@ -20,6 +20,7 @@ public class ItemDragHandler : MonoBehaviour
     private bool isDragging = false;
     private Vector3 startPosition;
     private Animator boyAnimator;
+    private Animator birdAnimator;
 
     public static int clothesOnLine ;  // Variable to track the number of cloth and toy objects on the line
     public static int toysDryed ;      // Static variable to track the number of dry toys placed in the cloth basket
@@ -39,11 +40,16 @@ public class ItemDragHandler : MonoBehaviour
     public Transform sun;
     public Transform sunTargetPosition;
     public GameObject boy;
+    public GameObject Bird;
     public SpriteRenderer clothBasketSpriteRenderer; // Reference to the sprite renderer of the cloth basket
     public AudioSource finalaudio;
     private bool finalaudioplayed;
+    private bool firstHalfAudioPlayed;
+    private bool firstHalfAnimationPlayed;
     private float originalMinSpeed;
     private float originalMaxSpeed;
+    public AudioSource firstHalfAudio;
+    public bool HasInteracted { get; private set; } = false;
 
     private void Awake()
     {
@@ -62,13 +68,17 @@ public class ItemDragHandler : MonoBehaviour
         bunnyResetPosition = bunnyInitialPosition.transform;
         startPosition = transform.position;
         boyAnimator = boy.GetComponent<Animator>();
+        birdAnimator = Bird.GetComponent<Animator>();
         DisableToyPositionColliders();       
         clothesOnLine = 6;
         toysDryed = 0;
         Debug.Log("clothsOnLine" + clothesOnLine);
         Debug.Log("Toys Dryed" + toysDryed);
         finalaudioplayed = false;
-    }
+        firstHalfAudioPlayed = false;
+        firstHalfAnimationPlayed = false;
+        
+}
 
     private void Update()
     {
@@ -114,13 +124,24 @@ public class ItemDragHandler : MonoBehaviour
         if (clothesOnLine == 6 && isTransitionComplete)
         {
             // Now call AreAllItemsWet() to check if all items are wet
-            if (AreAllItemsWet() && tweenstarted)
+            if (AreAllItemsWet() && tweenstarted && !firstHalfAudioPlayed)
             {
-                kikiActions.MoveOffScreen();
-                jojoActions.MoveOffScreen();
-                StartCoroutine(SetAllDry()); // Start the SetAllDry coroutine
+                birdAnimator.SetTrigger("1stHalf");          
+                firstHalfAudioPlayed = true;
+                firstHalfAudio.Play();
+                
             }
         }
+        
+        if(firstHalfAudioPlayed && birdAnimator.GetCurrentAnimatorStateInfo(0).IsName("1st Half") &&
+            birdAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.9f && !firstHalfAnimationPlayed)
+        {
+            firstHalfAnimationPlayed = true;
+            kikiActions.MoveOffScreen();
+            jojoActions.MoveOffScreen();
+            StartCoroutine(SetAllDry());
+        }
+        
     }
 
     private void OnMouseDown()
@@ -130,18 +151,15 @@ public class ItemDragHandler : MonoBehaviour
             isDragging = true;
             Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             offset = transform.position - mousePosition;
-            offset.z = 0; // Ensure there's no change in the z position
+            offset.z = 0;
 
             selectedTarget = DetermineDropTarget();
             if (selectedTarget != null)
             {
-                originalTargetScale = selectedTarget.localScale; // Store the original scale of the selected target
+                originalTargetScale = selectedTarget.localScale;
             }
         }
-
-        
     }
-
 
 
     private void OnMouseUp()
@@ -149,7 +167,7 @@ public class ItemDragHandler : MonoBehaviour
         isDragging = false;
         if (selectedTarget != null)
         {
-            selectedTarget.localScale = originalTargetScale; // Reset the target scale to its original value
+            selectedTarget.localScale = originalTargetScale;
         }
 
         bool isCorrectDrop = false;
@@ -159,15 +177,15 @@ public class ItemDragHandler : MonoBehaviour
             Collider2D targetCollider = selectedTarget.GetComponent<Collider2D>();
             if (targetCollider != null)
             {
-                // Move the object to the center of the target's collider
                 transform.position = targetCollider.bounds.center;
             }
 
-            GetComponent<Collider2D>().enabled = false; // Disable the collider
+            GetComponent<Collider2D>().enabled = false;
+
+            HasInteracted = true; // Mark as interacted
 
             if (gameObject.tag == "Cloth")
             {
-                // Destroy the cloth game object instead of just disabling the sprite renderer
                 Destroy(gameObject);
                 UpdateClothBasketSprite();
                 DecrementClothesCount();
@@ -175,7 +193,7 @@ public class ItemDragHandler : MonoBehaviour
             }
             else if (gameObject.tag == "Toy")
             {
-                if (isDry && selectedTarget == toyBasketTransform)
+                if (isDry && (selectedTarget == teddyInitialPosition || selectedTarget == dinoInitalPosition || selectedTarget == bunnyInitialPosition))
                 {
                     IncrementToysDryed();
                     DecrementClothesCount();
@@ -184,11 +202,10 @@ public class ItemDragHandler : MonoBehaviour
                 }
                 else if (!isDry && selectedTarget == GetClotheslinePosition(gameObject.name))
                 {
-                    IncrementClothesCount(); // Increment only if the wet toy is dropped in the correct position
+                    IncrementClothesCount();
                     isCorrectDrop = true;
                 }
 
-                // Check if the transition is now complete and update the flag
                 if (clothesOnLine == 6)
                 {
                     isTransitionComplete = true;
@@ -197,13 +214,11 @@ public class ItemDragHandler : MonoBehaviour
         }
         else
         {
-            // Set the start position dynamically based on the toy's dry status and name
             if (gameObject.tag == "Toy")
             {
                 Collider2D startCollider = null;
                 if (isDry)
                 {
-                    // Set to specific toy positions based on toy name
                     startCollider = gameObject.name switch
                     {
                         "wet kuma" => teddyPosition.GetComponent<Collider2D>(),
@@ -214,13 +229,12 @@ public class ItemDragHandler : MonoBehaviour
                 }
                 else
                 {
-                    // Set to specific toy positions based on toy name
                     startPosition = gameObject.name switch
                     {
                         "wet kuma" => teddyResetPosition.transform.position,
                         "wet dino" => dinoResetPosition.transform.position,
                         "wet bunny" => bunnyResetPosition.transform.position,
-                        _ => startPosition // Default to original start position if not found
+                        _ => startPosition
                     };
                 }
 
@@ -232,11 +246,9 @@ public class ItemDragHandler : MonoBehaviour
                 transform.position = startPosition;
             }
 
-            // Reset the position if the drop is incorrect
             transform.position = startPosition;
         }
 
-        // Notify the HelperHandController about the interaction result
         HelpHandController helperHand = FindObjectOfType<HelpHandController>();
         if (helperHand != null)
         {
@@ -480,11 +492,11 @@ public class ItemDragHandler : MonoBehaviour
             switch (gameObject.name)
             {
                 case "wet kuma":
-                    return isDry ? toyBasketTransform : teddyPosition;
+                    return isDry ? teddyInitialPosition.transform : teddyPosition;
                 case "wet dino":
-                    return isDry ? toyBasketTransform : dinoPosition;
+                    return isDry ? dinoInitalPosition.transform : dinoPosition;
                 case "wet bunny":
-                    return isDry ? toyBasketTransform : bunnyPosition;
+                    return isDry ? bunnyInitialPosition.transform : bunnyPosition;
                 default:
                     return null; // Return null if toy name doesn't match
             }

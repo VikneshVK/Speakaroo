@@ -6,6 +6,10 @@ using UnityEngine.SceneManagement;
 public class BGManager : MonoBehaviour
 {
     private static BGManager instance;
+    private AudioSource audioSource;
+    public AudioClip homeAndLevelSelectClip; // Clip for Home and LevelSelect
+    public AudioClip otherLevelsClip; // Clip for other levels
+    private string currentSceneName = "";
 
     void Awake()
     {
@@ -13,7 +17,15 @@ public class BGManager : MonoBehaviour
         {
             instance = this;
             DontDestroyOnLoad(gameObject);
+            audioSource = gameObject.AddComponent<AudioSource>();
+            audioSource.loop = true;
+            audioSource.volume = 0.50f;  // Set volume to 75%
+            audioSource.playOnAwake = false;  // Ensure it doesn't auto-play
+
             SceneManager.sceneLoaded += OnSceneLoaded;
+
+            // Load the audio for the starting scene
+            PlayAudioForCurrentScene(SceneManager.GetActiveScene().name);
         }
         else
         {
@@ -23,11 +35,51 @@ public class BGManager : MonoBehaviour
 
     void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        // Check the name of the loaded scene
-        if (scene.name != "Home_Scene" && scene.name != "LevelSelect")
+        // Play appropriate audio based on the newly loaded scene
+        PlayAudioForCurrentScene(scene.name);
+    }
+
+    void PlayAudioForCurrentScene(string sceneName)
+    {
+        AudioClip clipToPlay = null;
+
+        // Check if we are on the Home or LevelSelect scene
+        if (sceneName == "Home_Scene" || sceneName == "LevelSelect")
         {
-            // Stop the music and destroy the MusicManager
-            Destroy(gameObject);
+            if (homeAndLevelSelectClip == null)
+            {
+                homeAndLevelSelectClip = Resources.Load<AudioClip>("BGAudio/Audio1");
+            }
+            clipToPlay = homeAndLevelSelectClip;
+        }
+        else
+        {
+            if (otherLevelsClip == null)
+            {
+                otherLevelsClip = Resources.Load<AudioClip>("BGAudio/Audio2");
+            }
+            clipToPlay = otherLevelsClip;
+        }
+
+        // Check if we are switching to a new audio clip
+        if (audioSource.clip != clipToPlay)
+        {
+            // Assign the new clip
+            audioSource.clip = clipToPlay;
+
+            // Play from the start of the new clip
+            audioSource.time = 0f;
+
+            // Play the new audio
+            audioSource.Play();
+        }
+        else
+        {
+            // Continue playing from where it left off (no need to reset time)
+            if (!audioSource.isPlaying)
+            {
+                audioSource.Play();
+            }
         }
     }
 
@@ -35,6 +87,4 @@ public class BGManager : MonoBehaviour
     {
         SceneManager.sceneLoaded -= OnSceneLoaded;
     }
-
-    // Use this same script and make the audios load as per the Levels Later.
 }

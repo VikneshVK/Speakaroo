@@ -21,6 +21,9 @@ public class HelperHandController : MonoBehaviour
     private float helperAudioDelay;
     private bool canPlayHelperAudioAfterDelay;
 
+    // Reference to the bird's Animator
+    public Animator birdAnimator;
+
     private void Awake()
     {
         audioSource = GetComponent<AudioSource>();  // Get the AudioSource component attached to the game object
@@ -63,12 +66,8 @@ public class HelperHandController : MonoBehaviour
         currentPillow = pillow;
         helperHandInstance = Instantiate(helperHandPrefab, pillow.transform.position, Quaternion.identity);
 
-
-        //canPlayHelperAudioAfterDelay = true;  
         PlayAudioForPillow(pillow);  // Play the appropriate audio clip once
-        Debug.Log("check how many times this is calling");
-            
-    
+
         LeanTween.move(helperHandInstance, pillow.targetPosition.position, helperMoveDuration)
             .setOnComplete(() =>
             {
@@ -112,7 +111,6 @@ public class HelperHandController : MonoBehaviour
         CancelInvoke(nameof(StartHelperHandInternal));
     }
 
-
     public void ScheduleNextPillow(PillowDragAndDrop nextPillow)
     {
         ScheduleHelperHand(nextPillow);
@@ -127,37 +125,35 @@ public class HelperHandController : MonoBehaviour
         Invoke(nameof(ScheduleHelperHand), 10f);
     }
 
-
     private void PlayAudioForPillow(PillowDragAndDrop pillow)
     {
         if (audioSource != null)
         {
             if (pillow.IsBigPillow())  // Assuming you have a way to determine if a pillow is big
             {
-                //StartCoroutine(PlayHelperHandAudioPeriodically(helperAudioDelay));
                 audioSource.clip = audioClipBigPillow;
+
+                // Trigger the bigPillow parameter in the bird animator
+                if (birdAnimator != null)
+                {
+                    birdAnimator.SetTrigger("bigPillow");
+                }
             }
             else
             {
                 audioSource.clip = audioClipSmallPillow;
+
+                // Trigger the smallPillow parameter in the bird animator
+                if (birdAnimator != null)
+                {
+                    birdAnimator.SetTrigger("smallPillow");
+                }
             }
 
             if (!audioSource.isPlaying)  // Ensure the audio only plays once
             {
                 audioSource.Play();
             }
-
-
         }
     }
-
-    //private IEnumerator PlayHelperHandAudioPeriodically(float helperAudioDelay)
-    //{
-    //    canPlayHelperAudioAfterDelay = false;// Prevent further audio from playing until after the delay
-    //    yield return new WaitForSeconds(helperAudioDelay);  // Wait for the delay                                                  // Play the helper hand audio here
-    //    Debug.Log("Playing helper hand audio after delay" + helperAudioDelay);
-    //    // Example: PlayAudio(helperHandAudioClip);
-    //    canPlayHelperAudioAfterDelay = true;  // Allow the audio to play again after the delay
-    //}
-
 }

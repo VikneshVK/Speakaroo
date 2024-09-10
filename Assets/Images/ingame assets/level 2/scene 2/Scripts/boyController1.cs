@@ -16,6 +16,7 @@ public class boyController1 : MonoBehaviour
     public GameObject walkingRig;
     public GameObject normalRig;
     public GameObject Bird;
+    public AudioSource birdAudiosource;
 
     // Reference to the PillowDragAndDrop script
     public PillowDragAndDrop pillowDragAndDrop;
@@ -23,15 +24,16 @@ public class boyController1 : MonoBehaviour
     private Animator walkingAnimator;
     private Animator normalAnimator;
     private Animator birdAnimator;
-    private bool isWalking = false;
-    private bool hasReachedStopPosition = false;
-    private bool shouldContinueWalking = false;
+    private bool isWalking;
+    private bool hasReachedStopPosition;
+    private bool shouldContinueWalking;
     private AudioSource audioSource;
-    private bool isFinalWalk = false;
+    private bool isFinalWalk;
+    private bool birdaudioplayed;
 
     private HelperHandController helperHandController;
 
-    private bool hasPlayedAudio = false; // To ensure audio is played only once
+    private bool hasPlayedAudio; // To ensure audio is played only once
 
     void Start()
     {
@@ -51,6 +53,14 @@ public class boyController1 : MonoBehaviour
 
         // Initially disable colliders for all interactive objects
         DisableColliders();
+
+        birdaudioplayed = false;
+        isWalking = false;
+        hasReachedStopPosition = false;
+        shouldContinueWalking = false;
+        isFinalWalk = false;
+        hasPlayedAudio = false;
+
     }
 
     void Update()
@@ -130,6 +140,11 @@ public class boyController1 : MonoBehaviour
             normalRig.SetActive(true);
             walkingRig.SetActive(false);
             birdAnimator.SetTrigger("canTalk");
+            if (!birdaudioplayed)
+            {
+                birdaudioplayed = true;
+                birdAudiosource.Play();
+            }
         }
     }
 
