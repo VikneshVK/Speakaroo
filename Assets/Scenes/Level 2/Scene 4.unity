@@ -711,7 +711,7 @@ Transform:
   m_GameObject: {fileID: 268106268}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -9.277779, y: -2, z: 0}
+  m_LocalPosition: {x: -9.262802, y: -2, z: 0}
   m_LocalScale: {x: 1.44, y: 1.44, z: 1.44}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -1414,7 +1414,7 @@ PrefabInstance:
       objectReference: {fileID: 2128019463}
     - target: {fileID: 6120322812427231483, guid: 64d9d1640cac20f409cb264cca096a26, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -13.737779
+      value: -13.722802
       objectReference: {fileID: 0}
     - target: {fileID: 6120322812427231483, guid: 64d9d1640cac20f409cb264cca096a26, type: 3}
       propertyPath: m_LocalPosition.y
@@ -2104,7 +2104,7 @@ Transform:
   m_GameObject: {fileID: 1163185642}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 15.877779, y: -3.32, z: 0}
+  m_LocalPosition: {x: 15.8628025, y: -3.32, z: 0}
   m_LocalScale: {x: 1.3, y: 1.3, z: 1.3}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -3951,6 +3951,10 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1446004883}
+    - target: {fileID: 7818521083861892653, guid: 8a8298d9b3f8b0846a90c56bb0c38c1e, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_StringArgument
+      value: New_Level-Select
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

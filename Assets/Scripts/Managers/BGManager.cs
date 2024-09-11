@@ -19,7 +19,7 @@ public class BGManager : MonoBehaviour
             DontDestroyOnLoad(gameObject);
             audioSource = gameObject.AddComponent<AudioSource>();
             audioSource.loop = true;
-            audioSource.volume = 0.50f;  // Set volume to 75%
+            audioSource.volume = 0.20f;  // Set volume to 75%
             audioSource.playOnAwake = false;  // Ensure it doesn't auto-play
 
             SceneManager.sceneLoaded += OnSceneLoaded;
