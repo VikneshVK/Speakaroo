@@ -42,11 +42,12 @@ public class IAP_Manager : MonoBehaviour, IStoreListener
         }
     }
 
+
     // Handle failed purchases
     public void OnPurchaseFailed(Product product, PurchaseFailureReason failureReason)
     {
         Debug.LogError($"Purchase of {product.definition.id} failed due to {failureReason}");
-        // Add further handling, like showing a message to the user
+        // Here you can show a popup or message to the user about the failure
     }
 
     // Unity IAP callbacks
@@ -54,11 +55,13 @@ public class IAP_Manager : MonoBehaviour, IStoreListener
     {
         storeController = controller;
         storeExtensionProvider = extensions;
+        Debug.Log("IAP initialized successfully.");
     }
 
     public void OnInitializeFailed(InitializationFailureReason error)
     {
         Debug.LogError("IAP Initialization failed: " + error);
+        // Optional: Show user-friendly message about the failure
     }
 
     public PurchaseProcessingResult ProcessPurchase(PurchaseEventArgs args)
@@ -66,16 +69,49 @@ public class IAP_Manager : MonoBehaviour, IStoreListener
         if (args.purchasedProduct.definition.id == YearlySub)
         {
             Debug.Log("Purchase processed: " + args.purchasedProduct.definition.id);
+
+            // Call ButtonManager to unlock the buttons
+            ButtonManager buttonManager = FindObjectOfType<ButtonManager>();
+            if (buttonManager != null)
+            {
+                buttonManager.OnPurchaseCompleted();
+                Debug.Log("ButtonManager OnPurchaseCompleted() called from IAP_Manager");
+            }
+            else
+            {
+                Debug.LogError("ButtonManager not found in the scene!");
+            }
         }
         else
         {
             Debug.LogError("Unrecognized product: " + args.purchasedProduct.definition.id);
         }
+
         return PurchaseProcessingResult.Complete;
     }
 
+
+    // Use this method if a failure with extra error message is implemented
     public void OnInitializeFailed(InitializationFailureReason error, string message)
     {
-        throw new System.NotImplementedException();
+        Debug.LogError($"IAP Initialization failed: {error}, Message: {message}");
+        // Optional: Show user-friendly message
+    }
+
+    public void ResetPurchase()
+    {
+        
+        PlayerPrefs.DeleteKey(YearlySub);
+        PlayerPrefs.Save();
+
+        Debug.Log("Purchase has been reset.");
+
+        // Optionally, re-lock the buttons
+        ButtonManager buttonManager = FindObjectOfType<ButtonManager>();
+        if (buttonManager != null)
+        {
+            buttonManager.LockAllButtons(); // Re-lock the buttons if needed
+            Debug.Log("Buttons have been locked after reset.");
+        }
     }
 }
