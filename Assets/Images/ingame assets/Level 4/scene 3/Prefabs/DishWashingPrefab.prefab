@@ -334,7 +334,7 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
+  m_MaskInteraction: 2
   m_SpriteSortPoint: 0
 --- !u!1 &937486862321040755
 GameObject:
@@ -384,6 +384,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maskPrefab: {fileID: 1433547584507210601, guid: 1d26dd531982ed445a9d65d037809122, type: 3}
+  scrubberController: {fileID: 1911446884899190091}
+  isDishSelected: 0
 --- !u!58 &252333754854169077
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -501,7 +503,7 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
+  m_MaskInteraction: 2
   m_SpriteSortPoint: 0
 --- !u!1 &1737406270056468439
 GameObject:
@@ -635,6 +637,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maskPrefab: {fileID: 1433547584507210601, guid: 1d26dd531982ed445a9d65d037809122, type: 3}
+  scrubberController: {fileID: 1911446884899190091}
+  isDishSelected: 0
 --- !u!58 &471041051610277721
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -892,6 +896,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maskPrefab: {fileID: 1433547584507210601, guid: 1d26dd531982ed445a9d65d037809122, type: 3}
+  scrubberController: {fileID: 1911446884899190091}
+  isDishSelected: 0
 --- !u!58 &4751396899345073871
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -1009,7 +1015,7 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
+  m_MaskInteraction: 2
   m_SpriteSortPoint: 0
 --- !u!1 &4442249199316878057
 GameObject:
@@ -1093,7 +1099,7 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
+  m_MaskInteraction: 2
   m_SpriteSortPoint: 0
 --- !u!1 &5389477450302517687
 GameObject:
@@ -1177,7 +1183,7 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
+  m_MaskInteraction: 2
   m_SpriteSortPoint: 0
 --- !u!1 &5617015951011485067
 GameObject:
@@ -1227,6 +1233,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maskPrefab: {fileID: 1433547584507210601, guid: 1d26dd531982ed445a9d65d037809122, type: 3}
+  scrubberController: {fileID: 1911446884899190091}
+  isDishSelected: 0
 --- !u!58 &4732662667957895598
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -1310,6 +1318,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maskPrefab: {fileID: 1433547584507210601, guid: 1d26dd531982ed445a9d65d037809122, type: 3}
+  scrubberController: {fileID: 1911446884899190091}
+  isDishSelected: 0
 --- !u!58 &741452842951749313
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -1354,6 +1364,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1554677244859185582}
+  - component: {fileID: 3976194809329173700}
   m_Layer: 0
   m_Name: DishWashingPrefab
   m_TagString: Untagged
@@ -1377,48 +1388,15 @@ Transform:
   - {fileID: 1058945875172658618}
   - {fileID: 4449105995875165781}
   - {fileID: 3740587970459965782}
-  - {fileID: 5238919714343798330}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &7287719217298656483
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 5238919714343798330}
-  - component: {fileID: 552162130316332208}
-  m_Layer: 0
-  m_Name: DishWashingManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &5238919714343798330
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7287719217298656483}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 1554677244859185582}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &552162130316332208
+--- !u!114 &3976194809329173700
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7287719217298656483}
+  m_GameObject: {fileID: 6830670451752822319}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 377fba8c8c0a43442915d0f0d80ccb07, type: 3}
@@ -1563,6 +1541,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maskPrefab: {fileID: 1433547584507210601, guid: 1d26dd531982ed445a9d65d037809122, type: 3}
+  scrubberController: {fileID: 1911446884899190091}
+  isDishSelected: 0
 --- !u!58 &5552164614032874076
 CircleCollider2D:
   m_ObjectHideFlags: 0
@@ -1671,7 +1651,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 17
+  m_SortingOrder: 21
   m_Sprite: {fileID: 21300000, guid: f2197e690b2e6b5469151b7dab9655ad, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -1778,7 +1758,7 @@ SpriteRenderer:
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
-  m_MaskInteraction: 0
+  m_MaskInteraction: 2
   m_SpriteSortPoint: 0
 --- !u!1 &8883898756026529963
 GameObject:
