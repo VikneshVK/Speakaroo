@@ -544,7 +544,19 @@ public class ItemDragHandler : MonoBehaviour
             ItemDragHandler handler = obj.GetComponent<ItemDragHandler>();
             if (handler != null)
             {
+                // Set isDry to true
                 handler.isDry = true;
+
+                // Find the WaterDroplets child and disable it
+                Transform waterDroplets = obj.transform.Find("WaterDroplets");
+                if (waterDroplets != null)
+                {
+                    waterDroplets.gameObject.SetActive(false); // Disable WaterDroplets
+                }
+                else
+                {
+                    Debug.Log($"{obj.name} does not have a WaterDroplets child.");
+                }
             }
         }
         ChangeSpritesAfterDrying();
