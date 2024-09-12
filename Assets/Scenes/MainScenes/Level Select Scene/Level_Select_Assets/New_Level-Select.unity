@@ -310,7 +310,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1261242162691769517, guid: 5cc33678a45eebd4eb94af593e86f318, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3220799799381724627, guid: 5cc33678a45eebd4eb94af593e86f318, type: 3}
       propertyPath: m_Pivot.x
@@ -872,8 +872,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1404910694}
   m_HandleRect: {fileID: 1404910693}
   m_Direction: 0
-  m_Value: -0.00000017422094
-  m_Size: 0.5780821
+  m_Value: -0.000000087110486
+  m_Size: 0.57808214
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -942,7 +942,7 @@ Transform:
   m_GameObject: {fileID: 193034700}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -825.5956, y: 434.2276, z: 0}
+  m_LocalPosition: {x: -829, y: 400, z: 0}
   m_LocalScale: {x: 2.912278, y: 2.912278, z: 2.912278}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -3087,18 +3087,18 @@ MonoBehaviour:
       inWeight: 0
       outWeight: 0
     - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 2
-      outSlope: 2
+      time: 1.0958252
+      value: 1.0778294
+      inSlope: 0.26301065
+      outSlope: 0.26301065
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0
+      inWeight: 0.3764212
       outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  inAnimDuration: 1
+  inAnimDuration: 0.2
   inAnimEndPosition: {x: -0.00006103516, y: -166, z: 1}
   outAnim:
     serializedVersion: 2
@@ -3124,7 +3124,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  outAnimDuration: 1
+  outAnimDuration: 0.2
   outAnimEndPosition: {x: -6, y: 859, z: 2}
   startOffScreen: 0
   AnimateInOnStart: 0
@@ -4839,7 +4839,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  inAnimDuration: 1.5
+  inAnimDuration: 0.2
   inAnimEndPosition: {x: 9, y: -172, z: 2}
   outAnim:
     serializedVersion: 2
@@ -4865,7 +4865,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  outAnimDuration: 1.5
+  outAnimDuration: 0.2
   outAnimEndPosition: {x: -2171, y: -172, z: 3}
   startOffScreen: 0
   AnimateInOnStart: 0
@@ -5303,7 +5303,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  inAnimDuration: 1.5
+  inAnimDuration: 0.2
   inAnimEndPosition: {x: -0.00006103516, y: -172, z: 1}
   outAnim:
     serializedVersion: 2
@@ -5329,7 +5329,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  outAnimDuration: 1.5
+  outAnimDuration: 0.2
   outAnimEndPosition: {x: -0.00006103516, y: -872, z: 0}
   startOffScreen: 0
   AnimateInOnStart: 0
@@ -6461,7 +6461,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 5
+  orthographic size: 4
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
