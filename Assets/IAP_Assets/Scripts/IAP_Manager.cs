@@ -1,12 +1,29 @@
+using TMPro;
 using UnityEngine;
 using UnityEngine.Purchasing;
 
 public class IAP_Manager : MonoBehaviour, IStoreListener
 {
+    private static IAP_Manager instance;
+
     private static IStoreController storeController; // Handles all the products and purchasing
     private static IExtensionProvider storeExtensionProvider; // Handles platform-specific details
 
     private string YearlySub = "com.littlelearninglab.speakaroo.yearly_subscription";
+
+    void Awake()
+    {
+       
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject); 
+        }
+        else
+        {
+            Destroy(gameObject); 
+        }
+    }
 
     void Start()
     {
@@ -32,7 +49,7 @@ public class IAP_Manager : MonoBehaviour, IStoreListener
         return storeController != null && storeExtensionProvider != null;
     }
 
-    // Handle successful purchases
+    
     public void OnPurchaseCompleted(Product product)
     {
         if (product.definition.id == YearlySub)
@@ -42,15 +59,12 @@ public class IAP_Manager : MonoBehaviour, IStoreListener
         }
     }
 
-
     // Handle failed purchases
     public void OnPurchaseFailed(Product product, PurchaseFailureReason failureReason)
     {
         Debug.LogError($"Purchase of {product.definition.id} failed due to {failureReason}");
-        // Here you can show a popup or message to the user about the failure
     }
 
-    // Unity IAP callbacks
     public void OnInitialized(IStoreController controller, IExtensionProvider extensions)
     {
         storeController = controller;
@@ -61,7 +75,6 @@ public class IAP_Manager : MonoBehaviour, IStoreListener
     public void OnInitializeFailed(InitializationFailureReason error)
     {
         Debug.LogError("IAP Initialization failed: " + error);
-        // Optional: Show user-friendly message about the failure
     }
 
     public PurchaseProcessingResult ProcessPurchase(PurchaseEventArgs args)
@@ -70,7 +83,6 @@ public class IAP_Manager : MonoBehaviour, IStoreListener
         {
             Debug.Log("Purchase processed: " + args.purchasedProduct.definition.id);
 
-            // Call ButtonManager to unlock the buttons
             ButtonManager buttonManager = FindObjectOfType<ButtonManager>();
             if (buttonManager != null)
             {
@@ -90,28 +102,9 @@ public class IAP_Manager : MonoBehaviour, IStoreListener
         return PurchaseProcessingResult.Complete;
     }
 
-
-    // Use this method if a failure with extra error message is implemented
     public void OnInitializeFailed(InitializationFailureReason error, string message)
     {
         Debug.LogError($"IAP Initialization failed: {error}, Message: {message}");
-        // Optional: Show user-friendly message
-    }
+    }     
 
-    public void ResetPurchase()
-    {
-        
-        PlayerPrefs.DeleteKey(YearlySub);
-        PlayerPrefs.Save();
-
-        Debug.Log("Purchase has been reset.");
-
-        // Optionally, re-lock the buttons
-        ButtonManager buttonManager = FindObjectOfType<ButtonManager>();
-        if (buttonManager != null)
-        {
-            buttonManager.LockAllButtons(); // Re-lock the buttons if needed
-            Debug.Log("Buttons have been locked after reset.");
-        }
-    }
 }

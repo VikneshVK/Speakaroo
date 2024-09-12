@@ -158,9 +158,9 @@ AnimatorStateMachine:
   m_AnyStateTransitions: []
   m_EntryTransitions: []
   m_StateMachineTransitions:
-  - first: {fileID: 243643433166552833}
-    second: []
   - first: {fileID: 6312896746993489848}
+    second: []
+  - first: {fileID: 243643433166552833}
     second: []
   m_StateMachineBehaviours: []
   m_AnyStatePosition: {x: 50, y: 20, z: 0}
@@ -834,7 +834,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4465ef69baabd6b459abb78790cfae73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneToLoad: Scene 8
+  sceneToLoad: New_Level-Select
   booleanToReset: canTalk
 --- !u!1101 &4895935006877798484
 AnimatorStateTransition:

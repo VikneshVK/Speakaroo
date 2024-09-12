@@ -21,6 +21,7 @@ public class ItemDragHandler : MonoBehaviour
     private Vector3 startPosition;
     private Animator boyAnimator;
     private Animator birdAnimator;
+    public List<GameObject> objectsToEnable;
 
     public static int clothesOnLine ;  // Variable to track the number of cloth and toy objects on the line
     public static int toysDryed ;      // Static variable to track the number of dry toys placed in the cloth basket
@@ -46,10 +47,18 @@ public class ItemDragHandler : MonoBehaviour
     private bool finalaudioplayed;
     private bool firstHalfAudioPlayed;
     private bool firstHalfAnimationPlayed;
+    private bool collidersEnabled;
     private float originalMinSpeed;
     private float originalMaxSpeed;
     public AudioSource firstHalfAudio;
+    private bool isAudioPlaying = false;
+    private bool isCorrectDrop = false;
     public bool HasInteracted { get; private set; } = false;
+
+    public AudioClip feedbackAudio1;
+    public AudioClip feedbackAudio2;
+    public AudioClip feedbackAudio3;
+    public AudioSource feedbackAudioSource;
 
     private void Awake()
     {
@@ -69,7 +78,7 @@ public class ItemDragHandler : MonoBehaviour
         startPosition = transform.position;
         boyAnimator = boy.GetComponent<Animator>();
         birdAnimator = Bird.GetComponent<Animator>();
-        DisableToyPositionColliders();       
+        DisableToyPositionColliders();
         clothesOnLine = 6;
         toysDryed = 0;
         Debug.Log("clothsOnLine" + clothesOnLine);
@@ -77,8 +86,14 @@ public class ItemDragHandler : MonoBehaviour
         finalaudioplayed = false;
         firstHalfAudioPlayed = false;
         firstHalfAnimationPlayed = false;
-        
-}
+        collidersEnabled = false;
+
+
+        feedbackAudio1 = Resources.Load<AudioClip>("Audio/FeedbackAudio/Audio1");
+        feedbackAudio2 = Resources.Load<AudioClip>("Audio/FeedbackAudio/Audio2");
+        feedbackAudio3 = Resources.Load<AudioClip>("Audio/FeedbackAudio/Audio3");
+
+    }
 
     private void Update()
     {
@@ -107,6 +122,7 @@ public class ItemDragHandler : MonoBehaviour
         if (clothesOnLine == 3 && !isTransitionComplete)
         {
             EnableToyPositionColliders();
+            CheckAndEnableColliders();
         }
 
         // Check if all toys have been dried
@@ -170,7 +186,7 @@ public class ItemDragHandler : MonoBehaviour
             selectedTarget.localScale = originalTargetScale;
         }
 
-        bool isCorrectDrop = false;
+        isCorrectDrop = false;
 
         if (IsOverlapping(selectedTarget))
         {
@@ -214,45 +230,161 @@ public class ItemDragHandler : MonoBehaviour
         }
         else
         {
-            if (gameObject.tag == "Toy")
+            StartCoroutine(BlinkInRedThenReset());
+        }
+
+        if((clothesOnLine != 6 )|| (clothesOnLine == 0 && toysDryed == 3))
+        {
+            if (isCorrectDrop)
             {
-                Collider2D startCollider = null;
-                if (isDry)
+                // Shuffle between feedback1 and feedback2 for correct drop
+                string feedbackTrigger = Random.value > 0.5f ? "feedback1" : "feedback2";
+                birdAnimator.SetTrigger(feedbackTrigger);
+
+                if (feedbackTrigger == "feedback1")
                 {
-                    startCollider = gameObject.name switch
-                    {
-                        "wet kuma" => teddyPosition.GetComponent<Collider2D>(),
-                        "wet dino" => dinoPosition.GetComponent<Collider2D>(),
-                        "wet bunny" => bunnyPosition.GetComponent<Collider2D>(),
-                        _ => null
-                    };
+                    PlayFeedbackAudio(feedbackAudio1);
                 }
                 else
                 {
-                    startPosition = gameObject.name switch
-                    {
-                        "wet kuma" => teddyResetPosition.transform.position,
-                        "wet dino" => dinoResetPosition.transform.position,
-                        "wet bunny" => bunnyResetPosition.transform.position,
-                        _ => startPosition
-                    };
+                    PlayFeedbackAudio(feedbackAudio2);
                 }
-
-                if (startCollider != null)
-                {
-                    startPosition = startCollider.bounds.center;
-                }
-
-                transform.position = startPosition;
             }
+            else
+            {
+                // Trigger feedback3 for incorrect drop
+                birdAnimator.SetTrigger("feedback3");
+                PlayFeedbackAudio(feedbackAudio3);
+            }
+        }
+        
+    }
+    private IEnumerator BlinkInRedThenReset()
+    {
+        // Get the SpriteRenderer component
+        SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
 
-            transform.position = startPosition;
+        if (spriteRenderer == null)
+        {
+            Debug.LogError("No SpriteRenderer found on this GameObject!");
+            yield break;
         }
 
+        Color originalColor = spriteRenderer.color;
+
+        Debug.Log("Starting blink effect");
+
+        // Blink 2 times
+        for (int i = 0; i < 2; i++)
+        {
+            // Set color to red
+            Debug.Log("Blinking red");
+            spriteRenderer.color = Color.red;
+            yield return new WaitForSeconds(0.2f);
+
+            // Set back to original color
+            Debug.Log("Blinking back to original color");
+            spriteRenderer.color = originalColor;
+            yield return new WaitForSeconds(0.2f);
+        }
+
+        Debug.Log("Blinking complete, resetting position");
+
+        // After blinking, reset the position
+        Collider2D startCollider = null;
+        if (isDry)
+        {
+            startCollider = gameObject.name switch
+            {
+                "wet kuma" => teddyPosition.GetComponent<Collider2D>(),
+                "wet dino" => dinoPosition.GetComponent<Collider2D>(),
+                "wet bunny" => bunnyPosition.GetComponent<Collider2D>(),
+                _ => null
+            };
+        }
+        else
+        {
+            startPosition = gameObject.name switch
+            {
+                "wet kuma" => teddyResetPosition.transform.position,
+                "wet dino" => dinoResetPosition.transform.position,
+                "wet bunny" => bunnyResetPosition.transform.position,
+                _ => startPosition
+            };
+        }
+
+        if (startCollider != null)
+        {
+            startPosition = startCollider.bounds.center;
+        }
+
+        // Reset position after blinking
+        transform.position = startPosition;
+    }
+
+
+
+    private void PlayFeedbackAudio(AudioClip audioClip)
+    {
+        if (feedbackAudioSource != null && audioClip != null)
+        {
+            feedbackAudioSource.clip = audioClip;
+            feedbackAudioSource.Play();
+            isAudioPlaying = true;
+            Debug.Log("Starting CheckIfAudioFinished coroutine for: " + audioClip.name);
+            ResetHelperHandTimer(isCorrectDrop);
+        }
+        else
+        {
+            Debug.LogError("AudioSource or AudioClip is missing!");
+        }
+    }
+
+    
+
+    private void ResetHelperHandTimer(bool isCorrectDrop)
+    {
+        Debug.Log("helperhand reset is called");
         HelpHandController helperHand = FindObjectOfType<HelpHandController>();
         if (helperHand != null)
         {
+            // Log to check interaction status
+            Debug.Log("Interacted with: " + gameObject.name + " | Correct drop: " + isCorrectDrop);
+
             helperHand.OnObjectInteracted(gameObject, isCorrectDrop);
+        }
+        else
+        {
+            Debug.LogError("HelpHandController not found.");
+        }
+    }
+
+
+
+    private void CheckAndEnableColliders()
+    {
+        if (!collidersEnabled)
+        {
+            foreach (GameObject obj in objectsToEnable)
+            {
+                ItemDragHandler item = obj.GetComponent<ItemDragHandler>();
+                if (item != null)
+                {
+                    Collider2D collider = obj.GetComponent<Collider2D>();
+                    if (collider != null)
+                    {
+                        collider.enabled = true;
+                    }
+                }
+            }
+            collidersEnabled = true;
+
+            // Notify the HelpHandController for Jojo's action
+            HelpHandController helperHand = FindObjectOfType<HelpHandController>();
+            if (helperHand != null)
+            {
+                helperHand.StartHelperHandRoutineForJojo(objectsToEnable.ToArray());
+            }
         }
     }
 

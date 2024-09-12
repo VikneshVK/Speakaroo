@@ -7,7 +7,9 @@ public class TweenManager2 : MonoBehaviour
     private Bird_Controller birdController;
     private bool isRetryClicked = false;
     private bool speechTherapyCompleted = false;
-    
+    private GameObject parentObject;
+    private GameObject childObject;
+
 
     private void Start()
     {
@@ -20,7 +22,10 @@ public class TweenManager2 : MonoBehaviour
         {
             birdAnimator = bird.GetComponent<Animator>();
             birdController = bird.GetComponent<Bird_Controller>();
+
         }
+        parentObject = GameObject.FindWithTag("SpriteMask");
+        childObject = parentObject.transform.GetChild(0).gameObject;
     }
     private void OnDestroy()
     {
@@ -42,6 +47,7 @@ public class TweenManager2 : MonoBehaviour
 
     private IEnumerator Timer(float time)
     {
+        childObject.SetActive(true);
         float counter = 0;
         isRetryClicked = false;
 

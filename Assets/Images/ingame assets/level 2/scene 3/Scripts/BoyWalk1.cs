@@ -83,6 +83,11 @@ public class BoyWalk1 : MonoBehaviour
                 helperPointer.ScheduleHelperHand(bagDragHandler, dragManager);
             }
         }
+
+        if(dragManager.allDone)
+        {
+            birdAnimator.SetTrigger("finalTalkComplete");
+        }
     }
 
     // Move the boy towards the stop position

@@ -4,9 +4,16 @@ using UnityEngine;
 
 public class STMechanicsSpawner : MonoBehaviour
 {
-    public GameObject prefabToSpawn;    
+    public GameObject prefabToSpawn;
+    private GameObject Parent;
+    private GameObject childObject;
     private Dictionary<Transform, Vector3> originalScales = new Dictionary<Transform, Vector3>();
 
+    private void Start()
+    {
+        Parent = GameObject.FindWithTag("SpriteMask");
+        childObject = Parent.transform.GetChild(0).gameObject;
+    }
     void OnMouseDown()
     {
         SpawnAndAnimatePrefab();
@@ -18,7 +25,7 @@ public class STMechanicsSpawner : MonoBehaviour
        
         GameObject instantiatedPrefab = Instantiate(prefabToSpawn, Vector3.zero, Quaternion.identity);
 
-        
+        childObject.SetActive(false);
         SaveAndResetScales(instantiatedPrefab);
 
         

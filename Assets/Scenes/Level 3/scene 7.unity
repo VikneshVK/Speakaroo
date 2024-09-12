@@ -691,7 +691,7 @@ Transform:
   m_GameObject: {fileID: 238445634}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -11.079375, z: 0}
+  m_LocalPosition: {x: 0, y: -8.923845, z: 0}
   m_LocalScale: {x: 42.54, y: 1.6, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -728,6 +728,18 @@ PrefabInstance:
     - target: {fileID: 2017079313879886549, guid: 71a0a5f288cf1824493eb1b241bb082b, type: 3}
       propertyPath: m_SortingOrder
       value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 2219464377829844742, guid: 71a0a5f288cf1824493eb1b241bb082b, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2219464377829844742, guid: 71a0a5f288cf1824493eb1b241bb082b, type: 3}
+      propertyPath: m_TagString
+      value: Untagged
+      objectReference: {fileID: 0}
+    - target: {fileID: 5063019661773059823, guid: 71a0a5f288cf1824493eb1b241bb082b, type: 3}
+      propertyPath: m_TagString
+      value: SpriteMask
       objectReference: {fileID: 0}
     - target: {fileID: 5067593107644868069, guid: 71a0a5f288cf1824493eb1b241bb082b, type: 3}
       propertyPath: target1
@@ -2064,7 +2076,7 @@ Transform:
   m_GameObject: {fileID: 1354767948}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -8.439376, z: 0}
+  m_LocalPosition: {x: 0, y: -6.283846, z: 0}
   m_LocalScale: {x: 1.8, y: 1.8, z: 1.8}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -2110,7 +2122,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 9
+  m_SortingOrder: 10
   m_Sprite: {fileID: 4681704227676495067, guid: 034a7ecf7905df24a9d2fecf7f842790, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -2376,7 +2388,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 12.009376
+  orthographic size: 9.853846
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -3580,7 +3592,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 9
+  m_SortingOrder: 10
   m_Sprite: {fileID: 4681704227676495067, guid: 034a7ecf7905df24a9d2fecf7f842790, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0

@@ -8,6 +8,7 @@ public class boy_Actions1 : MonoBehaviour
     public float walkSpeed = 2f;
     public GameObject Bird;
     public GameObject pipe;
+    public GameObject Hose;
     public GameObject walkRig;
     public GameObject normalRig;
     public AudioSource tubeAudiosource;
@@ -17,6 +18,7 @@ public class boy_Actions1 : MonoBehaviour
     private Animator birdAnimator;
     private TapControl tapControl;
     private AudioSource jojoAudiosource;
+    private Collider2D hoseCollider;
     private bool isWalking ;
     private bool isIdleCompleted;
     private bool canTalk;
@@ -30,9 +32,11 @@ public class boy_Actions1 : MonoBehaviour
         birdAnimator = Bird.GetComponent<Animator>();
         tapControl = pipe.GetComponent<TapControl>();
         jojoAudiosource = GetComponent<AudioSource>();
+        hoseCollider = Hose.GetComponent<Collider2D>();
 
         normalRig.SetActive(true);
         walkRig.SetActive(false);
+        hoseCollider.enabled = false;
         isWalking = false;
         isIdleCompleted = false;
         canTalk = false;
@@ -90,6 +94,7 @@ public class boy_Actions1 : MonoBehaviour
             canTalk = true;
             normalAnimator.SetTrigger("canTalk");
             jojoAudiosource.Play();
+            hoseCollider.enabled = true;
         }
     }
     private void OnParticleCollision(GameObject other)

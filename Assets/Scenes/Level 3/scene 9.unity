@@ -576,102 +576,11 @@ Animator:
   m_CorrespondingSourceObject: {fileID: 116830765567261883, guid: c53541450521fc8418f2017b6857ebff, type: 3}
   m_PrefabInstance: {fileID: 9190813747056362964}
   m_PrefabAsset: {fileID: 0}
---- !u!82 &647642245
+--- !u!82 &647642245 stripped
 AudioSource:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 2056805990587870271, guid: c53541450521fc8418f2017b6857ebff, type: 3}
+  m_PrefabInstance: {fileID: 9190813747056362964}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 647642241}
-  m_Enabled: 1
-  serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 51c3412a6bd457446bc62720bf79e3ee, type: 3}
-  m_PlayOnAwake: 0
-  m_Volume: 1
-  m_Pitch: 1
-  Loop: 0
-  Mute: 0
-  Spatialize: 0
-  SpatializePostEffects: 0
-  Priority: 128
-  DopplerLevel: 1
-  MinDistance: 1
-  MaxDistance: 500
-  Pan2D: 0
-  rolloffMode: 0
-  BypassEffects: 0
-  BypassListenerEffects: 0
-  BypassReverbZones: 0
-  rolloffCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 1
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  panLevelCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  spreadCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
-  reverbZoneMixCustomCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
 --- !u!1 &693417105
 GameObject:
   m_ObjectHideFlags: 0
@@ -1021,7 +930,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   helpPointerPrefab: {fileID: 668317662352755921, guid: 75692ccf92d941440b5a63993daa8d77, type: 3}
-  delayTimer: 5
+  delayTimer: 10
   tweenDuration: 1
   birdAnimator: {fileID: 647642243}
   audioClip1: {fileID: 8300000, guid: 2c435120a7aadae429cf69d64daeb635, type: 3}
@@ -1615,9 +1524,6 @@ MonoBehaviour:
   - {fileID: 3987921054144288411}
   - {fileID: 7272973591985152280}
   - {fileID: 6592479478172972258}
-  - {fileID: 1545059300}
-  - {fileID: 1116073132}
-  - {fileID: 1756118245}
   walkRig: {fileID: 2050916704}
   talkRig: {fileID: 1781061607}
 --- !u!82 &977742744
@@ -1815,7 +1721,7 @@ Transform:
   m_GameObject: {fileID: 1053729808}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -12.277779, y: -2.4, z: 0}
+  m_LocalPosition: {x: -16.166668, y: -2.4, z: 0}
   m_LocalScale: {x: 1.6435, y: 1.6435, z: 1.6435}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -1944,7 +1850,7 @@ Transform:
   m_GameObject: {fileID: 1100201713}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -21.75, y: 2.57, z: 0}
+  m_LocalPosition: {x: -26.3, y: 2.57, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2050,6 +1956,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isDry: 0
   basketTransform: {fileID: 0}
+  objectsToEnable:
+  - {fileID: 1545059300}
+  - {fileID: 1116073132}
+  - {fileID: 1756118245}
   kikiActions: {fileID: 647642242}
   jojoActions: {fileID: 977742743}
   timerDuration: 5
@@ -2067,6 +1977,10 @@ MonoBehaviour:
   clothBasketSpriteRenderer: {fileID: 7129179934194797578}
   finalaudio: {fileID: 1993098047}
   firstHalfAudio: {fileID: 647642245}
+  feedbackAudio1: {fileID: 0}
+  feedbackAudio2: {fileID: 0}
+  feedbackAudio3: {fileID: 0}
+  feedbackAudioSource: {fileID: 8677334940102713239}
 --- !u!61 &1116073137
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2937,6 +2851,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isDry: 0
   basketTransform: {fileID: 0}
+  objectsToEnable:
+  - {fileID: 1545059300}
+  - {fileID: 1116073132}
+  - {fileID: 1756118245}
   kikiActions: {fileID: 647642242}
   jojoActions: {fileID: 977742743}
   timerDuration: 5
@@ -2954,6 +2872,10 @@ MonoBehaviour:
   clothBasketSpriteRenderer: {fileID: 7129179934194797578}
   finalaudio: {fileID: 1993098047}
   firstHalfAudio: {fileID: 647642245}
+  feedbackAudio1: {fileID: 0}
+  feedbackAudio2: {fileID: 0}
+  feedbackAudio3: {fileID: 0}
+  feedbackAudioSource: {fileID: 8677334940102713239}
 --- !u!61 &1545059305
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -3361,6 +3283,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isDry: 0
   basketTransform: {fileID: 0}
+  objectsToEnable:
+  - {fileID: 1545059300}
+  - {fileID: 1116073132}
+  - {fileID: 1756118245}
   kikiActions: {fileID: 647642242}
   jojoActions: {fileID: 977742743}
   timerDuration: 5
@@ -3378,6 +3304,10 @@ MonoBehaviour:
   clothBasketSpriteRenderer: {fileID: 7129179934194797578}
   finalaudio: {fileID: 1993098047}
   firstHalfAudio: {fileID: 647642245}
+  feedbackAudio1: {fileID: 0}
+  feedbackAudio2: {fileID: 0}
+  feedbackAudio3: {fileID: 0}
+  feedbackAudioSource: {fileID: 8677334940102713239}
 --- !u!61 &1756118250
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -3961,6 +3891,7 @@ GameObject:
   - component: {fileID: 8677334940102713237}
   - component: {fileID: 4892342224377077304}
   - component: {fileID: 8677334940102713238}
+  - component: {fileID: 8677334940102713239}
   m_Layer: 0
   m_Name: suN
   m_TagString: Untagged
@@ -4707,6 +4638,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isDry: 1
   basketTransform: {fileID: 0}
+  objectsToEnable:
+  - {fileID: 1545059300}
+  - {fileID: 1116073132}
+  - {fileID: 1756118245}
   kikiActions: {fileID: 647642242}
   jojoActions: {fileID: 977742743}
   timerDuration: 5
@@ -4724,6 +4659,10 @@ MonoBehaviour:
   clothBasketSpriteRenderer: {fileID: 7129179934194797578}
   finalaudio: {fileID: 1993098047}
   firstHalfAudio: {fileID: 647642245}
+  feedbackAudio1: {fileID: 0}
+  feedbackAudio2: {fileID: 0}
+  feedbackAudio3: {fileID: 0}
+  feedbackAudioSource: {fileID: 8677334940102713239}
 --- !u!61 &5604664597258484697
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -5017,6 +4956,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isDry: 0
   basketTransform: {fileID: 0}
+  objectsToEnable:
+  - {fileID: 1545059300}
+  - {fileID: 1116073132}
+  - {fileID: 1756118245}
   kikiActions: {fileID: 647642242}
   jojoActions: {fileID: 977742743}
   timerDuration: 5
@@ -5034,6 +4977,10 @@ MonoBehaviour:
   clothBasketSpriteRenderer: {fileID: 7129179934194797578}
   finalaudio: {fileID: 1993098047}
   firstHalfAudio: {fileID: 647642245}
+  feedbackAudio1: {fileID: 0}
+  feedbackAudio2: {fileID: 0}
+  feedbackAudio3: {fileID: 0}
+  feedbackAudioSource: {fileID: 8677334940102713239}
 --- !u!61 &6655896350698101200
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -5192,7 +5139,7 @@ Transform:
   m_GameObject: {fileID: 2330921799542402428}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -13.667778, y: 1.09, z: 0}
+  m_LocalPosition: {x: -17.556667, y: 1.09, z: 0}
   m_LocalScale: {x: 1.9, y: 1.9, z: 1.9}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -5277,6 +5224,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isDry: 1
   basketTransform: {fileID: 0}
+  objectsToEnable:
+  - {fileID: 1545059300}
+  - {fileID: 1116073132}
+  - {fileID: 1756118245}
   kikiActions: {fileID: 647642242}
   jojoActions: {fileID: 977742743}
   timerDuration: 5
@@ -5294,6 +5245,10 @@ MonoBehaviour:
   clothBasketSpriteRenderer: {fileID: 7129179934194797578}
   finalaudio: {fileID: 1993098047}
   firstHalfAudio: {fileID: 647642245}
+  feedbackAudio1: {fileID: 0}
+  feedbackAudio2: {fileID: 0}
+  feedbackAudio3: {fileID: 0}
+  feedbackAudioSource: {fileID: 8677334940102713239}
 --- !u!61 &7344907717306160509
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -5405,6 +5360,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isDry: 0
   basketTransform: {fileID: 0}
+  objectsToEnable:
+  - {fileID: 1545059300}
+  - {fileID: 1116073132}
+  - {fileID: 1756118245}
   kikiActions: {fileID: 647642242}
   jojoActions: {fileID: 977742743}
   timerDuration: 5
@@ -5422,6 +5381,10 @@ MonoBehaviour:
   clothBasketSpriteRenderer: {fileID: 7129179934194797578}
   finalaudio: {fileID: 1993098047}
   firstHalfAudio: {fileID: 647642245}
+  feedbackAudio1: {fileID: 0}
+  feedbackAudio2: {fileID: 0}
+  feedbackAudio3: {fileID: 0}
+  feedbackAudioSource: {fileID: 8677334940102713239}
 --- !u!61 &7495046548869677209
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -5593,6 +5556,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isDry: 1
   basketTransform: {fileID: 0}
+  objectsToEnable:
+  - {fileID: 1545059300}
+  - {fileID: 1116073132}
+  - {fileID: 1756118245}
   kikiActions: {fileID: 647642242}
   jojoActions: {fileID: 977742743}
   timerDuration: 5
@@ -5610,6 +5577,10 @@ MonoBehaviour:
   clothBasketSpriteRenderer: {fileID: 7129179934194797578}
   finalaudio: {fileID: 1993098047}
   firstHalfAudio: {fileID: 647642245}
+  feedbackAudio1: {fileID: 0}
+  feedbackAudio2: {fileID: 0}
+  feedbackAudio3: {fileID: 0}
+  feedbackAudioSource: {fileID: 8677334940102713239}
 --- !u!61 &8266202763870838502
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -5721,6 +5692,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isDry: 0
   basketTransform: {fileID: 0}
+  objectsToEnable:
+  - {fileID: 1545059300}
+  - {fileID: 1116073132}
+  - {fileID: 1756118245}
   kikiActions: {fileID: 647642242}
   jojoActions: {fileID: 977742743}
   timerDuration: 5
@@ -5738,6 +5713,10 @@ MonoBehaviour:
   clothBasketSpriteRenderer: {fileID: 7129179934194797578}
   finalaudio: {fileID: 1993098047}
   firstHalfAudio: {fileID: 647642245}
+  feedbackAudio1: {fileID: 0}
+  feedbackAudio2: {fileID: 0}
+  feedbackAudio3: {fileID: 0}
+  feedbackAudioSource: {fileID: 8677334940102713239}
 --- !u!61 &8393443239347026213
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -5812,6 +5791,102 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rotateAmount: {x: 0, y: 0, z: 360}
   rotateTime: 75
+--- !u!82 &8677334940102713239
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 462112325574896996}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1001 &9190813747056362964
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5860,17 +5935,9 @@ PrefabInstance:
       propertyPath: basketFinalPosition
       value: 
       objectReference: {fileID: 1401630334}
-    - target: {fileID: 4238554061597888292, guid: c53541450521fc8418f2017b6857ebff, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 180
-      objectReference: {fileID: 0}
-    - target: {fileID: 4238554061597888292, guid: c53541450521fc8418f2017b6857ebff, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 149.172
-      objectReference: {fileID: 0}
     - target: {fileID: 6120322812427231483, guid: c53541450521fc8418f2017b6857ebff, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -21.1
+      value: -26.93
       objectReference: {fileID: 0}
     - target: {fileID: 6120322812427231483, guid: c53541450521fc8418f2017b6857ebff, type: 3}
       propertyPath: m_LocalPosition.y
@@ -5915,10 +5982,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 7858792698623254911, guid: c53541450521fc8418f2017b6857ebff, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 647642245}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c53541450521fc8418f2017b6857ebff, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
