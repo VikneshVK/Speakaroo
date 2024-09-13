@@ -46,6 +46,8 @@ public class HouseholdItemManager : MonoBehaviour
     public GameObject confettiRight;
     public float sequenceDuration;
 
+    public Scene_Manager miniSceneManager;
+
     ////Balloon
     //public GameObject balloonPrefab;  // Reference to the balloon prefab
     //public int balloonCount = 10;  // Number of balloons to spawn
@@ -62,7 +64,7 @@ public class HouseholdItemManager : MonoBehaviour
 
         // Store the initial position of the sprite
         initialPosition = itemImage.transform.position;
-        totalItems = 15;
+        totalItems = itemSprites.Length;
 
         TotalWordCount.text = totalItems.ToString("/"+totalItems);
         // Initialize with the first item
@@ -89,7 +91,7 @@ public class HouseholdItemManager : MonoBehaviour
     void DetectSwipe()
     {
         // Check cooldown
-        if (Time.time - lastSwipeTime < swipeCooldown)
+        if (Time.time - lastSwipeTime < swipeCooldown || isCongratulating)
         {
             Debug.Log("timer started & ended");
             return;  // Exit if the cooldown hasn't elapsed
@@ -214,6 +216,13 @@ public class HouseholdItemManager : MonoBehaviour
             currentIndex++;
             DisplayItem(currentIndex);
         }
+
+        if(currentIndex == itemSprites.Length-1 ||currentIndex == 13)
+        {
+            Debug.Log("Mini game words finished");
+            StartCoroutine(miniGameEnd());
+
+        }
     }
 
     public void PreviousItem()
@@ -318,5 +327,13 @@ public class HouseholdItemManager : MonoBehaviour
     //        Debug.LogError("Rigidbody2D component is not found on the balloon prefab.");
     //    }
     //}
+
+    IEnumerator miniGameEnd()
+    {
+        yield return new WaitForSeconds(2f);
+        StartCoroutine(PlayCongratulatorySequence());
+        yield return new WaitForSeconds(5.5f);
+        miniSceneManager.LoadLevel("New_Level-Select");
+    }
 
 }
