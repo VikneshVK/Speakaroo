@@ -51,7 +51,7 @@ public class JojoController : MonoBehaviour
         CheckAndEnableFridgeCollider();
 
         // Continuously check and spawn the prefab as long as itemsDropped < 3
-        if (KikiController.itemsDropped < 3)
+        if (KikiController1.itemsDropped < 3)
         {
             CheckAndSpawnPrefab();
         }

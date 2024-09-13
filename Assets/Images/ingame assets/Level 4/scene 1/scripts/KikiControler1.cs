@@ -1,16 +1,17 @@
 using UnityEngine;
 using System.Collections;
 
-public class KikiController : MonoBehaviour
+public class KikiController1 : MonoBehaviour
 {
     public static int itemsDropped = 0;
 
     public Transform dropLocation;
     public Transform startPosition;
     public GameObject boy;
-    public SpriteRenderer parrotSpriteRenderer;
+    public GameObject itemHolder;
 
     public float flySpeed = 2f;
+    public bool isLocked = false;
 
     private Animator birdAnimator;
     private Animator boyAnimator;
@@ -43,25 +44,25 @@ public class KikiController : MonoBehaviour
 
     void Update()
     {
-        switch (currentState)
+        if (!isLocked)
         {
-            case BirdState.Idle:
-                CheckStartFlying();
-                break;
-
-            case BirdState.FlyingToItem:
-            case BirdState.FlyingToDropLocation:
-            case BirdState.ReturningToStart:
-                MoveToTarget();
-                break;
-
-            case BirdState.PickingUpItem:
-                CheckPickupCompletion();
-                break;
-
-            case BirdState.DroppingItem:
-                CheckDropCompletion();
-                break;
+            switch (currentState)
+            {
+                case BirdState.Idle:
+                    CheckStartFlying();
+                    break;
+                case BirdState.FlyingToItem:
+                case BirdState.FlyingToDropLocation:
+                case BirdState.ReturningToStart:
+                    MoveToTarget();
+                    break;
+                case BirdState.PickingUpItem:
+                    CheckPickupCompletion();
+                    break;
+                case BirdState.DroppingItem:
+                    CheckDropCompletion();
+                    break;
+            }
         }
     }
 
@@ -71,6 +72,7 @@ public class KikiController : MonoBehaviour
         {
             UpdateItemReferences();
             currentItem = GetCurrentItem();
+            Debug.Log("Current Item is " + currentItem);
             if (currentItem != null)
             {
                 birdAnimator.SetBool("startFlying", false);
@@ -100,6 +102,9 @@ public class KikiController : MonoBehaviour
     private void MoveToTarget()
     {
         if (!isMoving) return;
+
+        // Debug the movement step
+        Debug.Log($"Moving from {transform.position} to {targetPosition}");
 
         transform.position = Vector3.MoveTowards(transform.position, targetPosition, flySpeed * Time.deltaTime);
 
@@ -137,10 +142,22 @@ public class KikiController : MonoBehaviour
         if (birdAnimator.GetCurrentAnimatorStateInfo(0).IsName("pick up") &&
             birdAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
         {
-            currentItem.transform.SetParent(transform);
+            // Attach the picked-up item to the specified parent (itemHolder)
+            if (itemHolder != null)
+            {
+                currentItem.transform.SetParent(itemHolder.transform);
+
+                // Set the local position of the item to zero, so it aligns with the parent (itemHolder)
+                currentItem.transform.localPosition = Vector3.zero;
+            }
+            else
+            {
+                Debug.LogWarning("Item Holder is not assigned!");
+            }
+
             birdAnimator.SetBool("itemPicked", true);
             birdAnimator.SetBool("positionReached", false);
-            parrotSpriteRenderer.flipX = false;
+
             currentState = BirdState.FlyingToDropLocation;
             targetPosition = dropLocation.position;
             isMoving = true;
@@ -165,9 +182,9 @@ public class KikiController : MonoBehaviour
     private void OnReturnToStart()
     {
         birdAnimator.SetBool("positionReached", true);
-        parrotSpriteRenderer.flipX = true;
+
         itemsDropped++;
-        Debug.Log("itemDropped: " + itemsDropped);
+        Debug.Log("Items Dropped: " + itemsDropped);
 
         if (itemsDropped == 3)
         {
@@ -178,7 +195,7 @@ public class KikiController : MonoBehaviour
             boyAnimator.SetTrigger("talk2");
             jojoController.CheckAndSpawnPrefab();
         }
-        currentState = BirdState.Idle;
+
         StartCoroutine(ResetPositionReachedAfterDelay());
     }
 
