@@ -10,17 +10,25 @@ public class LV4DragManager : MonoBehaviour
     public Vector3 spawnPosition; // Position to spawn the prefab
     public Animator birdAnimator; // Reference to the Bird Animator
     public string canTalkParam = "canTalk"; // Name of the animation parameter
+    public LVL4Sc3HelperHand helperHandManager; // Reference to the Helper Hand Manager
+    private List<DishdragController> dishControllers = new List<DishdragController>();
 
-    private DishWashingManager dishWashingManager; // Reference to the DishWashingManager
+    public DishWashingManager dishWashingManager; // Reference to the DishWashingManager
     private Vector3 originalPosition; // Store the original position
     private Vector3 offset; // Declare offset here
     private Dictionary<Transform, Vector3> originalScales = new Dictionary<Transform, Vector3>(); // Store original scales of children
     private bool isDragging = false;
+    public bool PrefabSpawned;
+
+    private Coroutine helperHandCoroutine; // Coroutine for helper hand delay
+    private int currentIndex = 0;
 
     void Start()
     {
         birdAnimator.SetTrigger(canTalkParam);
+        PrefabSpawned = false;
         originalPosition = dirtyDishes.transform.position;
+        
 
         // Store original scale of dirty dishes and their children
         foreach (Transform child in dirtyDishes.transform)
@@ -67,31 +75,64 @@ public class LV4DragManager : MonoBehaviour
         }
     }
 
-    IEnumerator WaitForTalkAnimation()
+    public IEnumerator WaitForTalkAnimation()
     {
+        yield return new WaitUntil(() => birdAnimator.GetCurrentAnimatorStateInfo(0).IsName("Talk"));
+        yield return new WaitForSeconds(0.1f); // Adjust this delay as needed
+
         yield return new WaitUntil(() => birdAnimator.GetCurrentAnimatorStateInfo(0).IsName("Talk") == false);
+
         dirtyDishes.GetComponent<Collider2D>().enabled = true;
+
+        // Start the helper hand delay timer
+        helperHandCoroutine = StartCoroutine(HelperHandDelayTimer());
+    }
+
+    // Helper hand delay timer coroutine
+    private IEnumerator HelperHandDelayTimer()
+    {
+        // Wait for the delay time before spawning the helper hand
+        yield return new WaitForSeconds(helperHandManager.helperHandDelay);
+
+        // Spawn and tween the helper hand if OnDirtyDishesDropped() wasn't called
+        helperHandManager.SpawnHelperHand(dirtyDishes.transform.position, foam.transform.position);
     }
 
     void OnDirtyDishesDropped()
     {
+        // Stop the helper hand coroutine to prevent spawning
+        if (helperHandCoroutine != null)
+        {
+            StopCoroutine(helperHandCoroutine);
+        }
+
+        // If dropped correctly on the foam
         if (IsDroppedOnFoam(dirtyDishes))
         {
             LeanTween.scale(dirtyDishes, Vector3.zero, 0.5f).setOnComplete(() =>
             {
-                // After scaling, instantiate the yourPrefab (which includes DishWashingManager)
                 GameObject spawnedObject = Instantiate(yourPrefab, spawnPosition, Quaternion.identity);
 
-                // Get the DishWashingManager from the prefab
                 dishWashingManager = spawnedObject.GetComponent<DishWashingManager>();
 
-                // Call the function to spawn the other visual elements
                 SpawnPrefab(spawnedObject);
+
+                // Destroy the helper hand if it's active
+                helperHandManager.StopHelperHand();
             });
+        }
+        else
+        {
+            // If dropped incorrectly
+            // Reset the position of the dirty dishes
+            dirtyDishes.transform.position = originalPosition;
+
+            // Restart the helper hand delay timer
+            helperHandCoroutine = StartCoroutine(HelperHandDelayTimer());
         }
     }
 
-    bool IsDroppedOnFoam(GameObject droppedObject)
+    public bool IsDroppedOnFoam(GameObject droppedObject)
     {
         Collider2D foamCollider = foam.GetComponent<Collider2D>();
         Collider2D droppedCollider = droppedObject.GetComponent<Collider2D>();
@@ -128,27 +169,23 @@ public class LV4DragManager : MonoBehaviour
                 }
             });
         });
+
+        PrefabSpawned = true;
     }
 
-    
     void TweenDirtyDishesBack()
     {
-        
-        LeanTween.move(dirtyDishes, originalPosition, 0.5f);
-
-       
         LeanTween.scale(dirtyDishes, Vector3.one, 0.5f).setOnComplete(() =>
         {
-           
             foreach (Transform child in dirtyDishes.transform)
             {
+                // Enable the SpriteRenderer and change the sprite
                 SpriteRenderer sr = child.GetComponent<SpriteRenderer>();
                 if (sr != null)
                 {
-                   
                     string spritePath = "Images/LVL4Sc3/" + child.name;
-                    Debug.Log("Attempting to load sprite from path: " + spritePath); 
-                    
+                    Debug.Log("Attempting to load sprite from path: " + spritePath);
+
                     sr.sprite = Resources.Load<Sprite>(spritePath);
 
                     if (sr.sprite == null)
@@ -157,40 +194,62 @@ public class LV4DragManager : MonoBehaviour
                     }
                 }
 
-                
+                // Reset the scale of the child if it was stored in originalScales
                 if (originalScales.ContainsKey(child))
                 {
                     child.localScale = originalScales[child];
                 }
 
-                
-                DishdragController dishDragController = child.GetComponent<DishdragController>();
-                if (dishDragController != null)
+                // Enable the Collider2D component on each child GameObject
+                Collider2D childCollider = child.GetComponent<Collider2D>();
+                if (childCollider != null)
                 {
-                    dishDragController.enabled = true; // Enable the DishdragController
+                    childCollider.enabled = true; // Enable the collider
                 }
             }
 
-            
+            // Disable the main collider of dirtyDishes
             Collider2D dirtyDishesCollider = dirtyDishes.GetComponent<Collider2D>();
             if (dirtyDishesCollider != null)
             {
-                dirtyDishesCollider.enabled = false; 
+                dirtyDishesCollider.enabled = false;
             }
+
+            // Start the delay timer to check interactions in DishdragController
+            StartHelperHandDelayTimer();
         });
 
-        
+        LeanTween.move(dirtyDishes, originalPosition, 0.5f);
         dishWashingManager.allDishesWashed = false;
     }
 
+    // Start the delay timer to check each DishdragController
+    private void StartHelperHandDelayTimer()
+    {
+        if (helperHandCoroutine != null)
+        {
+            StopCoroutine(helperHandCoroutine);
+        }
+        helperHandCoroutine = StartCoroutine(HelperHandDelayTimerforchild());
+    }
+
+    // Coroutine to control the delay for checking interactions on DishdragController
+    private IEnumerator HelperHandDelayTimerforchild()
+    {
+        // Wait for a moment before allowing DishdragController to handle its own checks
+        yield return new WaitForSeconds(1f);
+
+        // Notify DishdragController objects to start their interaction checks
+        DishdragController.StartHelperHandCheckForAll();
+    }
 
 
-
-    public void SetAllDishesWashed()
+public void SetAllDishesWashed()
     {
         if (dishWashingManager != null)
         {
             dishWashingManager.allDishesWashed = true;
         }
     }
+
 }

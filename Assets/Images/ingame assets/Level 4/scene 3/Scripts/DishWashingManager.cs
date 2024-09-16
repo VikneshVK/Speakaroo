@@ -23,7 +23,7 @@ public class DishWashingManager : MonoBehaviour
     public static void DishWashed()
     {
         dishesWashed++;
-        if (dishesWashed == 6)
+        if (dishesWashed == 3)
         {
             instance.AllDishesAreWashed();
         }

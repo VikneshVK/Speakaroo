@@ -14,14 +14,29 @@ public class DishController : MonoBehaviour
     private bool isScrubbing = false;
 
     public bool isDishSelected = false;
+    public bool dishCleaned;
 
     private Dictionary<Transform, int> originalSortingOrders = new Dictionary<Transform, int>();
     private Collider2D objectCollider;
     private DishController[] allDishes;
     private DishWashingManager dishWashingManager;
 
+    private LVL4Sc3HelperHand helperHandManager; // Reference to the Helper Hand Manager
+    private Coroutine helperHandCoroutine; // Coroutine for helper hand delay
+
     private void Start()
     {
+        // Find the helper hand manager in the scene using the "HelperHand" tag
+        GameObject helperHandObject = GameObject.FindWithTag("HelperHand");
+        if (helperHandObject != null)
+        {
+            helperHandManager = helperHandObject.GetComponent<LVL4Sc3HelperHand>();
+        }
+        else
+        {
+            Debug.LogError("Helper hand manager with tag 'HelperHand' not found in the scene.");
+        }
+
         // Ensure original position and scale are stored, even if they are zero
         originalPosition = (transform.position == Vector3.zero) ? transform.localPosition : transform.position;
         originalScale = (transform.localScale == Vector3.zero) ? Vector3.one : transform.localScale;
@@ -29,7 +44,44 @@ public class DishController : MonoBehaviour
         objectCollider = GetComponent<Collider2D>();
         allDishes = FindObjectsOfType<DishController>();
         dishWashingManager = FindObjectOfType<DishWashingManager>();
+        dishCleaned = false;
         StoreOriginalSortingOrders();
+
+        // Start the helper hand delay timer at the beginning
+        StartHelperHandDelayTimer();
+    }
+
+    private void StartHelperHandDelayTimer()
+    {
+        if (helperHandCoroutine != null)
+        {
+            StopCoroutine(helperHandCoroutine);
+        }
+        helperHandCoroutine = StartCoroutine(HelperHandDelayTimer());
+    }
+
+    private IEnumerator HelperHandDelayTimer()
+    {
+        // Wait for the delay time before spawning the helper hand
+        yield return new WaitForSeconds(helperHandManager.helperHandDelay);
+
+        // Check if any dish is selected and not cleaned
+        DishController targetDish = null;
+        foreach (DishController dish in allDishes)
+        {
+            if (dish.isDishSelected || !dish.dishCleaned)
+            {
+                targetDish = dish;
+                break;
+            }
+        }
+
+        // If no dish is selected or cleaned, spawn the helper hand
+        if (targetDish != null)
+        {
+            // Spawn the helper hand out of the view port and tween it to the target dish's position
+            helperHandManager.SpawnHelperHand(new Vector3(-10, -10, 0), targetDish.transform.position);
+        }
     }
 
     public void OnMouseDown()
@@ -45,14 +97,14 @@ public class DishController : MonoBehaviour
         ChangeSortingOrderOfChildren(20);
 
         // Tween the dish to the center of the viewport and scale it up slightly
-        LeanTween.move(gameObject, Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, Camera.main.nearClipPlane + 5f)), 0.5f).setOnComplete(() =>
-        {
-            isDishSelected = true;
-        });
-
+        LeanTween.move(gameObject, Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, Camera.main.nearClipPlane + 5f)), 0.5f);
         LeanTween.scale(gameObject, originalScale * 2f, 0.5f); // Use the stored original scale
-    }
+        isDishSelected = true;
+        Debug.Log(gameObject.name + " is selected.");
 
+        // Destroy the helper hand
+        helperHandManager.StopHelperHand();
+    }
 
     public void StartScrubbing()
     {
@@ -68,7 +120,7 @@ public class DishController : MonoBehaviour
         Debug.Log("Spawning prefabs started.");
         isSpawning = true;
 
-        for (float timer = 0; timer < 5f; timer += Time.deltaTime)
+        for (float timer = 0; timer < 3f; timer += Time.deltaTime)
         {
             Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             Vector2 mousePos2D = new Vector2(mousePos.x, mousePos.y);
@@ -155,6 +207,10 @@ public class DishController : MonoBehaviour
         });
 
         Debug.Log("Dish cleaned and moved back to original position.");
+        dishCleaned = true;
+
+        // Start the delay timer again and check for interaction with other dishes
+        StartHelperHandDelayTimer();
     }
 
     private void StoreOriginalSortingOrders()
@@ -244,5 +300,4 @@ public class DishController : MonoBehaviour
             }
         }
     }
-
 }

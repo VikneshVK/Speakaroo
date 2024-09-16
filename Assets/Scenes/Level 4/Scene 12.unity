@@ -134,7 +134,6 @@ GameObject:
   - component: {fileID: 13232377}
   - component: {fileID: 13232374}
   - component: {fileID: 13232376}
-  - component: {fileID: 13232378}
   m_Layer: 0
   m_Name: dirty-Bowl2
   m_TagString: Untagged
@@ -216,7 +215,7 @@ BoxCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 13232373}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Density: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -261,62 +260,20 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 13232373}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e13bdd170c48dbe42bd97ae138ba2c46, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   dropTarget: {fileID: 1974727950}
+  helperHandManager: {fileID: 740028946}
+  helperHandDelay: 5
+  isDroppedCorrectly: 0
   bowlSprites:
   - {fileID: 21300000, guid: d2e31820b58c2594fb502f655f28e31c, type: 3}
   - {fileID: 21300000, guid: cb289c5ae3ecf4443aeb4ad70e1845b2, type: 3}
   newSprite: {fileID: 21300000, guid: d2e31820b58c2594fb502f655f28e31c, type: 3}
   birdAnimator: {fileID: 728265974}
---- !u!61 &13232378
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 13232373}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 2.62, y: 1.87}
-    newSize: {x: 2.62, y: 1.87}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 2.62, y: 1.87}
-  m_EdgeRadius: 0
 --- !u!1 &90656466
 GameObject:
   m_ObjectHideFlags: 0
@@ -389,7 +346,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 760964d16b821ce42bf4284e97a07340, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -720,7 +677,6 @@ GameObject:
   - component: {fileID: 450328873}
   - component: {fileID: 450328870}
   - component: {fileID: 450328872}
-  - component: {fileID: 450328874}
   m_Layer: 0
   m_Name: dirty-Plate2
   m_TagString: Untagged
@@ -802,7 +758,7 @@ BoxCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 450328869}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Density: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -847,62 +803,20 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 450328869}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e13bdd170c48dbe42bd97ae138ba2c46, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   dropTarget: {fileID: 1974550184}
+  helperHandManager: {fileID: 740028946}
+  helperHandDelay: 5
+  isDroppedCorrectly: 0
   bowlSprites:
   - {fileID: 21300000, guid: d2e31820b58c2594fb502f655f28e31c, type: 3}
   - {fileID: 21300000, guid: cb289c5ae3ecf4443aeb4ad70e1845b2, type: 3}
   newSprite: {fileID: 21300000, guid: 0b648f0cfbc05f74e91c9befe25cb16e, type: 3}
   birdAnimator: {fileID: 728265974}
---- !u!61 &450328874
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 450328869}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 3.83, y: 1.32}
-    newSize: {x: 3.83, y: 1.32}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 3.83, y: 1.32}
-  m_EdgeRadius: 0
 --- !u!1 &598856043
 GameObject:
   m_ObjectHideFlags: 0
@@ -975,7 +889,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 2
   m_Sprite: {fileID: 21300000, guid: 75be1e03190a11548be88a9511ad7755, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -999,7 +913,6 @@ GameObject:
   - component: {fileID: 620537056}
   - component: {fileID: 620537053}
   - component: {fileID: 620537055}
-  - component: {fileID: 620537057}
   m_Layer: 0
   m_Name: dirty-glass
   m_TagString: Untagged
@@ -1081,7 +994,7 @@ BoxCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 620537052}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Density: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -1126,62 +1039,20 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 620537052}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e13bdd170c48dbe42bd97ae138ba2c46, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   dropTarget: {fileID: 940707928}
+  helperHandManager: {fileID: 740028946}
+  helperHandDelay: 5
+  isDroppedCorrectly: 0
   bowlSprites:
   - {fileID: 21300000, guid: d2e31820b58c2594fb502f655f28e31c, type: 3}
   - {fileID: 21300000, guid: cb289c5ae3ecf4443aeb4ad70e1845b2, type: 3}
   newSprite: {fileID: 21300000, guid: 36d9e7d689d0c3b42b5d34412d2da97b, type: 3}
   birdAnimator: {fileID: 728265974}
---- !u!61 &620537057
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 620537052}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1.17, y: 1.85}
-    newSize: {x: 1.17, y: 1.85}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 1.17, y: 1.85}
-  m_EdgeRadius: 0
 --- !u!1 &626639652
 GameObject:
   m_ObjectHideFlags: 0
@@ -1239,7 +1110,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: ae689c360115c7f4f865debb73841bff, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -1281,7 +1152,6 @@ GameObject:
   - component: {fileID: 685672920}
   - component: {fileID: 685672917}
   - component: {fileID: 685672919}
-  - component: {fileID: 685672921}
   m_Layer: 0
   m_Name: dirty-Bowl-1
   m_TagString: Untagged
@@ -1363,7 +1233,7 @@ BoxCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 685672916}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Density: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -1408,62 +1278,20 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 685672916}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e13bdd170c48dbe42bd97ae138ba2c46, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   dropTarget: {fileID: 1974727950}
+  helperHandManager: {fileID: 740028946}
+  helperHandDelay: 5
+  isDroppedCorrectly: 0
   bowlSprites:
   - {fileID: 21300000, guid: d2e31820b58c2594fb502f655f28e31c, type: 3}
   - {fileID: 21300000, guid: cb289c5ae3ecf4443aeb4ad70e1845b2, type: 3}
   newSprite: {fileID: 21300000, guid: d2e31820b58c2594fb502f655f28e31c, type: 3}
   birdAnimator: {fileID: 728265974}
---- !u!61 &685672921
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 685672916}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 2.62, y: 1.87}
-    newSize: {x: 2.62, y: 1.87}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 2.62, y: 1.87}
-  m_EdgeRadius: 0
 --- !u!95 &728265974 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 2656597240842119264, guid: fa7f5c7e8378f6f49b1b90dfeb42f3ac, type: 3}
@@ -1541,7 +1369,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 2
   m_Sprite: {fileID: 21300000, guid: bac5c1a880281ff45b9627e5515e7535, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -1553,6 +1381,54 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &740028945
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 740028947}
+  - component: {fileID: 740028946}
+  m_Layer: 0
+  m_Name: HelperHandController
+  m_TagString: HelperHand
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &740028946
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 740028945}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 086b661736b4cef408e44c21cd956da5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  helperHandPrefab: {fileID: 668317662352755921, guid: 13d280a1ead5080429ec885eda1b1b04, type: 3}
+  tweenDuration: 1
+  delayBeforeTween: 1
+  helperHandDelay: 2
+--- !u!4 &740028947
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 740028945}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -8.118994, y: -4.9206, z: -0.5551462}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &846156416
 GameObject:
   m_ObjectHideFlags: 0
@@ -1565,7 +1441,6 @@ GameObject:
   - component: {fileID: 846156420}
   - component: {fileID: 846156417}
   - component: {fileID: 846156419}
-  - component: {fileID: 846156421}
   m_Layer: 0
   m_Name: dirty-glass2
   m_TagString: Untagged
@@ -1647,7 +1522,7 @@ BoxCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 846156416}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Density: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -1692,62 +1567,20 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 846156416}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e13bdd170c48dbe42bd97ae138ba2c46, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   dropTarget: {fileID: 1390652590}
+  helperHandManager: {fileID: 740028946}
+  helperHandDelay: 5
+  isDroppedCorrectly: 0
   bowlSprites:
   - {fileID: 21300000, guid: d2e31820b58c2594fb502f655f28e31c, type: 3}
   - {fileID: 21300000, guid: cb289c5ae3ecf4443aeb4ad70e1845b2, type: 3}
   newSprite: {fileID: 21300000, guid: 36d9e7d689d0c3b42b5d34412d2da97b, type: 3}
   birdAnimator: {fileID: 728265974}
---- !u!61 &846156421
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 846156416}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1.17, y: 1.85}
-    newSize: {x: 1.17, y: 1.85}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 1.17, y: 1.85}
-  m_EdgeRadius: 0
 --- !u!1 &906819339
 GameObject:
   m_ObjectHideFlags: 0
@@ -2169,7 +2002,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1261242162691769517, guid: 5cc33678a45eebd4eb94af593e86f318, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3220799799381724627, guid: 5cc33678a45eebd4eb94af593e86f318, type: 3}
       propertyPath: m_Pivot.x
@@ -2402,7 +2235,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 1
   m_Sprite: {fileID: 21300000, guid: 86e20e637ec39064e8835a70c22d34af, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -2440,7 +2273,7 @@ GameObject:
   - component: {fileID: 1275932627}
   - component: {fileID: 1275932626}
   m_Layer: 0
-  m_Name: DragManager
+  m_Name: LV4DragManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2464,6 +2297,9 @@ MonoBehaviour:
   spawnPosition: {x: 0, y: 0, z: 0}
   birdAnimator: {fileID: 728265974}
   canTalkParam: canTalk
+  helperHandManager: {fileID: 740028946}
+  dishWashingManager: {fileID: 0}
+  PrefabSpawned: 0
 --- !u!4 &1275932627
 Transform:
   m_ObjectHideFlags: 0
@@ -2621,7 +2457,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 1
+  m_SortingOrder: 2
   m_Sprite: {fileID: 21300000, guid: c0cd776c029e13941ab74dd37c14324e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -2705,7 +2541,6 @@ GameObject:
   - component: {fileID: 1428038131}
   - component: {fileID: 1428038128}
   - component: {fileID: 1428038130}
-  - component: {fileID: 1428038132}
   m_Layer: 0
   m_Name: dirty-plate
   m_TagString: Untagged
@@ -2787,7 +2622,7 @@ BoxCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1428038127}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Density: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -2832,62 +2667,20 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1428038127}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e13bdd170c48dbe42bd97ae138ba2c46, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   dropTarget: {fileID: 1244357064}
+  helperHandManager: {fileID: 740028946}
+  helperHandDelay: 5
+  isDroppedCorrectly: 0
   bowlSprites:
   - {fileID: 21300000, guid: d2e31820b58c2594fb502f655f28e31c, type: 3}
   - {fileID: 21300000, guid: cb289c5ae3ecf4443aeb4ad70e1845b2, type: 3}
   newSprite: {fileID: 21300000, guid: 0b648f0cfbc05f74e91c9befe25cb16e, type: 3}
   birdAnimator: {fileID: 728265974}
---- !u!61 &1428038132
-BoxCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1428038127}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_ForceSendLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ForceReceiveLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_ContactCaptureLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_CallbackLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0, y: 0, z: 0, w: 0}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 3.83, y: 1.32}
-    newSize: {x: 3.83, y: 1.32}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
-  serializedVersion: 2
-  m_Size: {x: 3.83, y: 1.32}
-  m_EdgeRadius: 0
 --- !u!1 &1578345602
 GameObject:
   m_ObjectHideFlags: 0
@@ -2915,7 +2708,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -12.19, y: -6.78, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 0.9, y: 0.9, z: 0.9}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 685672918}
@@ -2933,7 +2726,7 @@ BoxCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1578345602}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Density: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -3496,3 +3289,4 @@ SceneRoots:
   - {fileID: 1578345603}
   - {fileID: 248422834}
   - {fileID: 919507648}
+  - {fileID: 740028947}
