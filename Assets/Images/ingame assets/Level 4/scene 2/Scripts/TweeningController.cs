@@ -17,6 +17,9 @@ public class TweeningController : MonoBehaviour
 
     private JuiceManager juiceManager;
 
+    public float tweenDuration = 1f;
+    public LeanTweenType easeType = LeanTweenType.easeOutBack;
+
     private bool previousState = false; // To track the previous state of isSecondTime
 
     private void Awake()
@@ -54,11 +57,22 @@ public class TweeningController : MonoBehaviour
 
     private void Update()
     {
-        // Check if isSecondTime has changed
         if (isSecondTime != previousState)
         {
             previousState = isSecondTime;
+
+            
             PerformTweening();
+
+            
+            if (isSecondTime)
+            {
+                LVL4Sc2HelperHand.Instance.ResetAndStartDelayTimer(); // Only for the second time
+            }
+            else
+            {
+                LVL4Sc2HelperHand.Instance.ResetAndStartDelayTimer(); // For the first time
+            }
         }
     }
 
@@ -85,7 +99,10 @@ public class TweeningController : MonoBehaviour
             TweenSetToInitial(set1Objects, set1InitialPositions);
             TweenSetToTarget(set2Objects, set2Targets);
 
-            // Inform JuiceManager that it is the second time
+            
+            LVL4Sc2HelperHand.Instance.ResetAndStartDelayTimer();
+
+            
             if (juiceManager != null)
             {
                 juiceManager.isSecondTime = true;
@@ -95,8 +112,12 @@ public class TweeningController : MonoBehaviour
         {
             TweenSetToTarget(set1Objects, set1Targets);
             TweenSetToInitial(set2Objects, set2InitialPositions);
+
+            
+            LVL4Sc2HelperHand.Instance.ResetAndStartDelayTimer();
         }
     }
+
 
     private void TweenSetToTarget(GameObject[] objects, Transform[] targets)
     {

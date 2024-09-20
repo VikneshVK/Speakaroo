@@ -82,48 +82,60 @@ public class DishdragController : MonoBehaviour
         // Check if the object was dropped in the correct location (dropTarget)
         if (Vector3.Distance(transform.position, dropTarget.position) < 1.0f)
         {
-            OnDropped();
+            OnDropped(true); // Correct drop
         }
         else
         {
             // Reset position if not dropped correctly
             transform.position = startPosition;
 
-            // Reset and start the helper hand timer again
-            StartHelperHandTimer();
+            OnDropped(false); // Wrong drop
         }
     }
 
-    private void OnDropped()
+    private void OnDropped(bool correctDrop)
     {
         SpriteRenderer targetSpriteRenderer = dropTarget.GetComponent<SpriteRenderer>();
 
-        if (gameObject.name.Contains("Bowl"))
+        if (correctDrop)
         {
-            // Handle bowl-specific logic
-            HandleBowlDrop(targetSpriteRenderer);
-        }
-        else
-        {
-            // For other objects (non-bowls), change the sprite and destroy the object
-            if (targetSpriteRenderer != null)
+            // Correct Drop
+            if (gameObject.name.Contains("Bowl"))
             {
-                targetSpriteRenderer.sprite = newSprite; // Set the new sprite for plates/glasses
+                // Handle bowl-specific logic
+                HandleBowlDrop(targetSpriteRenderer);
             }
+            else
+            {
+                // For other objects (non-bowls), change the sprite and destroy the object
+                if (targetSpriteRenderer != null)
+                {
+                    targetSpriteRenderer.sprite = newSprite; // Set the new sprite for plates/glasses
+                }
 
-            // Mark the object as dropped correctly and destroy it
-            isDroppedCorrectly = true;
-            Destroy(gameObject);
+                // Mark the object as dropped correctly and destroy it
+                isDroppedCorrectly = true;
+                Destroy(gameObject);
 
-            // Increment the arranged dishes counter
-            dishesArranged++;
-            CheckDishesArranged();
+                // Increment the arranged dishes counter
+                dishesArranged++;
+                CheckDishesArranged();
+            }
 
             // Notify that the helper hand should stop
             if (helperHandManager != null)
             {
                 helperHandManager.StopHelperHand();
             }
+
+            // Start helper hand delay for the next undropped object
+            StartHelperHandCheckForAll();
+        }
+        else
+        {
+            // Wrong Drop
+            // Reset and start the helper hand timer for the current object
+            StartHelperHandTimer();
         }
     }
 
@@ -146,12 +158,6 @@ public class DishdragController : MonoBehaviour
         // Increment the arranged dishes counter
         dishesArranged++;
         CheckDishesArranged();
-
-        // Notify that the helper hand should stop
-        if (helperHandManager != null)
-        {
-            helperHandManager.StopHelperHand();
-        }
     }
 
     private void CheckDishesArranged()

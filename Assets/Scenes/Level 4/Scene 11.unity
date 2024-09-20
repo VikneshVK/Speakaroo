@@ -476,6 +476,8 @@ MonoBehaviour:
   maskPrefab: {fileID: 1433547584507210601, guid: 49c56f0785beb2c438ddb02cb2d51133, type: 3}
   finalBowlSpriteObject: {fileID: 734810635}
   eatenBowl: {fileID: 0}
+  helperHandController: {fileID: 1605762246}
+  helperHandDelay: 5
 --- !u!95 &69734998
 Animator:
   serializedVersion: 5
@@ -661,6 +663,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f43087b3ffd1de74e922ce1d5eab0bb7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  tweeningController: {fileID: 399465458}
+  juiceController: {fileID: 665024639}
 --- !u!1 &399465457
 GameObject:
   m_ObjectHideFlags: 0
@@ -719,6 +723,8 @@ MonoBehaviour:
   - {fileID: 1380364368}
   - {fileID: 1621726228}
   - {fileID: 1505533369}
+  tweenDuration: 1
+  easeType: 27
 --- !u!4 &399465459
 Transform:
   m_ObjectHideFlags: 0
@@ -1031,6 +1037,8 @@ MonoBehaviour:
   maskPrefab: {fileID: 1433547584507210601, guid: 49c56f0785beb2c438ddb02cb2d51133, type: 3}
   finalBowlSpriteObject: {fileID: 734810635}
   eatenBowl: {fileID: 0}
+  helperHandController: {fileID: 1605762246}
+  helperHandDelay: 5
 --- !u!61 &531209506
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1965,7 +1973,6 @@ Transform:
   m_Children:
   - {fileID: 291992674}
   - {fileID: 688040184}
-  - {fileID: 1455835057}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &848780943
@@ -2223,6 +2230,8 @@ MonoBehaviour:
   maskPrefab: {fileID: 1433547584507210601, guid: 49c56f0785beb2c438ddb02cb2d51133, type: 3}
   finalBowlSpriteObject: {fileID: 734810635}
   eatenBowl: {fileID: 0}
+  helperHandController: {fileID: 1605762246}
+  helperHandDelay: 5
 --- !u!95 &866387359
 Animator:
   serializedVersion: 5
@@ -2377,6 +2386,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f43087b3ffd1de74e922ce1d5eab0bb7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  tweeningController: {fileID: 399465458}
+  juiceController: {fileID: 665024639}
 --- !u!1 &939997623
 GameObject:
   m_ObjectHideFlags: 0
@@ -2645,6 +2656,7 @@ Transform:
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 921011781}
+  - {fileID: 1455835057}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1125105176
@@ -3181,6 +3193,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f43087b3ffd1de74e922ce1d5eab0bb7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  tweeningController: {fileID: 399465458}
+  juiceController: {fileID: 665024639}
 --- !u!1 &1446826456
 GameObject:
   m_ObjectHideFlags: 0
@@ -3291,11 +3305,11 @@ Transform:
   m_GameObject: {fileID: 1455835056}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -17.820002, y: -13.233334, z: 0}
+  m_LocalPosition: {x: -0.02000173, y: -0.5, z: 0}
   m_LocalScale: {x: 0.87553835, y: 0.87553835, z: 0.87553835}
   m_ConstrainProportionsScale: 1
   m_Children: []
-  m_Father: {fileID: 811686576}
+  m_Father: {fileID: 1034826766}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &1455835058
 SpriteRenderer:
@@ -3630,6 +3644,53 @@ Transform:
   - {fileID: 1621726228}
   - {fileID: 1505533369}
   - {fileID: 287426172}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1605762245
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1605762247}
+  - component: {fileID: 1605762246}
+  m_Layer: 0
+  m_Name: Helperhand Controller
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1605762246
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1605762245}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45895e168b36e0f498b2842f61c71ae6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  helperHandPrefab: {fileID: 668317662352755921, guid: 13d280a1ead5080429ec885eda1b1b04, type: 3}
+  delayTime: 5
+  tweeningController: {fileID: 399465458}
+--- !u!4 &1605762247
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1605762245}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 3.4790862, y: 10.00151, z: -0.5475493}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1613723308
@@ -3974,6 +4035,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: UI Canvas
       objectReference: {fileID: 0}
+    - target: {fileID: 6813998397458315856, guid: 8a8298d9b3f8b0846a90c56bb0c38c1e, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 77.1001
+      objectReference: {fileID: 0}
+    - target: {fileID: 6813998397458315856, guid: 8a8298d9b3f8b0846a90c56bb0c38c1e, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -85.900024
+      objectReference: {fileID: 0}
     - target: {fileID: 6865910305785931272, guid: 8a8298d9b3f8b0846a90c56bb0c38c1e, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -4222,6 +4291,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f43087b3ffd1de74e922ce1d5eab0bb7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  tweeningController: {fileID: 399465458}
+  juiceController: {fileID: 665024639}
 --- !u!50 &1942680800
 Rigidbody2D:
   serializedVersion: 4
@@ -4713,3 +4784,4 @@ SceneRoots:
   - {fileID: 1579320382}
   - {fileID: 848780947}
   - {fileID: 939997626}
+  - {fileID: 1605762247}

@@ -170,6 +170,8 @@ public class SpriteChangeController : MonoBehaviour
             if (juiceController.ValidateFruit(fruitsInBlender))
             {
                 juiceController.EnableBlenderCollider();
+                // Start a coroutine to monitor player interaction with the blender
+                juiceController.StartBlenderInteractionTimer(); // New method added in JuiceController
             }
             else
             {
@@ -183,6 +185,8 @@ public class SpriteChangeController : MonoBehaviour
             if (juiceController.ValidateFruit(fruitsInBlender))
             {
                 juiceController.EnableBlenderCollider();
+                // Start a coroutine to monitor player interaction with the blender
+                juiceController.StartBlenderInteractionTimer(); // New method added in JuiceController
             }
             else
             {
@@ -191,6 +195,7 @@ public class SpriteChangeController : MonoBehaviour
             }
         }
     }
+
 
     private string DetermineSpriteName()
     {

@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
+
 public class DraggingController : MonoBehaviour
 {
     private Vector3 offset;
@@ -9,6 +10,9 @@ public class DraggingController : MonoBehaviour
     private Vector3 originalScale;
     private SpriteChangeController spriteChangeController;
     private JuiceManager juiceManager;
+    public TweeningController tweeningController; // Reference to TweeningController
+    public JuiceController juiceController;
+    private bool helperTimerStarted = false; // To track if the helper hand timer has already started
 
     void Start()
     {
@@ -33,6 +37,13 @@ public class DraggingController : MonoBehaviour
         else
         {
             transform.localScale = originalScale;
+        }
+
+        if (tweeningController.isSecondTime && !helperTimerStarted)
+        {
+            Debug.Log("Starting helper hand delay timer in DraggingController for the second time.");
+            LVL4Sc2HelperHand.Instance.StartDelayTimer();
+            helperTimerStarted = true; // Ensure the timer is only started once
         }
     }
 
@@ -73,6 +84,28 @@ public class DraggingController : MonoBehaviour
         if (spriteChangeController.IsOverlappingBlenderJar(fruitCollider) && gameObject.tag != "Blender_Jar")
         {
             spriteChangeController.UpdateBlenderJarSprite(gameObject.tag, gameObject);
+            LVL4Sc2HelperHand.Instance.DestroySpawnedHelperHand();
+        }
+
+        // Handle fruit and blender interactions based on the second time logic
+        if (tweeningController.isSecondTime)
+        {
+            if (gameObject.CompareTag("Kiwi") || gameObject.CompareTag("SB") || gameObject.CompareTag("BB"))
+            {
+                juiceController.StartBlenderInteractionTimer();
+            }
+
+            // Check interaction with blender
+            if (gameObject.CompareTag("Blender"))
+            {
+                juiceController.OnBlenderClick();
+            }
+
+            // Check interaction with blender jar
+            if (gameObject.CompareTag("Blender_Jar"))
+            {
+                LVL4Sc2HelperHand.Instance.OnBlenderJarInteraction();
+            }
         }
     }
 
