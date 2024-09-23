@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 2672854043516699021}
   - component: {fileID: 3971432974025621102}
   m_Layer: 0
-  m_Name: bubble_speech Balloons 1
+  m_Name: Camera_LVL5_Sc1.3_bubble_speech Balloons 1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -28,8 +28,8 @@ Transform:
   m_GameObject: {fileID: 2720721835439482840}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 4.79, y: 4.56, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 0.25, y: 0.25, z: 0.25}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
@@ -74,7 +74,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 7
+  m_SortingOrder: 8
   m_Sprite: {fileID: 21300000, guid: 38fa47313f388a04b9b43fae761b83b3, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 1
@@ -143,10 +143,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4a35b907d52893d4281d113d010202ce, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefabToSpawn: {fileID: 2604101911739624177, guid: 0b6ece04fb99dbd4da13074a3f64217c, type: 3}
+  prefabToSpawn: {fileID: 2604101911739624177, guid: 20779e3e741e99d409e4b72b09461f2b, type: 3}
   balloonPrefabs:
-  - {fileID: 5212196212075300466, guid: b6ba3f68dd29d004389015080cf49a5d, type: 3}
-  - {fileID: 3950397747086539872, guid: 8204f46d924c17c4881c230d4393b41b, type: 3}
-  - {fileID: 3924332530084411020, guid: b85f2636c224188498c2029c6c907dc2, type: 3}
+  - {fileID: 4525612018245363809, guid: b09b49015880f9041a5be00c30ef0ebf, type: 3}
+  - {fileID: 1690791044773813029, guid: 9cb1ce8c6222ddf43a8176a7a46e3086, type: 3}
+  - {fileID: 197126160639554430, guid: 6f533c8de8be1ab44a0ea2ec5ed7d5f7, type: 3}
   balloonCount: 10
   balloonSpeed: 2

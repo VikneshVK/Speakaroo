@@ -1,15 +1,15 @@
-using UnityEngine;
-using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine;
 
-public class TweenManager : MonoBehaviour
+public class CameraLvl5Sc1_3TweenManager : MonoBehaviour
 {
     public bool speechTherapyCompleted = false;
-    private Animator birdAnimator;
+    private Animator BoyAnimator;
     private bool isRetryClicked = false;
     private GameObject buttonToActivate;
-    private List<GameObject> spriteMasks = new List<GameObject>();
+    private LVL5Sc1_3JojoController jojoController;
+    
 
     private void Start()
     {
@@ -17,10 +17,11 @@ public class TweenManager : MonoBehaviour
         ST_AudioManager.Instance.OnRetryClicked += ResetTimer;
 
         // Get the reference to the Animator component of the Bird game object
-        GameObject bird = GameObject.FindGameObjectWithTag("Bird");
-        if (bird != null)
+        GameObject Boy = GameObject.FindGameObjectWithTag("Player");
+        if (Boy != null)
         {
-            birdAnimator = bird.GetComponent<Animator>();
+            BoyAnimator = Boy.GetComponent<Animator>();
+            jojoController = Boy.GetComponent<LVL5Sc1_3JojoController>();
         }
 
         // Find the UICanvas and the Button within it
@@ -34,9 +35,7 @@ public class TweenManager : MonoBehaviour
         {
             Debug.LogWarning("Button not found inside the UICanvas.");
         }
-        GameObject[] masks = GameObject.FindGameObjectsWithTag("SpriteMask");
-        spriteMasks.AddRange(masks);
-        Debug.Log("Number of sprite masks found: " + spriteMasks.Count);
+       
     }
 
     private void OnDestroy()
@@ -87,14 +86,13 @@ public class TweenManager : MonoBehaviour
         // Wait for the children to finish tweening
         LeanTween.delayedCall(0.5f, () =>
         {
-            Debug.Log("Tween completed, activating masks...");
-            SpriteMaskManager.Instance.ActivateMasks();
+            
             speechTherapyCompleted = true;
-            // Set the animator parameters for the bird
-            if (birdAnimator != null)
+            jojoController.canTalk2 = true;
+            
+            if (BoyAnimator != null)
             {
-                birdAnimator.SetBool("startWalking", true);
-                birdAnimator.SetBool("resetPosition", false);
+                BoyAnimator.SetBool("canTalk2", true);
             }
 
             // Tween the parent to scale 0
