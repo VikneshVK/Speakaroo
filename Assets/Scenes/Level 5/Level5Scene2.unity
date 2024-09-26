@@ -122,10 +122,227 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &34653153 stripped
+--- !u!1001 &59355292
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 406341865708487449, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: m_Name
+      value: ground Center
+      objectReference: {fileID: 0}
+    - target: {fileID: 2176056630470709601, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2176056630470709601, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2176056630470709601, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2176056630470709601, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+    - target: {fileID: 4324940019866252409, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4324940019866252409, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4324940019866252409, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4324940019866252409, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4324940019866252409, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4324940019866252409, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4324940019866252409, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4324940019866252409, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4324940019866252409, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4324940019866252409, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6259433761653598219, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: cameraUI
+      value: 
+      objectReference: {fileID: 1178097188}
+    - target: {fileID: 6259433761653598219, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: flashImage
+      value: 
+      objectReference: {fileID: 777935908}
+    - target: {fileID: 6259433761653598219, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: questImage
+      value: 
+      objectReference: {fileID: 1949096134}
+    - target: {fileID: 6259433761653598219, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: centerReference
+      value: 
+      objectReference: {fileID: 971797207}
+    - target: {fileID: 6259433761653598219, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: photoQuestManager
+      value: 
+      objectReference: {fileID: 1573346322}
+    - target: {fileID: 6259433761653598219, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: photoCameraController
+      value: 
+      objectReference: {fileID: 2064792876}
+    - target: {fileID: 6303240642539519209, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: cameraUI
+      value: 
+      objectReference: {fileID: 1178097188}
+    - target: {fileID: 6303240642539519209, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: flashImage
+      value: 
+      objectReference: {fileID: 777935908}
+    - target: {fileID: 6303240642539519209, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: questImage
+      value: 
+      objectReference: {fileID: 1949096134}
+    - target: {fileID: 6303240642539519209, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: centerReference
+      value: 
+      objectReference: {fileID: 971797207}
+    - target: {fileID: 6303240642539519209, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: photoQuestManager
+      value: 
+      objectReference: {fileID: 1573346322}
+    - target: {fileID: 6303240642539519209, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: photoCameraController
+      value: 
+      objectReference: {fileID: 2064792876}
+    - target: {fileID: 6857190800762221963, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: cameraUI
+      value: 
+      objectReference: {fileID: 1178097188}
+    - target: {fileID: 6857190800762221963, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: flashImage
+      value: 
+      objectReference: {fileID: 777935908}
+    - target: {fileID: 6857190800762221963, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: questImage
+      value: 
+      objectReference: {fileID: 1949096134}
+    - target: {fileID: 6857190800762221963, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: centerReference
+      value: 
+      objectReference: {fileID: 971797207}
+    - target: {fileID: 6857190800762221963, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: photoQuestManager
+      value: 
+      objectReference: {fileID: 1573346322}
+    - target: {fileID: 6857190800762221963, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: photoCameraController
+      value: 
+      objectReference: {fileID: 2064792876}
+    - target: {fileID: 7316229345880258692, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: cameraUI
+      value: 
+      objectReference: {fileID: 1178097188}
+    - target: {fileID: 7316229345880258692, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: flashImage
+      value: 
+      objectReference: {fileID: 777935908}
+    - target: {fileID: 7316229345880258692, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: questImage
+      value: 
+      objectReference: {fileID: 1949096134}
+    - target: {fileID: 7316229345880258692, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: centerReference
+      value: 
+      objectReference: {fileID: 971797207}
+    - target: {fileID: 7316229345880258692, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: photoQuestManager
+      value: 
+      objectReference: {fileID: 1573346322}
+    - target: {fileID: 7316229345880258692, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: photoCameraController
+      value: 
+      objectReference: {fileID: 2064792876}
+    - target: {fileID: 7607276675810894102, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: cameraUI
+      value: 
+      objectReference: {fileID: 1178097188}
+    - target: {fileID: 7607276675810894102, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: flashImage
+      value: 
+      objectReference: {fileID: 777935908}
+    - target: {fileID: 7607276675810894102, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: questImage
+      value: 
+      objectReference: {fileID: 1949096134}
+    - target: {fileID: 7607276675810894102, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: centerReference
+      value: 
+      objectReference: {fileID: 971797207}
+    - target: {fileID: 7607276675810894102, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: photoQuestManager
+      value: 
+      objectReference: {fileID: 1573346322}
+    - target: {fileID: 7607276675810894102, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: photoCameraController
+      value: 
+      objectReference: {fileID: 2064792876}
+    - target: {fileID: 7959287915249228933, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: cameraUI
+      value: 
+      objectReference: {fileID: 1178097188}
+    - target: {fileID: 7959287915249228933, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: flashImage
+      value: 
+      objectReference: {fileID: 777935908}
+    - target: {fileID: 7959287915249228933, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: questImage
+      value: 
+      objectReference: {fileID: 1949096134}
+    - target: {fileID: 7959287915249228933, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: centerReference
+      value: 
+      objectReference: {fileID: 971797207}
+    - target: {fileID: 7959287915249228933, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: photoQuestManager
+      value: 
+      objectReference: {fileID: 1573346322}
+    - target: {fileID: 7959287915249228933, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: photoCameraController
+      value: 
+      objectReference: {fileID: 2064792876}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+--- !u!1 &111888148 stripped
 GameObject:
-  m_CorrespondingSourceObject: {fileID: 7151728337628133864, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-  m_PrefabInstance: {fileID: 4162705369312396628}
+  m_CorrespondingSourceObject: {fileID: 406341865708487449, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+  m_PrefabInstance: {fileID: 59355292}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &134092752
 GameObject:
@@ -185,7 +402,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: 3d33df60fde9afc42bd5648961864dc0, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -203,16 +420,270 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 134092752}
   m_CullTransparentMesh: 1
---- !u!1 &215995652 stripped
+--- !u!1 &165002345
 GameObject:
-  m_CorrespondingSourceObject: {fileID: 406341865708487449, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-  m_PrefabInstance: {fileID: 4162705369312396628}
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &290865735 stripped
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 165002346}
+  m_Layer: 0
+  m_Name: containers
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &165002346
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 165002345}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 2018904883}
+  - {fileID: 2051627000}
+  m_Father: {fileID: 2064792874}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &276480071 stripped
 GameObject:
-  m_CorrespondingSourceObject: {fileID: 2829548099814251150, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-  m_PrefabInstance: {fileID: 4162705369312396628}
+  m_CorrespondingSourceObject: {fileID: 4147920581009837525, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+  m_PrefabInstance: {fileID: 59355292}
   m_PrefabAsset: {fileID: 0}
+--- !u!1001 &288303392
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 406341865708487449, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: m_Name
+      value: ground Left
+      objectReference: {fileID: 0}
+    - target: {fileID: 2176056630470709601, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: m_FlipX
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2176056630470709601, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 8240cb596ca4113418b8a3e9cdb62b36, type: 3}
+    - target: {fileID: 2940532540047264769, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2940532540047264769, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2940532540047264769, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4324940019866252409, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -122.74
+      objectReference: {fileID: 0}
+    - target: {fileID: 4324940019866252409, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 4324940019866252409, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4324940019866252409, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4324940019866252409, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4324940019866252409, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4324940019866252409, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4324940019866252409, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4324940019866252409, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4324940019866252409, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5599422941109445161, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6259433761653598219, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: cameraUI
+      value: 
+      objectReference: {fileID: 1178097188}
+    - target: {fileID: 6259433761653598219, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: flashImage
+      value: 
+      objectReference: {fileID: 777935908}
+    - target: {fileID: 6259433761653598219, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: questImage
+      value: 
+      objectReference: {fileID: 1949096134}
+    - target: {fileID: 6259433761653598219, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: centerReference
+      value: 
+      objectReference: {fileID: 971797207}
+    - target: {fileID: 6259433761653598219, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: photoQuestManager
+      value: 
+      objectReference: {fileID: 1573346322}
+    - target: {fileID: 6259433761653598219, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: photoCameraController
+      value: 
+      objectReference: {fileID: 2064792876}
+    - target: {fileID: 6303240642539519209, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: cameraUI
+      value: 
+      objectReference: {fileID: 1178097188}
+    - target: {fileID: 6303240642539519209, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: flashImage
+      value: 
+      objectReference: {fileID: 777935908}
+    - target: {fileID: 6303240642539519209, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: questImage
+      value: 
+      objectReference: {fileID: 1949096134}
+    - target: {fileID: 6303240642539519209, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: centerReference
+      value: 
+      objectReference: {fileID: 971797207}
+    - target: {fileID: 6303240642539519209, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: photoQuestManager
+      value: 
+      objectReference: {fileID: 1573346322}
+    - target: {fileID: 6303240642539519209, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: photoCameraController
+      value: 
+      objectReference: {fileID: 2064792876}
+    - target: {fileID: 6857190800762221963, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: cameraUI
+      value: 
+      objectReference: {fileID: 1178097188}
+    - target: {fileID: 6857190800762221963, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: flashImage
+      value: 
+      objectReference: {fileID: 777935908}
+    - target: {fileID: 6857190800762221963, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: questImage
+      value: 
+      objectReference: {fileID: 1949096134}
+    - target: {fileID: 6857190800762221963, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: centerReference
+      value: 
+      objectReference: {fileID: 971797207}
+    - target: {fileID: 6857190800762221963, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: photoQuestManager
+      value: 
+      objectReference: {fileID: 1573346322}
+    - target: {fileID: 6857190800762221963, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: photoCameraController
+      value: 
+      objectReference: {fileID: 2064792876}
+    - target: {fileID: 7316229345880258692, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: cameraUI
+      value: 
+      objectReference: {fileID: 1178097188}
+    - target: {fileID: 7316229345880258692, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: flashImage
+      value: 
+      objectReference: {fileID: 777935908}
+    - target: {fileID: 7316229345880258692, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: questImage
+      value: 
+      objectReference: {fileID: 1949096134}
+    - target: {fileID: 7316229345880258692, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: centerReference
+      value: 
+      objectReference: {fileID: 971797207}
+    - target: {fileID: 7316229345880258692, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: photoQuestManager
+      value: 
+      objectReference: {fileID: 1573346322}
+    - target: {fileID: 7316229345880258692, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: photoCameraController
+      value: 
+      objectReference: {fileID: 2064792876}
+    - target: {fileID: 7607276675810894102, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: cameraUI
+      value: 
+      objectReference: {fileID: 1178097188}
+    - target: {fileID: 7607276675810894102, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: flashImage
+      value: 
+      objectReference: {fileID: 777935908}
+    - target: {fileID: 7607276675810894102, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: questImage
+      value: 
+      objectReference: {fileID: 1949096134}
+    - target: {fileID: 7607276675810894102, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: centerReference
+      value: 
+      objectReference: {fileID: 971797207}
+    - target: {fileID: 7607276675810894102, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: photoQuestManager
+      value: 
+      objectReference: {fileID: 1573346322}
+    - target: {fileID: 7607276675810894102, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: photoCameraController
+      value: 
+      objectReference: {fileID: 2064792876}
+    - target: {fileID: 7959287915249228933, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: cameraUI
+      value: 
+      objectReference: {fileID: 1178097188}
+    - target: {fileID: 7959287915249228933, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: flashImage
+      value: 
+      objectReference: {fileID: 777935908}
+    - target: {fileID: 7959287915249228933, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: questImage
+      value: 
+      objectReference: {fileID: 1949096134}
+    - target: {fileID: 7959287915249228933, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: centerReference
+      value: 
+      objectReference: {fileID: 971797207}
+    - target: {fileID: 7959287915249228933, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: photoQuestManager
+      value: 
+      objectReference: {fileID: 1573346322}
+    - target: {fileID: 7959287915249228933, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: photoCameraController
+      value: 
+      objectReference: {fileID: 2064792876}
+    m_RemovedComponents: []
+    m_RemovedGameObjects:
+    - {fileID: 5760822866978009465, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
 --- !u!1 &348269974
 GameObject:
   m_ObjectHideFlags: 0
@@ -405,7 +876,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: d2222ac81db576447a6bb7131720d13b, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -423,6 +894,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 361105230}
   m_CullTransparentMesh: 1
+--- !u!1 &369504709 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 406341865708487449, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+  m_PrefabInstance: {fileID: 1881098073}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &590278185
 GameObject:
   m_ObjectHideFlags: 0
@@ -481,7 +957,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: 12c8278c5ac42334ba8282994874ad2e, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -499,6 +975,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 590278185}
   m_CullTransparentMesh: 1
+--- !u!1 &666965220 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 604541072948802734, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+  m_PrefabInstance: {fileID: 59355292}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &777935906
 GameObject:
   m_ObjectHideFlags: 0
@@ -574,6 +1055,53 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 777935906}
   m_CullTransparentMesh: 1
+--- !u!1 &896663485
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 896663487}
+  - component: {fileID: 896663486}
+  m_Layer: 0
+  m_Name: HelperController
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &896663486
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 896663485}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ff95c5435f2b2504f9fad9c609af1258, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dirPrefab: {fileID: 4281211063120659677, guid: 6067280ce4a34164883b26db75aeca78, type: 3}
+  dirPrefabRefL: {fileID: 2018904883}
+  dirPrefabRefR: {fileID: 2051627000}
+--- !u!4 &896663487
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 896663485}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -54.990265, y: -2.1131904, z: 0.5481244}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &938481446
 GameObject:
   m_ObjectHideFlags: 0
@@ -739,115 +1267,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 2064792874}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1001 &971800950
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 406341865708487449, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: m_Name
-      value: ground (2)
-      objectReference: {fileID: 0}
-    - target: {fileID: 1129073981242599530, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 21300000, guid: 964730e3be295004db682863768e7e65, type: 3}
-    - target: {fileID: 4324940019866252409, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 120
-      objectReference: {fileID: 0}
-    - target: {fileID: 4324940019866252409, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4324940019866252409, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4324940019866252409, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4324940019866252409, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4324940019866252409, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4324940019866252409, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4324940019866252409, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4324940019866252409, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4324940019866252409, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6259433761653598219, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: flashImage
-      value: 
-      objectReference: {fileID: 777935908}
-    - target: {fileID: 6259433761653598219, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: photoQuestManager
-      value: 
-      objectReference: {fileID: 1573346322}
-    - target: {fileID: 6303240642539519209, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: flashImage
-      value: 
-      objectReference: {fileID: 777935908}
-    - target: {fileID: 6303240642539519209, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: photoQuestManager
-      value: 
-      objectReference: {fileID: 1573346322}
-    - target: {fileID: 6857190800762221963, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: flashImage
-      value: 
-      objectReference: {fileID: 777935908}
-    - target: {fileID: 6857190800762221963, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: photoQuestManager
-      value: 
-      objectReference: {fileID: 1573346322}
-    - target: {fileID: 7316229345880258692, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: flashImage
-      value: 
-      objectReference: {fileID: 777935908}
-    - target: {fileID: 7316229345880258692, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: photoQuestManager
-      value: 
-      objectReference: {fileID: 1573346322}
-    - target: {fileID: 7607276675810894102, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: flashImage
-      value: 
-      objectReference: {fileID: 777935908}
-    - target: {fileID: 7607276675810894102, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: photoQuestManager
-      value: 
-      objectReference: {fileID: 1573346322}
-    - target: {fileID: 7959287915249228933, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: flashImage
-      value: 
-      objectReference: {fileID: 777935908}
-    - target: {fileID: 7959287915249228933, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: photoQuestManager
-      value: 
-      objectReference: {fileID: 1573346322}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
 --- !u!1 &1034774264
 GameObject:
   m_ObjectHideFlags: 0
@@ -982,11 +1401,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1034774264}
   m_CullTransparentMesh: 1
---- !u!1 &1052004765 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 604541072948802734, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-  m_PrefabInstance: {fileID: 4162705369312396628}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1116608921
 GameObject:
   m_ObjectHideFlags: 0
@@ -1247,7 +1661,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: b333b1e63ec25fc44ab1d2dcaf0e62de, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1399,11 +1813,6 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!1 &1168743320 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 406341865708487449, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-  m_PrefabInstance: {fileID: 971800950}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1178097188
 GameObject:
   m_ObjectHideFlags: 0
@@ -1431,7 +1840,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 10}
-  m_LocalScale: {x: 0.75, y: 0.75, z: 0.75}
+  m_LocalScale: {x: 0.65, y: 0.65, z: 0.65}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 2064792874}
@@ -1477,7 +1886,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 10
-  m_Sprite: {fileID: 21300000, guid: bb5533fb96f0bda489fda7ae9d71777e, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 74131db3610ce4e40b13185ec15a656a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -1546,7 +1955,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: dabc6e6b0389e0547a33f983cadc7648, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1802,15 +2211,10 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1353772789}
   m_CullTransparentMesh: 1
---- !u!1 &1392438884 stripped
+--- !u!1 &1462010677 stripped
 GameObject:
-  m_CorrespondingSourceObject: {fileID: 8673561018163759068, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-  m_PrefabInstance: {fileID: 4162705369312396628}
-  m_PrefabAsset: {fileID: 0}
---- !u!1 &1454996154 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4147920581009837525, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-  m_PrefabInstance: {fileID: 4162705369312396628}
+  m_CorrespondingSourceObject: {fileID: 406341865708487449, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+  m_PrefabInstance: {fileID: 288303392}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &1504712911
 GameObject:
@@ -1918,6 +2322,11 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!1 &1517508529 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7662872727153646557, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+  m_PrefabInstance: {fileID: 59355292}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1532448161
 GameObject:
   m_ObjectHideFlags: 0
@@ -1976,7 +2385,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 0}
+  m_Sprite: {fileID: 21300000, guid: c0b2ac73610527540ba92061a0760a20, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -2035,12 +2444,14 @@ MonoBehaviour:
   - {fileID: 1131904715}
   - {fileID: 1180456203}
   animals:
-  - {fileID: 1052004765}
-  - {fileID: 1734386013}
-  - {fileID: 34653153}
-  - {fileID: 1392438884}
-  - {fileID: 290865735}
-  - {fileID: 1454996154}
+  - {fileID: 276480071}
+  - {fileID: 1911704911}
+  - {fileID: 2129522343}
+  - {fileID: 1866775577}
+  - {fileID: 666965220}
+  - {fileID: 1517508529}
+  photoCameraController: {fileID: 2064792876}
+  helperController: {fileID: 896663486}
 --- !u!4 &1573346323
 Transform:
   m_ObjectHideFlags: 0
@@ -2056,11 +2467,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1734386013 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7662872727153646557, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-  m_PrefabInstance: {fileID: 4162705369312396628}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1772517592
 GameObject:
   m_ObjectHideFlags: 0
@@ -2142,10 +2548,240 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1772517592}
   m_CullTransparentMesh: 1
---- !u!1 &1850996812 stripped
+--- !u!1 &1866775577 stripped
 GameObject:
-  m_CorrespondingSourceObject: {fileID: 406341865708487449, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-  m_PrefabInstance: {fileID: 1967413552}
+  m_CorrespondingSourceObject: {fileID: 2829548099814251150, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+  m_PrefabInstance: {fileID: 59355292}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1001 &1881098073
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 406341865708487449, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: m_Name
+      value: ground Right
+      objectReference: {fileID: 0}
+    - target: {fileID: 2176056630470709601, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: m_FlipX
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2176056630470709601, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 8240cb596ca4113418b8a3e9cdb62b36, type: 3}
+    - target: {fileID: 2940532540047264769, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2940532540047264769, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2940532540047264769, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4324940019866252409, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 122.74
+      objectReference: {fileID: 0}
+    - target: {fileID: 4324940019866252409, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -0.01
+      objectReference: {fileID: 0}
+    - target: {fileID: 4324940019866252409, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4324940019866252409, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4324940019866252409, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4324940019866252409, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4324940019866252409, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4324940019866252409, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4324940019866252409, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4324940019866252409, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5599422941109445161, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6259433761653598219, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: cameraUI
+      value: 
+      objectReference: {fileID: 1178097188}
+    - target: {fileID: 6259433761653598219, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: flashImage
+      value: 
+      objectReference: {fileID: 777935908}
+    - target: {fileID: 6259433761653598219, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: questImage
+      value: 
+      objectReference: {fileID: 1949096134}
+    - target: {fileID: 6259433761653598219, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: centerReference
+      value: 
+      objectReference: {fileID: 971797207}
+    - target: {fileID: 6259433761653598219, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: photoQuestManager
+      value: 
+      objectReference: {fileID: 1573346322}
+    - target: {fileID: 6259433761653598219, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: photoCameraController
+      value: 
+      objectReference: {fileID: 2064792876}
+    - target: {fileID: 6303240642539519209, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: cameraUI
+      value: 
+      objectReference: {fileID: 1178097188}
+    - target: {fileID: 6303240642539519209, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: flashImage
+      value: 
+      objectReference: {fileID: 777935908}
+    - target: {fileID: 6303240642539519209, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: questImage
+      value: 
+      objectReference: {fileID: 1949096134}
+    - target: {fileID: 6303240642539519209, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: centerReference
+      value: 
+      objectReference: {fileID: 971797207}
+    - target: {fileID: 6303240642539519209, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: photoQuestManager
+      value: 
+      objectReference: {fileID: 1573346322}
+    - target: {fileID: 6303240642539519209, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: photoCameraController
+      value: 
+      objectReference: {fileID: 2064792876}
+    - target: {fileID: 6857190800762221963, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: cameraUI
+      value: 
+      objectReference: {fileID: 1178097188}
+    - target: {fileID: 6857190800762221963, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: flashImage
+      value: 
+      objectReference: {fileID: 777935908}
+    - target: {fileID: 6857190800762221963, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: questImage
+      value: 
+      objectReference: {fileID: 1949096134}
+    - target: {fileID: 6857190800762221963, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: centerReference
+      value: 
+      objectReference: {fileID: 971797207}
+    - target: {fileID: 6857190800762221963, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: photoQuestManager
+      value: 
+      objectReference: {fileID: 1573346322}
+    - target: {fileID: 6857190800762221963, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: photoCameraController
+      value: 
+      objectReference: {fileID: 2064792876}
+    - target: {fileID: 7316229345880258692, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: cameraUI
+      value: 
+      objectReference: {fileID: 1178097188}
+    - target: {fileID: 7316229345880258692, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: flashImage
+      value: 
+      objectReference: {fileID: 777935908}
+    - target: {fileID: 7316229345880258692, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: questImage
+      value: 
+      objectReference: {fileID: 1949096134}
+    - target: {fileID: 7316229345880258692, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: centerReference
+      value: 
+      objectReference: {fileID: 971797207}
+    - target: {fileID: 7316229345880258692, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: photoQuestManager
+      value: 
+      objectReference: {fileID: 1573346322}
+    - target: {fileID: 7316229345880258692, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: photoCameraController
+      value: 
+      objectReference: {fileID: 2064792876}
+    - target: {fileID: 7607276675810894102, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: cameraUI
+      value: 
+      objectReference: {fileID: 1178097188}
+    - target: {fileID: 7607276675810894102, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: flashImage
+      value: 
+      objectReference: {fileID: 777935908}
+    - target: {fileID: 7607276675810894102, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: questImage
+      value: 
+      objectReference: {fileID: 1949096134}
+    - target: {fileID: 7607276675810894102, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: centerReference
+      value: 
+      objectReference: {fileID: 971797207}
+    - target: {fileID: 7607276675810894102, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: photoQuestManager
+      value: 
+      objectReference: {fileID: 1573346322}
+    - target: {fileID: 7607276675810894102, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: photoCameraController
+      value: 
+      objectReference: {fileID: 2064792876}
+    - target: {fileID: 7959287915249228933, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: cameraUI
+      value: 
+      objectReference: {fileID: 1178097188}
+    - target: {fileID: 7959287915249228933, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: flashImage
+      value: 
+      objectReference: {fileID: 777935908}
+    - target: {fileID: 7959287915249228933, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: questImage
+      value: 
+      objectReference: {fileID: 1949096134}
+    - target: {fileID: 7959287915249228933, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: centerReference
+      value: 
+      objectReference: {fileID: 971797207}
+    - target: {fileID: 7959287915249228933, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: photoQuestManager
+      value: 
+      objectReference: {fileID: 1573346322}
+    - target: {fileID: 7959287915249228933, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+      propertyPath: photoCameraController
+      value: 
+      objectReference: {fileID: 2064792876}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+--- !u!1 &1911704911 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8673561018163759068, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+  m_PrefabInstance: {fileID: 59355292}
   m_PrefabAsset: {fileID: 0}
 --- !u!1 &1949096134
 GameObject:
@@ -2223,115 +2859,68 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!1001 &1967413552
-PrefabInstance:
+--- !u!1 &2018904882
+GameObject:
   m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2018904883}
+  m_Layer: 0
+  m_Name: DirPrefabRef_L
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2018904883
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2018904882}
   serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 406341865708487449, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: m_Name
-      value: ground (1)
-      objectReference: {fileID: 0}
-    - target: {fileID: 1129073981242599530, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 21300000, guid: 964730e3be295004db682863768e7e65, type: 3}
-    - target: {fileID: 4324940019866252409, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -120
-      objectReference: {fileID: 0}
-    - target: {fileID: 4324940019866252409, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4324940019866252409, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4324940019866252409, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4324940019866252409, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4324940019866252409, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4324940019866252409, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4324940019866252409, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4324940019866252409, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4324940019866252409, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6259433761653598219, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: flashImage
-      value: 
-      objectReference: {fileID: 777935908}
-    - target: {fileID: 6259433761653598219, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: photoQuestManager
-      value: 
-      objectReference: {fileID: 1573346322}
-    - target: {fileID: 6303240642539519209, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: flashImage
-      value: 
-      objectReference: {fileID: 777935908}
-    - target: {fileID: 6303240642539519209, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: photoQuestManager
-      value: 
-      objectReference: {fileID: 1573346322}
-    - target: {fileID: 6857190800762221963, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: flashImage
-      value: 
-      objectReference: {fileID: 777935908}
-    - target: {fileID: 6857190800762221963, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: photoQuestManager
-      value: 
-      objectReference: {fileID: 1573346322}
-    - target: {fileID: 7316229345880258692, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: flashImage
-      value: 
-      objectReference: {fileID: 777935908}
-    - target: {fileID: 7316229345880258692, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: photoQuestManager
-      value: 
-      objectReference: {fileID: 1573346322}
-    - target: {fileID: 7607276675810894102, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: flashImage
-      value: 
-      objectReference: {fileID: 777935908}
-    - target: {fileID: 7607276675810894102, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: photoQuestManager
-      value: 
-      objectReference: {fileID: 1573346322}
-    - target: {fileID: 7959287915249228933, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: flashImage
-      value: 
-      objectReference: {fileID: 777935908}
-    - target: {fileID: 7959287915249228933, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: photoQuestManager
-      value: 
-      objectReference: {fileID: 1573346322}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -7.2, y: 3.5, z: 10}
+  m_LocalScale: {x: 1.9999999, y: 1.9999999, z: 1.9999999}
+  m_ConstrainProportionsScale: 1
+  m_Children: []
+  m_Father: {fileID: 165002346}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2051626999
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2051627000}
+  m_Layer: 0
+  m_Name: DirPrefabRef_R
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2051627000
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2051626999}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 6.25, y: 3.5, z: 10}
+  m_LocalScale: {x: 2, y: 2, z: 2}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 165002346}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2064792871
 GameObject:
   m_ObjectHideFlags: 0
@@ -2420,11 +3009,12 @@ Transform:
   m_GameObject: {fileID: 2064792871}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: -10}
+  m_LocalPosition: {x: -53.42, y: 0, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1178097189}
+  - {fileID: 165002346}
   - {fileID: 1504712912}
   - {fileID: 1248153176}
   - {fileID: 971797207}
@@ -2453,7 +3043,7 @@ MonoBehaviour:
     m_Bits: 1
   m_VolumeTrigger: {fileID: 0}
   m_VolumeFrameworkUpdateModeOption: 2
-  m_RenderPostProcessing: 0
+  m_RenderPostProcessing: 1
   m_Antialiasing: 0
   m_AntialiasingQuality: 2
   m_StopNaN: 0
@@ -2486,11 +3076,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db70d81b8d014864e9f98f3d7abb9918, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ground1: {fileID: 1850996812}
-  ground2: {fileID: 215995652}
-  ground3: {fileID: 1168743320}
+  ground1: {fileID: 1462010677}
+  ground2: {fileID: 111888148}
+  ground3: {fileID: 369504709}
   panSpeed: 5
+  targetPosition: {x: 0, y: 0, z: 0}
   canPan: 0
+  canMove: 0
 --- !u!1 &2106659650
 GameObject:
   m_ObjectHideFlags: 0
@@ -2625,218 +3217,19 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2106659650}
   m_CullTransparentMesh: 1
---- !u!1001 &4162705369312396628
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 406341865708487449, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: m_Name
-      value: ground
-      objectReference: {fileID: 0}
-    - target: {fileID: 1129073981242599530, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 21300000, guid: 964730e3be295004db682863768e7e65, type: 3}
-    - target: {fileID: 4324940019866252409, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4324940019866252409, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4324940019866252409, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4324940019866252409, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 4324940019866252409, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4324940019866252409, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4324940019866252409, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4324940019866252409, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4324940019866252409, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4324940019866252409, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6259433761653598219, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: cameraUI
-      value: 
-      objectReference: {fileID: 1178097188}
-    - target: {fileID: 6259433761653598219, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: flashImage
-      value: 
-      objectReference: {fileID: 777935908}
-    - target: {fileID: 6259433761653598219, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: questImage
-      value: 
-      objectReference: {fileID: 1949096134}
-    - target: {fileID: 6259433761653598219, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: centerReference
-      value: 
-      objectReference: {fileID: 971797207}
-    - target: {fileID: 6259433761653598219, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: photoQuestManager
-      value: 
-      objectReference: {fileID: 1573346322}
-    - target: {fileID: 6259433761653598219, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: photoCameraController
-      value: 
-      objectReference: {fileID: 2064792876}
-    - target: {fileID: 6303240642539519209, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: cameraUI
-      value: 
-      objectReference: {fileID: 1178097188}
-    - target: {fileID: 6303240642539519209, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: flashImage
-      value: 
-      objectReference: {fileID: 777935908}
-    - target: {fileID: 6303240642539519209, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: questImage
-      value: 
-      objectReference: {fileID: 1949096134}
-    - target: {fileID: 6303240642539519209, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: centerReference
-      value: 
-      objectReference: {fileID: 971797207}
-    - target: {fileID: 6303240642539519209, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: photoQuestManager
-      value: 
-      objectReference: {fileID: 1573346322}
-    - target: {fileID: 6303240642539519209, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: photoCameraController
-      value: 
-      objectReference: {fileID: 2064792876}
-    - target: {fileID: 6857190800762221963, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: cameraUI
-      value: 
-      objectReference: {fileID: 1178097188}
-    - target: {fileID: 6857190800762221963, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: flashImage
-      value: 
-      objectReference: {fileID: 777935908}
-    - target: {fileID: 6857190800762221963, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: questImage
-      value: 
-      objectReference: {fileID: 1949096134}
-    - target: {fileID: 6857190800762221963, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: centerReference
-      value: 
-      objectReference: {fileID: 971797207}
-    - target: {fileID: 6857190800762221963, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: photoQuestManager
-      value: 
-      objectReference: {fileID: 1573346322}
-    - target: {fileID: 6857190800762221963, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: photoCameraController
-      value: 
-      objectReference: {fileID: 2064792876}
-    - target: {fileID: 7316229345880258692, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: cameraUI
-      value: 
-      objectReference: {fileID: 1178097188}
-    - target: {fileID: 7316229345880258692, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: flashImage
-      value: 
-      objectReference: {fileID: 777935908}
-    - target: {fileID: 7316229345880258692, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: questImage
-      value: 
-      objectReference: {fileID: 1949096134}
-    - target: {fileID: 7316229345880258692, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: centerReference
-      value: 
-      objectReference: {fileID: 971797207}
-    - target: {fileID: 7316229345880258692, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: photoQuestManager
-      value: 
-      objectReference: {fileID: 1573346322}
-    - target: {fileID: 7316229345880258692, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: photoCameraController
-      value: 
-      objectReference: {fileID: 2064792876}
-    - target: {fileID: 7607276675810894102, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: cameraUI
-      value: 
-      objectReference: {fileID: 1178097188}
-    - target: {fileID: 7607276675810894102, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: flashImage
-      value: 
-      objectReference: {fileID: 777935908}
-    - target: {fileID: 7607276675810894102, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: questImage
-      value: 
-      objectReference: {fileID: 1949096134}
-    - target: {fileID: 7607276675810894102, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: centerReference
-      value: 
-      objectReference: {fileID: 971797207}
-    - target: {fileID: 7607276675810894102, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: photoQuestManager
-      value: 
-      objectReference: {fileID: 1573346322}
-    - target: {fileID: 7607276675810894102, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: photoCameraController
-      value: 
-      objectReference: {fileID: 2064792876}
-    - target: {fileID: 7959287915249228933, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: cameraUI
-      value: 
-      objectReference: {fileID: 1178097188}
-    - target: {fileID: 7959287915249228933, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: flashImage
-      value: 
-      objectReference: {fileID: 777935908}
-    - target: {fileID: 7959287915249228933, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: questImage
-      value: 
-      objectReference: {fileID: 1949096134}
-    - target: {fileID: 7959287915249228933, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: centerReference
-      value: 
-      objectReference: {fileID: 971797207}
-    - target: {fileID: 7959287915249228933, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: photoQuestManager
-      value: 
-      objectReference: {fileID: 1573346322}
-    - target: {fileID: 7959287915249228933, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
-      propertyPath: photoCameraController
-      value: 
-      objectReference: {fileID: 2064792876}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+--- !u!1 &2129522343 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7151728337628133864, guid: d61627f25df312f49ad699bec70cc55a, type: 3}
+  m_PrefabInstance: {fileID: 59355292}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 2064792874}
   - {fileID: 1130491092}
-  - {fileID: 4162705369312396628}
-  - {fileID: 1967413552}
-  - {fileID: 971800950}
+  - {fileID: 288303392}
+  - {fileID: 59355292}
+  - {fileID: 1881098073}
   - {fileID: 1573346323}
+  - {fileID: 896663487}
