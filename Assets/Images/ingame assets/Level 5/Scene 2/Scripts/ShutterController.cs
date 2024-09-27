@@ -70,57 +70,28 @@ public class ShutterController : MonoBehaviour
     }
 
     IEnumerator TakePhoto()
-    {
-        photoCameraController.canMove = false;
-
-        Vector3 targetPosition = new Vector3(transform.position.x, photoCameraController.transform.position.y, photoCameraController.transform.position.z);
-
-        float panDuration = 1f;
-        float elapsedTime = 0f;
-        Vector3 initialCameraPosition = photoCameraController.transform.position;
-
-        while (elapsedTime < panDuration)
+    {        
+        photoCameraController.SetPanningEnabled(false);
+        
+        questImage.SetActive(false);
+       
+        foreach (var collider in colliders)
         {
-            elapsedTime += Time.deltaTime;
-            float t = Mathf.Clamp01(elapsedTime / panDuration);
-
-            photoCameraController.transform.position = new Vector3(
-                Mathf.Lerp(initialCameraPosition.x, targetPosition.x, t),
-                initialCameraPosition.y,
-                initialCameraPosition.z
-            );
-
-            yield return null;
+            collider.enabled = false;
         }
 
+        foreach (var collider in allAnimalColliders)
+        {
+            collider.enabled = false;
+        }
+
+        // Enable camera UI
         if (cameraUI != null)
         {
             cameraUI.SetActive(true);
         }
 
         yield return new WaitForSeconds(1f);
-
-        photoCameraController.SetPanningEnabled(false);
-
-        questImage.SetActive(false);
-
-        // Disable the collider of the tapped animal
-        foreach (var collider in colliders)
-        {
-            if (collider != null && collider.gameObject != null)
-            {
-                collider.enabled = false;
-            }
-        }
-
-        // Disable all animal colliders in the scene
-        foreach (var collider in allAnimalColliders)
-        {
-            if (collider != null && collider.gameObject != null)
-            {
-                collider.enabled = false;
-            }
-        }
 
         if (shutterSound != null)
         {
@@ -131,11 +102,11 @@ public class ShutterController : MonoBehaviour
         {
             flashImage.color = new Color(1, 1, 1, 1);
 
-            float elapsedTimeFlash = 0f;
-            while (elapsedTimeFlash < flashDuration)
+            float elapsedTime = 0f;
+            while (elapsedTime < flashDuration)
             {
-                elapsedTimeFlash += Time.deltaTime;
-                float alpha = Mathf.Lerp(1, 0, elapsedTimeFlash / flashDuration);
+                elapsedTime += Time.deltaTime;
+                float alpha = Mathf.Lerp(1, 0, elapsedTime / flashDuration);
                 flashImage.color = new Color(1, 1, 1, alpha);
                 yield return null;
             }
@@ -148,35 +119,33 @@ public class ShutterController : MonoBehaviour
         if (photoChild != null)
         {
             photoChild.gameObject.SetActive(true);
-
+            
             LeanTween.scale(photoChild.gameObject, originalScale * 1.5f, 1f).setEaseOutBack();
-
-            Vector3 photoTargetPosition = centerReference.position;
-            photoTargetPosition.z = photoChild.position.z;
-            LeanTween.move(photoChild.gameObject, photoTargetPosition, 1.5f).setEaseOutBack();
+            
+            Vector3 targetPosition = centerReference.position;
+            targetPosition.z = photoChild.position.z; 
+            LeanTween.move(photoChild.gameObject, targetPosition, 1.5f).setEaseOutBack();
         }
-
+        
         yield return new WaitForSeconds(3f);
-
+        
         bool isCorrectPhoto = ValidateCurrentPhoto();
-
-        // Validate the photo and handle colliders accordingly
+       
         photoQuestManager.ValidatePhoto(isCorrectPhoto, gameObject);
-
+        
         if (isCorrectPhoto)
         {
-            // Enable all remaining colliders and destroy the tapped animal
-            EnableAllColliders();
-            /*Destroy(gameObject);*/
+            EnableOtherColliders(gameObject); 
         }
         else
         {
-            // Keep the collider of the tapped animal disabled
-            EnableOtherColliders(gameObject);
+            EnableAllColliders(); 
         }
+        
+        /*questImage.SetActive(true);*/
+        
+        photoCameraController.SetPanningEnabled(true);
     }
-
-
 
 
     private bool ValidateCurrentPhoto()
@@ -187,13 +156,10 @@ public class ShutterController : MonoBehaviour
 
     // Enable all colliders in the scene
     private void EnableAllColliders()
-    {        
+    {
         foreach (var collider in allAnimalColliders)
         {
-            if (collider != null && collider.gameObject != null)
-            {
-                collider.enabled = true;
-            }               
+            collider.enabled = true;
         }
     }
 
@@ -202,14 +168,10 @@ public class ShutterController : MonoBehaviour
     {
         foreach (var collider in allAnimalColliders)
         {
-            if (collider != null && collider.gameObject != null)
+            if (collider.gameObject != tappedAnimal)
             {
-                if (collider.gameObject != tappedAnimal)
-                {
-                    collider.enabled = true; // Enable only colliders that are not the tapped animal
-                }
+                collider.enabled = true; // Enable only colliders that are not the tapped animal
             }
-                
         }
     }
 }

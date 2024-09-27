@@ -2,25 +2,25 @@ using UnityEngine;
 
 public class PhotoCameraController : MonoBehaviour
 {
-    public GameObject ground1;
-    public GameObject ground2;
-    public GameObject ground3;
-    public float panSpeed = 0.5f;
+    public GameObject ground1; 
+    public GameObject ground2; 
+    public GameObject ground3; 
+    public float panSpeed = 0.5f; 
 
-    private GameObject leftGround;
-    private GameObject centerGround;
-    private GameObject rightGround;
-    private float groundWidth;
+    private GameObject leftGround;    
+    private GameObject centerGround; 
+    private GameObject rightGround;  
+    private float groundWidth;       
 
-    public Vector3 targetPosition;
+    private Vector3 targetPosition;
     private Vector2 startTouchPosition;
     private Vector2 currentTouchPosition;
     private bool isSwiping = false;
     public bool canPan;
-    public bool canMove; 
 
     void Start()
     {
+        // Initialize the ground positions and calculate the width of one ground object
         leftGround = ground1;
         centerGround = ground2;
         rightGround = ground3;
@@ -28,20 +28,18 @@ public class PhotoCameraController : MonoBehaviour
         Renderer groundRenderer = ground1.GetComponent<Renderer>();
         groundWidth = groundRenderer.bounds.size.x;
 
+        // Position the ground objects at the start of the game
         leftGround.transform.position = new Vector3(-groundWidth, 0, 0);
         centerGround.transform.position = new Vector3(0, 0, 0);
         rightGround.transform.position = new Vector3(groundWidth, 0, 0);
 
+        // Initialize the camera target position
         targetPosition = transform.position;
         canPan = true;
-        canMove = true;
     }
 
     void Update()
     {
-        // Check if movement is allowed
-        if (!canMove) return;
-
         HandleSwipeInput();
         MoveCamera();
         HandleGroundCycling();
@@ -50,7 +48,7 @@ public class PhotoCameraController : MonoBehaviour
     // Function to handle swipe input
     void HandleSwipeInput()
     {
-        if (!canPan) return;
+        if (!canPan) return; // Do nothing if panning is disabled
 
         if (Input.touchCount > 0)
         {
@@ -58,22 +56,24 @@ public class PhotoCameraController : MonoBehaviour
 
             switch (touch.phase)
             {
-                case TouchPhase.Began:
+                case TouchPhase.Began: // Start of the swipe
+
                     startTouchPosition = touch.position;
                     isSwiping = true;
                     break;
 
-                case TouchPhase.Moved:
+                case TouchPhase.Moved: // Detect swipe and update the camera's target position
+
                     if (isSwiping)
                     {
                         currentTouchPosition = touch.position;
-                        float swipeDelta = startTouchPosition.x - currentTouchPosition.x;
-                        targetPosition.x += swipeDelta * panSpeed * Time.deltaTime;
-                        startTouchPosition = currentTouchPosition;
+                        float swipeDelta = startTouchPosition.x - currentTouchPosition.x;                        
+                        targetPosition.x += swipeDelta * panSpeed * Time.deltaTime; // Adjust target position based on swipe distance                       
+                        startTouchPosition = currentTouchPosition; // Update start touch position to the current position for smooth swiping
                     }
                     break;
 
-                case TouchPhase.Ended:
+                case TouchPhase.Ended:                    
                     isSwiping = false;
                     break;
             }
@@ -90,12 +90,12 @@ public class PhotoCameraController : MonoBehaviour
     void HandleGroundCycling()
     {
         Camera cam = Camera.main;
-        Vector3 cameraPosition = cam.transform.position;
-        float cameraHalfWidth = cam.orthographicSize * cam.aspect;
+        Vector3 cameraPosition = cam.transform.position;       
+        float cameraHalfWidth = cam.orthographicSize * cam.aspect;        
         if (cameraPosition.x + cameraHalfWidth > centerGround.transform.position.x + groundWidth / 2)
         {
             CycleGroundsRight();
-        }
+        }        
         if (cameraPosition.x - cameraHalfWidth < centerGround.transform.position.x - groundWidth / 2)
         {
             CycleGroundsLeft();
@@ -105,8 +105,9 @@ public class PhotoCameraController : MonoBehaviour
     // Function to cycle the grounds to the right
     void CycleGroundsRight()
     {
-        leftGround.transform.position = new Vector3(rightGround.transform.position.x + groundWidth, 0, 0);
-        GameObject temp = leftGround;
+        // Move the leftmost ground to the rightmost position
+        leftGround.transform.position = new Vector3(rightGround.transform.position.x + groundWidth, 0, 0);        
+        GameObject temp = leftGround;   // Reassign the ground references for the next cycle
         leftGround = centerGround;
         centerGround = rightGround;
         rightGround = temp;
@@ -115,8 +116,9 @@ public class PhotoCameraController : MonoBehaviour
     // Function to cycle the grounds to the left
     void CycleGroundsLeft()
     {
-        rightGround.transform.position = new Vector3(leftGround.transform.position.x - groundWidth, 0, 0);
-        GameObject temp = rightGround;
+        // Move the rightmost ground to the leftmost position
+        rightGround.transform.position = new Vector3(leftGround.transform.position.x - groundWidth, 0, 0);        
+        GameObject temp = rightGround;  // Reassign the ground references for the next cycle
         rightGround = centerGround;
         centerGround = leftGround;
         leftGround = temp;
@@ -127,9 +129,4 @@ public class PhotoCameraController : MonoBehaviour
         canPan = enabled;
     }
 
-    // Method to enable/disable camera movement
-    public void SetMovementEnabled(bool enabled)
-    {
-        canMove = enabled;
-    }
 }
