@@ -1,0 +1,91 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1000010277789090
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4000011350626534}
+  - component: {fileID: 114000013809963828}
+  - component: {fileID: 1644845445}
+  - component: {fileID: 1644845444}
+  m_Layer: 0
+  m_Name: ResolutionMagic
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4000011350626534
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1000010277789090}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &114000013809963828
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1000010277789090}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3b864cb4fd8a694297bfd19a97345b3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ZoomTo: 0
+  ExtraCameras: []
+  objectsToKeepOnScreen: []
+  dontZoomIn: 0
+  centreOn: {fileID: 0}
+  transformsToFocusOn: []
+  AlwaysVisibleBoundary: {fileID: 1644845445}
+  MaxAreaBoundary: {fileID: 1644845444}
+  centreOnAlwaysVisibleArea: 1
+  AutoRefresh: 1
+--- !u!114 &1644845445
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1000010277789090}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d14e7ccff36f74f4b94dbac92992f878, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: Always Displayed
+  LineSprite: {fileID: 2800000, guid: aab59237cfb709b4dbc08df025da31d5, type: 3}
+  lineColour: {r: 1, g: 0.748063, b: 0, a: 1}
+  topLeftPos: {x: -13.268915, y: 7.4378777}
+  bottomRightPos: {x: 10.441745, y: -5.786862}
+--- !u!114 &1644845444
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1000010277789090}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d14e7ccff36f74f4b94dbac92992f878, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Name: Max Bounds
+  LineSprite: {fileID: 2800000, guid: aab59237cfb709b4dbc08df025da31d5, type: 3}
+  lineColour: {r: 1, g: 0, b: 0.2281251, a: 1}
+  topLeftPos: {x: -14.99172, y: 9.204859}
+  bottomRightPos: {x: 16.007734, y: -10.778584}

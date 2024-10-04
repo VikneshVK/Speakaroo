@@ -1,0 +1,9 @@
+This scene is a very simple demo of how Resolution Magic 2D can be used in a side-scrolling game.
+
+In this scene, move the player left and right with the arrow keys. A simple camera follow script moves the camera to keep the player centred.
+
+The script moves the camera via the ResolutionManager script and tells it to only move the camera if it is 'safe' (i.e. if it does not show anything outside the maximum area set in the ResolutionMagic prefab).
+
+Walk the player to the right until they fall off the edge. You will see the camera will not move once it has reached the limit of what is set as displayable.
+
+This scene also includes the black bars prefab that can be turned on or off to see how it works.

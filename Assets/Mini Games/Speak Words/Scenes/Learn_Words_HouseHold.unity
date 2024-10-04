@@ -571,7 +571,7 @@ MonoBehaviour:
   progressBar: {fileID: 1874534995}
   totalItems: 0
   finishedItems: 0
-  swipeCooldown: 1.8
+  swipeCooldown: 3
   congratulationsAudioSource: {fileID: 2037492128}
   CongratulationsaudioClip:
   - {fileID: 8300000, guid: 06675c50acb9d4eb196d34a8e4158485, type: 3}
@@ -579,7 +579,19 @@ MonoBehaviour:
   - {fileID: 8300000, guid: b4c65d3fc7ef947c9a76e98d4bcf4613, type: 3}
   confettiLeft: {fileID: 8676064495659671253}
   confettiRight: {fileID: 1680201661}
-  sequenceDuration: 3
+  sequenceDuration: 0
+  balloonPrefab: {fileID: 5943555667091062890, guid: de9ade7089ef34393a369bfe8a7c6200, type: 3}
+  balloonSpawnPoint: {fileID: 1299263599}
+  balloonSpawnInterval: 0.5
+  balloonFallSpeed: 250
+  maxBalloonCount: 10
+  spawnedBalloonCount: 0
+  gameplayDuration: 20
+  confettiPrefab: {fileID: 2507985994617002729, guid: 55216d1f2871c0b42af53c2c4c76816f, type: 3}
+  isMiniGameActive: 0
+  graphicRaycaster: {fileID: 1706426914}
+  eventSystem: {fileID: 59997768}
+  confettiParent: {fileID: 756404675}
   miniSceneManager: {fileID: 924377509}
 --- !u!1 &504240096
 GameObject:
@@ -749,6 +761,50 @@ CanvasRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 569761588}
+  m_CullTransparentMesh: 1
+--- !u!1 &756404674
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 756404675}
+  - component: {fileID: 756404676}
+  m_Layer: 5
+  m_Name: Confetti_SpawnPoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &756404675
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 756404674}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1706426917}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 968.2338, y: -459.1169}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &756404676
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 756404674}
   m_CullTransparentMesh: 1
 --- !u!1 &883491382
 GameObject:
@@ -1044,7 +1100,7 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1258945542}
   m_CullTransparentMesh: 1
---- !u!1 &1297195913
+--- !u!1 &1299263598
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1052,29 +1108,33 @@ GameObject:
   m_PrefabAsset: {fileID: 0}
   serializedVersion: 6
   m_Component:
-  - component: {fileID: 1297195914}
-  m_Layer: 0
-  m_Name: BaloonSpawnPoint
+  - component: {fileID: 1299263599}
+  m_Layer: 5
+  m_Name: BalloonSpawnPoint
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &1297195914
-Transform:
+--- !u!224 &1299263599
+RectTransform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1297195913}
-  serializedVersion: 2
+  m_GameObject: {fileID: 1299263598}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 1068, y: 1100, z: 11.628372}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1706426917}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: 600}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1311721733
 GameObject:
   m_ObjectHideFlags: 0
@@ -6466,7 +6526,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1261242162691769517, guid: 5cc33678a45eebd4eb94af593e86f318, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3220799799381724627, guid: 5cc33678a45eebd4eb94af593e86f318, type: 3}
       propertyPath: m_Pivot.x
@@ -11535,6 +11595,8 @@ RectTransform:
   - {fileID: 376860514}
   - {fileID: 2072417229}
   - {fileID: 1620557538}
+  - {fileID: 1299263599}
+  - {fileID: 756404675}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -21612,6 +21674,5 @@ SceneRoots:
   - {fileID: 1210061860}
   - {fileID: 504240097}
   - {fileID: 2037492129}
-  - {fileID: 1297195914}
   - {fileID: 924377510}
   - {fileID: 1645409433}

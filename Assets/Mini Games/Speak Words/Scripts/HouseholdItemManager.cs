@@ -2,6 +2,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections;
+using UnityEngine.EventSystems;
+using System.Collections.Generic;
 
 public class HouseholdItemManager : MonoBehaviour
 {
@@ -36,7 +38,7 @@ public class HouseholdItemManager : MonoBehaviour
     //private float tapRange = 10f;
     //private bool isSwiping = false;
     public float swipeCooldown = 3f;
-    private float lastSwipeTime; 
+    private float lastSwipeTime;
 
     //congratulations
     private bool isCongratulating;
@@ -45,6 +47,22 @@ public class HouseholdItemManager : MonoBehaviour
     public GameObject confettiLeft;
     public GameObject confettiRight;
     public float sequenceDuration;
+
+    //Baloon Pop miniGame
+    public GameObject balloonPrefab;
+    public Transform balloonSpawnPoint;
+    public float balloonSpawnInterval = 0.5f;
+    public float balloonFallSpeed = 2f;
+    public int maxBalloonCount = 10;
+    public int spawnedBalloonCount;
+    public float gameplayDuration = 10f;  // Total duration for balloon gameplay
+    public GameObject confettiPrefab;
+    public bool isMiniGameActive;
+    public GraphicRaycaster graphicRaycaster;  // Reference to the GraphicRaycaster attached to your Canvas
+    public EventSystem eventSystem;
+
+
+    public Transform confettiParent;
 
     public Scene_Manager miniSceneManager;
 
@@ -66,25 +84,30 @@ public class HouseholdItemManager : MonoBehaviour
         initialPosition = itemImage.transform.position;
         totalItems = itemSprites.Length;
 
-        TotalWordCount.text = totalItems.ToString("/"+totalItems);
+        TotalWordCount.text = totalItems.ToString("/" + totalItems);
         // Initialize with the first item
         DisplayItem(currentIndex, false);
 
         //AlignTextToImage();
 
         lastSwipeTime = -swipeCooldown;
+
+        StartCoroutine(StartBalloonMiniGame());
     }
 
     void Update()
     {
-            DetectSwipe();
+        DetectSwipe();
 
-            // Check if the audio is finished and no animation is happening
-            if (!audioSource.isPlaying && !isAnimating && !rewardGiven[currentIndex])
-            {
-                RewardPlayer();
-                Debug.Log("Audio finished, enabling buttons");
-            }
+        // Check if the audio is finished and no animation is happening
+        if (!audioSource.isPlaying && !isAnimating && !rewardGiven[currentIndex])
+        {
+            RewardPlayer();
+            Debug.Log("Audio finished, enabling buttons");
+
+        }
+
+        CheckUIRaycastBalloonPop();
     }
     // Time in seconds to debounce swipe input
 
@@ -193,8 +216,8 @@ public class HouseholdItemManager : MonoBehaviour
                     isAnimating = false;  // Animation finished
                 });
             });
-        
-    }
+
+        }
         else
         {
             itemImage.sprite = itemSprites[index];
@@ -217,10 +240,11 @@ public class HouseholdItemManager : MonoBehaviour
             DisplayItem(currentIndex);
         }
 
-        if(currentIndex == itemSprites.Length-1 ||currentIndex == 13)
+        if (currentIndex == itemSprites.Length - 1 || currentIndex == 13)
         {
             Debug.Log("Mini game words finished");
-            StartCoroutine(miniGameEnd());
+            //StartCoroutine(miniGameEnd());
+
 
         }
     }
@@ -263,7 +287,7 @@ public class HouseholdItemManager : MonoBehaviour
                 StartCoroutine(PlayCongratulatorySequence());
             }
         }
-        }
+    }
 
 
     //Congratulations
@@ -299,41 +323,117 @@ public class HouseholdItemManager : MonoBehaviour
     }
 
 
-    //void SpawnBalloon()
-    //{
-    //    Vector3 spawnPosition = baloonSpawnPoint.position;
-    //    spawnPosition.y = Screen.height + 100; // Adjust spawn position if needed
-    //    GameObject balloon = Instantiate(balloonPrefab, spawnPosition, Quaternion.identity);
+    // --- Balloon Mini-Game Section ---
+    IEnumerator StartBalloonMiniGame()
+    {
+        isMiniGameActive = true;
+        Debug.Log("Starting balloon mini-game");
 
-    //    // Ensure BalloonInteraction script is set up
-    //    BalloonInteraction balloonInteraction = balloon.GetComponent<BalloonInteraction>();
-    //    if (balloonInteraction != null)
-    //    {
-    //        balloonInteraction.GetComponent<ParticleSystem>().Play(balloonInteraction.burstEffectPrefab); // Assign the burst effect
-    //    }
-    //    else
-    //    {
-    //        Debug.LogError("BalloonInteraction script is not found on the balloon prefab.");
-    //    }
+        // Spawn balloons for the set duration or max count
+        float endTime = Time.time + gameplayDuration;
 
-    //    // Set the velocity of the balloon
-    //    Rigidbody2D rb = balloon.GetComponent<Rigidbody2D>();
-    //    if (rb != null)
-    //    {
-    //        rb.velocity = new Vector2(0, -balloonSpeed);
-    //    }
-    //    else
-    //    {
-    //        Debug.LogError("Rigidbody2D component is not found on the balloon prefab.");
-    //    }
-    //}
+        while (Time.time < endTime && spawnedBalloonCount < maxBalloonCount)
+        {
+            SpawnBalloon();
+            spawnedBalloonCount++;
+            yield return new WaitForSeconds(balloonSpawnInterval);
+        }
+
+        // After game end, you can call the end method (e.g., load a new scene or display a result)
+        yield return new WaitForSeconds(gameplayDuration);
+        StartCoroutine(PlayCongratulatorySequence());
+    }
+
+    void SpawnBalloon()
+    {
+        // X-axis: Spawn randomly between 0 and 1080 (Canvas width)
+        float randomX = Random.Range(0, 1080);
+
+        // Y-axis: Spawn just above the canvas, say at Y = 600
+        Vector3 spawnPosition = new Vector3(randomX, 600, 0);
+
+        // Convert screen space to canvas space (this assumes Screen Space - Overlay canvas)
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(
+            (RectTransform)balloonSpawnPoint.parent, spawnPosition, null, out Vector2 localPoint);
+
+        // Instantiate balloon at the calculated position
+        GameObject balloon = Instantiate(balloonPrefab, balloonSpawnPoint);
+        balloon.GetComponent<RectTransform>().anchoredPosition = localPoint;
+
+        // Apply downward velocity for falling effect
+        Rigidbody2D rb = balloon.GetComponent<Rigidbody2D>();
+        rb.velocity = new Vector2(0, -balloonFallSpeed);  // Falls straight down
+
+        // Destroy balloon after 10 seconds (or when it exits the bottom of the screen)
+        Destroy(balloon, 10f);
+    }
+
+
+    // Raycast-based balloon popping
+    void CheckUIRaycastBalloonPop()
+    {
+        if (Input.GetMouseButtonDown(0))  // Mouse or touch input
+        {
+            // Create a PointerEventData instance for the current mouse/touch position
+            PointerEventData pointerData = new PointerEventData(eventSystem);
+            pointerData.position = Input.mousePosition;
+
+            // List to store the results of the raycast
+            List<RaycastResult> results = new List<RaycastResult>();
+
+            // Perform the UI raycast
+            graphicRaycaster.Raycast(pointerData, results);
+
+            // Loop through the raycast results to find any balloons
+            foreach (RaycastResult result in results)
+            {
+                if (result.gameObject.CompareTag("Balloon_MiniGame"))  // Check for the tag on UI element
+                {
+                    GameObject balloon = result.gameObject;
+                    PopBalloon(balloon);
+                    break;  // Stop after finding the first balloon
+                }
+            }
+        }
+    }
+
+    // Balloon pop logic
+    void PopBalloon(GameObject balloon)
+    {
+        StartCoroutine(PopBalloonRoutine(balloon));
+    }
+
+    IEnumerator PopBalloonRoutine(GameObject balloon)
+    {
+        // Scale down animation (using LeanTween or other tween engine)
+        LeanTween.scale(balloon, Vector3.zero, 0.3f).setEaseInBack();
+
+        // Wait for the animation to finish
+        yield return new WaitForSeconds(0.3f);
+
+        // Get the balloon's position in canvas space
+        Vector3 balloonScreenPos = RectTransformUtility.WorldToScreenPoint(Camera.main, balloon.transform.position);
+        Vector3 confettiWorldPos;
+        RectTransformUtility.ScreenPointToWorldPointInRectangle((RectTransform)confettiParent, balloonScreenPos, Camera.main, out confettiWorldPos);
+
+        // Spawn confetti at the balloon's position in canvas space
+        GameObject confetti = Instantiate(confettiPrefab, confettiWorldPos, Quaternion.identity, confettiParent);
+        confetti.GetComponent<ParticleSystem>().Play();
+
+        // Destroy the balloon object
+        Destroy(balloon);
+
+        // Destroy confetti after it plays
+        Destroy(confetti, 2f);
+    }
+
 
     IEnumerator miniGameEnd()
-    {
-        yield return new WaitForSeconds(2f);
-        StartCoroutine(PlayCongratulatorySequence());
-        yield return new WaitForSeconds(5.5f);
-        miniSceneManager.LoadLevel("New_Level-Select");
-    }
+        {
+            yield return new WaitForSeconds(2f);
+            StartCoroutine(PlayCongratulatorySequence());
+            yield return new WaitForSeconds(5.5f);
+            miniSceneManager.LoadLevel("New_Level-Select");
+        }
 
 }
