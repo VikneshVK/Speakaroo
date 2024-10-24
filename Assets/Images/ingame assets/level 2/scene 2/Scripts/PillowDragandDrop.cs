@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using TMPro;
 
 public class PillowDragAndDrop : MonoBehaviour
 {
@@ -9,9 +10,14 @@ public class PillowDragAndDrop : MonoBehaviour
     public GameObject bedsheet;
     public float offsetValue = 2f;
     public HelperHandController helperHandController; // Reference to the HelperHandController
+    public GameObject Boy;
+    public GameObject Kiki;
+    public TextMeshProUGUI subtitleText;
     public bool HasInteracted { get; private set; } = false;
 
     private bool isDragging = false;
+    private Animator boyAnimator;
+    private Animator kikiAnimator;
     private Vector3 startPosition;
     private Vector3 offset;
     private int originalSortingOrder;
@@ -24,11 +30,17 @@ public class PillowDragAndDrop : MonoBehaviour
     private AudioClip positiveAudio2;
     private AudioClip negativeAudio;
 
+    // New audio clips for pillow types
+    private AudioClip audioClipBigPillow;
+    private AudioClip audioClipSmallPillow;
+
     void Start()
     {
         startPosition = transform.position;
         GetComponent<Collider2D>().enabled = false;
         droppedPillowsCount = 0;
+        boyAnimator = Boy.GetComponent<Animator>();
+        kikiAnimator = Kiki.GetComponent<Animator>();
         if (dust != null)
         {
             dust.SetActive(false);
@@ -53,6 +65,9 @@ public class PillowDragAndDrop : MonoBehaviour
         positiveAudio2 = Resources.Load<AudioClip>("Audio/FeedbackAudio/Audio2");
         negativeAudio = Resources.Load<AudioClip>("Audio/FeedbackAudio/Audio3");
 
+        audioClipBigPillow = Resources.Load<AudioClip>("Audio/Helper Audio/BigPillowAudio");
+        audioClipSmallPillow = Resources.Load<AudioClip>("Audio/Helper Audio/SmallPillowAudio");
+
         // Find the audio source with the tag "FeedbackAudio"
         GameObject audioObject = GameObject.FindGameObjectWithTag("FeedbackAudio");
         if (audioObject != null)
@@ -72,8 +87,8 @@ public class PillowDragAndDrop : MonoBehaviour
             Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             transform.position = mousePosition + offset;
 
-            // If the player is interacting, stop the helper hand
-            helperHandController.StopHelperHand();
+            /*// If the player is interacting, stop the helper hand
+            helperHandController.StopHelperHand();*/
         }
     }
 
@@ -110,30 +125,41 @@ public class PillowDragAndDrop : MonoBehaviour
 
             if (Vector3.Distance(transform.position, targetPosition.position) < offsetValue)
             {
-                // Play a random positive audio clip only if droppedPillowsCount is less than 4
-                if (droppedPillowsCount < 4)
-                {
-                    PlayPositiveFeedbackAudio();
-                }
-
                 // Tween to the target position
                 LeanTween.move(gameObject, targetPosition.position, 0.5f).setOnComplete(() =>
                 {
                     transform.rotation = Quaternion.identity;
                     GetComponent<Collider2D>().enabled = false;
                     HasInteracted = true;
-                    EnableNextCollider();
+
                     ActivateDust();
                     UpdateBedsheetSprite();
                     targetPosition.gameObject.SetActive(false);
 
                     // Increment the droppedPillowsCount
                     droppedPillowsCount++;
+                    Debug.Log("droppedpillows count: " + droppedPillowsCount);
+                    // Call the coroutine to handle animation and audio with a delay
+                    StartCoroutine(HandlePillowAnimationAndAudio());
                 });
+
+                if (droppedPillowsCount < 3) // Only play audio for the first three pillows
+                {
+                    boyAnimator.SetTrigger("rightDrop");
+                    kikiAnimator.SetTrigger("rightDrop");
+                    PlayPositiveFeedbackAudio();
+                }
+               /* else
+                {
+                    boyAnimator.SetTrigger("rightDrop");
+                    kikiAnimator.SetTrigger("rightDrop");
+                }*/
             }
             else
             {
-                // Play the negative audio clip only if droppedPillowsCount is less than 4
+                boyAnimator.SetTrigger("wrongDrop");
+                kikiAnimator.SetTrigger("wrongDrop");
+
                 if (droppedPillowsCount < 4)
                 {
                     PlayNegativeFeedbackAudio();
@@ -152,6 +178,43 @@ public class PillowDragAndDrop : MonoBehaviour
             }
         }
     }
+
+    private IEnumerator HandlePillowAnimationAndAudio()
+    {
+        // Wait for 1 second before triggering animations and audio
+        yield return new WaitForSeconds(2f);
+
+        if (droppedPillowsCount < 4)
+        {
+            EnableNextCollider();
+
+            if (nextCollider != null && nextCollider.enabled)
+            {
+                var nextPillow = nextCollider.GetComponent<PillowDragAndDrop>();
+
+                if (nextPillow != null)
+                {
+
+                    if (nextPillow.IsBigPillow())
+                    {
+                        // Trigger BigPillow animation and play big pillow audio
+                        kikiAnimator.SetTrigger("BigPillow");
+                        helperHandController.GetComponent<AudioSource>().PlayOneShot(audioClipBigPillow);
+                        StartCoroutine(RevealTextWordByWord("Put the Big Pillow at the Back", 0.5f));
+                    }
+                    else
+                    {
+                        // Trigger SmallPillow animation and play small pillow audio
+                        kikiAnimator.SetTrigger("smallPillow");
+                        helperHandController.GetComponent<AudioSource>().PlayOneShot(audioClipSmallPillow);
+                        StartCoroutine(RevealTextWordByWord("Put the Small Pillow at the front of the big Pillow", 0.3f));
+                    }
+
+                    helperHandController.ScheduleNextPillow(nextPillow);
+                }
+            }
+        }
+     }
 
     private IEnumerator DelayedScheduleHelperHand()
     {
@@ -186,17 +249,16 @@ public class PillowDragAndDrop : MonoBehaviour
         return gameObject.name.Contains("Big");
     }
 
-    // Helper method to check if the corresponding big pillow has been interacted with
     private bool CorrespondingBigPillowInteracted()
     {
         if (gameObject.name.Contains("Small Left"))
         {
-            var bigPillowLeft = FindObjectOfType<boyController>().pillowBigLeft.GetComponent<PillowDragAndDrop>();
+            var bigPillowLeft = FindObjectOfType<boyController1>().pillowBigLeft.GetComponent<PillowDragAndDrop>();
             return bigPillowLeft != null && bigPillowLeft.HasInteracted;
         }
         else if (gameObject.name.Contains("Small Right"))
         {
-            var bigPillowRight = FindObjectOfType<boyController>().pillowBigRight.GetComponent<PillowDragAndDrop>();
+            var bigPillowRight = FindObjectOfType<boyController1>().pillowBigRight.GetComponent<PillowDragAndDrop>();
             return bigPillowRight != null && bigPillowRight.HasInteracted;
         }
         return false;
@@ -204,15 +266,24 @@ public class PillowDragAndDrop : MonoBehaviour
 
     private void EnableNextCollider()
     {
+        // Disable all other pillow colliders
+        DisableOtherPillowColliders();
+
         if (nextCollider != null)
         {
-            nextCollider.enabled = true;
-            var nextPillow = nextCollider.GetComponent<PillowDragAndDrop>();
+            nextCollider.enabled = true;            
+        }
+    }
 
-            if (nextPillow != null)
+    private void DisableOtherPillowColliders()
+    {
+        PillowDragAndDrop[] allPillows = FindObjectsOfType<PillowDragAndDrop>();
+
+        foreach (PillowDragAndDrop pillow in allPillows)
+        {
+            if (pillow != this && pillow.GetComponent<Collider2D>() != nextCollider)
             {
-                // Schedule the helper hand for the next pillow
-                helperHandController.ScheduleNextPillow(nextPillow);
+                pillow.GetComponent<Collider2D>().enabled = false;
             }
         }
     }
@@ -242,7 +313,6 @@ public class PillowDragAndDrop : MonoBehaviour
     {
         if (bedsheet != null)
         {
-            // Change the bedsheet sprite based on the number of dropped pillows
             string spriteName = "";
 
             switch (droppedPillowsCount)
@@ -257,7 +327,7 @@ public class PillowDragAndDrop : MonoBehaviour
                     spriteName = "bedsheet1";
                     break;
                 case 3:
-                    spriteName = "bedsheet"; // Final sprite when all pillows are dropped
+                    spriteName = "bedsheet";
                     break;
             }
 
@@ -294,5 +364,21 @@ public class PillowDragAndDrop : MonoBehaviour
             feedbackAudioSource.clip = negativeAudio;
             feedbackAudioSource.Play();
         }
+    }
+    private IEnumerator RevealTextWordByWord(string fullText, float delayBetweenWords)
+    {
+        subtitleText.text = "";  // Clear the text before starting
+        subtitleText.gameObject.SetActive(true);  // Ensure the subtitle text is active
+
+        string[] words = fullText.Split(' ');  // Split the full text into individual words
+
+        // Reveal words one by one
+        for (int i = 0; i < words.Length; i++)
+        {
+            // Instead of appending, build the text up to the current word
+            subtitleText.text = string.Join(" ", words, 0, i + 1);  // Show only the words up to the current index
+            yield return new WaitForSeconds(delayBetweenWords);  // Wait before revealing the next word
+        }
+        subtitleText.gameObject.SetActive(false);
     }
 }

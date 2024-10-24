@@ -14,8 +14,11 @@ public class PhotoQuestManager : MonoBehaviour
 
     public List<GameObject> animals = new List<GameObject>(); // List of 6 unique animal GameObjects
 
+    public PhotoCameraController photoCameraController;
+    public LVL5Sc2HelperController helperController;
+
     private Dictionary<GameObject, Sprite> photoSprites = new Dictionary<GameObject, Sprite>(); // Cache of animal photo sprites
-    private int currentAnimalIndex = 0; // Index of the current animal to take a photo of
+    public int currentAnimalIndex = 0; // Index of the current animal to take a photo of
     private bool validationSuccess = false; // To track validation result
 
     void Start()
@@ -85,71 +88,121 @@ public class PhotoQuestManager : MonoBehaviour
             return; // All animals are done
         }
 
-        // Assuming each animal has a black and white image attached to it
-        GameObject currentAnimal = animals[currentAnimalIndex];
-        questImage.GetComponent<Image>().sprite = photoSprites[currentAnimal]; // Set the cached black and white sprite
-        questText.text = "Take a photo of " + currentAnimal.name; // Update quest text
+        Image albumSlotImage = albumSlots[currentAnimalIndex].GetComponentInChildren<Image>();
+        questImage.GetComponent<Image>().sprite = albumSlotImage.sprite;
+        questText.text = "Take a photo of " + animals[currentAnimalIndex].name;
     }
 
-    // Coroutine to handle the correct photo sequence
     IEnumerator HandleCorrectPhotoSequence(GameObject tappedAnimal)
     {
-        /* // Wait until the bird's "right talk" animation is finished
-         yield return new WaitUntil(() => birdAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1);*/
         yield return new WaitForSeconds(1f);
-        // Find the "- Photo" child of the tapped animal
-        GameObject photoChild = tappedAnimal.transform.Find(tappedAnimal.name + " - Photo").gameObject;
+
+        GameObject photoChild = tappedAnimal.transform.Find(tappedAnimal.name + " - Photo")?.gameObject;
 
         if (photoChild != null)
         {
             photoChild.SetActive(false); // Deactivate the photoChild after animation
         }
 
-        // Now open the photo album panel
         LeanTween.scale(photoAlbumPanel, new Vector3(0.9f, 0.9f, 0.9f), 1.5f).setEaseOutBack();
-
-        // Wait for the album panel tween to complete
         yield return new WaitForSeconds(2f);
 
-        // Update the album slot with the correct animal's photo and text
         GameObject currentAnimal = animals[currentAnimalIndex];
         Sprite photoSprite = photoSprites[currentAnimal];
         string animalName = currentAnimal.name;
 
-        // Find the corresponding album slot
-        Image albumImage = albumSlots[currentAnimalIndex].GetComponentInChildren<Image>(); // Get the Image component in the album slot
-        TextMeshProUGUI albumText = albumSlots[currentAnimalIndex].GetComponentInChildren<TextMeshProUGUI>(); // Get the TMP text component in the album slot
+        Image albumImage = albumSlots[currentAnimalIndex].GetComponentInChildren<Image>();
+        TextMeshProUGUI albumText = albumSlots[currentAnimalIndex].GetComponentInChildren<TextMeshProUGUI>();
 
-        // Update the image and text
-        albumImage.sprite = photoSprite; // Set the photo sprite
-        albumText.text = animalName; // Set the animal's name
+        albumImage.sprite = photoSprite;
+        albumText.text = animalName;
 
-        // Wait for a bit before scaling back down
         yield return new WaitForSeconds(2f);
 
-        // Tween the photo album panel's scale down to 0
         LeanTween.scale(photoAlbumPanel, Vector3.zero, 1.5f).setEaseInBack();
 
-        questImage.SetActive(true);
+        // Destroy the tapped animal and its instances across grounds
+        DestroyTappedAnimalAcrossGrounds(tappedAnimal.name);
 
-        // Move on to the next animal
+        // Reactivate all remaining animal colliders
+        foreach (GameObject animal in animals)
+        {
+            if (animal != null && animal != tappedAnimal)
+            {
+                Collider2D collider = animal.GetComponent<Collider2D>();
+                if (collider != null) collider.enabled = true;
+            }
+        }
+
+        questImage.SetActive(true);
+        photoCameraController.canMove = true;
+        photoCameraController.SetPanningEnabled(true);
+
         currentAnimalIndex++;
         SetNextAnimalQuest();
+
+        if (helperController != null)
+        {
+            helperController.OnValidationSuccess();
+        }
     }
 
-    // Coroutine to handle the incorrect photo sequence
     IEnumerator HandleIncorrectPhotoSequence(GameObject tappedAnimal)
     {
-        // Wait until the bird's "wrong talk" animation is finished
-        yield return new WaitUntil(() => birdAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1);
+        yield return new WaitForSeconds(1f);
 
-        // Find the "- Photo" child of the tapped animal, and deactivate it
-        GameObject photoChild = tappedAnimal.transform.Find(tappedAnimal.name + " - Photo").gameObject;
+        GameObject photoChild = tappedAnimal.transform.Find(tappedAnimal.name + " - Photo")?.gameObject;
+
+        // Deactivate the collider of the tapped animal to prevent further interactions
+        foreach (GameObject animal in animals)
+        {
+            if (animal != null && animal != tappedAnimal)
+            {
+                Collider2D collider = animal.GetComponent<Collider2D>();
+                if (collider != null) collider.enabled = true;
+            }
+        }
+
+        questImage.SetActive(true);
+        photoCameraController.canMove = true;
+        photoCameraController.SetPanningEnabled(true);
 
         if (photoChild != null)
         {
             photoChild.SetActive(false); // Deactivate the photoChild after animation
         }
+    }
+
+    void DestroyTappedAnimalAcrossGrounds(string animalName)
+    {
+        // Get all ground objects from the PhotoCameraController
+        GameObject[] grounds = { photoCameraController.ground1, photoCameraController.ground2, photoCameraController.ground3 };
+
+        foreach (GameObject ground in grounds)
+        {
+            // Find the "Animals" container within each ground
+            Transform animalsContainer = ground.transform.Find("Animals");
+
+            if (animalsContainer != null)
+            {
+                // Search for the specific animal within the "Animals" container
+                Transform animalTransform = animalsContainer.Find(animalName);
+
+                if (animalTransform != null)
+                {
+                    Destroy(animalTransform.gameObject);
+                }
+            }
+        }
+    }
+
+    public Vector3 GetCurrentAnimalPosition()
+    {
+        if (currentAnimalIndex < animals.Count && animals[currentAnimalIndex] != null)
+        {
+            return animals[currentAnimalIndex].transform.position;
+        }
+        return Vector3.zero; // Return a default value if index is out of bounds or animal is null
     }
 
     public void ValidatePhoto(bool isCorrectPhoto, GameObject tappedAnimal)
@@ -164,7 +217,7 @@ public class PhotoQuestManager : MonoBehaviour
         {
             validationSuccess = false;
             birdAnimator.SetTrigger("wrongTalk");
-            StartCoroutine(HandleIncorrectPhotoSequence(tappedAnimal)); // Pass the tapped animal here
+            StartCoroutine(HandleIncorrectPhotoSequence(tappedAnimal));
         }
     }
 }

@@ -16,13 +16,17 @@ public class DragAndDropController : MonoBehaviour
     public GameObject Boy;
     public GameObject BoyCharacter;
     public Transform speechBubbleContainer;
+    public GameObject bird;
 
     public float dropOffset;
     public float blinkCount;
     public float blinkDuration;
 
+    /*private SpriteRenderer boySpriteRender;*/
     private Animator boyAnimator;
+    private Animator birdAnimator;
     private Animator animator;
+    private InteractableObject interactableObject;
     private bool isDragging = false;
     private Vector3 offset;
     private Dictionary<GameObject, bool> interactionStatus = new Dictionary<GameObject, bool>();
@@ -43,12 +47,13 @@ public class DragAndDropController : MonoBehaviour
         interactionStatus.Add(miniWhale, false);
         interactionStatus.Add(miniBuilding, false);
         originalPosition = transform.position;
-
+        interactableObject = GetComponent<InteractableObject>();
         // Disable colliders for the start, only enable for the first interactable
         miniWhale.GetComponent<Collider2D>().enabled = false;
         miniBuilding.GetComponent<Collider2D>().enabled = false;
         objectRenderer = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
+        birdAnimator = bird.GetComponent<Animator>();
 
         // Load audio clips from Resources
         positiveAudio1 = Resources.Load<AudioClip>("Audio/FeedbackAudio/Audio1");
@@ -81,6 +86,7 @@ public class DragAndDropController : MonoBehaviour
                 HelpPointerManager.IsAnyObjectBeingInteracted = true;
                 HelpPointerManager.Instance.StopHelpPointer(); // Stop the help pointer
                 offset = transform.position - mousePosition;
+                interactableObject.OnInteract();
             }
         }
 
@@ -107,7 +113,9 @@ public class DragAndDropController : MonoBehaviour
     {
         if (IsCorrectDropZone())
         {
+            /*boySpriteRender.flipX = false;*/
             boyAnimator.SetTrigger("isRightDrop");
+            birdAnimator.SetTrigger("RightDrop");
             parentController.PlayAudioByIndex(1);
 
             // Play a random positive audio clip
@@ -130,11 +138,14 @@ public class DragAndDropController : MonoBehaviour
 
                 EnableMiniatureCollider();
                 MarkAsInteracted(gameObject);
+                /*boySpriteRender.flipX = true;*/
             });
         }
         else
         {
-            
+            /*boySpriteRender.flipX = false;*/
+            boyAnimator.SetTrigger("isWrongDrop");
+            birdAnimator.SetTrigger("wrongDrop");
             // Play the negative audio clip
             PlayNegativeFeedbackAudio();
 
@@ -142,6 +153,7 @@ public class DragAndDropController : MonoBehaviour
             ResetInteractionStatus();
 
             ResetObjectPosition();
+            
         }
     }
 
@@ -194,7 +206,7 @@ public class DragAndDropController : MonoBehaviour
     {
         // Wait until the audio has finished playing
         yield return new WaitUntil(() => !feedbackAudioSource.isPlaying);
-        yield return new WaitForSeconds(2.7f);
+        yield return new WaitForSeconds(3.5f);
 
         // Instantiate the speech bubble prefab
         InstantiateSpeechBubble();
@@ -236,7 +248,7 @@ public class DragAndDropController : MonoBehaviour
         return Vector3.Distance(transform.position, correctDropZoneObject.transform.position) <= dropOffset;
     }
 
-    public Vector3 GetDropLocation()
+    public Vector3 GetDropLocation2()
     {
         return correctDropZoneObject.transform.position;
     }
@@ -259,8 +271,10 @@ public class DragAndDropController : MonoBehaviour
             objectRenderer.material.color = originalColor;
             yield return new WaitForSeconds(blinkDuration);
         }
-        
+
         transform.position = originalPosition;
         transform.rotation = originalRotation;
     }
+
+    
 }

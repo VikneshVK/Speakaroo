@@ -37,6 +37,7 @@ public class TapControl : MonoBehaviour
             if (isFirstTime)
             {
                 tapCollider.enabled = false;
+                hoseCollider.enabled=true;
                 StartCoroutine(PlayWaterEffectForDuration());
                 
                 // Reset the helper hand after the tap is interacted with

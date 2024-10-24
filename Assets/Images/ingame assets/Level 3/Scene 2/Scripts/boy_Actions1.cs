@@ -19,6 +19,7 @@ public class boy_Actions1 : MonoBehaviour
     private TapControl tapControl;
     private AudioSource jojoAudiosource;
     private Collider2D hoseCollider;
+    private Collider2D pipeCollider;
     private bool isWalking ;
     private bool isIdleCompleted;
     private bool canTalk;
@@ -33,6 +34,7 @@ public class boy_Actions1 : MonoBehaviour
         tapControl = pipe.GetComponent<TapControl>();
         jojoAudiosource = GetComponent<AudioSource>();
         hoseCollider = Hose.GetComponent<Collider2D>();
+        pipeCollider = pipe.GetComponent<Collider2D>();
 
         normalRig.SetActive(true);
         walkRig.SetActive(false);
@@ -95,6 +97,7 @@ public class boy_Actions1 : MonoBehaviour
             normalAnimator.SetTrigger("canTalk");
             jojoAudiosource.Play();
             hoseCollider.enabled = true;
+            /*pipeCollider.enabled = true;   */ 
         }
     }
     private void OnParticleCollision(GameObject other)

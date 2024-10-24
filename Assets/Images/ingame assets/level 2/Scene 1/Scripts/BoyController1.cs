@@ -1,12 +1,12 @@
-using System;
+using System.Collections;
+using TMPro;
 using UnityEngine;
 
 public class BoyController1 : MonoBehaviour
 {
     public Transform stopPosition;
     public float walkSpeed = 2f;
-    public GameObject FrontView;
-    public GameObject SideView;
+
     public GameObject Bird;
     public GameObject Bus;
     public GameObject Whale;
@@ -14,9 +14,10 @@ public class BoyController1 : MonoBehaviour
     public AudioSource jojoAudio;
     public AudioSource kikiAudio; //temp addition,please change later
     public AudioClip[] audioClips; // Array to hold the audio clips
+    public TextMeshProUGUI subtitleText;
 
-    private Animator frontViewAnimator;
-    private Animator sideViewAnimator;
+    private Animator boyAnimator;
+    private SpriteRenderer boyspriteRenderer;
     private Animator birdAnimator;
     private bool isWalking = false;
     private bool isIdleCompleted = false;
@@ -32,14 +33,12 @@ public class BoyController1 : MonoBehaviour
     void Start()
     {
         // Initialize animators for front and side views
-        frontViewAnimator = FrontView.GetComponent<Animator>();
-        sideViewAnimator = SideView.GetComponent<Animator>();
+        boyAnimator = GetComponent<Animator>();
+        boyspriteRenderer = GetComponent<SpriteRenderer>();
         birdAnimator = Bird.GetComponent<Animator>();
         jojoAudio = GetComponent<AudioSource>();
 
-        // Ensure the front view is active and the side view is inactive at the start
-        FrontView.SetActive(true);
-        SideView.SetActive(false);
+
 
         if (stopPosition == null)
         {
@@ -59,17 +58,13 @@ public class BoyController1 : MonoBehaviour
     private void HandleIdleCompletion()
     {
         // Check if the idle animation on the front view is complete
-        if (!isIdleCompleted && frontViewAnimator.GetCurrentAnimatorStateInfo(0).IsName("Idle") &&
-            frontViewAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
+        if (!isIdleCompleted && boyAnimator.GetCurrentAnimatorStateInfo(0).IsName("Idle") &&
+            boyAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
         {
             isIdleCompleted = true;
 
-            // Switch to the side view for walking
-            FrontView.SetActive(false);
-            SideView.SetActive(true);
-
-            // Enable walking animation on the side view
-            sideViewAnimator.SetTrigger("canWalk");
+            
+            boyAnimator.SetBool("isWalking", true);
             isWalking = true;
 
             Debug.Log("Idle complete, switching to side view for walking.");
@@ -80,6 +75,7 @@ public class BoyController1 : MonoBehaviour
     {
         if (isWalking && !isWalkCompleted)
         {
+            boyspriteRenderer.flipX = true;
             WalkToStopPosition();
         }
     }
@@ -88,7 +84,6 @@ public class BoyController1 : MonoBehaviour
     {
         if (stopPosition != null)
         {
-            // Move the Boy Character towards the stop position
             Vector3 targetPosition = new Vector3(stopPosition.position.x, transform.position.y, transform.position.z);
             transform.position = Vector3.MoveTowards(transform.position, targetPosition, walkSpeed * Time.deltaTime);
 
@@ -97,39 +92,50 @@ public class BoyController1 : MonoBehaviour
             {
                 isWalking = false;
                 isWalkCompleted = true;
-                sideViewAnimator.SetTrigger("StopWalk");
-                // Switch back to the front view
-                SideView.SetActive(false);
-                FrontView.SetActive(true);
-                frontViewAnimator.SetTrigger("CanTalk");
-                PlayAudioByIndex(0);
-                Debug.Log("Walking complete, switching back to front view.");
-                
-
+                boyspriteRenderer.flipX = false;
+                boyAnimator.SetBool("isWalking", false);
+                StartCoroutine(DelayBeforeCanTalk());// Start coroutine to delay the "canTalk" animation                
             }
+        }
+    }
+
+    private IEnumerator DelayBeforeCanTalk()
+    {
+        yield return new WaitForSeconds(0.3f);  // Wait for 1 second
+        /*boyspriteRenderer.flipX = false;*/
+        boyAnimator.SetBool("canTalk", true);  // Enable the "canTalk" animation after the delay
+        PlayAudioByIndex(0);
+        Debug.Log("Walking complete, switching back to front view.");
+        if (subtitleText != null)
+        {
+            StartCoroutine(RevealTextWordByWord("Oh No..!, My Room is So Messy", 0.5f));  // Word by word reveal with 0.5s delay
         }
     }
 
     private void HandleTalking()
     {
-        
 
-        if (isWalkCompleted && !isTalking && frontViewAnimator.GetCurrentAnimatorStateInfo(0).IsName("Dialouge 1") &&
-            frontViewAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.9f)
+
+        if (isWalkCompleted && !isTalking && boyAnimator.GetCurrentAnimatorStateInfo(0).IsName("Dialouge1") &&
+            boyAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.9f)
         {
+            
+            boyAnimator.SetBool("canTalk", false);
             isTalking = true;
             birdAnimator.SetBool("can talk", true);
             PlayAudioByIndex(3); //added temp, change after
+            StartCoroutine(RevealTextWordByWord("Put the Toys on the Shelf", 0.5f));
+            boyspriteRenderer.flipX = true;
         }
     }
 
     private void HandleCollidersEnabling()
     {
         if (isTalking && !collidersEnabled && birdAnimator.GetCurrentAnimatorStateInfo(0).IsName("Bird Talk") &&
-            birdAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f)
+            birdAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.9f)
         {
             EnableColliders();
-            birdAnimator.SetBool("talkCompleted", true);
+            birdAnimator.SetBool("TalkCompleted", true);
             collidersEnabled = true;
         }
     }
@@ -154,29 +160,31 @@ public class BoyController1 : MonoBehaviour
 
     private void HandleFinalTalkAndReturn()
     {
-        
+
 
         if (birdAnimator.GetCurrentAnimatorStateInfo(0).IsName("bird talk_") &&
-            birdAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
+            birdAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.9f)
         {
             if (!hasFinalAudioPlayed)
             {
-                frontViewAnimator.SetTrigger("cleaningComplete");
+                boyAnimator.SetTrigger("CleaningComplete");
                 PlayAudioByIndex(2);  // Play audio
+                if (subtitleText != null)
+                {
+                    StartCoroutine(RevealTextWordByWord("Wow.! My Room Looks so Clean. Thankyou Kiki and Friend", 0.5f));  // Word by word reveal with 0.5s delay
+                }
                 hasFinalAudioPlayed = true; // Mark as played
                 Debug.Log("final audio playing once");
             }
 
         }
 
-        if (frontViewAnimator.GetCurrentAnimatorStateInfo(0).IsName("Dialouge 2") &&
-            frontViewAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.96f)
+        if (boyAnimator.GetCurrentAnimatorStateInfo(0).IsName("Dialouge2") &&
+            boyAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f)
         {
             isReturning = true;
-            isWalking = true;  // Ensure walking continues
-            FrontView.SetActive(false);
-            SideView.SetActive(true);
-            sideViewAnimator.SetTrigger("canWalk2");
+            isWalking = true;  // Ensure walking continues            
+            boyAnimator.SetBool("isWalking", true);
         }
 
         if (isReturning && isWalking)
@@ -187,6 +195,7 @@ public class BoyController1 : MonoBehaviour
 
     private void MoveBackOnXAxis()
     {
+        boyspriteRenderer.flipX = false;
         transform.position += Vector3.right * walkSpeed * Time.deltaTime;
     }
 
@@ -195,7 +204,7 @@ public class BoyController1 : MonoBehaviour
     {
         if (jojoAudio != null && audioClips != null && index >= 0 && index < audioClips.Length)
         {
-            
+
             jojoAudio.clip = audioClips[index];
             jojoAudio.loop = false; // Ensure that the audio does not loop
             jojoAudio.Play();
@@ -207,5 +216,21 @@ public class BoyController1 : MonoBehaviour
         }
     }
 
-    
+    private IEnumerator RevealTextWordByWord(string fullText, float delayBetweenWords)
+    {
+        subtitleText.text = "";  // Clear the text before starting
+        subtitleText.gameObject.SetActive(true);  // Ensure the subtitle text is active
+
+        string[] words = fullText.Split(' ');  // Split the full text into individual words
+
+        // Reveal words one by one
+        for (int i = 0; i < words.Length; i++)
+        {
+            // Instead of appending, build the text up to the current word
+            subtitleText.text = string.Join(" ", words, 0, i + 1);  // Show only the words up to the current index
+            yield return new WaitForSeconds(delayBetweenWords);  // Wait before revealing the next word
+        }
+        subtitleText.gameObject.SetActive(false);
+    }
+
 }

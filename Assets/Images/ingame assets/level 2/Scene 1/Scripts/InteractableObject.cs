@@ -1,13 +1,15 @@
 using UnityEngine;
+using System.Collections;
 
 public class InteractableObject : MonoBehaviour
 {
     public float delayBeforeHelp = 10f;
     private float interactionTimer = 0f;
     public bool isInteracted = false;
-    public bool needsHelp = false;
-    public bool IsDragAndDrop = true;
+    public bool needsHelp = false;    
     private bool isTrackingEnabled = false;
+    private bool isGlowDone = false;    
+    private bool isPaused = false; // New flag to track if the timer is paused
     private DragAndDropController dragAndDropController;
 
     void Start()
@@ -18,26 +20,41 @@ public class InteractableObject : MonoBehaviour
 
     void Update()
     {
-        if (ColliderIsEnabled() && !isInteracted && isTrackingEnabled)
+        if (ColliderIsEnabled() && !isInteracted && isTrackingEnabled && !isPaused)
         {
             interactionTimer += Time.deltaTime;
 
+            // Trigger glow effect halfway through the delay time
+            if (interactionTimer >= delayBeforeHelp / 2 && !needsHelp && !isGlowDone)
+            {
+                isGlowDone = true;
+                HelpPointerManager.Instance.SpawnGlowEffect(gameObject);  // Spawn glow prefab
+                StartCoroutine(PauseInteractionTimer(2f));
+            }
+
+            // Trigger helper hand and additional glow at the full delay
             if (interactionTimer >= delayBeforeHelp && !needsHelp)
             {
                 needsHelp = true;
-                Debug.Log("Object needs help: " + gameObject.name);
-                HelpPointerManager.Instance.CheckAndShowHelpForObject(gameObject);
+                HelpPointerManager.Instance.CheckAndShowHelpForObject(gameObject, delayBeforeHelp);                
             }
         }
     }
+
+    private IEnumerator PauseInteractionTimer(float pauseDuration)
+    {
+        isPaused = true;
+        yield return new WaitForSeconds(pauseDuration);
+        isPaused = false;
+    }
+
     public void EnableInteractionTracking()
     {
         isTrackingEnabled = true;
-        interactionTimer = 0f;  // Reset the timer when tracking starts
-        needsHelp = false;      // Ensure the help request is reset
-        Debug.Log("Tracking enabled and timer reset for " + gameObject.name);
+        interactionTimer = 0f;
+        needsHelp = false;
+        isGlowDone = false;        
     }
-
 
     private bool ColliderIsEnabled()
     {
@@ -56,9 +73,8 @@ public class InteractableObject : MonoBehaviour
         Debug.Log($"Interaction completed for {gameObject.name}, resetting timer and stopping help pointer.");
     }
 
-
     public Vector3 GetDropLocation()
     {
-        return dragAndDropController != null ? dragAndDropController.GetDropLocation() : transform.position;
+        return dragAndDropController != null ? dragAndDropController.GetDropLocation2() : transform.position;
     }
 }

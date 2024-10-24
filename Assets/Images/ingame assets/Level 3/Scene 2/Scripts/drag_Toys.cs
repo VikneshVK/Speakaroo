@@ -76,6 +76,7 @@ public class drag_Toys : MonoBehaviour
             Vector3 worldPosition = Camera.main.ScreenToWorldPoint(mousePosition) + offset;
 
             transform.position = worldPosition;
+            
         }
     }
 

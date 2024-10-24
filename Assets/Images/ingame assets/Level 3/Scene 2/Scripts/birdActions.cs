@@ -8,7 +8,7 @@ public class birdActions : MonoBehaviour
     public Transform finalStopPosition;
     public float flyspeed = 2f;
     public GameObject pipe;
-    public List<GameObject> objectsToEnable;
+    public GameObject objectsToEnable;
     public float helperHandDelay = 5f;
 
     private Animator animator;
@@ -78,14 +78,12 @@ public class birdActions : MonoBehaviour
         if (!collidersEnabled && animator.GetCurrentAnimatorStateInfo(0).IsName("Bird Talk") &&
             animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.9f)
         {
-            foreach (GameObject obj in objectsToEnable)
+           Collider2D collider = objectsToEnable.GetComponent<Collider2D>();
+            if (collider != null)
             {
-                Collider2D collider = obj.GetComponent<Collider2D>();
-                if (collider != null)
-                {
-                    collider.enabled = true;
-                }
+                collider.enabled = true;
             }
+            
 
             collidersEnabled = true;
 

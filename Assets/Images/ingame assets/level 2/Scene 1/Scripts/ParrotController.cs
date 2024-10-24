@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections;
 using System.Linq;
 using System;
+using TMPro;
 
 public class ParrotController : MonoBehaviour
 {
@@ -14,10 +15,13 @@ public class ParrotController : MonoBehaviour
     public Transform finalPositionBuilding;
     public Boolean cleaningCompleted;
     public float speed = 5.0f;
+    public float targetDistance = 10.0f;
     public AudioSource audioSource;
     public GameObject referenceContainer;
 
-    private AnchorGameObject anchor;
+    private float speed2 = 2f;
+    private SpriteRenderer kikiSprite;
+    private Vector3 targetPosition;
     private Animator animator;
     private SpriteRenderer spriteRenderer;
     private Vector3 startPosition;
@@ -36,7 +40,7 @@ public class ParrotController : MonoBehaviour
         animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         startPosition = transform.position;
-        anchor = GetComponent<AnchorGameObject>();
+        kikiSprite = GetComponent<SpriteRenderer>();
         audioSource = GetComponent<AudioSource>();
         ReferenceaudioSource= referenceContainer.GetComponent<AudioSource>();
         cleaningCompleted = false;
@@ -56,9 +60,9 @@ public class ParrotController : MonoBehaviour
 
     void Update()
     {
-        if (animator.GetBool("startWalking") && !isReturning)
+        if (animator.GetBool("startWalking") && !isReturning && !stopWalking)
         {
-            StartCoroutine(WaitAndWalk());
+            StartCoroutine(MoveRight());
         }
 
         if (isReturning)
@@ -72,42 +76,56 @@ public class ParrotController : MonoBehaviour
         }
     }
 
-    IEnumerator WaitAndWalk()
+    IEnumerator MoveRight()
     {
         isWalkingCoroutineRunning = true;
-        anchor.enabled = false;
-        yield return new WaitForSeconds(1f);
+        
+        yield return new WaitForSeconds(2.5f);
 
-        float duration = 0.5f; // Set the duration for the movement
-        float elapsedTime = 0f;
-        Vector3 startPosition = transform.position;
-        Vector3 targetPosition = transform.position + new Vector3(1f, 0f, 0f); // Move by 1 unit on the x-axis
+        targetPosition = transform.position + new Vector3(targetDistance, 0, 0);
 
-        while (elapsedTime < duration)
+        while (!stopWalking && transform.position != targetPosition)
         {
-            transform.position = Vector3.Lerp(startPosition, targetPosition, elapsedTime / duration);
-            elapsedTime += Time.deltaTime;
-            yield return null;
+            transform.position = Vector3.MoveTowards(transform.position, targetPosition, speed * Time.deltaTime);
+
+            yield return null; 
         }
 
-        transform.position = targetPosition; // Ensure the final position is exactly the target position
-        isWalkingCoroutineRunning = false;
+        isWalkingCoroutineRunning = false; 
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
         if (other.gameObject.CompareTag("Pushable") && !pushedObjects.Contains(other.gameObject.name))
         {
-            stopWalking = true; // Stop the WaitAndWalk movement
+            // Stop moving when a collision happens
+            stopWalking = true;
+
+            // Stop the walking animation
             animator.SetBool("startWalking", false);
-            animator.SetTrigger("canKnock");
-            pushedGameObject = other.gameObject;
-            other.GetComponent<Collider2D>().enabled = false;
-            pushedObjects.Add(pushedGameObject.name);
-            StartCoroutine(WaitForKnockToComplete());
-            UpdateColliderStatus(pushedGameObject.name);
+
+            // Trigger the next animation (knock)
+            StartCoroutine(TriggerKnockAfterStop(other.gameObject));
         }
     }
+
+    private IEnumerator TriggerKnockAfterStop(GameObject otherObject)
+    {
+        yield return new WaitForEndOfFrame(); // Ensure the movement fully stops
+
+        // Trigger the knock animation
+        animator.SetTrigger("canKnock");
+
+        // Store the pushed object and disable its collider
+        pushedGameObject = otherObject;
+        otherObject.GetComponent<Collider2D>().enabled = false;
+
+        // Add the pushed object to the list and continue with knock actions
+        pushedObjects.Add(pushedGameObject.name);
+        StartCoroutine(WaitForKnockToComplete()); // Handle knock completion
+        UpdateColliderStatus(pushedGameObject.name); // Update other objects' collider statuses
+    }
+
 
     IEnumerator WaitForKnockToComplete()
     {
@@ -141,6 +159,7 @@ public class ParrotController : MonoBehaviour
 
     private void OnCompleteMove()
     {
+        
         animator.SetBool("walkBack", true);
         isReturning = true;
 
@@ -148,17 +167,20 @@ public class ParrotController : MonoBehaviour
 
     private void ReturnToStart()
     {
-        transform.position = Vector3.MoveTowards(transform.position, startPosition, speed * Time.deltaTime);
+        kikiSprite.flipX = true;
+        transform.position = Vector3.MoveTowards(transform.position, startPosition, speed2 * Time.deltaTime);
 
         if (transform.position == startPosition)
         {
+
             if(pushedObjects.Count < requiredObjects.Count)
             {
                 ReferenceaudioSource.Play();
             }
-            
+
             ResetAnimatorBooleans();
-            anchor.enabled = true;
+            kikiSprite.flipX = false;
+           
             isReturning = false;
             stopWalking = false;
 
@@ -167,6 +189,7 @@ public class ParrotController : MonoBehaviour
 
             // Reset timers for the next objects
             ResetTimersForNextObjects();
+            ResetAudioPlayed();
         }
     }
 
