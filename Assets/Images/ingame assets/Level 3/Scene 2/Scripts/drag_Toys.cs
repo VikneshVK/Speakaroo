@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class drag_Toys : MonoBehaviour
@@ -15,6 +16,7 @@ public class drag_Toys : MonoBehaviour
     public GameObject jojo;
     public bool isDragging = false;
     public AudioSource tapAudiosource;
+    public TextMeshProUGUI subtitleText;
 
     public static bool isTeddyInteracted = false;
     public static bool isDinoInteracted = false;
@@ -35,7 +37,7 @@ public class drag_Toys : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
         toysCollider = GetComponent<Collider2D>();
         kikiAnimator = kiki.GetComponent<Animator>();
-        jojoAnimator = jojo.GetComponent<Animator>();   
+        jojoAnimator = jojo.GetComponent<Animator>();
         completedTweens = 0;
     }
 
@@ -76,7 +78,7 @@ public class drag_Toys : MonoBehaviour
             Vector3 worldPosition = Camera.main.ScreenToWorldPoint(mousePosition) + offset;
 
             transform.position = worldPosition;
-            
+
         }
     }
 
@@ -163,6 +165,7 @@ public class drag_Toys : MonoBehaviour
                                                        if (!audioplayed)
                                                        {
                                                            tapAudiosource.Play();
+                                                           StartCoroutine(RevealTextWordByWord("Super now, let's hang the wet toys", 0.5f));
                                                            audioplayed = true;
                                                        }
 
@@ -177,5 +180,21 @@ public class drag_Toys : MonoBehaviour
         {
             Debug.LogError("Sprite not found for tag: " + gameObject.tag);
         }
+    }
+
+    private IEnumerator RevealTextWordByWord(string fullText, float delayBetweenWords)
+    {
+        subtitleText.text = "";
+        subtitleText.gameObject.SetActive(true);
+
+        string[] words = fullText.Split(' ');
+
+        // Reveal words one by one
+        for (int i = 0; i < words.Length; i++)
+        {
+            subtitleText.text = string.Join(" ", words, 0, i + 1);
+            yield return new WaitForSeconds(delayBetweenWords);
+        }
+        subtitleText.text = "";
     }
 }

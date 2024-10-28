@@ -3,12 +3,16 @@ using System.Collections;
 
 public class LeafDragAndDrop : MonoBehaviour
 {
+    public enum LeafType { Leaf1, Leaf2 }
+
+    public LeafType leafType;
     public Vector3 dropOffset;
     public GameObject bin;
     public GameObject spawnPrefab;
     public Transform spawnLocation;
     public GameObject spareLeaves;
     public GameObject trashCanSmoke;
+    public HP_HelperpointerController helperPointerController;
 
     private Animator leavesAnimator;
     private Animator smokeAnimator;
@@ -40,6 +44,14 @@ public class LeafDragAndDrop : MonoBehaviour
             binAnimator.SetBool("binOpen", true);
             Vector3 mousePosition = new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10);
             transform.position = Camera.main.ScreenToWorldPoint(mousePosition) + offset;
+            if (leafType == LeafType.Leaf1)
+            {
+                helperPointerController.OnLeaf1Interacted();
+            }
+            else if (leafType == LeafType.Leaf2)
+            {
+                helperPointerController.OnLeaf2Interacted();
+            }
         }
     }
 
@@ -83,6 +95,7 @@ public class LeafDragAndDrop : MonoBehaviour
         {
             // If drop is incorrect, return the object to the start position
             transform.position = startPosition;
+            helperPointerController.StartInactivityTimer();
         }
     }
 

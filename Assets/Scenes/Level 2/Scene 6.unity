@@ -396,6 +396,7 @@ MonoBehaviour:
   targetPosition: {fileID: 841040602}
   nextGameObject: {fileID: 57430200}
   dragManager: {fileID: 268866137}
+  helperPointer: {fileID: 943344314}
 --- !u!1 &57430200
 GameObject:
   m_ObjectHideFlags: 0
@@ -542,6 +543,7 @@ MonoBehaviour:
   targetPosition: {fileID: 1677437922}
   nextGameObject: {fileID: 915501614}
   dragManager: {fileID: 268866137}
+  helperPointer: {fileID: 943344314}
 --- !u!1 &78891850
 GameObject:
   m_ObjectHideFlags: 0
@@ -568,7 +570,7 @@ Transform:
   m_GameObject: {fileID: 78891850}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 12.4, y: -2.18, z: 0}
+  m_LocalPosition: {x: 11.08, y: -2.18, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -648,8 +650,8 @@ MonoBehaviour:
       m_Calls: []
   m_text: 
   m_isRightToLeft: 0
-  m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
-  m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
+  m_fontAsset: {fileID: 11400000, guid: f3400530643e2d244ac6c739524fdcc6, type: 2}
+  m_sharedMaterial: {fileID: 7446901447100285370, guid: f3400530643e2d244ac6c739524fdcc6, type: 2}
   m_fontSharedMaterials: []
   m_fontMaterial: {fileID: 0}
   m_fontMaterials: []
@@ -976,12 +978,12 @@ MonoBehaviour:
   audioSource: {fileID: 268866139}
   feedbackAudioSource: {fileID: 29285177}
   objectAudioClips:
-  - {fileID: 8300000, guid: 53dce0e113bc1af43b2b6bef26b120ba, type: 3}
-  - {fileID: 8300000, guid: e7a2babd49af98948b9be4cdac1057a0, type: 3}
-  - {fileID: 8300000, guid: dedab7d4c48f1b74d98093d67a7f98cf, type: 3}
-  - {fileID: 8300000, guid: 3d1550c3b078368489dff9602fe46869, type: 3}
-  - {fileID: 8300000, guid: 93195d18436d16040be4f787493c1bfd, type: 3}
-  - {fileID: 8300000, guid: da8c3a891ef5e3f4c9c3b8fc45f32595, type: 3}
+  - {fileID: 8300000, guid: 78fcad90084b15640a8e57dfc400270c, type: 3}
+  - {fileID: 8300000, guid: 1c09bc758f8d3b14d9c1de87b18bedde, type: 3}
+  - {fileID: 8300000, guid: dd58146557c424041b79a46760038e36, type: 3}
+  - {fileID: 8300000, guid: 2866fe86b4d7ee14f9a5665cc6c33185, type: 3}
+  - {fileID: 8300000, guid: ca92c0a5906e9e941852a3ea4c970dff, type: 3}
+  - {fileID: 8300000, guid: 44da9089f5e090447a7beeda70dbfa48, type: 3}
   feedbackClips:
   - {fileID: 8300000, guid: dfd9864b761d17b4680e1cab1dbb31a9, type: 3}
   - {fileID: 8300000, guid: c632de609c8ce5343a4881ada583586b, type: 3}
@@ -1011,12 +1013,12 @@ MonoBehaviour:
   kikiAudio: {fileID: 275504934}
   subtitleText: {fileID: 111346486}
   subtitles:
-  - Put the Bag under the Bed
-  - Put the Sheets on the Bed
-  - Put the Rug under the Bed
+  - ' Let''s put the Bag under the Bed'
+  - Put the Bedsheets on the Bed
+  - Put the Mat under the Bed
   - Put the Pillow on the Bed
-  - Put the Shoe under the Bed
-  - Put the Teddy on the Bed
+  - Now Put the Shoes under the Bed
+  - Now Put the Teddy on the Bed
   delayBetweenWords: 0.3
 --- !u!4 &268866138
 Transform:
@@ -1478,6 +1480,7 @@ MonoBehaviour:
   targetPosition: {fileID: 1761094229}
   nextGameObject: {fileID: 36023386}
   dragManager: {fileID: 268866137}
+  helperPointer: {fileID: 943344314}
 --- !u!95 &461845765 stripped
 Animator:
   m_CorrespondingSourceObject: {fileID: 4622859189109833440, guid: 5cc33678a45eebd4eb94af593e86f318, type: 3}
@@ -1629,6 +1632,7 @@ MonoBehaviour:
   targetPosition: {fileID: 676472397}
   nextGameObject: {fileID: 422953007}
   dragManager: {fileID: 268866137}
+  helperPointer: {fileID: 943344314}
 --- !u!1 &569593487
 GameObject:
   m_ObjectHideFlags: 0
@@ -1800,7 +1804,7 @@ Transform:
   m_GameObject: {fileID: 676472396}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -8.47, y: -0.97, z: 0}
+  m_LocalPosition: {x: -8.47, y: -1.03, z: 0}
   m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -1900,7 +1904,7 @@ Transform:
   m_GameObject: {fileID: 841040601}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -8.6, y: 0.52, z: 0}
+  m_LocalPosition: {x: -8.6, y: 0.28, z: 0}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -2119,6 +2123,7 @@ MonoBehaviour:
   targetPosition: {fileID: 1920410445}
   nextGameObject: {fileID: 0}
   dragManager: {fileID: 268866137}
+  helperPointer: {fileID: 943344314}
 --- !u!1 &916378003
 GameObject:
   m_ObjectHideFlags: 0
@@ -2809,7 +2814,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 3
+  m_SortingOrder: 4
   m_Sprite: {fileID: 21300000, guid: 7e5ac9ea877e318479b3ad53749b176b, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -3177,6 +3182,7 @@ MonoBehaviour:
   targetPosition: {fileID: 1534332381}
   nextGameObject: {fileID: 523711538}
   dragManager: {fileID: 268866137}
+  helperPointer: {fileID: 943344314}
 --- !u!1 &1534332380
 GameObject:
   m_ObjectHideFlags: 0

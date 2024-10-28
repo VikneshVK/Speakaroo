@@ -16,10 +16,11 @@ public class ParrotController : MonoBehaviour
     public Boolean cleaningCompleted;
     public float speed = 5.0f;
     public float targetDistance = 10.0f;
-    public AudioSource audioSource;
+    private AudioSource audioSource;
     public GameObject referenceContainer;
+    public AudioSource kikiwalkSoundSource;
 
-    private float speed2 = 2f;
+    private float speed2 = 5f;
     private SpriteRenderer kikiSprite;
     private Vector3 targetPosition;
     private Animator animator;
@@ -62,6 +63,7 @@ public class ParrotController : MonoBehaviour
     {
         if (animator.GetBool("startWalking") && !isReturning && !stopWalking)
         {
+            /*kikiwalkSoundSource.Play();*/
             StartCoroutine(MoveRight());
         }
 

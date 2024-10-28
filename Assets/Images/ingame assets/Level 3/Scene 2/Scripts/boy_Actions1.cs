@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class boy_Actions1 : MonoBehaviour
@@ -8,13 +9,11 @@ public class boy_Actions1 : MonoBehaviour
     public float walkSpeed = 2f;
     public GameObject Bird;
     public GameObject pipe;
-    public GameObject Hose;
-    public GameObject walkRig;
-    public GameObject normalRig;
+    public GameObject Hose;    
     public AudioSource tubeAudiosource;
+    public TextMeshProUGUI subtitleText;
 
-    private Animator walkAnimator;
-    private Animator normalAnimator;
+    private Animator boyAnimator;    
     private Animator birdAnimator;
     private TapControl tapControl;
     private AudioSource jojoAudiosource;
@@ -24,25 +23,25 @@ public class boy_Actions1 : MonoBehaviour
     private bool isIdleCompleted;
     private bool canTalk;
     private bool audioplayed;
+    private bool isSubtitleDisplayed;
 
     // Start is called before the first frame update
     void Start()
     {
-        normalAnimator = normalRig.GetComponent<Animator>();
-        walkAnimator = walkRig.GetComponent<Animator>();
+        boyAnimator = GetComponent<Animator>();       
         birdAnimator = Bird.GetComponent<Animator>();
         tapControl = pipe.GetComponent<TapControl>();
         jojoAudiosource = GetComponent<AudioSource>();
         hoseCollider = Hose.GetComponent<Collider2D>();
         pipeCollider = pipe.GetComponent<Collider2D>();
 
-        normalRig.SetActive(true);
-        walkRig.SetActive(false);
+       
         hoseCollider.enabled = false;
         isWalking = false;
         isIdleCompleted = false;
         canTalk = false;
         audioplayed = false;
+        isSubtitleDisplayed = false;
     }
 
     // Update is called once per frame
@@ -52,17 +51,17 @@ public class boy_Actions1 : MonoBehaviour
         HandleWalking();
         HandleTalk();
         HandleWaterPlay();
+        
     }
 
     private void HandleIdleCompletion()
     {
-        if (!isIdleCompleted && normalAnimator.GetCurrentAnimatorStateInfo(0).IsName("Idle") &&
-            normalAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
+        if (!isIdleCompleted && boyAnimator.GetCurrentAnimatorStateInfo(0).IsName("Idle") &&
+            boyAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
         {
-            normalRig.SetActive(false);
-            walkRig.SetActive(true);
             isIdleCompleted = true;
             isWalking = true;
+            boyAnimator.SetBool("canWalk", true);
         }
     }
 
@@ -83,21 +82,21 @@ public class boy_Actions1 : MonoBehaviour
             if (Mathf.Abs(transform.position.x - stopPosition.position.x) <= 0.1f)
             {
                 isWalking = false;
-                normalRig.SetActive(true);
-                walkRig.SetActive(false);
+                boyAnimator.SetBool("canWalk", false);
             }
         }
     }
     private void HandleTalk()
     {
         if(!canTalk && birdAnimator.GetCurrentAnimatorStateInfo(0).IsName("Bird Talk") &&
-            normalAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
+            birdAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.9f)
         {
             canTalk = true;
-            normalAnimator.SetTrigger("canTalk");
+            boyAnimator.SetTrigger("CanTalk");
             jojoAudiosource.Play();
+            StartCoroutine(RevealTextWordByWord("Look, it's a water tap come on. Let's play", 0.5f));
             hoseCollider.enabled = true;
-            /*pipeCollider.enabled = true;   */ 
+            /*pipeCollider.enabled = true;   */
         }
     }
     private void OnParticleCollision(GameObject other)
@@ -105,7 +104,13 @@ public class boy_Actions1 : MonoBehaviour
         // Check if the colliding particle system is the water particles
         if (other.CompareTag("spray")) // Make sure the particle system object has the tag "WaterParticles"
         {
-            normalAnimator.SetBool("waterPlay", true);
+            boyAnimator.SetBool("waterPlay", true);
+            if (!isSubtitleDisplayed)
+            {
+                StartCoroutine(RevealTextWordByWord("That was So Fun..!", 0.5f));
+                isSubtitleDisplayed = true;
+            }
+            
             if (!audioplayed)
             {
                 tubeAudiosource.Play();
@@ -115,11 +120,27 @@ public class boy_Actions1 : MonoBehaviour
         }
 
     }
+
     private void HandleWaterPlay()
     {
         if (tapControl != null && !tapControl.isFirstTime)
         {
-            normalAnimator.SetBool("waterPlay", false);
+            boyAnimator.SetBool("waterPlay", false);
         }
+    }
+    private IEnumerator RevealTextWordByWord(string fullText, float delayBetweenWords)
+    {
+        subtitleText.text = "";
+        subtitleText.gameObject.SetActive(true);
+
+        string[] words = fullText.Split(' ');
+
+        // Reveal words one by one
+        for (int i = 0; i < words.Length; i++)
+        {
+            subtitleText.text = string.Join(" ", words, 0, i + 1);
+            yield return new WaitForSeconds(delayBetweenWords);
+        }
+        subtitleText.text = "";
     }
 }

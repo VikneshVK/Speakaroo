@@ -97,7 +97,16 @@ public class Tween_Toys : MonoBehaviour
 
         if (!toyScript.IsInteracted())
         {
-            // Pass false to indicate that this is for the toy, not the tap position
+            // Trigger the glow effect on the current toy's position
+            helperPointerController.PauseAndSpawnGlow(currentToy.transform.position);
+
+            // Wait for the glow effect to complete (glowInstance should be null after it completes)
+            while (helperPointerController.glowInstance != null)
+            {
+                yield return null;
+            }
+
+            // Now spawn the helper hand after the glow effect is done
             helperPointerController.SpawnHelperHand(currentToy.transform.position, false);
             helperPointerController.TweenHelperHandToParticlesPosition(currentToyIndex);
         }
@@ -107,6 +116,7 @@ public class Tween_Toys : MonoBehaviour
             yield return null;
         }
 
+        // Reset helper hand after interaction
         helperPointerController.ResetHelperHand();
 
         currentToyIndex++;
@@ -116,6 +126,8 @@ public class Tween_Toys : MonoBehaviour
             StartCoroutine(HandleHelperHandForCurrentToy());
         }
     }
+
+
 
     private GameObject GetCurrentToy()
     {

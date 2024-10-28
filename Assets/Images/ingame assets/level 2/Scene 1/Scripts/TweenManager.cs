@@ -10,12 +10,14 @@ public class TweenManager : MonoBehaviour
     private bool isRetryClicked = false;
     private GameObject buttonToActivate;
     private List<GameObject> spriteMasks = new List<GameObject>();
-
+    private AudioSource feedbackAudiosource;
+    private AudioClip dialouge3;
     private void Start()
     {
         ST_AudioManager.Instance.OnPlaybackComplete += HandlePlaybackComplete;
         ST_AudioManager.Instance.OnRetryClicked += ResetTimer;
-
+        feedbackAudiosource = GameObject.FindGameObjectWithTag("FeedbackAudio").GetComponent<AudioSource>();
+        dialouge3 = Resources.Load<AudioClip>("Audio/FeedbackAudio/Dialouge3");
         // Get the reference to the Animator component of the Bird game object
         GameObject bird = GameObject.FindGameObjectWithTag("Bird");
         if (bird != null)
@@ -95,6 +97,8 @@ public class TweenManager : MonoBehaviour
             {
                 birdAnimator.SetBool("startWalking", true);
                 birdAnimator.SetBool("resetPosition", false);
+                feedbackAudiosource.clip = dialouge3;
+                feedbackAudiosource.Play();
             }
 
             // Tween the parent to scale 0

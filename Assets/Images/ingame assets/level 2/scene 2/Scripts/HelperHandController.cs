@@ -128,31 +128,59 @@ public class HelperHandController : MonoBehaviour
     {
         Debug.Log("Stopping Helper Hand");
 
-        // Cancel and destroy the helper hand instance if it's still active
+        // Cancel any LeanTween actions on helper hand and destroy if active
         if (helperHandInstance != null)
         {
-            LeanTween.cancel(helperHandInstance);  // Cancel any active LeanTween on the helper hand
-            Destroy(helperHandInstance);  // Destroy the helper hand instance
-            helperHandInstance = null;  // Reset the reference to the helper hand instance
+            LeanTween.cancel(helperHandInstance);
+            Destroy(helperHandInstance);
+            helperHandInstance = null;
         }
 
-        // Cancel and destroy the glow instance if it's still active
+        // Cancel any LeanTween actions on glow and destroy if active
         if (glowInstance != null)
         {
-            LeanTween.cancel(glowInstance);  // Cancel any active LeanTween on the glow object
-            Destroy(glowInstance);  // Destroy the glow instance
-            glowInstance = null;  // Reset the reference to the glow instance
+            LeanTween.cancel(glowInstance);
+            Destroy(glowInstance);
+            glowInstance = null;
         }
 
-        // Stop any active coroutines related to helper hand or glow
-        StopAllCoroutines();  // This will stop any ongoing coroutines, including glow and audio
+        // Stop all active coroutines to ensure no ongoing helper-related actions
+        StopAllCoroutines();
 
-        // Reset the isPingPongActive flag
+        // Reset states
         isPingPongActive = false;
+        timerPaused = false;
+        isPlayingAudio = false;
 
-        // Cancel any delayed invocations to StartHelperHandInternal
+        // Cancel any delayed invocations
         CancelInvoke(nameof(StartHelperHandInternal));
+        CancelInvoke(nameof(CompleteHelperHandTimer));
+
+        // Schedule a delayed check to ensure objects are fully removed
+        StartCoroutine(EnsureHelperHandCleanup());
     }
+
+    // Coroutine to check and ensure helper hand and glow are fully cleaned up
+    private IEnumerator EnsureHelperHandCleanup()
+    {
+        yield return new WaitForEndOfFrame();
+
+        if (helperHandInstance != null)
+        {
+            Destroy(helperHandInstance);
+            helperHandInstance = null;
+        }
+
+        if (glowInstance != null)
+        {
+            Destroy(glowInstance);
+            glowInstance = null;
+        }
+
+        Debug.Log("Helper hand and glow have been fully cleaned up.");
+    }
+
+
 
 
     private void StartHelperHand(PillowDragAndDrop pillow)

@@ -84,7 +84,7 @@ public class boyController1 : MonoBehaviour
         }
 
         if (birdAnimator.GetCurrentAnimatorStateInfo(0).IsName("Talk") &&
-            birdAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.96f)
+            birdAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.9f)
         {
             birdAnimator.SetTrigger("bigPillow");
             EnableBigPillowColliders();

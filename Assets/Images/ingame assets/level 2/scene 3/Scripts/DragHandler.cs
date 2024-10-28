@@ -12,13 +12,13 @@ public class DragHandler : MonoBehaviour
     private bool isDroppedSuccessfully = false;  // To prevent multiple drops
     public bool IsDragged => isDragging;
     private AnchorGameObject anchor;
-    private HelperPointer helperPointer;
+    public HelperPointer helperPointer;
 
     void Awake()
     {
         objectCollider = GetComponent<Collider2D>();
         anchor = GetComponent<AnchorGameObject>();
-        helperPointer = FindObjectOfType<HelperPointer>();
+        
     }
 
     void OnEnable()
@@ -61,7 +61,7 @@ public class DragHandler : MonoBehaviour
             originalPosition = transform.position;
             Debug.Log($"{gameObject.name} collider is active and interaction started.");
             anchor.enabled = false;
-            helperPointer?.StopHelperHand();  // Stop the helper hand when dragging starts
+             // Stop the helper hand when dragging starts
         }
         else
         {
@@ -79,6 +79,7 @@ public class DragHandler : MonoBehaviour
         // Move the object to follow the mouse
         transform.position = new Vector2(mousePosition.x, mousePosition.y);
 
+        helperPointer.StopHelperHand();
         Debug.Log($"{gameObject.name} is being dragged to position {transform.position}");
     }
 

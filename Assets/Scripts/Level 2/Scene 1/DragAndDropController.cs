@@ -115,6 +115,7 @@ public class DragAndDropController : MonoBehaviour
         {
             /*boySpriteRender.flipX = false;*/
             boyAnimator.SetTrigger("isRightDrop");
+
             birdAnimator.SetTrigger("RightDrop");
             parentController.PlayAudioByIndex(1);
 
@@ -144,7 +145,7 @@ public class DragAndDropController : MonoBehaviour
         else
         {
             /*boySpriteRender.flipX = false;*/
-            boyAnimator.SetTrigger("isWrongDrop");
+            /*boyAnimator.SetTrigger("isWrongDrop");*/
             birdAnimator.SetTrigger("wrongDrop");
             // Play the negative audio clip
             PlayNegativeFeedbackAudio();

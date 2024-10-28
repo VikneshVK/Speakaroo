@@ -1,17 +1,23 @@
+using TMPro;
 using UnityEngine;
+using System.Collections;
 
 public class HP_HelperpointerController : MonoBehaviour
 {
     public GameObject leaves1;
     public GameObject leaves2;
     public GameObject helperPointerPrefab;
+    public GameObject glowPrefab; // Glow effect prefab
     public Collider2D trashCanCollider; // Reference to the trash can's collider
+    public Transform endposition;
     public float inactivityTime = 10f; // Time before the pointer spawns, adjustable in Inspector
     public float tweenDuration = 2f; // Duration of the tween to trash can
+    public TextMeshProUGUI subtitleText;
 
     private bool isTimerActive = false;
     private bool leaves1Interacted = false;
     private bool leaves2Interacted = false;
+    private bool glowSpawned = false; // To track if glow has been spawned at half time
     private float leaves1Timer = 0f;
     private float leaves2Timer = 0f;
     private GameObject helperPointerInstance;
@@ -29,57 +35,55 @@ public class HP_HelperpointerController : MonoBehaviour
 
     void Start()
     {
-        // Get references to the LeafDragAndDrop components
         leaves1DragScript = leaves1.GetComponent<LeafDragAndDrop>();
         leaves2DragScript = leaves2.GetComponent<LeafDragAndDrop>();
 
-        // Get references to the colliders of leaves1 and leaves2
         leaves1Collider = leaves1.GetComponent<Collider2D>();
         leaves2Collider = leaves2.GetComponent<Collider2D>();
 
-        // Get references to the SpriteRenderers of leaves1 and leaves2
         leaves1SpriteRenderer = leaves1.GetComponent<SpriteRenderer>();
         leaves2SpriteRenderer = leaves2.GetComponent<SpriteRenderer>();
 
-        // Get the reference to the AudioSource attached to the same GameObject
         audioSource = GetComponent<AudioSource>();
-
-        // Start the inactivity timer
-        StartInactivityTimer();
     }
 
     void Update()
     {
         if (isTimerActive)
         {
-            // Check if leaves1's collider is enabled and its SpriteRenderer is enabled before starting the timer
-            if (!leaves1Interacted && leaves1Collider.enabled && leaves1SpriteRenderer.enabled)
+            // Only check for inactivity if neither leaf has been interacted with
+            if (!leaves1Interacted && !leaves2Interacted)
             {
-                leaves1Timer += Time.deltaTime;
-
-                if (leaves1Timer >= inactivityTime && helperPointerInstance == null)
-                {
-                    SpawnHelperPointer(leaves1.transform.position);
-                }
+                CheckInactivity(leaves1, ref leaves1Timer, ref leaves1Interacted);
+                CheckInactivity(leaves2, ref leaves2Timer, ref leaves2Interacted);
             }
 
-            // Check if leaves2's collider is enabled and its SpriteRenderer is enabled before starting the timer for leaves2
-            if (!leaves2Interacted && leaves2Collider.enabled && leaves2SpriteRenderer.enabled && helperPointerInstance == null)
-            {
-                // Start the timer for leaves2 only after leaves1 has been interacted with
-                leaves2Timer += Time.deltaTime;
-
-                if (leaves2Timer >= inactivityTime && helperPointerInstance == null)
-                {
-                    SpawnHelperPointer(leaves2.transform.position);
-                }
-            }
-
-            // Check if the leaves are being dragged; if yes, destroy the helper pointer
+            // Stop helper pointer if either leaf is being dragged
             if ((leaves1DragScript.dragging || leaves2DragScript.dragging) && helperPointerInstance != null)
             {
                 Destroy(helperPointerInstance);
-                ResetTimers();
+                StopInactivityTimer(); // Stop the timer to prevent further helper pointer spawning
+            }
+        }
+    }
+
+    private void CheckInactivity(GameObject leaf, ref float timer, ref bool interacted)
+    {
+        if (!interacted && leaf.GetComponent<Collider2D>().enabled && leaf.GetComponent<SpriteRenderer>().enabled)
+        {
+            timer += Time.deltaTime;
+
+            // Spawn glow effect at half inactivity time
+            if (timer >= inactivityTime / 2 && !glowSpawned)
+            {
+                glowSpawned = true;
+                SpawnGlowEffect(leaf.transform.position);
+            }
+
+            // Spawn helper pointer at full inactivity time
+            if (timer >= inactivityTime && helperPointerInstance == null)
+            {
+                SpawnHelperPointer(leaf.transform.position);
             }
         }
     }
@@ -87,25 +91,36 @@ public class HP_HelperpointerController : MonoBehaviour
     public void StartInactivityTimer()
     {
         isTimerActive = true;
-        leaves1Timer = 0f; // Reset the timer for leaves1
-        leaves2Timer = 0f; // Reset the timer for leaves2
+        leaves1Timer = 0f;
+        leaves2Timer = 0f;
+        glowSpawned = false;
+    }
+
+    private void SpawnGlowEffect(Vector3 position)
+    {
+        GameObject glowInstance = Instantiate(glowPrefab, position, Quaternion.identity);
+
+        // Tween scale up, wait, then tween back down
+        LeanTween.scale(glowInstance, Vector3.one * 8, 0.5f)
+            .setOnComplete(() =>
+            {
+                LeanTween.scale(glowInstance, Vector3.zero, 0.5f)
+                    .setDelay(1f)
+                    .setOnComplete(() => Destroy(glowInstance));
+            });
     }
 
     private void SpawnHelperPointer(Vector3 startPosition)
     {
-        // Instantiate the helper pointer prefab at the leaves' position
         helperPointerInstance = Instantiate(helperPointerPrefab, startPosition, Quaternion.identity);
 
-        // Play the audio whenever the helper pointer spawns
         if (audioSource != null)
         {
             audioSource.Play();
+            StartCoroutine(RevealTextWordByWord("Put the Dry Leaves inside the Bin", 0.5f));
         }
 
-        // Get the center of the trash can's collider bounds
-        Vector3 trashCanCenter = trashCanCollider.bounds.center;
-
-        // Tween the pointer to the trash can's collider bounds center in a loop
+        Vector3 trashCanCenter = endposition.position;
         LeanTween.move(helperPointerInstance, trashCanCenter, tweenDuration).setLoopClamp();
     }
 
@@ -121,9 +136,9 @@ public class HP_HelperpointerController : MonoBehaviour
         leaves2Timer = 0f;
         leaves1Interacted = false;
         leaves2Interacted = false;
+        glowSpawned = false;
     }
 
-    // Call these methods when leaves1 or leaves2 are interacted with
     public void OnLeaf1Interacted()
     {
         leaves1Interacted = true;
@@ -142,5 +157,22 @@ public class HP_HelperpointerController : MonoBehaviour
         {
             Destroy(helperPointerInstance);
         }
+        StopInactivityTimer(); // Stop timer to prevent further helper pointer spawning
+    }
+
+    private IEnumerator RevealTextWordByWord(string fullText, float delayBetweenWords)
+    {
+        subtitleText.text = "";  // Clear the text before starting
+        subtitleText.gameObject.SetActive(true);  // Ensure the subtitle text is active
+
+        string[] words = fullText.Split(' ');  // Split the full text into individual words
+
+        // Reveal words one by one
+        for (int i = 0; i < words.Length; i++)
+        {
+            subtitleText.text = string.Join(" ", words, 0, i + 1);  // Show only the words up to the current index
+            yield return new WaitForSeconds(delayBetweenWords);  // Wait before revealing the next word
+        }
+        subtitleText.gameObject.SetActive(false);
     }
 }

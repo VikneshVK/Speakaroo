@@ -7,9 +7,6 @@ public class TweenManager2 : MonoBehaviour
     private Bird_Controller birdController;
     private bool isRetryClicked = false;
     private bool speechTherapyCompleted = false;
-    private GameObject parentObject;
-    private GameObject childObject;
-
 
     private void Start()
     {
@@ -22,11 +19,9 @@ public class TweenManager2 : MonoBehaviour
         {
             birdAnimator = bird.GetComponent<Animator>();
             birdController = bird.GetComponent<Bird_Controller>();
-
         }
-        parentObject = GameObject.FindWithTag("SpriteMask");
-        childObject = parentObject.transform.GetChild(0).gameObject;
     }
+
     private void OnDestroy()
     {
         ST_AudioManager.Instance.OnPlaybackComplete -= HandlePlaybackComplete;
@@ -47,7 +42,6 @@ public class TweenManager2 : MonoBehaviour
 
     private IEnumerator Timer(float time)
     {
-        childObject.SetActive(true);
         float counter = 0;
         isRetryClicked = false;
 
@@ -72,11 +66,19 @@ public class TweenManager2 : MonoBehaviour
         LeanTween.delayedCall(0.5f, () =>
         {
             speechTherapyCompleted = true;
-            birdController.OnBigLeafDropped();
+            birdController.OnBigLeafDropped(); // Trigger bird's action for dropping the leaf
+            birdAnimator.SetTrigger("jump"); // Trigger the fly transition in Bird_Controller
+
             LeanTween.scale(gameObject, Vector3.zero, 0.5f).setEase(LeanTweenType.easeInOutBack).setOnComplete(() =>
             {
-                Destroy(gameObject);
+                Destroy(gameObject); // Destroy this game object after completing the tween
             });
         });
+    }
+
+    public void SkipButton()
+    {
+        StartCoroutine(Timer(0f));
+        speechTherapyCompleted = true;
     }
 }

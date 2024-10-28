@@ -65,8 +65,8 @@ public class PillowDragAndDrop : MonoBehaviour
         positiveAudio2 = Resources.Load<AudioClip>("Audio/FeedbackAudio/Audio2");
         negativeAudio = Resources.Load<AudioClip>("Audio/FeedbackAudio/Audio3");
 
-        audioClipBigPillow = Resources.Load<AudioClip>("Audio/Helper Audio/BigPillowAudio");
-        audioClipSmallPillow = Resources.Load<AudioClip>("Audio/Helper Audio/SmallPillowAudio");
+        audioClipBigPillow = Resources.Load<AudioClip>("Audio/Helper Audio/5. put the big pillow at the back ");
+        audioClipSmallPillow = Resources.Load<AudioClip>("Audio/Helper Audio/6. put the small pillow at the front of the big pillow ");
 
         // Find the audio source with the tag "FeedbackAudio"
         GameObject audioObject = GameObject.FindGameObjectWithTag("FeedbackAudio");

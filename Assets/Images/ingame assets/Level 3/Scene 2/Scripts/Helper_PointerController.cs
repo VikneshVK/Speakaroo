@@ -1,4 +1,5 @@
 using System.Collections;
+using TMPro;
 using UnityEngine;
 
 public class Helper_PointerController : MonoBehaviour
@@ -11,6 +12,11 @@ public class Helper_PointerController : MonoBehaviour
     public Transform offscreenPosition;
     public TapControl tapControl;
 
+    public GameObject glowPrefab;
+    public GameObject glowInstance;
+
+    public TextMeshProUGUI subtitleText;
+
     private GameObject helperHandInstance;
     private bool hasSpawnedHelperHand = false;
     public drag_Toys[] toys = new drag_Toys[3];
@@ -21,26 +27,19 @@ public class Helper_PointerController : MonoBehaviour
     public GameObject bird;
     private Animator birdAnimator;
 
-    // AudioSource and AudioClip references
     private AudioSource audioSource;
     private AudioClip audioClip1;
     private AudioClip audioClip2;
-
-    // Flag to ensure audioClip2 only plays once
     private bool hasPlayedAudioClip2 = false;
 
     void Start()
     {
-        // Find toy references
         toys = FindObjectsOfType<drag_Toys>();
         toys[0] = GameObject.FindWithTag("Teddy").GetComponent<drag_Toys>();
         toys[1] = GameObject.FindWithTag("Dino").GetComponent<drag_Toys>();
         toys[2] = GameObject.FindWithTag("Bunny").GetComponent<drag_Toys>();
 
-        // Find bird animator
         birdAnimator = bird.GetComponent<Animator>();
-
-        // Load AudioSource and AudioClips from Resources
         audioSource = GetComponent<AudioSource>();
         audioClip1 = Resources.Load<AudioClip>("audio/Lvl3sc2/Friend, open the tap");
         audioClip2 = Resources.Load<AudioClip>("audio/Lvl3sc2/Now show your toys under the water");
@@ -56,18 +55,76 @@ public class Helper_PointerController : MonoBehaviour
 
     private IEnumerator StartHelperHandSequence()
     {
-        yield return new WaitForSeconds(delayBeforeHelp);
+        float halfDelay = delayBeforeHelp / 2f; // Halfway point (5 seconds if delayBeforeHelp is 10)
+
+        yield return new WaitForSeconds(halfDelay);
+
+        Vector3 targetPosition;
+        if (tapControl.isFirstTime)
+        {
+            Collider2D tapCollider = tapControl.GetComponent<Collider2D>();
+            if (tapCollider != null)
+            {
+                targetPosition = tapCollider.bounds.center;
+            }
+            else
+            {
+                Debug.LogError("Tap Collider not found on the TapControl object.");
+                yield break;
+            }
+        }
+        else
+        {
+            targetPosition = toys[currentToyIndex].transform.position;
+        }
+
+        PauseAndSpawnGlow(targetPosition);
+        while (glowInstance != null)
+        {
+            yield return null;
+        }
+
+
+        yield return new WaitForSeconds(halfDelay);
+
 
         if (tapControl.isFirstTime && !hasSpawnedHelperHand)
         {
-            SpawnHelperHand(offscreenPosition.position, true); // true indicates tap position
+            SpawnHelperHand(offscreenPosition.position, true);
             StartHelperHandTweenLoop();
         }
 
         StartCoroutine(CheckToyInteraction());
     }
 
-    // Modify SpawnHelperHand to accept a bool that differentiates tap and toy spawning
+
+    public void PauseAndSpawnGlow(Vector3 targetPosition)
+    {
+        if (glowInstance == null)
+        {
+            glowInstance = Instantiate(glowPrefab, targetPosition, Quaternion.identity);
+
+            LeanTween.scale(glowInstance, Vector3.one * 8, 1f).setEase(LeanTweenType.easeInOutQuad)
+                .setOnComplete(() =>
+                {
+                    StartCoroutine(WaitAndScaleDownGlow());
+                });
+        }
+    }
+
+    private IEnumerator WaitAndScaleDownGlow()
+    {
+        yield return new WaitForSeconds(2f);
+
+        LeanTween.scale(glowInstance, Vector3.zero, 1f).setEase(LeanTweenType.easeInOutQuad)
+            .setOnComplete(() =>
+            {
+                Destroy(glowInstance);
+                glowInstance = null;
+                shouldRestartTimer = true;
+            });
+    }
+
     public void SpawnHelperHand(Vector3 startPosition, bool isTapPosition)
     {
         if (helperHandInstance == null)
@@ -76,10 +133,10 @@ public class Helper_PointerController : MonoBehaviour
             hasSpawnedHelperHand = true;
             birdAnimator.SetTrigger("helper");
 
-            // Play audioClip1 if helper hand spawns for tap position
             if (isTapPosition && audioClip1 != null)
             {
                 audioSource.clip = audioClip1;
+                StartCoroutine(RevealTextWordByWord("Friend, open the tap", 0.5f));
                 audioSource.Play();
             }
         }
@@ -102,8 +159,6 @@ public class Helper_PointerController : MonoBehaviour
             if (tapCollider != null)
             {
                 Vector3 targetPosition = tapCollider.bounds.center;
-
-                Debug.Log($"Tweening helper hand from {offscreenPosition.position} to {targetPosition}");
 
                 LeanTween.move(helperHandInstance, targetPosition, 1f)
                          .setEase(LeanTweenType.easeInOutQuad)
@@ -129,11 +184,11 @@ public class Helper_PointerController : MonoBehaviour
             GameObject toy = toys[toyIndex].gameObject;
             Vector3 startPosition = toy.transform.position;
 
-            // Play audioClip2 only once when the helper hand is spawned for a toy
             if (!hasPlayedAudioClip2 && audioClip2 != null)
             {
                 audioSource.clip = audioClip2;
                 audioSource.Play();
+                StartCoroutine(RevealTextWordByWord("Now show your toys under the water", 0.5f));
                 hasPlayedAudioClip2 = true; // Mark that audioClip2 has been played
             }
 
@@ -174,6 +229,11 @@ public class Helper_PointerController : MonoBehaviour
                 {
                     ResetHelperHand();
                 }
+                if (glowInstance != null)
+                {
+                    Destroy(glowInstance);
+                    glowInstance = null;
+                }
             }
             else
             {
@@ -200,6 +260,13 @@ public class Helper_PointerController : MonoBehaviour
             helperHandInstance = null;
             hasSpawnedHelperHand = false;
             shouldRestartTimer = false;
+            hasPlayedAudioClip2 = false;
+        }
+
+        if (glowInstance != null)
+        {
+            Destroy(glowInstance);
+            glowInstance = null;
         }
     }
 
@@ -209,6 +276,23 @@ public class Helper_PointerController : MonoBehaviour
         {
             StopAllCoroutines();
             StartCoroutine(StartHelperHandSequence());
+            ResetHelperHand();
         }
+    }
+
+    private IEnumerator RevealTextWordByWord(string fullText, float delayBetweenWords)
+    {
+        subtitleText.text = "";
+        subtitleText.gameObject.SetActive(true);
+
+        string[] words = fullText.Split(' ');
+
+        // Reveal words one by one
+        for (int i = 0; i < words.Length; i++)
+        {
+            subtitleText.text = string.Join(" ", words, 0, i + 1);
+            yield return new WaitForSeconds(delayBetweenWords);
+        }
+        subtitleText.text = "";
     }
 }

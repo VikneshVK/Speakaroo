@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class birdActions : MonoBehaviour
@@ -10,6 +11,7 @@ public class birdActions : MonoBehaviour
     public GameObject pipe;
     public GameObject objectsToEnable;
     public float helperHandDelay = 5f;
+    public TextMeshProUGUI subtitleText;
 
     private Animator animator;
     private TapControl tapControl;
@@ -59,7 +61,7 @@ public class birdActions : MonoBehaviour
     {
         if (birdStopPosition != null && isFlying)
         {
-            Vector3 targetPosition = new Vector3(birdStopPosition.position.x, birdStopPosition.position.y, transform.position.z);
+            Vector3 targetPosition = new Vector3(birdStopPosition.position.x, transform.position.y, transform.position.z);
             transform.position = Vector3.MoveTowards(transform.position, targetPosition, flyspeed * Time.deltaTime);
 
             if (Mathf.Abs(birdStopPosition.position.x - transform.position.x) <= 0.1f)
@@ -68,6 +70,7 @@ public class birdActions : MonoBehaviour
                 animator.SetBool("canFly", false);
                 kikiAudiosource.clip = audioClip1;
                 kikiAudiosource.Play();
+                StartCoroutine(RevealTextWordByWord("Mom told us to wash our toys", 0.5f));
 
             }
         }
@@ -78,12 +81,12 @@ public class birdActions : MonoBehaviour
         if (!collidersEnabled && animator.GetCurrentAnimatorStateInfo(0).IsName("Bird Talk") &&
             animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.9f)
         {
-           Collider2D collider = objectsToEnable.GetComponent<Collider2D>();
+            Collider2D collider = objectsToEnable.GetComponent<Collider2D>();
             if (collider != null)
             {
                 collider.enabled = true;
             }
-            
+
 
             collidersEnabled = true;
 
@@ -113,7 +116,7 @@ public class birdActions : MonoBehaviour
 
             Vector3 newtargetPosition = new Vector3(finalStopPosition.position.x, finalStopPosition.position.y, transform.position.z);
             transform.position = Vector3.MoveTowards(transform.position, newtargetPosition, flyspeed * Time.deltaTime);
-            
+
             if (Mathf.Abs(finalStopPosition.position.y - transform.position.y) <= 0.1f)
             {
                 /*spriteRenderer.flipX = false;*/
@@ -123,9 +126,26 @@ public class birdActions : MonoBehaviour
                 {
                     kikiAudiosource.clip = audioClip2;
                     kikiAudiosource.Play();
+                    StartCoroutine(RevealTextWordByWord("Now show your toys under the water", 0.5f));
                     hasPlayedAudioClip2 = true; // Mark that the second audio has been played
                 }
             }
         }
+    }
+
+    private IEnumerator RevealTextWordByWord(string fullText, float delayBetweenWords)
+    {
+        subtitleText.text = "";
+        subtitleText.gameObject.SetActive(true);
+
+        string[] words = fullText.Split(' ');
+
+        // Reveal words one by one
+        for (int i = 0; i < words.Length; i++)
+        {
+            subtitleText.text = string.Join(" ", words, 0, i + 1);
+            yield return new WaitForSeconds(delayBetweenWords);
+        }
+        subtitleText.text = "";
     }
 }
