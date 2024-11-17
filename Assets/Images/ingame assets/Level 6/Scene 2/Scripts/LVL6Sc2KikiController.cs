@@ -1,20 +1,26 @@
 using UnityEngine;
 using System.Collections;
+using TMPro;
 
 public class LVL6Sc2KikiController : MonoBehaviour
 {
-    [SerializeField] private GameObject finalPosition;
     [SerializeField] private float tweenDuration = 1.0f;
     [SerializeField] private AudioClip audioClip1; // First tween audio
     private AudioSource audioSource;
     public Lvl6QuestManager Lvl6QuestManager;
     public LVL6Sc2Helperhand helperHandController;
+    public TextMeshProUGUI subtitleText;
     private Animator animator;
-    private Vector3 originalPosition;
+
+    private Vector2 outsideViewportPosition = new Vector2(180, -275); // Position outside viewport
+    private Vector2 insideViewportPosition = new Vector2(180, 175);   // Position inside viewport
 
     private void Start()
     {
-        originalPosition = transform.position;
+        RectTransform rectTransform = GetComponent<RectTransform>();
+
+        rectTransform.anchoredPosition = outsideViewportPosition;
+
         animator = GetComponent<Animator>();
         audioSource = GetComponent<AudioSource>();
 
@@ -23,42 +29,72 @@ public class LVL6Sc2KikiController : MonoBehaviour
 
     private IEnumerator HandleTweens()
     {
-        // Set and play the first tween audio
         audioSource.clip = audioClip1;
         audioSource.Play();
-
-        // Call the first tween and wait for it to complete
+        
+        StartCoroutine(RevealTextWordByWord("Something is under the Sand", 0.5f));
         TweenBirdandback("FirstTalk");
         yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).IsName("FirstTalk") &&
                                         animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.9f);
 
         yield return new WaitForSeconds(1f);
 
-        // Now, call SpawnItems() which triggers the second tween
         Lvl6QuestManager.SpawnItems();
     }
 
     public void TweenBirdandback(string parameter)
     {
-        LeanTween.move(gameObject, finalPosition.transform.position, tweenDuration).setOnComplete(() =>
+        RectTransform rectTransform = GetComponent<RectTransform>();
+
+        LeanTween.value(gameObject, rectTransform.anchoredPosition.y, insideViewportPosition.y, tweenDuration).setOnUpdate((float val) =>
+        {
+            rectTransform.anchoredPosition = new Vector2(outsideViewportPosition.x, val);
+        }).setOnComplete(() =>
         {
             animator.SetTrigger(parameter);
             StartCoroutine(WaitForAnimationComplete(parameter));
         });
+
         helperHandController.OnTweenBirdAndBackCalled();
     }
 
     private IEnumerator WaitForAnimationComplete(string parameter)
     {
-        yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).IsName(parameter) &&
-                                        animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.9f);
-        LeanTween.move(gameObject, originalPosition, tweenDuration);
+        
+        float timeout = 3f; // maximum time to wait for the animation
+        float elapsed = 0f;
+
+        while (elapsed < timeout && !(animator.GetCurrentAnimatorStateInfo(0).IsName(parameter) &&
+                                      animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.9f))
+        {
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        RectTransform rectTransform = GetComponent<RectTransform>();
+        LeanTween.value(gameObject, rectTransform.anchoredPosition.y, outsideViewportPosition.y, tweenDuration).setOnUpdate((float val) =>
+        {
+            rectTransform.anchoredPosition = new Vector2(outsideViewportPosition.x, val);
+        });
     }
 
-    // Called when quest starts to play the appropriate audio clip based on the quest
     public void PlayQuestAudio(AudioClip questAudio)
     {
         audioSource.clip = questAudio;
         audioSource.Play();
+    }
+    private IEnumerator RevealTextWordByWord(string fullText, float delayBetweenWords)
+    {
+        subtitleText.text = "";
+        subtitleText.gameObject.SetActive(true);
+
+        string[] words = fullText.Split(' ');
+
+        for (int i = 0; i < words.Length; i++)
+        {
+            subtitleText.text = string.Join(" ", words, 0, i + 1);
+            yield return new WaitForSeconds(delayBetweenWords);
+        }
+        subtitleText.text = "";
     }
 }

@@ -1,40 +1,44 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class DishdragController : MonoBehaviour
 {
-    public static List<DishdragController> allDishControllers = new List<DishdragController>(); // List of all DishdragController objects
-    public Transform dropTarget; // The target location to drop the object
-    public LVL4Sc3HelperHand helperHandManager; // Reference to the Helper Hand Manager
-    public float helperHandDelay = 5f; // Delay time for the helper hand
-    public bool isDroppedCorrectly = false; // Track if the object was dropped correctly
+    public static List<DishdragController> allDishControllers = new List<DishdragController>();
+    public Transform dropTarget;
+    public LVL4Sc3HelperHand helperHandManager;
+    public float helperHandDelay = 5f;
+    public bool isDroppedCorrectly = false;
+    public AudioSource audio1;
+    public TextMeshProUGUI subtitleText;
 
-    public Sprite[] bowlSprites; // Array of sprites for when bowls are dropped
-    public Sprite newSprite; // The new sprite for glass and plates (non-bowl items)
-    public Animator birdAnimator; // Reference to the bird Animator
+    public Sprite newSprite;
+    public Animator birdAnimator;
 
-    private static int bowlDropCount = 0; // Static counter to track how many bowls have been dropped
-    public static int dishesArranged = 0; // Static variable to count total dishes arranged
+    public Transform glassDropTarget1; // Drop location for dirty-glass1 and dirty-glass2
+    public Transform glassDropTarget2;
+    public Transform plateDropTarget1; // Drop location for dirty-plate1 and dirty-plate2
+    public Transform plateDropTarget2;
+    public Transform bowlDropTarget1; // Drop location for dirty-bowl1 and dirty-bowl2
+    public Transform bowlDropTarget2;
 
-    private Vector3 startPosition; // Store the start position for reset if needed
+    public static int dishesArranged = 0;
+
+    private Vector3 startPosition;
     private bool isDragging = false;
-    private Coroutine helperHandCoroutine; // Coroutine for the helper hand delay
+    private Coroutine helperHandCoroutine;
 
     private void Start()
     {
-        startPosition = transform.position; // Store the initial position for reset if needed
-
-        // Add this object to the static list
+        startPosition = transform.position;
         allDishControllers.Add(this);
-
-        // Disable the collider initially (until enabled by LV4DragManager)
         GetComponent<Collider2D>().enabled = false;
     }
 
     private void Update()
     {
-        HandleMouseInput(); // Update function to handle mouse/touch input
+        HandleMouseInput();
     }
 
     private void HandleMouseInput()
@@ -59,9 +63,11 @@ public class DishdragController : MonoBehaviour
         Collider2D hitCollider = Physics2D.OverlapPoint(mousePosition);
         if (hitCollider != null && hitCollider.gameObject == gameObject)
         {
-            isDragging = true; // Start dragging when touched or clicked
+            isDragging = true;
 
-            // Stop the helper hand if it's active
+            // Change the sorting order to 5 when dragging starts
+            GetComponent<SpriteRenderer>().sortingOrder = 5;
+
             if (helperHandManager != null)
             {
                 helperHandManager.StopHelperHand();
@@ -79,95 +85,133 @@ public class DishdragController : MonoBehaviour
     {
         isDragging = false;
 
-        // Check if the object was dropped in the correct location (dropTarget)
-        if (Vector3.Distance(transform.position, dropTarget.position) < 1.0f)
-        {
-            OnDropped(true); // Correct drop
-        }
-        else
-        {
-            // Reset position if not dropped correctly
-            transform.position = startPosition;
+        // Reset the sorting order when dragging stops
+        GetComponent<SpriteRenderer>().sortingOrder = 2;
 
-            OnDropped(false); // Wrong drop
-        }
-    }
-
-    private void OnDropped(bool correctDrop)
-    {
-        SpriteRenderer targetSpriteRenderer = dropTarget.GetComponent<SpriteRenderer>();
-
-        if (correctDrop)
+        if (gameObject.name.Contains("Bowl"))
         {
-            // Correct Drop
-            if (gameObject.name.Contains("Bowl"))
+            // Check if dropped near any bowl drop location
+            if (Vector3.Distance(transform.position, bowlDropTarget1.position) < 1.0f ||
+                Vector3.Distance(transform.position, bowlDropTarget2.position) < 1.0f)
             {
-                // Handle bowl-specific logic
-                HandleBowlDrop(targetSpriteRenderer);
+                OnDropped(true, isBowl: true);
             }
             else
             {
-                // For other objects (non-bowls), change the sprite and destroy the object
+                ResetPosition();
+                OnDropped(false);
+            }
+        }
+        else if (gameObject.name.Contains("glass"))
+        {
+            // Check if dropped near any glass drop location
+            if (Vector3.Distance(transform.position, glassDropTarget1.position) < 1.0f ||
+                Vector3.Distance(transform.position, glassDropTarget2.position) < 1.0f)
+            {
+                OnDropped(true, isGlass: true);
+            }
+            else
+            {
+                ResetPosition();
+                OnDropped(false);
+            }
+        }
+        else if (gameObject.name.Contains("plate"))
+        {
+            // Check if dropped near any plate drop location
+            if (Vector3.Distance(transform.position, plateDropTarget1.position) < 1.0f ||
+                Vector3.Distance(transform.position, plateDropTarget2.position) < 1.0f)
+            {
+                OnDropped(true, isPlate: true);
+            }
+            else
+            {
+                ResetPosition();
+                OnDropped(false);
+            }
+        }
+    }
+
+    private void OnDropped(bool correctDrop, bool isGlass = false, bool isPlate = false, bool isBowl = false)
+    {
+        SpriteRenderer targetSpriteRenderer = null;
+
+        if (correctDrop)
+        {
+            if (isBowl)
+            {
+                // For bowls, change the sprite and destroy the object
+                targetSpriteRenderer = Vector3.Distance(transform.position, bowlDropTarget1.position) <
+                                       Vector3.Distance(transform.position, bowlDropTarget2.position)
+                    ? bowlDropTarget1.GetComponent<SpriteRenderer>()
+                    : bowlDropTarget2.GetComponent<SpriteRenderer>();
+
                 if (targetSpriteRenderer != null)
                 {
-                    targetSpriteRenderer.sprite = newSprite; // Set the new sprite for plates/glasses
+                    targetSpriteRenderer.sprite = newSprite;
                 }
+            }
+            else if (isGlass)
+            {
+                // For glasses, change the sprite and destroy the object
+                targetSpriteRenderer = Vector3.Distance(transform.position, glassDropTarget1.position) <
+                                       Vector3.Distance(transform.position, glassDropTarget2.position)
+                    ? glassDropTarget1.GetComponent<SpriteRenderer>()
+                    : glassDropTarget2.GetComponent<SpriteRenderer>();
 
-                // Mark the object as dropped correctly and destroy it
-                isDroppedCorrectly = true;
-                Destroy(gameObject);
+                if (targetSpriteRenderer != null)
+                {
+                    targetSpriteRenderer.sprite = newSprite;
+                    
+                }
+            }
+            else if (isPlate)
+            {
+                // For plates, change the sprite and destroy the object
+                targetSpriteRenderer = Vector3.Distance(transform.position, plateDropTarget1.position) <
+                                       Vector3.Distance(transform.position, plateDropTarget2.position)
+                    ? plateDropTarget1.GetComponent<SpriteRenderer>()
+                    : plateDropTarget2.GetComponent<SpriteRenderer>();
 
-                // Increment the arranged dishes counter
-                dishesArranged++;
-                CheckDishesArranged();
+                if (targetSpriteRenderer != null)
+                {
+                    targetSpriteRenderer.sprite = newSprite;
+                    targetSpriteRenderer.gameObject.transform.localScale = Vector3.one * 0.2f;
+                }
             }
 
-            // Notify that the helper hand should stop
+            isDroppedCorrectly = true;
+            gameObject.GetComponent<SpriteRenderer>().enabled = false;
+            dishesArranged++;
+            CheckDishesArranged();
+
             if (helperHandManager != null)
             {
                 helperHandManager.StopHelperHand();
             }
 
-            // Start helper hand delay for the next undropped object
             StartHelperHandCheckForAll();
         }
         else
         {
-            // Wrong Drop
-            // Reset and start the helper hand timer for the current object
             StartHelperHandTimer();
         }
-    }
-
-    private void HandleBowlDrop(SpriteRenderer targetSpriteRenderer)
-    {
-        // Increase the bowl drop count
-        bowlDropCount++;
-
-        // Change the sprite of the target (bowl silhouette) based on how many bowls have been dropped
-        if (bowlDropCount <= bowlSprites.Length)
-        {
-            // Update the sprite based on how many bowls have been dropped
-            targetSpriteRenderer.sprite = bowlSprites[bowlDropCount - 1]; // Set sprite based on drop count
-        }
-
-        // Mark the object as dropped correctly and destroy it
-        isDroppedCorrectly = true;
-        Destroy(gameObject);
-
-        // Increment the arranged dishes counter
-        dishesArranged++;
-        CheckDishesArranged();
     }
 
     private void CheckDishesArranged()
     {
         if (dishesArranged == 6)
         {
-            // Trigger the LvlComplete animation when all 6 dishes are arranged
             birdAnimator.SetTrigger("LvlComplete");
+            audio1.Play();
+            StartCoroutine(RevealTextWordByWord("WOW.! Thank You Friend the Kitchen looks So Clean", 0.5f));
             Debug.Log("Level Completed! All dishes arranged.");
         }
+    }
+
+    private void ResetPosition()
+    {
+        transform.position = startPosition;
     }
 
     // Start the helper hand delay timer
@@ -182,18 +226,14 @@ public class DishdragController : MonoBehaviour
 
     private IEnumerator HelperHandDelayTimer()
     {
-        // Wait for the delay time before spawning the helper hand
         yield return new WaitForSeconds(helperHandDelay);
 
-        // If the object was not dragged and dropped correctly, spawn the helper hand
         if (!isDroppedCorrectly)
         {
-            // Spawn the helper hand at the current position and tween it to the drop target
             helperHandManager.SpawnHelperHand(transform.position, dropTarget.position);
         }
     }
 
-    // Static method to initiate the check for all dish controllers
     public static void StartHelperHandCheckForAll()
     {
         foreach (var dishController in allDishControllers)
@@ -201,8 +241,23 @@ public class DishdragController : MonoBehaviour
             if (!dishController.isDroppedCorrectly)
             {
                 dishController.StartHelperHandTimer();
-                break; // Only start for the first undropped item
+                break;
             }
         }
+    }
+
+    private IEnumerator RevealTextWordByWord(string fullText, float delayBetweenWords)
+    {
+        subtitleText.text = "";
+        subtitleText.gameObject.SetActive(true);
+
+        string[] words = fullText.Split(' ');
+
+        for (int i = 0; i < words.Length; i++)
+        {
+            subtitleText.text = string.Join(" ", words, 0, i + 1);
+            yield return new WaitForSeconds(delayBetweenWords);
+        }
+        subtitleText.text = "";
     }
 }

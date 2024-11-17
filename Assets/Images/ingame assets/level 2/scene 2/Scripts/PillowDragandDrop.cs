@@ -9,12 +9,13 @@ public class PillowDragAndDrop : MonoBehaviour
     public GameObject dust;
     public GameObject bedsheet;
     public float offsetValue = 2f;
-    public HelperHandController helperHandController; // Reference to the HelperHandController
+    public GameObject nextaudiosoucre; // Reference to the HelperHandController
     public GameObject Boy;
     public GameObject Kiki;
     public TextMeshProUGUI subtitleText;
     public bool HasInteracted { get; private set; } = false;
 
+    public HelperHandController helperHandController;
     private bool isDragging = false;
     private Animator boyAnimator;
     private Animator kikiAnimator;
@@ -41,6 +42,7 @@ public class PillowDragAndDrop : MonoBehaviour
         droppedPillowsCount = 0;
         boyAnimator = Boy.GetComponent<Animator>();
         kikiAnimator = Kiki.GetComponent<Animator>();
+
         if (dust != null)
         {
             dust.SetActive(false);
@@ -65,10 +67,14 @@ public class PillowDragAndDrop : MonoBehaviour
         positiveAudio2 = Resources.Load<AudioClip>("Audio/FeedbackAudio/Audio2");
         negativeAudio = Resources.Load<AudioClip>("Audio/FeedbackAudio/Audio3");
 
-        audioClipBigPillow = Resources.Load<AudioClip>("Audio/Helper Audio/5. put the big pillow at the back ");
-        audioClipSmallPillow = Resources.Load<AudioClip>("Audio/Helper Audio/6. put the small pillow at the front of the big pillow ");
+        audioClipBigPillow = Resources.Load<AudioClip>("Audio/Helper Audio/bigpillow");
+        audioClipSmallPillow = Resources.Load<AudioClip>("Audio/Helper Audio/smallpillow");
 
-        // Find the audio source with the tag "FeedbackAudio"
+        if (audioClipBigPillow == null || audioClipSmallPillow == null)
+        {
+            Debug.LogError("Big or small pillow audio clips not found in Resources.");
+        }
+
         GameObject audioObject = GameObject.FindGameObjectWithTag("FeedbackAudio");
         if (audioObject != null)
         {
@@ -77,6 +83,19 @@ public class PillowDragAndDrop : MonoBehaviour
         else
         {
             Debug.LogError("No GameObject with the tag 'FeedbackAudio' found.");
+        }
+
+        if (nextaudiosoucre != null)
+        {
+            AudioSource testAudioSource = nextaudiosoucre.GetComponent<AudioSource>();
+            if (testAudioSource == null)
+            {
+                Debug.LogError("No AudioSource component found on nextaudiosoucre.");
+            }
+        }
+        else
+        {
+            Debug.LogError("nextaudiosoucre GameObject is not assigned in the inspector.");
         }
     }
 
@@ -181,7 +200,6 @@ public class PillowDragAndDrop : MonoBehaviour
 
     private IEnumerator HandlePillowAnimationAndAudio()
     {
-        // Wait for 1 second before triggering animations and audio
         yield return new WaitForSeconds(2f);
 
         if (droppedPillowsCount < 4)
@@ -194,27 +212,36 @@ public class PillowDragAndDrop : MonoBehaviour
 
                 if (nextPillow != null)
                 {
+                    AudioSource audioSource = nextaudiosoucre.GetComponent<AudioSource>() ?? feedbackAudioSource;
 
-                    if (nextPillow.IsBigPillow())
+                    if (audioSource == null)
                     {
-                        // Trigger BigPillow animation and play big pillow audio
-                        kikiAnimator.SetTrigger("BigPillow");
-                        helperHandController.GetComponent<AudioSource>().PlayOneShot(audioClipBigPillow);
-                        StartCoroutine(RevealTextWordByWord("Put the Big Pillow at the Back", 0.5f));
+                        Debug.LogError("AudioSource is null. Neither nextaudiosoucre nor feedbackAudioSource is assigned correctly.");
                     }
                     else
                     {
-                        // Trigger SmallPillow animation and play small pillow audio
-                        kikiAnimator.SetTrigger("smallPillow");
-                        helperHandController.GetComponent<AudioSource>().PlayOneShot(audioClipSmallPillow);
-                        StartCoroutine(RevealTextWordByWord("Put the Small Pillow at the front of the big Pillow", 0.3f));
+                        if (nextPillow.IsBigPillow())
+                        {
+                            kikiAnimator.SetTrigger("bigPillow");
+                            audioSource.PlayOneShot(audioClipBigPillow);
+                            StartCoroutine(RevealTextWordByWord("Put the Big Pillow at the Back", 0.5f));
+                            Debug.Log("Playing big pillow audio.");
+                        }
+                        else
+                        {
+                            kikiAnimator.SetTrigger("smallPillow");
+                            audioSource.PlayOneShot(audioClipSmallPillow);
+                            StartCoroutine(RevealTextWordByWord("Put the Small Pillow at the front of the big Pillow", 0.3f));
+                            Debug.Log("Playing small pillow audio.");
+                        }
                     }
 
                     helperHandController.ScheduleNextPillow(nextPillow);
                 }
             }
         }
-     }
+    }
+
 
     private IEnumerator DelayedScheduleHelperHand()
     {
@@ -367,18 +394,17 @@ public class PillowDragAndDrop : MonoBehaviour
     }
     private IEnumerator RevealTextWordByWord(string fullText, float delayBetweenWords)
     {
-        subtitleText.text = "";  // Clear the text before starting
-        subtitleText.gameObject.SetActive(true);  // Ensure the subtitle text is active
+        subtitleText.text = "";
+        subtitleText.gameObject.SetActive(true);
 
-        string[] words = fullText.Split(' ');  // Split the full text into individual words
+        string[] words = fullText.Split(' ');
 
         // Reveal words one by one
         for (int i = 0; i < words.Length; i++)
         {
-            // Instead of appending, build the text up to the current word
-            subtitleText.text = string.Join(" ", words, 0, i + 1);  // Show only the words up to the current index
-            yield return new WaitForSeconds(delayBetweenWords);  // Wait before revealing the next word
+            subtitleText.text = string.Join(" ", words, 0, i + 1);
+            yield return new WaitForSeconds(delayBetweenWords);
         }
-        subtitleText.gameObject.SetActive(false);
+        subtitleText.text = "";
     }
 }

@@ -481,16 +481,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: fa8112416b9288943bd251711cfab331, type: 3}
---- !u!1 &279622442 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 7858792698623254911, guid: 85f6e187413e1874c867f63abf871ab5, type: 3}
-  m_PrefabInstance: {fileID: 1786206411}
-  m_PrefabAsset: {fileID: 0}
---- !u!82 &279622445 stripped
-AudioSource:
-  m_CorrespondingSourceObject: {fileID: 1708946441714153709, guid: 85f6e187413e1874c867f63abf871ab5, type: 3}
-  m_PrefabInstance: {fileID: 1786206411}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &301199582
 GameObject:
   m_ObjectHideFlags: 0
@@ -724,10 +714,11 @@ MonoBehaviour:
   dust: {fileID: 2129446495}
   bedsheet: {fileID: 797688688}
   offsetValue: 2
-  helperHandController: {fileID: 912389236}
+  nextaudiosoucre: {fileID: 1559247392}
   Boy: {fileID: 780673490}
   Kiki: {fileID: 1109235245}
   subtitleText: {fileID: 1393608717}
+  helperHandController: {fileID: 912389236}
 --- !u!1 &566178913
 GameObject:
   m_ObjectHideFlags: 0
@@ -877,10 +868,11 @@ MonoBehaviour:
   dust: {fileID: 1587762974}
   bedsheet: {fileID: 797688688}
   offsetValue: 2
-  helperHandController: {fileID: 912389236}
+  nextaudiosoucre: {fileID: 1559247392}
   Boy: {fileID: 780673490}
   Kiki: {fileID: 1109235245}
   subtitleText: {fileID: 1393608717}
+  helperHandController: {fileID: 912389236}
 --- !u!1 &780673490
 GameObject:
   m_ObjectHideFlags: 0
@@ -1012,6 +1004,7 @@ MonoBehaviour:
   stopPosition: {fileID: 811882548}
   stopPosition2: {fileID: 1809541160}
   walkSpeed: 5
+  nextaudiosoucre: {fileID: 1559247392}
   pillowBigRight: {fileID: 566178913}
   pillowBigLeft: {fileID: 391338648}
   pillowSmallLeft: {fileID: 1739629795}
@@ -1729,10 +1722,11 @@ MonoBehaviour:
   dust: {fileID: 1225254316}
   bedsheet: {fileID: 797688688}
   offsetValue: 2
-  helperHandController: {fileID: 912389236}
+  nextaudiosoucre: {fileID: 1559247392}
   Boy: {fileID: 780673490}
   Kiki: {fileID: 1109235245}
   subtitleText: {fileID: 1393608717}
+  helperHandController: {fileID: 912389236}
 --- !u!1 &962734870
 GameObject:
   m_ObjectHideFlags: 0
@@ -2920,6 +2914,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1559247394}
   - component: {fileID: 1559247393}
+  - component: {fileID: 1559247395}
   m_Layer: 0
   m_Name: flower pot
   m_TagString: Untagged
@@ -2994,6 +2989,102 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!82 &1559247395
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1559247392}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &1587762974
 GameObject:
   m_ObjectHideFlags: 0
@@ -3766,79 +3857,11 @@ MonoBehaviour:
   dust: {fileID: 1093195398}
   bedsheet: {fileID: 797688688}
   offsetValue: 2
-  helperHandController: {fileID: 912389236}
+  nextaudiosoucre: {fileID: 1559247392}
   Boy: {fileID: 780673490}
   Kiki: {fileID: 1109235245}
   subtitleText: {fileID: 1393608717}
---- !u!1001 &1786206411
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 1708946441714153709, guid: 85f6e187413e1874c867f63abf871ab5, type: 3}
-      propertyPath: m_Volume
-      value: 0.166
-      objectReference: {fileID: 0}
-    - target: {fileID: 1708946441714153709, guid: 85f6e187413e1874c867f63abf871ab5, type: 3}
-      propertyPath: m_PlayOnAwake
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6120322812427231483, guid: 85f6e187413e1874c867f63abf871ab5, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: 10.44
-      objectReference: {fileID: 0}
-    - target: {fileID: 6120322812427231483, guid: 85f6e187413e1874c867f63abf871ab5, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 5.7
-      objectReference: {fileID: 0}
-    - target: {fileID: 6120322812427231483, guid: 85f6e187413e1874c867f63abf871ab5, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6120322812427231483, guid: 85f6e187413e1874c867f63abf871ab5, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6120322812427231483, guid: 85f6e187413e1874c867f63abf871ab5, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6120322812427231483, guid: 85f6e187413e1874c867f63abf871ab5, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6120322812427231483, guid: 85f6e187413e1874c867f63abf871ab5, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6120322812427231483, guid: 85f6e187413e1874c867f63abf871ab5, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6120322812427231483, guid: 85f6e187413e1874c867f63abf871ab5, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6120322812427231483, guid: 85f6e187413e1874c867f63abf871ab5, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7858792698623254911, guid: 85f6e187413e1874c867f63abf871ab5, type: 3}
-      propertyPath: m_Name
-      value: Kiki 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 7858792698623254911, guid: 85f6e187413e1874c867f63abf871ab5, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 85f6e187413e1874c867f63abf871ab5, type: 3}
+  helperHandController: {fileID: 912389236}
 --- !u!1 &1809541159
 GameObject:
   m_ObjectHideFlags: 0
@@ -3920,13 +3943,14 @@ MonoBehaviour:
   stopPosition: {fileID: 811882548}
   stopPosition2: {fileID: 1809541160}
   walkSpeed: 5
+  nextaudiosoucre: {fileID: 0}
   pillowBigRight: {fileID: 566178913}
   pillowBigLeft: {fileID: 391338648}
   pillowSmallLeft: {fileID: 1739629795}
   pillowSmallRight: {fileID: 926076959}
   bedsheet: {fileID: 797688688}
-  Bird: {fileID: 279622442}
-  birdAudiosource: {fileID: 279622445}
+  Bird: {fileID: 0}
+  birdAudiosource: {fileID: 0}
   pillowDragAndDrop: {fileID: 391338652}
   subtitleText: {fileID: 0}
 --- !u!82 &1862408398
@@ -4459,7 +4483,7 @@ PrefabInstance:
       objectReference: {fileID: 1102895508}
     - target: {fileID: 7818521083861892653, guid: 8a8298d9b3f8b0846a90c56bb0c38c1e, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_StringArgument
-      value: New_Level-Select
+      value: LevelSelect
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -4494,7 +4518,6 @@ SceneRoots:
   - {fileID: 1035907881}
   - {fileID: 1559247394}
   - {fileID: 962734871}
-  - {fileID: 1786206411}
   - {fileID: 912389237}
   - {fileID: 1373119447}
   - {fileID: 1720523142}

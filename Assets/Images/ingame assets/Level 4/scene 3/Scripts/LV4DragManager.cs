@@ -1,42 +1,53 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class LV4DragManager : MonoBehaviour
 {
-    public GameObject dirtyDishes; // Reference to the Dirty Dishes GameObject
-    public GameObject foam; // Reference to the Foam GameObject
-    public GameObject yourPrefab; // The prefab to spawn (also includes DishWashingManager)
-    public Vector3 spawnPosition; // Position to spawn the prefab
-    public Animator birdAnimator; // Reference to the Bird Animator
-    public string canTalkParam = "canTalk"; // Name of the animation parameter
-    public LVL4Sc3HelperHand helperHandManager; // Reference to the Helper Hand Manager
+    public GameObject dirtyDishes;
+    public GameObject foam;
+    public GameObject yourPrefab;
+    public Vector3 spawnPosition;
+    public Animator birdAnimator;
+    public string canTalkParam = "canTalk";
+    public LVL4Sc3HelperHand helperHandManager;
+    public AudioSource imageAudioSource;
     private List<DishdragController> dishControllers = new List<DishdragController>();
 
-    public DishWashingManager dishWashingManager; // Reference to the DishWashingManager
-    private Vector3 originalPosition; // Store the original position
-    private Vector3 offset; // Declare offset here
-    private Dictionary<Transform, Vector3> originalScales = new Dictionary<Transform, Vector3>(); // Store original scales of children
+    private DishWashingManager dishWashingManager;
+    public bool tweenComplete;
+    private Vector3 originalPosition;
+    private Vector3 offset;
+    private Dictionary<Transform, Vector3> originalScales = new Dictionary<Transform, Vector3>();
     private bool isDragging = false;
     public bool PrefabSpawned;
 
-    private Coroutine helperHandCoroutine; // Coroutine for helper hand delay
+    private Coroutine helperHandCoroutine;
     private int currentIndex = 0;
+
+    public AudioSource audioSource1; // Drag Audio 1 here
+    public AudioSource audioSource2; // Drag Audio 2 here
+    public AudioSource audioSource3;
+    public AudioSource audioSource4;    
+    public TextMeshProUGUI subtitleText;
+    public bool timerRunning;
 
     void Start()
     {
         birdAnimator.SetTrigger(canTalkParam);
         PrefabSpawned = false;
         originalPosition = dirtyDishes.transform.position;
-        
+        tweenComplete = false;
 
         // Store original scale of dirty dishes and their children
         foreach (Transform child in dirtyDishes.transform)
         {
             originalScales[child] = child.localScale;
         }
+        timerRunning = false;
 
-        StartCoroutine(WaitForTalkAnimation());
+        StartCoroutine(PlayAnimationsWithAudio());
     }
 
     void Update()
@@ -75,38 +86,47 @@ public class LV4DragManager : MonoBehaviour
         }
     }
 
-    public IEnumerator WaitForTalkAnimation()
+    
+    private IEnumerator PlayAnimationsWithAudio()
     {
         yield return new WaitUntil(() => birdAnimator.GetCurrentAnimatorStateInfo(0).IsName("Talk"));
-        yield return new WaitForSeconds(0.1f); // Adjust this delay as needed
+
+        audioSource1.Play();
+        StartCoroutine(RevealTextWordByWord("Oh no, the dishes are so Dirty", 0.5f));
 
         yield return new WaitUntil(() => birdAnimator.GetCurrentAnimatorStateInfo(0).IsName("Talk") == false);
 
-        dirtyDishes.GetComponent<Collider2D>().enabled = true;
+        yield return new WaitForSeconds(0.5f);
 
-        // Start the helper hand delay timer
+        /*birdAnimator.SetTrigger("next");*/
+
+        yield return new WaitUntil(() => birdAnimator.GetCurrentAnimatorStateInfo(0).IsName("Put Dishes in Sink"));
+        
+        audioSource2.Play();
+        StartCoroutine(RevealTextWordByWord("Please put the dishes in the sink!", 0.5f)); // Modified subtitle for clarity
+
+        yield return new WaitUntil(() => birdAnimator.GetCurrentAnimatorStateInfo(0).IsName("Put Dishes in Sink") == false);
+
+        yield return new WaitForSeconds(0.5f);
+
+        dirtyDishes.GetComponent<Collider2D>().enabled = true;
         helperHandCoroutine = StartCoroutine(HelperHandDelayTimer());
     }
 
-    // Helper hand delay timer coroutine
     private IEnumerator HelperHandDelayTimer()
     {
-        // Wait for the delay time before spawning the helper hand
         yield return new WaitForSeconds(helperHandManager.helperHandDelay);
 
-        // Spawn and tween the helper hand if OnDirtyDishesDropped() wasn't called
         helperHandManager.SpawnHelperHand(dirtyDishes.transform.position, foam.transform.position);
     }
 
     void OnDirtyDishesDropped()
     {
-        // Stop the helper hand coroutine to prevent spawning
         if (helperHandCoroutine != null)
         {
             StopCoroutine(helperHandCoroutine);
         }
 
-        // If dropped correctly on the foam
         if (IsDroppedOnFoam(dirtyDishes))
         {
             LeanTween.scale(dirtyDishes, Vector3.zero, 0.5f).setOnComplete(() =>
@@ -117,17 +137,14 @@ public class LV4DragManager : MonoBehaviour
 
                 SpawnPrefab(spawnedObject);
 
-                // Destroy the helper hand if it's active
                 helperHandManager.StopHelperHand();
             });
         }
         else
         {
-            // If dropped incorrectly
-            // Reset the position of the dirty dishes
+            
             dirtyDishes.transform.position = originalPosition;
 
-            // Restart the helper hand delay timer
             helperHandCoroutine = StartCoroutine(HelperHandDelayTimer());
         }
     }
@@ -166,6 +183,29 @@ public class LV4DragManager : MonoBehaviour
                 {
                     Vector3 dishOriginalScale = dishOriginalScales[dish];
                     LeanTween.scale(dish.gameObject, dishOriginalScale, 0.5f).setEase(LeanTweenType.easeOutBounce);
+                    tweenComplete = true;
+                }
+
+                // Get reference to the bird image GameObject by tag and Animator component
+                GameObject birdImage = GameObject.FindWithTag("Bird");
+                if (birdImage != null)
+                {
+                    RectTransform birdRectTransform = birdImage.GetComponent<RectTransform>();
+                    Animator birdAnimator = birdImage.GetComponent<Animator>();
+
+                    // Tween bird image to enter the viewport, trigger "instruction", then return
+                    LeanTween.move(birdRectTransform, new Vector2(-250, 250), 0.5f).setOnComplete(() =>
+                    {
+                        birdAnimator.SetTrigger("instruction");
+                        imageAudioSource.Play();
+                        StartCoroutine(RevealTextWordByWord("Lets Wash the Dishes", 0.5f));
+                        StartCoroutine(WaitAndReturnBirdImage(birdRectTransform));
+                        timerRunning = true;
+                    });
+                }
+                else
+                {
+                    Debug.LogError("Bird image GameObject with tag 'Bird' not found.");
                 }
             });
         });
@@ -173,9 +213,17 @@ public class LV4DragManager : MonoBehaviour
         PrefabSpawned = true;
     }
 
+    // Coroutine to wait and then move the bird image back to its original position
+    private IEnumerator WaitAndReturnBirdImage(RectTransform birdRectTransform)
+    {
+        yield return new WaitForSeconds(3f);
+        LeanTween.move(birdRectTransform, new Vector2(-250, -140), 0.5f);
+    }
+
+
     void TweenDirtyDishesBack()
     {
-        LeanTween.scale(dirtyDishes, Vector3.one, 0.5f).setOnComplete(() =>
+        LeanTween.scale(dirtyDishes, Vector3.one * 1.25f, 0.5f).setOnComplete(() =>
         {
             foreach (Transform child in dirtyDishes.transform)
             {
@@ -200,12 +248,12 @@ public class LV4DragManager : MonoBehaviour
                     child.localScale = originalScales[child];
                 }
 
-                // Enable the Collider2D component on each child GameObject
+                /*// Enable the Collider2D component on each child GameObject
                 Collider2D childCollider = child.GetComponent<Collider2D>();
                 if (childCollider != null)
                 {
                     childCollider.enabled = true; // Enable the collider
-                }
+                }*/
             }
 
             // Disable the main collider of dirtyDishes
@@ -220,7 +268,28 @@ public class LV4DragManager : MonoBehaviour
         });
 
         LeanTween.move(dirtyDishes, originalPosition, 0.5f);
+        birdAnimator.SetTrigger("dishClean");
+        audioSource3.Play();
+        StartCoroutine(RevealTextWordByWord("Yohoo...! so Clean", 0.5f));
         dishWashingManager.allDishesWashed = false;
+        StartCoroutine(TriggerDishArrangeWithDelay());
+    }
+
+    IEnumerator TriggerDishArrangeWithDelay()
+    {
+        yield return new WaitForSeconds(3f); // 2-second delay
+        birdAnimator.SetTrigger("dishArrange");
+        audioSource4.Play();
+        StartCoroutine(RevealTextWordByWord("lets put the dishes on the rack", 0.5f));
+
+        foreach (Transform child in dirtyDishes.transform)
+        {            
+            Collider2D childCollider = child.GetComponent<Collider2D>();
+            if (childCollider != null)
+            {
+                childCollider.enabled = true; // Enable the collider
+            }
+        }
     }
 
     // Start the delay timer to check each DishdragController
@@ -244,7 +313,7 @@ public class LV4DragManager : MonoBehaviour
     }
 
 
-public void SetAllDishesWashed()
+    public void SetAllDishesWashed()
     {
         if (dishWashingManager != null)
         {
@@ -252,4 +321,22 @@ public void SetAllDishesWashed()
         }
     }
 
+    private IEnumerator RevealTextWordByWord(string fullText, float delayBetweenWords)
+    {
+        subtitleText.text = "";
+        subtitleText.gameObject.SetActive(true);
+
+        string[] words = fullText.Split(' ');
+
+        // Reveal words one by one
+        for (int i = 0; i < words.Length; i++)
+        {
+            subtitleText.text = string.Join(" ", words, 0, i + 1);
+            yield return new WaitForSeconds(delayBetweenWords);
+        }
+        subtitleText.text = "";
+    }
+
 }
+
+

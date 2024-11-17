@@ -1,9 +1,13 @@
 using UnityEngine;
+using System.Collections;
+using TMPro;
 
 public class TweeningController : MonoBehaviour
 {
     public bool isSecondTime = false;
-
+    public LVL4Sc2AudioManager audioManager;
+    public AudioClip Audio1;
+    public TextMeshProUGUI subtitleText;
     [Header("Set 1 Game Objects and Target Positions")]
     public GameObject[] set1Objects;
     public Transform[] set1Targets;
@@ -19,8 +23,15 @@ public class TweeningController : MonoBehaviour
 
     public float tweenDuration = 1f;
     public LeanTweenType easeType = LeanTweenType.easeOutBack;
-
+    public bool TweenComplete;
     private bool previousState = false; // To track the previous state of isSecondTime
+
+    // Bird-related variables
+    private GameObject bird;
+    public Transform birdEndPosition;
+    public LVL4Sc2HelperHand helperhand;
+    private Vector3 birdInitialPosition;
+    private Animator birdAnimator;
 
     private void Awake()
     {
@@ -37,7 +48,7 @@ public class TweeningController : MonoBehaviour
 
         for (int i = 0; i < set1Objects.Length; i++)
         {
-            if (set1Objects[i] != null) // Check if the game object is not null
+            if (set1Objects[i] != null)
             {
                 set1InitialPositions[i] = set1Objects[i].transform.position;
             }
@@ -45,14 +56,22 @@ public class TweeningController : MonoBehaviour
 
         for (int i = 0; i < set2Objects.Length; i++)
         {
-            if (set2Objects[i] != null) // Check if the game object is not null
+            if (set2Objects[i] != null)
             {
                 set2InitialPositions[i] = set2Objects[i].transform.position;
             }
         }
 
-        // Initially, tween Set 1 to target positions
+        // Set initial tweening
         PerformInitialTweening();
+
+        // Get bird reference and its initial position
+        bird = GameObject.FindGameObjectWithTag("Bird");
+        if (bird != null)
+        {
+            birdInitialPosition = bird.transform.position;
+            birdAnimator = bird.GetComponent<Animator>();
+        }
     }
 
     private void Update()
@@ -61,17 +80,13 @@ public class TweeningController : MonoBehaviour
         {
             previousState = isSecondTime;
 
-            
             PerformTweening();
 
-            
-            if (isSecondTime)
+            helperhand.ResetAndStartDelayTimer();
+
+            if (isSecondTime && juiceManager != null)
             {
-                LVL4Sc2HelperHand.Instance.ResetAndStartDelayTimer(); // Only for the second time
-            }
-            else
-            {
-                LVL4Sc2HelperHand.Instance.ResetAndStartDelayTimer(); // For the first time
+                juiceManager.isSecondTime = true;
             }
         }
     }
@@ -80,13 +95,12 @@ public class TweeningController : MonoBehaviour
     {
         if (isSecondTime)
         {
-            // Move set 2 to target positions and set 1 back to initial positions
             TweenSetToInitial(set1Objects, set1InitialPositions);
             TweenSetToTarget(set2Objects, set2Targets);
+            CallBirdTween(); // Call bird tweening when set2 is moved to target positions on the second time
         }
         else
         {
-            // Move set 1 to target positions and set 2 back to initial positions
             TweenSetToTarget(set1Objects, set1Targets);
             TweenSetToInitial(set2Objects, set2InitialPositions);
         }
@@ -98,26 +112,55 @@ public class TweeningController : MonoBehaviour
         {
             TweenSetToInitial(set1Objects, set1InitialPositions);
             TweenSetToTarget(set2Objects, set2Targets);
-
-            
-            LVL4Sc2HelperHand.Instance.ResetAndStartDelayTimer();
-
-            
-            if (juiceManager != null)
-            {
-                juiceManager.isSecondTime = true;
-            }
+            CallBirdTween(); // Call bird tweening here when isSecondTime is true
         }
         else
         {
             TweenSetToTarget(set1Objects, set1Targets);
             TweenSetToInitial(set2Objects, set2InitialPositions);
-
-            
-            LVL4Sc2HelperHand.Instance.ResetAndStartDelayTimer();
         }
     }
 
+    private void CallBirdTween()
+    {
+        // Get the RectTransform component of the bird
+        RectTransform birdRectTransform = bird.GetComponent<RectTransform>();
+        if (birdRectTransform != null)
+        {
+            // Set initial position (outside the viewport)
+            birdRectTransform.anchoredPosition = new Vector2(-1300, 320);
+
+            // Tween bird to final position (inside the viewport)
+            LeanTween.value(bird, -1300, -790, tweenDuration).setEase(easeType).setOnUpdate((float x) =>
+            {
+                birdRectTransform.anchoredPosition = new Vector2(x, 320);
+            }).setOnComplete(() =>
+            {
+                StartCoroutine(BirdAnimationSequence(birdRectTransform));
+            });
+        }
+    }
+
+    private IEnumerator BirdAnimationSequence(RectTransform birdRectTransform)
+    {
+        if (birdAnimator != null)
+        {
+            // Trigger "Intro2" animation
+            birdAnimator.SetTrigger("Intro2");
+            audioManager.PlayAudio(Audio1);
+            StartCoroutine(RevealTextWordByWord("Now, Let's make Juice", 0.5f));
+        }
+
+        yield return new WaitForSeconds(3f); // Wait for the animation and text reveal to complete
+
+        // Tween bird back to initial position (outside the viewport)
+        LeanTween.value(bird, -790, -1300, tweenDuration).setEase(easeType).setOnUpdate((float x) =>
+        {
+            birdRectTransform.anchoredPosition = new Vector2(x, 320);
+        });
+
+        TweenComplete = true;
+    }
 
     private void TweenSetToTarget(GameObject[] objects, Transform[] targets)
     {
@@ -125,8 +168,8 @@ public class TweeningController : MonoBehaviour
         {
             if (objects[i] != null && targets[i] != null)
             {
-                LeanTween.cancel(objects[i]); // Cancel any existing tweens on the object
-                LeanTween.move(objects[i], targets[i].position, 1f).setEase(LeanTweenType.easeOutBack);
+                LeanTween.cancel(objects[i]);
+                LeanTween.move(objects[i], targets[i].position, tweenDuration).setEase(easeType);
             }
         }
     }
@@ -137,9 +180,31 @@ public class TweeningController : MonoBehaviour
         {
             if (objects[i] != null)
             {
-                LeanTween.cancel(objects[i]); // Cancel any existing tweens on the object
-                LeanTween.move(objects[i], initialPositions[i], 1f).setEase(LeanTweenType.easeOutBack);
+                LeanTween.cancel(objects[i]);
+                LeanTween.move(objects[i], initialPositions[i], tweenDuration).setEase(easeType);
             }
         }
     }
+    private IEnumerator RevealTextWordByWord(string fullText, float delayBetweenWords)
+    {
+        if (subtitleText == null)
+        {
+            Debug.LogError("subtitleText is not assigned in the Inspector.");
+            yield break; // Exit the coroutine if subtitleText is null
+        }
+
+        subtitleText.text = "";
+        subtitleText.gameObject.SetActive(true);
+
+        string[] words = fullText.Split(' ');
+
+        // Reveal words one by one
+        for (int i = 0; i < words.Length; i++)
+        {
+            subtitleText.text = string.Join(" ", words, 0, i + 1);
+            yield return new WaitForSeconds(delayBetweenWords);
+        }
+        subtitleText.text = "";
+    }
+
 }

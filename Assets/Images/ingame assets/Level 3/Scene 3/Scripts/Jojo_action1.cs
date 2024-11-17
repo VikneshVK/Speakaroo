@@ -1,6 +1,8 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class Jojo_action1 : MonoBehaviour
 {
@@ -10,12 +12,17 @@ public class Jojo_action1 : MonoBehaviour
     public bool hasReachedOffScreen = false; // New boolean to track off-screen position
     public List<GameObject> objectsToEnable;
     public static event Action<GameObject[]> OnCollidersEnabled;
+    public Lvl3Sc3DragManager dragmanager;
+    public GameObject clothStand;
+    public GameObject sun;
+    public GameObject farm;
+   
 
-    private Animator walkAnimator;
-    private Animator talkAnimator;
+    private Animator jojoAnimator;
+    public Animator kikiAnimator;
+    private SpriteRenderer jojoSprite;
 
-    public GameObject walkRig;
-    public GameObject talkRig;
+    public TextMeshProUGUI subtitleText;
 
     // AudioSource and AudioClips
     private AudioSource audioSource;
@@ -23,24 +30,25 @@ public class Jojo_action1 : MonoBehaviour
     private AudioClip audioClip2;
 
     private bool isWalking = false;
+    private bool positionreached = false;
+    private bool audioPlayed = false;
     private bool isIdleCompleted = false;
     private bool collidersEnabled = false; // To ensure colliders are enabled only once
     private bool isReturning = false; // Flag for return trip
     private bool isTalk2Triggered = false; // Flag to track when canTalk2 is triggered
+    private bool subtitleTriggered = false;
 
     private Vector3 targetPosition; // Store the current target position
 
     void Start()
     {
-        walkAnimator = walkRig.GetComponent<Animator>();
-        talkAnimator = talkRig.GetComponent<Animator>();
+        jojoAnimator = GetComponent<Animator>();
+        jojoSprite = GetComponent<SpriteRenderer>();
 
         // Get the AudioSource and load the audio clips from Resources
         audioSource = GetComponent<AudioSource>();
         audioClip1 = Resources.Load<AudioClip>("audio/lvl3sc3/Looks like some clothes are still wet");
         audioClip2 = Resources.Load<AudioClip>("audio/lvl3sc3/_You are right, Kiki. It is evening now the clothes and toys are dry");
-
-        ActivateTalkRig(); // Start with talkRig active
     }
 
     void Update()
@@ -49,44 +57,61 @@ public class Jojo_action1 : MonoBehaviour
         {
             WalkToPosition(targetPosition);
         }
-        else if (!isReturning)
+        else if (!isReturning && !positionreached)
         {
-            HandleIdleCompletion();
+            MoveToStopPosition();
+        }
+
+        if (dragmanager.levelComplete && !audioPlayed)
+        {
+            StartCoroutine(HandleLevelCompleteActionsWithDelay()); 
         }
     }
 
-    private void HandleIdleCompletion()
+    private IEnumerator HandleLevelCompleteActionsWithDelay()
     {
-        if (!isIdleCompleted && talkAnimator.GetCurrentAnimatorStateInfo(0).IsName("Idle") &&
-            talkAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
+        yield return new WaitForSeconds(1f); 
+
+        jojoAnimator.SetBool("allDryed", true);
+        kikiAnimator.SetTrigger("allDryed");
+
+        AudioSource farmaudio = farm.GetComponent<AudioSource>();
+        if (farmaudio != null)
         {
-            isIdleCompleted = true;
-            MoveToStopPosition(); // Start moving to the stop position after idle completes
+            farmaudio.Play();
         }
+        if (!subtitleTriggered) 
+        {
+            subtitleTriggered = true;
+            StartCoroutine(RevealTextWordByWord("Woo Hoo..! the Laundry is done. lets take it in", 0.5f)); 
+        }        
+        audioPlayed = true;
     }
+
 
     public void MoveToStopPosition()
     {
-        ActivateWalkRig(); // Activate walkRig
+        jojoSprite.flipX = false;
         targetPosition = stopPosition.position;
         isWalking = true;
+        jojoAnimator.SetBool("canWalk", true);
         isReturning = false;
     }
 
     public void MoveOffScreen()
     {
-        ActivateWalkRig(); // Activate walkRig
         targetPosition = offScreenPosition.position;
-        walkAnimator.SetTrigger("walkBack");
+        jojoSprite.flipX = true;
+        jojoAnimator.SetBool("canWalk", true);
         isWalking = true;
     }
 
     public void ReturnToStopPosition()
     {
+        jojoSprite.flipX = false;
         isReturning = true;
-        ActivateWalkRig(); // Activate walkRig
         targetPosition = stopPosition.position;
-        walkAnimator.SetTrigger("walk");
+        jojoAnimator.SetBool("canWalk", true);
         isWalking = true;
         isTalk2Triggered = true; // Set flag to trigger canTalk2 when returning to stop position
     }
@@ -97,6 +122,7 @@ public class Jojo_action1 : MonoBehaviour
         if (Vector3.Distance(transform.position, targetPosition) <= 0.1f)
         {
             isWalking = false; // Stop walking
+            jojoAnimator.SetBool("canWalk", false);
 
             if (targetPosition == offScreenPosition.position)
             {
@@ -105,8 +131,7 @@ public class Jojo_action1 : MonoBehaviour
             }
             else if (targetPosition == stopPosition.position)
             {
-                ActivateTalkRig(); // Switch to talkRig after reaching the stop position
-                CheckAndEnableColliders();
+
 
                 if (isTalk2Triggered)
                 {
@@ -116,65 +141,115 @@ public class Jojo_action1 : MonoBehaviour
                 else
                 {
                     StartTalking("canTalk"); // Regular talking trigger
+                    positionreached = true;
                 }
+
             }
         }
     }
 
     public void StartTalking(string talkTrigger)
     {
-        ActivateTalkRig(); // Switch to talkRig
-        talkAnimator.SetTrigger(talkTrigger); // Trigger the correct talk animation (canTalk or canTalk2)
+        // Switch to talkRig
+        jojoAnimator.SetTrigger(talkTrigger); // Trigger the correct talk animation (canTalk or canTalk2)
 
         // Play the appropriate audio based on the trigger
         if (talkTrigger == "canTalk" && audioClip1 != null)
         {
             audioSource.clip = audioClip1;
             audioSource.Play();
+            StartCoroutine(RevealTextWordByWord("Looks like some clothes are still Wet", 0.5f));
+            StartCoroutine(TriggerHelperAfterDialogue());
         }
         else if (talkTrigger == "canTalk2" && audioClip2 != null)
         {
             audioSource.clip = audioClip2;
             audioSource.Play();
+            StartCoroutine(RevealTextWordByWord("You are right, Kiki. It is evening now the clothes and toys are dry", 0.5f));
+            StartCoroutine(TriggerHelper2AfterDialogue());
         }
+    }
+
+    private IEnumerator TriggerHelperAfterDialogue()
+    {
+        yield return new WaitForSeconds(3.5f);
+
+        // Trigger "helper1" on Kiki's animator
+        if (kikiAnimator != null)
+        {
+            kikiAnimator.SetTrigger("helper1");
+        }
+
+        // Play audio from the AudioSource on the clothStand GameObject
+        AudioSource clothStandAudio = clothStand.GetComponent<AudioSource>();
+        if (clothStandAudio != null)
+        {
+            clothStandAudio.Play();
+        }
+        StartCoroutine(RevealTextWordByWord("Let's put the dry clothes in the basket", 0.5f));
+        CheckAndEnableColliders();
+    }
+
+    private IEnumerator TriggerHelper2AfterDialogue()
+    {
+        yield return new WaitForSeconds(7.5f);
+
+        // Trigger "helper1" on Kiki's animator
+        if (kikiAnimator != null)
+        {
+            kikiAnimator.SetTrigger("helper2");
+        }
+
+        // Play audio from the AudioSource on the clothStand GameObject
+        AudioSource sunAudio = sun.GetComponent<AudioSource>();
+        if (sunAudio != null)
+        {
+            sunAudio.Play();
+        }
+        StartCoroutine(RevealTextWordByWord("Let's put the toys and the clothes in the basket", 0.5f));
     }
 
     private void CheckAndEnableColliders()
     {
         if (!collidersEnabled)
         {
+            int enabledCount = 0;
+
             foreach (GameObject obj in objectsToEnable)
             {
-                ItemDragHandler item = obj.GetComponent<ItemDragHandler>();
-                if (item != null)
+                if (enabledCount >= 3) break; // Enable only three cloth objects
+
+                ClothesdragHandler clothHandler = obj.GetComponent<ClothesdragHandler>();
+                if (clothHandler != null && clothHandler.isDry) // Check if cloth is dry
                 {
                     Collider2D collider = obj.GetComponent<Collider2D>();
                     if (collider != null)
                     {
                         collider.enabled = true;
+                        enabledCount++;
                     }
+                    // Start monitoring for helper hand on the first active object
+                    
                 }
             }
+            dragmanager.StartHelperTimerForNextObject();
             collidersEnabled = true;
-
-            // Notify the HelpHandController for Jojo's action
-            HelpHandController helperHand = FindObjectOfType<HelpHandController>();
-            if (helperHand != null)
-            {
-                helperHand.StartHelperHandRoutineForJojo(objectsToEnable.ToArray());
-            }
         }
     }
 
-    private void ActivateWalkRig()
+    private IEnumerator RevealTextWordByWord(string fullText, float delayBetweenWords)
     {
-        walkRig.SetActive(true);
-        talkRig.SetActive(false);
-    }
+        subtitleText.text = "";
+        subtitleText.gameObject.SetActive(true);
 
-    private void ActivateTalkRig()
-    {
-        talkRig.SetActive(true);
-        walkRig.SetActive(false);
+        string[] words = fullText.Split(' ');
+
+        // Reveal words one by one
+        for (int i = 0; i < words.Length; i++)
+        {
+            subtitleText.text = string.Join(" ", words, 0, i + 1);
+            yield return new WaitForSeconds(delayBetweenWords);
+        }
+        subtitleText.text = "";
     }
 }

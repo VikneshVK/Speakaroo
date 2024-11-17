@@ -29,11 +29,12 @@ public class Lvl6QuestManager : MonoBehaviour
 
     [Header("KIKI")]
     public GameObject Kiki;
+    public TextMeshProUGUI subtitleText;
 
     [Header("Description Canvas")]
     public GameObject descriptionCanvas;
     public TextMeshProUGUI titleText;
-    public TextMeshProUGUI descriptionText;
+    /*public TextMeshProUGUI descriptionText;*/
 
     [Header("Helper Hand")]
     public LVL6Sc2Helperhand helperhand;
@@ -45,6 +46,9 @@ public class Lvl6QuestManager : MonoBehaviour
     public AudioClip starfishAudio;
     public AudioClip redShellAudio;
     public AudioClip babyTurtleAudio;
+    public AudioClip rightDropAudio;
+    public AudioClip wrongDropAudio;
+    public AudioClip finalAudio;
 
     public GameObject BlackoutPanel;
 
@@ -61,12 +65,12 @@ public class Lvl6QuestManager : MonoBehaviour
 
     }
 
-    
+
     public void SpawnItems()
     {
         ClearSpawnedObjects();
 
-        kikiController.TweenBirdandback("FirstTalk");
+        kikiController.TweenBirdandback("Pointing");
 
         // Create lists for items and positions
         List<GameObject> shells = new List<GameObject> { whiteShell, redShell, yellowShell };
@@ -75,17 +79,17 @@ public class Lvl6QuestManager : MonoBehaviour
         List<Transform> oddPositions = new List<Transform> { position2, position4, position6 };
         List<Transform> evenPositions = new List<Transform> { position1, position3, position5 };
 
-       
+
         ShuffleList(shells);
         ShuffleList(seaAnimals);
 
         // Spawn items based on the quest type (even or odd)
-        if (ItemstobeFound % 2 == 0) 
+        if (ItemstobeFound % 2 == 0)
         {
             for (int i = 0; i < evenPositions.Count; i++)
             {
                 GameObject spawnedObject = Instantiate(shells[i], evenPositions[i]);
-                spawnedObject.transform.localPosition = Vector3.zero; 
+                spawnedObject.transform.localPosition = Vector3.zero;
                 spawnedObjects.Add(spawnedObject);
 
                 originalScales[spawnedObject] = spawnedObject.transform.localScale;
@@ -93,32 +97,32 @@ public class Lvl6QuestManager : MonoBehaviour
                 EnableSpecificCollider(evenPositions[i]);
             }
         }
-        else 
+        else
         {
             for (int i = 0; i < oddPositions.Count; i++)
             {
                 GameObject spawnedObject = Instantiate(seaAnimals[i], oddPositions[i]);
-                spawnedObject.transform.localPosition = Vector3.zero; 
+                spawnedObject.transform.localPosition = Vector3.zero;
                 spawnedObjects.Add(spawnedObject);
 
-              
+
                 originalScales[spawnedObject] = spawnedObject.transform.localScale;
-                
+
                 EnableSpecificCollider(oddPositions[i]);
             }
         }
 
-       
+
         string questItemName = QuestGiver();
 
-        
+
         GameObject currentQuestItem = spawnedObjects.Find(item => item.name.Contains(questItemName));
 
-        
+
         AudioClip questAudio = GetQuestAudio();
         kikiController.PlayQuestAudio(questAudio);
 
-        
+
         if (currentQuestItem != null)
         {
             helperhand.StartDelayTimer(currentQuestItem);
@@ -176,24 +180,47 @@ public class Lvl6QuestManager : MonoBehaviour
 
     private AudioClip GetQuestAudio()
     {
+        AudioClip selectedAudio = null;
+        string subtitleText = "";
+
+        // Set the audio and subtitle text based on the current quest item
         switch (ItemstobeFound)
         {
             case 6:
-                return whiteShellAudio;
+                selectedAudio = whiteShellAudio;
+                subtitleText = "Lets find a White Shell";
+                break;
             case 5:
-                return crabAudio;
+                selectedAudio = crabAudio;
+                subtitleText = "Lets find the Crab";
+                break;
             case 4:
-                return yellowShellAudio;
+                selectedAudio = yellowShellAudio;
+                subtitleText = "Lets find a Yellow Shell";
+                break;
             case 3:
-                return starfishAudio;
+                selectedAudio = starfishAudio;
+                subtitleText = "Lets find the Starfish";
+                break;
             case 2:
-                return redShellAudio;
+                selectedAudio = redShellAudio;
+                subtitleText = "Lets find a Red Shell";
+                break;
             case 1:
-                return babyTurtleAudio;
+                selectedAudio = babyTurtleAudio;
+                subtitleText = "Lets find the Turtle";
+                break;
             default:
+                Debug.LogWarning("No audio clip available for the current quest.");
                 return null;
         }
+
+        // Start the subtitle coroutine with the specific subtitle text
+        StartCoroutine(RevealTextWordByWord(subtitleText, 0.5f));
+
+        return selectedAudio;
     }
+
 
     // Checks for changes to ItemstobeFound and updates the spawned items accordingly
     public void QuestValidation(string itemName, GameObject clickedObject)
@@ -202,30 +229,30 @@ public class Lvl6QuestManager : MonoBehaviour
 
         if (itemName == expectedItem)
         {
-            
+
             DisableAllColliders();
             EnableDescriptionCanvas();
             kikiController.TweenBirdandback("RightTalk");
+            kikiController.PlayQuestAudio(rightDropAudio);
 
-            
+
             itemsFound++;
             ItemstobeFound--;
 
-            
+
             StartCoroutine(HandleCorrectItem());
         }
         else
         {
-            
+
             kikiController.TweenBirdandback("WrongTalk");
-            
+            kikiController.PlayQuestAudio(wrongDropAudio);
+
             BoxCollider2D collider = clickedObject.GetComponentInParent<BoxCollider2D>();
             if (collider != null)
             {
                 collider.enabled = false;
             }
-            
-            EnableOtherColliders(clickedObject.transform);
 
             StartCoroutine(HandleIncorrectItem(clickedObject));
         }
@@ -252,11 +279,13 @@ public class Lvl6QuestManager : MonoBehaviour
         helperhand.DestroyAndResetTimer();
 
         if (itemsFound >= 6)
-        {            
+        {
             kikiController.TweenBirdandback("FinalTalk");
+            kikiController.PlayQuestAudio(finalAudio);
+            StartCoroutine(RevealTextWordByWord("Playing in the Sand was Super Fun ", 0.5f));
         }
         else
-        {            
+        {
             SpawnItems();
         }
 
@@ -271,6 +300,8 @@ public class Lvl6QuestManager : MonoBehaviour
         DisableParticleEffects();
 
         DisableDescriptionCanvas();
+
+       /* EnableOtherColliders(clickedObject.transform);*/
 
         EnablePositionChildren();
 
@@ -365,31 +396,31 @@ public class Lvl6QuestManager : MonoBehaviour
         {
             case "White_shell":
                 titleText.text = "White Seashell";
-                descriptionText.text = "A smooth white shell you might find by the shore.";
+                /*descriptionText.text = "A smooth white shell you might find by the shore.";*/
                 break;
             case "crabe":
                 titleText.text = "Crab";
-                descriptionText.text = "A small sea creature with claws that walks sideways.";
+                /*descriptionText.text = "A small sea creature with claws that walks sideways.";*/
                 break;
             case "Yellow_Shell":
                 titleText.text = "Yellow Seashell";
-                descriptionText.text = "A bright yellow shell you can find on the beach.";
+                /*descriptionText.text = "A bright yellow shell you can find on the beach.";*/
                 break;
             case "start-fish":
                 titleText.text = "Starfish";
-                descriptionText.text = "A sea creature shaped like a star that lives in the water.";
+                /*descriptionText.text = "A sea creature shaped like a star that lives in the water.";*/
                 break;
             case "Red_Shell":
                 titleText.text = "Red Seashell";
-                descriptionText.text = "A red shell that's pretty and stands out in the sand.";
+                /*descriptionText.text = "A red shell that's pretty and stands out in the sand.";*/
                 break;
             case "baby-turtle":
                 titleText.text = "Sea Turtle";
-                descriptionText.text = "A gentle turtle that swims in the ocean.";
+                /*descriptionText.text = "A gentle turtle that swims in the ocean.";*/
                 break;
             default:
                 titleText.text = "Unknown";
-                descriptionText.text = "No description available.";
+                /*descriptionText.text = "No description available.";*/
                 break;
         }
     }
@@ -439,5 +470,20 @@ public class Lvl6QuestManager : MonoBehaviour
             list[i] = list[randomIndex];
             list[randomIndex] = temp;
         }
+    }
+
+    private IEnumerator RevealTextWordByWord(string fullText, float delayBetweenWords)
+    {
+        subtitleText.text = "";
+        subtitleText.gameObject.SetActive(true);
+
+        string[] words = fullText.Split(' ');
+
+        for (int i = 0; i < words.Length; i++)
+        {
+            subtitleText.text = string.Join(" ", words, 0, i + 1);
+            yield return new WaitForSeconds(delayBetweenWords);
+        }
+        subtitleText.text = "";
     }
 }

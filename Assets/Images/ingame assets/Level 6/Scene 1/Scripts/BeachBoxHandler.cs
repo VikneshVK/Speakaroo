@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections;
+using UnityEngine.EventSystems;
 
 public class BeachBoxHandler : MonoBehaviour
 {
@@ -41,8 +42,86 @@ public class BeachBoxHandler : MonoBehaviour
         {
             playRestared = false;
             CheckCompletedMiniGames(); // Enable buttons immediately
+            StartCoroutine(ScaleActiveButtonsAfterPositioning());
         }
     }
+
+    private IEnumerator ScaleActiveButtonsAfterPositioning()
+    {
+        yield return new WaitForSeconds(0.6f); // Ensure buttons have updated their positions
+
+        // Disable dragging for all active buttons at once
+        if (leftButton.gameObject.activeSelf)
+        {
+            RemoveDragEvents(leftButton);
+        }
+        if (centerButton.gameObject.activeSelf)
+        {
+            RemoveDragEvents(centerButton);
+        }
+        if (rightButton.gameObject.activeSelf)
+        {
+            RemoveDragEvents(rightButton);
+        }
+
+        // Scale up each button and play effect with the updated highlighter position
+        if (leftButton.gameObject.activeSelf)
+        {
+            yield return ScaleChildAndPlayEffect(leftButton);
+        }
+        if (centerButton.gameObject.activeSelf)
+        {
+            yield return ScaleChildAndPlayEffect(centerButton);
+        }
+        if (rightButton.gameObject.activeSelf)
+        {
+            yield return ScaleChildAndPlayEffect(rightButton);
+        }
+
+        // Enable dragging for all active buttons after all effects are complete
+        if (leftButton.gameObject.activeSelf)
+        {
+            AddDragEvents(leftButton);
+        }
+        if (centerButton.gameObject.activeSelf)
+        {
+            AddDragEvents(centerButton);
+        }
+        if (rightButton.gameObject.activeSelf)
+        {
+            AddDragEvents(rightButton);
+        }
+    }
+
+    private void RemoveDragEvents(Image button)
+    {
+        EventTrigger eventTrigger = button.GetComponent<EventTrigger>();
+        if (eventTrigger != null)
+        {
+            // Remove PointerDown and PointerUp entries related to drag
+            eventTrigger.triggers.RemoveAll(entry =>
+                entry.eventID == EventTriggerType.PointerDown ||
+                entry.eventID == EventTriggerType.PointerUp);
+        }
+    }
+
+    private void AddDragEvents(Image button)
+    {
+        EventTrigger eventTrigger = button.GetComponent<EventTrigger>();
+        if (eventTrigger != null)
+        {
+            // Add PointerDown event for starting the drag
+            EventTrigger.Entry pointerDownEntry = new EventTrigger.Entry { eventID = EventTriggerType.PointerDown };
+            pointerDownEntry.callback.AddListener((data) => { button.GetComponent<DraggableTextHandler>().OnMouseDown(); });
+            eventTrigger.triggers.Add(pointerDownEntry);
+
+            // Add PointerUp event for ending the drag
+            EventTrigger.Entry pointerUpEntry = new EventTrigger.Entry { eventID = EventTriggerType.PointerUp };
+            pointerUpEntry.callback.AddListener((data) => { button.GetComponent<DraggableTextHandler>().OnMouseUp(); });
+            eventTrigger.triggers.Add(pointerUpEntry);
+        }
+    }
+
 
     public void OnMouseDown()
     {
@@ -87,15 +166,12 @@ public class BeachBoxHandler : MonoBehaviour
 
     private void EnableAndTweenButtons()
     {
-        // Activate all buttons
         leftButton.gameObject.SetActive(true);
         centerButton.gameObject.SetActive(true);
         rightButton.gameObject.SetActive(true);
 
-        // Disable buttons based on completed mini-games
         CheckCompletedMiniGames();
 
-        // Tween each button to its respective position
         float duration = 0.5f;
         Vector3 leftPosition = new Vector3(-550, 70, 0);
         Vector3 centerPosition = new Vector3(0, 70, 0);
@@ -104,55 +180,87 @@ public class BeachBoxHandler : MonoBehaviour
         LeanTween.moveLocal(leftButton.gameObject, leftPosition, duration).setEase(LeanTweenType.easeOutBack);
         LeanTween.moveLocal(centerButton.gameObject, centerPosition, duration).setEase(LeanTweenType.easeOutBack);
         LeanTween.moveLocal(rightButton.gameObject, rightPosition, duration).setEase(LeanTweenType.easeOutBack)
-                 .setOnComplete(() => StartCoroutine(ScaleUpButtonsAndPlayEffects()));
+                 .setOnComplete(() =>
+                 {
+                     NotifyDraggableHandlers(); // Notify DraggableTextHandlers to update initial positions
+                     StartCoroutine(ScaleUpButtonsAndPlayEffects());
+                 });
     }
 
     private IEnumerator ScaleUpButtonsAndPlayEffects()
     {
-        // Scale and play effect for left button's child component, wait for 1 second
-        yield return ScaleChildAndPlayEffect(leftButton);
+        yield return new WaitForSeconds(0.6f);
+        // Disable dragging for all active buttons at once
+        if (leftButton.gameObject.activeSelf)
+        {
+            RemoveDragEvents(leftButton);
+        }
+        if (centerButton.gameObject.activeSelf)
+        {
+            RemoveDragEvents(centerButton);
+        }
+        if (rightButton.gameObject.activeSelf)
+        {
+            RemoveDragEvents(rightButton);
+        }
 
-        // Scale and play effect for center button's child component, wait for 1 second
-        yield return ScaleChildAndPlayEffect(centerButton);
+        // Scale up each button and play effect
+        if (leftButton.gameObject.activeSelf)
+        {
+            yield return ScaleChildAndPlayEffect(leftButton);
+        }
+        if (centerButton.gameObject.activeSelf)
+        {
+            yield return ScaleChildAndPlayEffect(centerButton);
+        }
+        if (rightButton.gameObject.activeSelf)
+        {
+            yield return ScaleChildAndPlayEffect(rightButton);
+        }
 
-        // Scale and play effect for right button's child component, wait for 1 second
-        yield return ScaleChildAndPlayEffect(rightButton);
+        // Enable dragging for all active buttons after all effects are complete
+        if (leftButton.gameObject.activeSelf)
+        {
+            AddDragEvents(leftButton);
+        }
+        if (centerButton.gameObject.activeSelf)
+        {
+            AddDragEvents(centerButton);
+        }
+        if (rightButton.gameObject.activeSelf)
+        {
+            AddDragEvents(rightButton);
+        }
     }
+
 
     private IEnumerator ScaleChildAndPlayEffect(Image button)
     {
-        // Get the child component of the button (the text)
         Transform childComponent = button.transform.GetChild(0);
         AudioSource buttonAudioSource = button.GetComponent<AudioSource>();
 
         if (childComponent != null && highlighter != null)
         {
-            // Move the highlighter to the button's position
+            // Position the highlighter at the updated button position before scaling
             highlighter.transform.position = button.transform.position;
-
-            // Set the highlighter's initial scale to 0
             highlighter.transform.localScale = Vector3.zero;
-
-            // Start scaling up the text component
             childComponent.localScale = Vector3.zero;
-            LeanTween.scale(childComponent.gameObject, Vector3.one, 0.5f).setEase(LeanTweenType.easeOutBack);
 
-            // At the same time, scale up the highlighter to 8
+            // Start scaling the button child and highlighter
+            LeanTween.scale(childComponent.gameObject, Vector3.one, 0.5f).setEase(LeanTweenType.easeOutBack);
             LeanTween.scale(highlighter.gameObject, Vector3.one * 8f, 0.5f).setEase(LeanTweenType.easeOutBack);
 
-            // Wait for both the scaling operations to complete
             yield return new WaitForSeconds(0.5f);
 
-            // Play the audio from the button's AudioSource
+            // Play audio if available
             if (buttonAudioSource != null)
             {
                 buttonAudioSource.Play();
             }
 
-            // Scale down the highlighter after 0.5 seconds
+            // Scale down the highlighter after the animation
             LeanTween.scale(highlighter.gameObject, Vector3.zero, 0.5f).setEase(LeanTweenType.easeInBack);
 
-            // Wait for the highlighter scaling down to complete
             yield return new WaitForSeconds(0.5f);
         }
     }
@@ -160,19 +268,106 @@ public class BeachBoxHandler : MonoBehaviour
     private void CheckCompletedMiniGames()
     {
         if (miniGameController == null) return;
+        textComponent2.enabled = true;
 
-        // Deactivate image components based on completed mini-games
-        if (miniGameController.IsMiniGameCompleted("BeachBallMiniGame"))
+        // Determine which mini-games are completed
+        bool beachBallCompleted = miniGameController.IsMiniGameCompleted("BeachBallMiniGame");
+        bool bubblesCompleted = miniGameController.IsMiniGameCompleted("BubbleMinigame");
+        bool frisbeeCompleted = miniGameController.IsMiniGameCompleted("FrisbeeMiniGame");
+
+        // Deactivate buttons for completed games
+        leftButton.gameObject.SetActive(!beachBallCompleted);
+        centerButton.gameObject.SetActive(!bubblesCompleted);
+        rightButton.gameObject.SetActive(!frisbeeCompleted);
+
+        // List of active buttons
+        Image[] activeButtons = { leftButton, centerButton, rightButton };
+        int activeCount = 0;
+        foreach (Image button in activeButtons)
         {
-            leftButton.gameObject.SetActive(false); // Deactivate the image component
+            if (button.gameObject.activeSelf) activeCount++;
         }
-        if (miniGameController.IsMiniGameCompleted("BubbleMinigame"))
+
+        // Adjust positions based on the number of active buttons
+        Vector3 leftPosition = new Vector3(-550, 70, 0);
+        Vector3 centerPosition = new Vector3(0, 70, 0);
+        Vector3 rightPosition = new Vector3(550, 70, 0);
+
+        if (activeCount == 3)
         {
-            centerButton.gameObject.SetActive(false); // Deactivate the image component
+            // No games completed, arrange in left, center, and right
+            SetButtonPosition(leftButton, leftPosition);
+            SetButtonPosition(centerButton, centerPosition);
+            SetButtonPosition(rightButton, rightPosition);
         }
-        if (miniGameController.IsMiniGameCompleted("FrisbeeMiniGame"))
+        else if (activeCount == 2)
         {
-            rightButton.gameObject.SetActive(false); // Deactivate the image component
+            // One game completed, arrange remaining in left and right
+            if (leftButton.gameObject.activeSelf && centerButton.gameObject.activeSelf)
+            {
+                SetButtonPosition(leftButton, leftPosition);
+                SetButtonPosition(centerButton, rightPosition);
+            }
+            else if (leftButton.gameObject.activeSelf && rightButton.gameObject.activeSelf)
+            {
+                SetButtonPosition(leftButton, leftPosition);
+                SetButtonPosition(rightButton, rightPosition);
+            }
+            else if (centerButton.gameObject.activeSelf && rightButton.gameObject.activeSelf)
+            {
+                SetButtonPosition(centerButton, leftPosition);
+                SetButtonPosition(rightButton, rightPosition);
+            }
+        }
+        else if (activeCount == 1)
+        {
+            // Two games completed, place the remaining button in the center
+            if (leftButton.gameObject.activeSelf)
+            {
+                SetButtonPosition(leftButton, centerPosition);
+            }
+            else if (centerButton.gameObject.activeSelf)
+            {
+                SetButtonPosition(centerButton, centerPosition);
+            }
+            else if (rightButton.gameObject.activeSelf)
+            {
+                SetButtonPosition(rightButton, centerPosition);
+            }
+        }
+    }
+
+    // Helper method to set button positions with animation
+    private void SetButtonPosition(Image button, Vector3 position)
+    {
+        LeanTween.moveLocal(button.gameObject, position, 0.5f).setEase(LeanTweenType.easeOutBack).setOnComplete(() =>
+        {
+            NotifyDraggableHandlers();
+        });
+    }
+
+    public Vector3 GetButtonPosition(string buttonName)
+    {
+        switch (buttonName)
+        {
+            case "Beach Ball":
+                return leftButton.transform.position;
+            case "Bubbles":
+                return centerButton.transform.position;
+            case "Frisbee":
+                return rightButton.transform.position;
+            default:
+                Debug.LogWarning($"Button with name {buttonName} not found.");
+                return Vector3.zero;
+        }
+    }
+
+    private void NotifyDraggableHandlers()
+    {
+        // Notify all draggable handlers to update their initial positions
+        foreach (DraggableTextHandler handler in FindObjectsOfType<DraggableTextHandler>())
+        {
+            handler.UpdateInitialPositionFromHandler();
         }
     }
 }

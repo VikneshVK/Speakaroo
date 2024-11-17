@@ -61,6 +61,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0691923866cb0a745bda590238341689, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Boy: {fileID: 3262085437610431735}
   spinDuration: 1
   flyAwayDuration: 1
   ellipseRadiusX: 30
@@ -108,7 +109,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: d4fd7608fcc7a524b8349720b7eb9458, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 36c618053e410184b9cce93a313ff53e, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -269,6 +270,7 @@ GameObject:
   - component: {fileID: 3665306143518950359}
   - component: {fileID: 1353470408777685416}
   - component: {fileID: 3276130006852769568}
+  - component: {fileID: 864956754111765703}
   m_Layer: 5
   m_Name: Boy
   m_TagString: Untagged
@@ -333,6 +335,27 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!95 &864956754111765703
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3262085437610431735}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 21e4f924aaba26346a0b3a79a9552e5c, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &3881228837771025479
 GameObject:
   m_ObjectHideFlags: 0
@@ -431,6 +454,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e62709ef8bc96c74d99361f52fbcbab5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  audio1: {fileID: 8300000, guid: 79d24cf928c208d4c81a023f694be860, type: 3}
 --- !u!1 &4835918468277690418
 GameObject:
   m_ObjectHideFlags: 0
@@ -492,6 +516,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0691923866cb0a745bda590238341689, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Boy: {fileID: 3262085437610431735}
   spinDuration: 1
   flyAwayDuration: 1
   ellipseRadiusX: 30
@@ -539,7 +564,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: d4fd7608fcc7a524b8349720b7eb9458, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 36c618053e410184b9cce93a313ff53e, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -750,6 +775,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0691923866cb0a745bda590238341689, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Boy: {fileID: 3262085437610431735}
   spinDuration: 1
   flyAwayDuration: 1
   ellipseRadiusX: 30
@@ -797,7 +823,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: d4fd7608fcc7a524b8349720b7eb9458, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 36c618053e410184b9cce93a313ff53e, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -1008,6 +1034,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0691923866cb0a745bda590238341689, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Boy: {fileID: 3262085437610431735}
   spinDuration: 0.5
   flyAwayDuration: 1
   ellipseRadiusX: 30
@@ -1055,7 +1082,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: d4fd7608fcc7a524b8349720b7eb9458, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 36c618053e410184b9cce93a313ff53e, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -1373,6 +1400,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0691923866cb0a745bda590238341689, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Boy: {fileID: 3262085437610431735}
   spinDuration: 0.5
   flyAwayDuration: 1
   ellipseRadiusX: 30
@@ -1420,7 +1448,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: d4fd7608fcc7a524b8349720b7eb9458, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 36c618053e410184b9cce93a313ff53e, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1

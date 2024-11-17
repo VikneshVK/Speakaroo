@@ -8,6 +8,7 @@ public class FrisbeeMiniGame : MonoBehaviour, IMiniGame
     private GameObject stCanvasPrefab; // Reference to ST Canvas
     private string stCanvasTag = "Mask"; // The tag assigned to the ST Canvas in the scene
     private MiniGameController miniGameController; // Reference to the MiniGameController
+    public AudioClip audio1;
 
     private void Start()
     {
@@ -78,6 +79,8 @@ public class FrisbeeMiniGame : MonoBehaviour, IMiniGame
                 {
                     // Set "canTalk" to true to start the "Talk 0" animation
                     playerAnimator.SetBool("canTalk", true);
+                    jojoController.audioSource.clip = audio1;
+                    jojoController.audioSource.Play();
                     Debug.Log("Player 'canTalk' set to true.");
                 }
             }

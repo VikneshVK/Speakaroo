@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Tween_Toys : MonoBehaviour
@@ -16,15 +15,12 @@ public class Tween_Toys : MonoBehaviour
     public Transform basketFinalPosition;
 
     private TapControl tapControl;
-    private Helper_PointerController helperPointerController;
     private int currentToyIndex = 0;
     private bool hasTweened = false;
 
     void Start()
     {
         tapControl = pipe.GetComponent<TapControl>();
-        helperPointerController = FindObjectOfType<Helper_PointerController>();
-
         DisableAllColliders();
     }
 
@@ -46,7 +42,7 @@ public class Tween_Toys : MonoBehaviour
                 .setOnComplete(() =>
                 {
                     EnableColliderForCurrentToy();
-                    StartCoroutine(HandleHelperHandForCurrentToy());
+                    FindObjectOfType<Helper_PointerController>().EnableHelperHandForToy(currentToyIndex);
                 });
     }
 
@@ -65,16 +61,20 @@ public class Tween_Toys : MonoBehaviour
         switch (currentToyIndex)
         {
             case 0:
+                Debug.Log("Enabling Teddy’s collider.");
                 EnableCollider(teddy);
                 break;
             case 1:
+                Debug.Log("Enabling Dino’s collider.");
                 EnableCollider(dino);
                 break;
             case 2:
+                Debug.Log("Enabling Bunny’s collider.");
                 EnableCollider(bunny);
                 break;
         }
     }
+
 
     private void DisableCollider(GameObject obj)
     {
@@ -88,55 +88,13 @@ public class Tween_Toys : MonoBehaviour
         collider.enabled = true;
     }
 
-    private IEnumerator HandleHelperHandForCurrentToy()
+    public void MoveToNextToy()
     {
-        yield return new WaitForSeconds(helperPointerController.toyDragDelay);
-
-        GameObject currentToy = GetCurrentToy();
-        drag_Toys toyScript = currentToy.GetComponent<drag_Toys>();
-
-        if (!toyScript.IsInteracted())
-        {
-            // Trigger the glow effect on the current toy's position
-            helperPointerController.PauseAndSpawnGlow(currentToy.transform.position);
-
-            // Wait for the glow effect to complete (glowInstance should be null after it completes)
-            while (helperPointerController.glowInstance != null)
-            {
-                yield return null;
-            }
-
-            // Now spawn the helper hand after the glow effect is done
-            helperPointerController.SpawnHelperHand(currentToy.transform.position, false);
-            helperPointerController.TweenHelperHandToParticlesPosition(currentToyIndex);
-        }
-
-        while (!toyScript.IsInteracted())
-        {
-            yield return null;
-        }
-
-        // Reset helper hand after interaction
-        helperPointerController.ResetHelperHand();
-
         currentToyIndex++;
         if (currentToyIndex < 3)
         {
             EnableColliderForCurrentToy();
-            StartCoroutine(HandleHelperHandForCurrentToy());
-        }
-    }
-
-
-
-    private GameObject GetCurrentToy()
-    {
-        switch (currentToyIndex)
-        {
-            case 0: return teddy;
-            case 1: return dino;
-            case 2: return bunny;
-            default: return null;
+            FindObjectOfType<Helper_PointerController>().EnableHelperHandForToy(currentToyIndex);
         }
     }
 }

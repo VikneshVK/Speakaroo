@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class BubbleBurst : MonoBehaviour
 {
@@ -8,13 +9,26 @@ public class BubbleBurst : MonoBehaviour
     public float floatDistance = 0.5f; // Maximum distance the bubble can float in any direction
     public float floatDuration = 2f; // Time it takes for one float cycle
     public Animator bubbleAnimator; // Reference to the Animator component
-
+    public GameObject boy;
     public AudioSource boyAudioSource; // Reference to the boy's AudioSource (assign via Inspector)
     private AudioSource bubbleAudioSource; // The AudioSource on the same GameObject
     private AudioClip[] popClips; // Array to store pop1 and pop2 clips
 
     private bool isPopped = false;
     private Vector3 originalLocalPosition; // Store the original local position of the bubble
+    private static List<BubbleBurst> allBubbles = new List<BubbleBurst>(); // List to keep track of all bubbles
+
+    private void Awake()
+    {
+        // Add this bubble to the list of all bubbles
+        allBubbles.Add(this);
+    }
+
+    private void OnDestroy()
+    {
+        // Remove this bubble from the list when destroyed
+        allBubbles.Remove(this);
+    }
 
     private void Start()
     {
@@ -69,6 +83,9 @@ public class BubbleBurst : MonoBehaviour
             // Stop the floating effect
             LeanTween.cancel(gameObject);
 
+            // Disable interactivity on other bubbles
+            DisableOtherBubbles();
+
             // Play bubble pop sound (shuffle between pop1 and pop2)
             if (bubbleAudioSource != null && popClips.Length > 0)
             {
@@ -84,6 +101,7 @@ public class BubbleBurst : MonoBehaviour
 
             // Trigger the "Pop" animation
             bubbleAnimator.SetTrigger("Pop");
+            boy.GetComponent<Animator>().SetTrigger("Giggle");
         }
     }
 
@@ -93,7 +111,42 @@ public class BubbleBurst : MonoBehaviour
         // Notify the minigame that this bubble is destroyed
         OnDestroyEvent?.Invoke(this);
 
+        // Re-enable interactivity on other bubbles
+        EnableOtherBubbles();
+
         // Destroy the bubble
         Destroy(gameObject);
+    }
+
+    // Disable interactivity on all other bubbles by disabling their colliders
+    private void DisableOtherBubbles()
+    {
+        foreach (var bubble in allBubbles)
+        {
+            if (bubble != this)
+            {
+                Collider2D collider = bubble.GetComponent<Collider2D>();
+                if (collider != null)
+                {
+                    collider.enabled = false;
+                }
+            }
+        }
+    }
+
+    // Enable interactivity on all other bubbles by enabling their colliders
+    private void EnableOtherBubbles()
+    {
+        foreach (var bubble in allBubbles)
+        {
+            if (bubble != this)
+            {
+                Collider2D collider = bubble.GetComponent<Collider2D>();
+                if (collider != null)
+                {
+                    collider.enabled = true;
+                }
+            }
+        }
     }
 }

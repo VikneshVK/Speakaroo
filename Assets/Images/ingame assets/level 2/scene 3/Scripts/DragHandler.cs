@@ -11,13 +11,13 @@ public class DragHandler : MonoBehaviour
     private Vector2 originalPosition;  // The original position of the object
     private bool isDroppedSuccessfully = false;  // To prevent multiple drops
     public bool IsDragged => isDragging;
-    private AnchorGameObject anchor;
+   /* private AnchorGameObject anchor;*/
     public HelperPointer helperPointer;
 
     void Awake()
     {
         objectCollider = GetComponent<Collider2D>();
-        anchor = GetComponent<AnchorGameObject>();
+        /*anchor = GetComponent<AnchorGameObject>();*/
         
     }
 
@@ -33,7 +33,7 @@ public class DragHandler : MonoBehaviour
     void Start()
     {
         objectCollider.enabled = false;  // Initially disable all colliders until activated by dragManager
-        anchor = GetComponent<AnchorGameObject>();
+       /* anchor = GetComponent<AnchorGameObject>();*/
     }
 
     void Update()
@@ -60,23 +60,17 @@ public class DragHandler : MonoBehaviour
             isDragging = true;
             originalPosition = transform.position;
             Debug.Log($"{gameObject.name} collider is active and interaction started.");
-            anchor.enabled = false;
-             // Stop the helper hand when dragging starts
+            
         }
-        else
-        {
-            Debug.LogWarning($"{gameObject.name}'s collider is not being detected or is disabled.");
-        }
+        
     }
 
     void OnMouseDrag()
     {
         if (!isDragging) return;
 
-        // Get the current mouse position in world coordinates
         Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
 
-        // Move the object to follow the mouse
         transform.position = new Vector2(mousePosition.x, mousePosition.y);
 
         helperPointer.StopHelperHand();
@@ -87,17 +81,16 @@ public class DragHandler : MonoBehaviour
     {
         isDragging = false;
 
-        // Check if the object is close enough to the target position for a correct drop
         if (Vector2.Distance(transform.position, targetPosition.position) < 2.0f)  // Adjust threshold as needed
         {
             if (!isDroppedSuccessfully)
             {
-                OnSuccessfulDrop();  // Handle successful drop
+                OnSuccessfulDrop();  
             }
         }
         else
         {
-            OnFailedDrop();  // Handle failed drop
+            OnFailedDrop();  
         }
     }
 
@@ -113,21 +106,7 @@ public class DragHandler : MonoBehaviour
         {
             dragManager.OnItemDropped(true);  // Inform dragManager of successful drop
             Debug.Log($"{gameObject.name} dropped successfully.");
-        });
-
-        // Activate the next object if there is one
-        if (nextGameObject != null)
-        {
-            nextGameObject.GetComponent<Collider2D>().enabled = true;  // Enable the next object's collider (Sheet)
-            Debug.Log($"{nextGameObject.name} is now active for dragging.");
-
-            // Schedule helper hand for the next object (after successful drop)
-            var nextDragHandler = nextGameObject.GetComponent<DragHandler>();
-            if (nextDragHandler != null && helperPointer != null)
-            {
-                helperPointer.ScheduleHelperHand(nextDragHandler, dragManager);  // Schedule the helper hand for the next object
-            }
-        }
+        });          
 
         Destroy(targetPosition.gameObject);  // Clean up target position
     }

@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections.Generic;
 
 public class LVL5Sc2HelperController : MonoBehaviour
 {
@@ -14,10 +15,9 @@ public class LVL5Sc2HelperController : MonoBehaviour
     private float currentDelay = 0f;
     private bool isHelperActive = false;
 
-    // Reference to sprites corresponding to 6 animals
-    public Sprite[] animalSprites; // Array to hold 6 sprites
+    public Sprite[] animalSprites; // Array to hold sprites for 6 animals
 
-    // References for the helper hand
+    // Helper hand references
     public GameObject helperHandPrefab;
     public Transform helperHandSpawnPosition;
     public Transform helperHandTargetPosition;
@@ -26,10 +26,8 @@ public class LVL5Sc2HelperController : MonoBehaviour
 
     void Start()
     {
-        // Get the reference to PhotoQuestManager in the scene
+        // Reference to PhotoQuestManager in the scene
         photoQuestManager = FindObjectOfType<PhotoQuestManager>();
-
-        // Initialize the delay timer
         ResetDelayTimer();
     }
 
@@ -37,52 +35,82 @@ public class LVL5Sc2HelperController : MonoBehaviour
     {
         currentDelay += Time.deltaTime;
 
-        // If the timer exceeds the delay and the helper is not active, show the helper
         if (currentDelay >= delayTimer)
         {
-            Vector3 currentAnimalPosition = photoQuestManager.GetCurrentAnimalPosition();
+            // Get positions for the target animal in all grounds
+            List<Vector3> animalPositions = photoQuestManager.GetAnimalPositionsInAllGrounds(photoQuestManager.currentAnimalIndex);
             Vector3 cameraPosition = Camera.main.transform.position;
 
-            // Check if the animal is in the viewport
-            if (Mathf.Abs(currentAnimalPosition.x - cameraPosition.x) >= Camera.main.orthographicSize * Camera.main.aspect)
+            // Check if any animal position is within the viewport
+            bool anyAnimalInView = false;
+
+            foreach (Vector3 position in animalPositions)
             {
+                Vector3 viewportPosition = Camera.main.WorldToViewportPoint(position);
+
+                // Log each animal's viewport position to check if it's within the viewport
+                Debug.Log("Animal position: " + position + " | Viewport position: " + viewportPosition);
+
+                // Check if the position is within the viewport (x and y between 0 and 1)
+                if (viewportPosition.x >= 0 && viewportPosition.x <= 1 && viewportPosition.z > 0)
+                {
+                    anyAnimalInView = true;
+                    Debug.Log("Animal is in view: " + position);
+                    break;
+                }
+            }
+
+            if (anyAnimalInView)
+            {
+                // Hide the helper if any instance of the animal is in the viewport
+                if (isHelperActive)
+                {
+                    Debug.Log("Hiding helper as an animal instance is in view.");
+                    HideHelper();
+                }
+            }
+            else
+            {
+                // Show the helper if none of the instances are in the viewport
+                Vector3 closestAnimalPosition = GetClosestPosition(animalPositions, cameraPosition);
                 if (!isHelperActive)
                 {
-                    ShowHelper(currentAnimalPosition, cameraPosition);
+                    Debug.Log("Showing helper as all animal instances are out of view.");
+                    ShowHelperOnEdge(closestAnimalPosition.x < cameraPosition.x);
                 }
                 else
                 {
-
-                    UpdateHelperPosition(currentAnimalPosition, cameraPosition);
+                    UpdateHelperPosition(closestAnimalPosition, cameraPosition);
                 }
-            }
-            else if (isHelperActive)
-            {
-
-                spawnedDirPrefab.SetActive(false);
-                DestroyHelperHand();
-                isHelperActive = false;
             }
         }
     }
 
-    private void ShowHelper(Vector3 animalPosition, Vector3 cameraPosition)
+
+
+    private Vector3 GetClosestPosition(List<Vector3> positions, Vector3 referencePosition)
     {
-        // Determine where to spawn the prefab based on the position of the animal relative to the camera
-        if (animalPosition.x < cameraPosition.x)
+        Vector3 closestPosition = positions[0];
+        float smallestDistance = Vector3.Distance(positions[0], referencePosition);
+
+        foreach (var position in positions)
         {
-            // Spawn on the left and flip the sprite
-            SpawnHelper(dirPrefabRefL.position, true);
-        }
-        else
-        {
-            // Spawn on the right without flipping
-            SpawnHelper(dirPrefabRefR.position, false);
+            float distance = Vector3.Distance(position, referencePosition);
+            if (distance < smallestDistance)
+            {
+                smallestDistance = distance;
+                closestPosition = position;
+            }
         }
 
+        return closestPosition;
+    }
+
+    private void ShowHelperOnEdge(bool isLeft)
+    {
+        Vector3 edgePosition = isLeft ? dirPrefabRefL.position : dirPrefabRefR.position;
+        SpawnHelper(edgePosition, isLeft);
         isHelperActive = true;
-
-        // Spawn the helper hand and start tweening
         SpawnHelperHand();
     }
 
@@ -90,21 +118,9 @@ public class LVL5Sc2HelperController : MonoBehaviour
     {
         if (spawnedDirPrefab != null)
         {
-            // Update the position of the helper continuously based on the animal's position relative to the camera
-            if (animalPosition.x < cameraPosition.x)
-            {
-                // Update position to the left reference and flip the sprite
-                spawnedDirPrefab.transform.position = dirPrefabRefL.position;
-                dirPrefabSpriteRenderer.flipX = true;
-            }
-            else
-            {
-                // Update position to the right reference without flipping
-                spawnedDirPrefab.transform.position = dirPrefabRefR.position;
-                dirPrefabSpriteRenderer.flipX = false;
-            }
+            spawnedDirPrefab.transform.position = animalPosition.x < cameraPosition.x ? dirPrefabRefL.position : dirPrefabRefR.position;
+            dirPrefabSpriteRenderer.flipX = animalPosition.x < cameraPosition.x;
 
-            // Make sure the helper is active if it is not already
             if (!spawnedDirPrefab.activeSelf)
             {
                 spawnedDirPrefab.SetActive(true);
@@ -114,22 +130,17 @@ public class LVL5Sc2HelperController : MonoBehaviour
 
     private void SpawnHelper(Vector3 position, bool flipX)
     {
-        // If a prefab is already spawned, destroy it
         if (spawnedDirPrefab != null)
         {
             Destroy(spawnedDirPrefab);
         }
 
-        // Instantiate the directional prefab at the specified position
         spawnedDirPrefab = Instantiate(dirPrefab, position, Quaternion.identity);
 
-        // Get the SpriteRenderer component of the child GameObject named "image"
         Transform imageTransform = spawnedDirPrefab.transform.Find("image");
         if (imageTransform != null)
         {
             SpriteRenderer imageSpriteRenderer = imageTransform.GetComponent<SpriteRenderer>();
-
-            // Use the currentAnimalIndex from photoQuestManager to update the sprite of the image GameObject
             int currentAnimalIndex = photoQuestManager.currentAnimalIndex;
             if (currentAnimalIndex >= 0 && currentAnimalIndex < animalSprites.Length)
             {
@@ -141,7 +152,6 @@ public class LVL5Sc2HelperController : MonoBehaviour
             Debug.LogError("No child GameObject named 'image' found in dirPrefab.");
         }
 
-        // Flip the dirPrefab if needed
         dirPrefabSpriteRenderer = spawnedDirPrefab.GetComponent<SpriteRenderer>();
         dirPrefabSpriteRenderer.flipX = flipX;
     }
@@ -153,16 +163,13 @@ public class LVL5Sc2HelperController : MonoBehaviour
             Destroy(spawnedHelperHand);
         }
 
-        // Instantiate the helper hand prefab
         spawnedHelperHand = Instantiate(helperHandPrefab, helperHandSpawnPosition.position, Quaternion.identity);
 
-        // Tween the helper hand between spawn and target positions
         LeanTween.move(spawnedHelperHand, helperHandTargetPosition.position, 1.5f)
             .setEaseInOutSine()
             .setLoopPingPong();
     }
 
-    // Public method to destroy the helper hand, callable from external scripts
     public void DestroyHelperHand()
     {
         if (spawnedHelperHand != null)
@@ -172,24 +179,42 @@ public class LVL5Sc2HelperController : MonoBehaviour
         }
     }
 
-    public void ResetDelayTimer()
-    {
-        currentDelay = 0f;
-    }
-
-    // Call this method when validation is successful
-    public void OnValidationSuccess()
+    public void DestroyDirPrefab()
     {
         if (spawnedDirPrefab != null)
         {
             Destroy(spawnedDirPrefab);
             spawnedDirPrefab = null;
         }
+    }
 
-        // Reset the delay timer
+    public void ResetDelayTimer()
+    {
+        currentDelay = 0f;
+    }
+
+    private void HideHelper()
+    {
+        if (spawnedDirPrefab != null)
+        {
+            spawnedDirPrefab.SetActive(false);
+        }
+        DestroyHelperHand();
+        isHelperActive = false;
         ResetDelayTimer();
+    }
 
-        // Mark the helper as inactive so it will be spawned again for the next animal
+    public void OnValidationSuccess()
+    {
+        DestroyHelperHand();
+        DestroyDirPrefab();
+        ResetDelayTimer();
+        isHelperActive = false;
+    }
+
+    public void OnValidationFailed()
+    {
+        ResetDelayTimer();
         isHelperActive = false;
     }
 }

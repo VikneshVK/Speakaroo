@@ -14,7 +14,7 @@ public class TweenManager2 : MonoBehaviour
         ST_AudioManager.Instance.OnRetryClicked += ResetTimer;
 
         // Get the reference to the Animator and Bird_Controller component of the Bird game object
-        GameObject bird = GameObject.FindGameObjectWithTag("Bird");
+        GameObject bird = GameObject.FindGameObjectWithTag("Kiki");
         if (bird != null)
         {
             birdAnimator = bird.GetComponent<Animator>();
@@ -67,7 +67,7 @@ public class TweenManager2 : MonoBehaviour
         {
             speechTherapyCompleted = true;
             birdController.OnBigLeafDropped(); // Trigger bird's action for dropping the leaf
-            birdAnimator.SetTrigger("jump"); // Trigger the fly transition in Bird_Controller
+            birdAnimator.SetTrigger("jump");
 
             LeanTween.scale(gameObject, Vector3.zero, 0.5f).setEase(LeanTweenType.easeInOutBack).setOnComplete(() =>
             {

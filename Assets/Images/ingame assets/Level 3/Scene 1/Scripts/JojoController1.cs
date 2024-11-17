@@ -76,7 +76,7 @@ public class JojoController1 : MonoBehaviour
 
                 isWalking = false;
                 boyAnimator.SetBool("canWalk", false);
-                spriteRenderer.flipX = true;
+                
                 boyAnimator.SetBool("canTalk", true);
                 audioSource.Play();
                 StartCoroutine(RevealTextWordByWord("Mom asked if we can help clean our garden", 0.3f));
@@ -90,7 +90,7 @@ public class JojoController1 : MonoBehaviour
             boyAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f)
         {
             boyAnimator.SetBool("canTalk", false);
-            spriteRenderer.flipX = false;
+            
             birdcanTalk = true;
             kikiAudiosource.Play();
             birdAnimator.SetBool("canTalk", true);

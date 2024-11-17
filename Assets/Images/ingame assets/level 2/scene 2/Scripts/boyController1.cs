@@ -8,7 +8,7 @@ public class boyController1 : MonoBehaviour
     public Transform stopPosition;
     public Transform stopPosition2;
     public float walkSpeed = 2f;
-
+    public GameObject nextaudiosoucre;
     public GameObject pillowBigRight;
     public GameObject pillowBigLeft;
     public GameObject pillowSmallLeft;
@@ -27,13 +27,14 @@ public class boyController1 : MonoBehaviour
     private Animator BoyAnimator;
     private Animator birdAnimator;
     private SpriteRenderer boySprite;
+    private bool pillowAudioPlayer;
     private bool isWalking;
     private bool hasReachedStopPosition;
     private bool shouldContinueWalking;
     private AudioSource audioSource;
     private bool isFinalWalk;
     private bool birdaudioplayed;
-
+    private AudioClip audioClipBigPillow;
     private HelperHandController helperHandController;
 
     private bool hasPlayedAudio; // To ensure audio is played only once
@@ -49,7 +50,7 @@ public class boyController1 : MonoBehaviour
         /*normalRig.SetActive(true);
         walkingRig.SetActive(false);*/
         helperHandController = FindObjectOfType<HelperHandController>();
-
+        audioClipBigPillow = Resources.Load<AudioClip>("Audio/Helper Audio/bigpillow");
         if (stopPosition == null)
         {
             Debug.LogError("Stop position not set for BoyController.");
@@ -86,8 +87,7 @@ public class boyController1 : MonoBehaviour
         if (birdAnimator.GetCurrentAnimatorStateInfo(0).IsName("Talk") &&
             birdAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.9f)
         {
-            birdAnimator.SetTrigger("bigPillow");
-            EnableBigPillowColliders();
+            StartCoroutine(DelayedBigPillowTrigger());
         }
 
         if (PillowDragAndDrop.droppedPillowsCount == 4 && !hasPlayedAudio)
@@ -112,6 +112,23 @@ public class boyController1 : MonoBehaviour
         {
             movetoEnd();
         }
+    }
+
+    private IEnumerator DelayedBigPillowTrigger()
+    {
+        yield return new WaitForSeconds(2.5f); // Add 1-second delay
+
+        birdAnimator.SetTrigger("bigPillow");
+
+        if (!pillowAudioPlayer)
+        {
+            AudioSource audioSource = nextaudiosoucre.GetComponent<AudioSource>();
+            audioSource.PlayOneShot(audioClipBigPillow);
+            StartCoroutine(RevealTextWordByWord("Put the Big Pillow at the Back", 0.5f));
+            pillowAudioPlayer = true;
+        }
+
+        EnableBigPillowColliders();
     }
 
     private void PlayAudioOnPillowsDropped()
@@ -190,18 +207,17 @@ public class boyController1 : MonoBehaviour
 
     private IEnumerator RevealTextWordByWord(string fullText, float delayBetweenWords)
     {
-        subtitleText.text = "";  // Clear the text before starting
-        subtitleText.gameObject.SetActive(true);  // Ensure the subtitle text is active
+        subtitleText.text = "";
+        subtitleText.gameObject.SetActive(true);
 
-        string[] words = fullText.Split(' ');  // Split the full text into individual words
+        string[] words = fullText.Split(' ');
 
         // Reveal words one by one
         for (int i = 0; i < words.Length; i++)
         {
-            // Instead of appending, build the text up to the current word
-            subtitleText.text = string.Join(" ", words, 0, i + 1);  // Show only the words up to the current index
-            yield return new WaitForSeconds(delayBetweenWords);  // Wait before revealing the next word
+            subtitleText.text = string.Join(" ", words, 0, i + 1);
+            yield return new WaitForSeconds(delayBetweenWords);
         }
-        subtitleText.gameObject.SetActive(false);
+        subtitleText.text = "";
     }
 }

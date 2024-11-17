@@ -105,8 +105,8 @@ public class dragManager : MonoBehaviour
     {
         if (isCorrectDrop)
         {
-            // Randomly select one of the two positive feedback audios
-            int randomIndex = Random.Range(0, 2);  // Select either rightDrop1 or rightDrop2
+            // Play the feedback audio for a correct drop
+            int randomIndex = Random.Range(0, 2);  // Select either rightDrop1 or rightDrop2 feedback
             feedbackAudioSource.clip = feedbackClips[randomIndex];
             birdAnimator.SetTrigger(feedbackTriggers[randomIndex]);  // Trigger corresponding feedback animation
             boyAnimator.SetTrigger("rightDrop");
@@ -114,10 +114,11 @@ public class dragManager : MonoBehaviour
             feedbackAudioSource.Play();
             yield return new WaitUntil(() => !feedbackAudioSource.isPlaying);
 
-            // Play the object-specific audio after feedback finishes
+            // After feedback, play the object-specific audio
             PlayObjectAudio(totalCorrectDrops);
+            yield return new WaitUntil(() => !audioSource.isPlaying);
 
-            // Enable the next object
+            // Enable the next object collider after both audios have finished playing
             if (totalCorrectDrops < gameObjects.Length)
             {
                 ActivateNextObject(totalCorrectDrops);  // Activate the next object

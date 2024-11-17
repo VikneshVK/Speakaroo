@@ -88,17 +88,14 @@ public class Lvl5Sc12TweenManager : MonoBehaviour
         // Wait for the children to finish tweening
         LeanTween.delayedCall(0.5f, () =>
         {
-            /*Debug.Log("Tween completed, activating masks...");
-            SpriteMaskManager.Instance.ActivateMasks();*/
             speechTherapyCompleted = true;
             jojoController.canTalk2 = true;
-            // Set the animator parameters for the bird
+            
             if (BoyAnimator != null)
             {
                 BoyAnimator.SetBool("canTalk2", true);                
             }
 
-            // Tween the parent to scale 0
             LeanTween.scale(gameObject, Vector3.zero, 0.5f).setEase(LeanTweenType.easeInOutBack).setOnComplete(() =>
             {
                 Destroy(gameObject);

@@ -8,7 +8,7 @@ public class SunscreenLvl5Sc1_3TweenManager : MonoBehaviour
     private Animator BoyAnimator;
     private bool isRetryClicked = false;
     private GameObject buttonToActivate;
-    private LVL5Sc1_3JojoController jojoController;
+    private LVL5Sc1_3JojoController1 jojoController;
 
 
     private void Start()
@@ -21,7 +21,7 @@ public class SunscreenLvl5Sc1_3TweenManager : MonoBehaviour
         if (Boy != null)
         {
             BoyAnimator = Boy.GetComponent<Animator>();
-            jojoController = Boy.GetComponent<LVL5Sc1_3JojoController>();
+            jojoController = Boy.GetComponent<LVL5Sc1_3JojoController1>();
         }
 
         // Find the UICanvas and the Button within it
@@ -88,12 +88,8 @@ public class SunscreenLvl5Sc1_3TweenManager : MonoBehaviour
         {
 
             speechTherapyCompleted = true;
-            jojoController.canTalk = true;
-
-            if (BoyAnimator != null)
-            {
-                BoyAnimator.SetBool("canTalk", true);
-            }
+            jojoController.suncreamSpawned = true;
+            
 
             // Tween the parent to scale 0
             LeanTween.scale(gameObject, Vector3.zero, 0.5f).setEase(LeanTweenType.easeInOutBack).setOnComplete(() =>

@@ -1,21 +1,24 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 public class LVL4Sc2HelperHand : MonoBehaviour
 {
     public static LVL4Sc2HelperHand Instance { get; private set; }
 
     public GameObject helperHandPrefab;
-    public float delayTime = 5f;
+    public GameObject glowPrefab;
+    public float delayTime = 10f; // Total delay time
     public TweeningController tweeningController;
 
     private GameObject spawnedHelperHand;
+    private GameObject spawnedGlow;
     private Coroutine delayTimerCoroutine;
-    
-    private JuiceManager juiceManager; // Reference to JuiceManager
-    private bool isBlenderInteracted = false;
-    private bool isBlenderJarInteracted = false;
+    private JuiceManager juiceManager;
+
+    // Track collected status of required fruits
+    private Dictionary<string, bool> requiredFruitStatus = new Dictionary<string, bool>();
 
     private void Awake()
     {
@@ -28,98 +31,147 @@ public class LVL4Sc2HelperHand : MonoBehaviour
             Destroy(gameObject);
             return;
         }
-
         DontDestroyOnLoad(gameObject);
     }
 
     private void Start()
     {
-        juiceManager = FindObjectOfType<JuiceManager>(); // Initialize JuiceManager
+        juiceManager = FindObjectOfType<JuiceManager>();
+        
     }
 
-    // 1) Start the delay timer
+    public void InitializeRequiredFruitStatus()
+    {
+        requiredFruitStatus.Clear();
+        if (tweeningController.isSecondTime) 
+        {
+            foreach (string fruit in juiceManager.requiredFruits)
+            {
+                requiredFruitStatus[fruit] = false; // Set each required fruit as not collected
+                Debug.Log("Initialized required fruit: " + fruit + " as uncollected.");
+            }
+        }
+        
+    }
+
+
     public void StartDelayTimer()
     {
         if (delayTimerCoroutine != null)
         {
             StopCoroutine(delayTimerCoroutine);
         }
-        Debug.Log("Helper hand delay timer started.");
         delayTimerCoroutine = StartCoroutine(DelayTimerCoroutine());
+        Debug.Log("Timer started.");
     }
 
     private IEnumerator DelayTimerCoroutine()
     {
-        yield return new WaitForSeconds(delayTime);
-        Debug.Log("Helper hand delay timer finished.");
+        yield return new WaitForSeconds(delayTime / 2);
 
-        if (tweeningController != null && tweeningController.isSecondTime)
+        // Spawn glow on the required fruit
+        string nextTarget = GetCurrentTarget();
+        if (!string.IsNullOrEmpty(nextTarget))
         {
-            Debug.Log("Spawning helper hand based on fruit requirements.");
-            SpawnHelperHandBasedOnRequirements();
+            Debug.Log("Attempting to spawn and animate glow for: " + nextTarget);
+            yield return StartCoroutine(SpawnAndAnimateGlow(nextTarget));
         }
         else
         {
-            Debug.Log("isSecondTime is false, helper hand will not spawn.");
+            Debug.Log("No target found for glow.");
         }
+
+        yield return new WaitForSeconds(delayTime / 2);
+        Debug.Log("Timer ended.");
+
+        // After timer, spawn helper hand on the next target
+        SpawnHelperHandForNextTarget();
     }
 
-    private void SpawnHelperHandBasedOnRequirements()
+
+    private string GetCurrentTarget()
     {
-        if (juiceManager == null || juiceManager.requiredFruits == null || juiceManager.requiredFruits.Count == 0)
+        if (juiceManager.requiredFruits.Count > 0)
         {
+            foreach (string fruit in juiceManager.requiredFruits)
+            {
+                if (requiredFruitStatus.ContainsKey(fruit) && !requiredFruitStatus[fruit])
+                {
+                    Debug.Log("Next target for glow: " + fruit);
+                    return fruit; // Return the first uncollected required fruit
+                }
+            }
+        }
+        Debug.Log("No more fruits to collect.");
+        return null; // No more fruits to collect
+    }
+
+
+    private void SpawnHelperHandForNextTarget()
+    {
+        
+        string nextTarget = GetCurrentTarget();
+
+        if (string.IsNullOrEmpty(nextTarget))
+            return;
+
+        GameObject fruitObject = GameObject.FindGameObjectWithTag(nextTarget);
+        if (fruitObject == null)
+        {
+            Debug.Log("Fruit with tag '" + nextTarget + "' not found.");
             return;
         }
+        Vector3 spawnPosition = fruitObject.transform.position; // Get spawn position from fruit's location
 
-        // Spawn helper hand based on the required fruits
-        if (juiceManager.requiredFruits.Count == 1)
+        GameObject blenderObject = GameObject.FindGameObjectWithTag("Blender");
+        if (blenderObject == null)
         {
-            Debug.Log("Spawning helper hand for single fruit.");
-            SpawnAndTweenHelperHandForSingleFruit(juiceManager.requiredFruits[0]);
+            Debug.Log("Blender not found in the scene.");
+            return;
         }
-        else if (juiceManager.requiredFruits.Count == 2)
-        {
-            Debug.Log("Spawning helper hand for multiple fruits.");
-            StartCoroutine(SpawnAndTweenHelperHandForMultipleFruits(juiceManager.requiredFruits));
-        }
+        Transform targetPosition = blenderObject.transform; 
+
+        Debug.Log("Spawning helper hand from " + nextTarget + " to Blender.");
+        SpawnAndTweenHelperHand(spawnPosition, targetPosition);
     }
 
-    private void SpawnAndTweenHelperHandForSingleFruit(string fruitTag)
+
+    private IEnumerator SpawnAndAnimateGlow(string fruitTag)
     {
-        // Find the fruit position based on tag
+        if (glowPrefab == null)
+        {
+            Debug.Log("Glow prefab is not assigned.");
+            yield break;
+        }
+
         GameObject fruit = GameObject.FindGameObjectWithTag(fruitTag);
         if (fruit != null)
         {
-            Vector3 spawnPosition = fruit.transform.position;
-            Transform targetPosition = GameObject.FindGameObjectWithTag("Blender").transform;
-            Debug.Log($"Spawning helper hand at {spawnPosition} for fruit {fruitTag}.");
-            SpawnAndTweenHelperHand(spawnPosition, targetPosition);
+            Debug.Log("Fruit found for glow: " + fruitTag);
+            spawnedGlow = Instantiate(glowPrefab, fruit.transform.position, Quaternion.identity);
+            spawnedGlow.transform.localScale = Vector3.zero;
+
+            // Scale up
+            LeanTween.scale(spawnedGlow, Vector3.one * 15, 1f).setOnComplete(() =>
+            {
+                Debug.Log("Glow scale up completed for: " + fruitTag);
+            });
+            yield return new WaitForSeconds(2f);
+
+            // Scale down and destroy
+            LeanTween.scale(spawnedGlow, Vector3.zero, 1f).setOnComplete(() =>
+            {
+                Debug.Log("Glow scale down completed for: " + fruitTag);
+                Destroy(spawnedGlow);
+            });
         }
         else
         {
-            Debug.LogError($"Fruit with tag {fruitTag} not found.");
+            Debug.Log("Fruit with tag '" + fruitTag + "' not found in the scene.");
         }
     }
 
-    private IEnumerator SpawnAndTweenHelperHandForMultipleFruits(List<string> fruitTags)
-    {
-        foreach (string fruitTag in fruitTags)
-        {
-            GameObject fruit = GameObject.FindGameObjectWithTag(fruitTag);
-            if (fruit != null)
-            {
-                Vector3 spawnPosition = fruit.transform.position;
-                Transform targetPosition = GameObject.FindGameObjectWithTag("Blender").transform;
-                Debug.Log($"Spawning helper hand at {spawnPosition} for fruit {fruitTag}.");
-                SpawnAndTweenHelperHand(spawnPosition, targetPosition);
-                yield return new WaitForSeconds(2f); // Wait for a short duration before spawning for the next fruit
-            }
-            else
-            {
-                Debug.LogError($"Fruit with tag {fruitTag} not found.");
-            }
-        }
-    }
+
 
     public void SpawnAndTweenHelperHand(Vector3 spawnPosition, Transform targetPosition)
     {
@@ -128,9 +180,7 @@ public class LVL4Sc2HelperHand : MonoBehaviour
         DestroySpawnedHelperHand();
 
         spawnedHelperHand = Instantiate(helperHandPrefab, spawnPosition, Quaternion.identity);
-
         LeanTween.move(spawnedHelperHand, targetPosition.position, 1f).setLoopClamp();
-        Debug.Log($"Helper hand spawned at {spawnPosition}, moving to {targetPosition.position}.");
     }
 
     public void DestroySpawnedHelperHand()
@@ -139,7 +189,11 @@ public class LVL4Sc2HelperHand : MonoBehaviour
         {
             Destroy(spawnedHelperHand);
             spawnedHelperHand = null;
-            Debug.Log("Helper hand destroyed.");
+        }
+        if (spawnedGlow != null)
+        {
+            Destroy(spawnedGlow);
+            spawnedGlow = null;
         }
     }
 
@@ -152,31 +206,31 @@ public class LVL4Sc2HelperHand : MonoBehaviour
         StartDelayTimer();
     }
 
-    public bool IsHelperHandActive()
+    public void OnFruitCollected(string fruitTag)
     {
-        return spawnedHelperHand != null;
+        if (requiredFruitStatus.ContainsKey(fruitTag))
+        {
+            requiredFruitStatus[fruitTag] = true; // Mark as collected
+            DestroySpawnedHelperHand();
+            Debug.Log("Fruit collected: " + fruitTag);
+
+            // Trigger next target (next fruit if available)
+            StartDelayTimer();
+        }
     }
 
-    // Call this method when the player interacts with the correct fruit
-    public void OnFruitInteraction()
+    private bool AllFruitsCollected()
     {
-        DestroySpawnedHelperHand();
-        ResetAndStartDelayTimer();
+        return requiredFruitStatus.Values.All(collected => collected);
     }
-
-    // Call this method when the player interacts with the blender
-    public void OnBlenderInteraction()
-    {
-        isBlenderInteracted = true;
-        DestroySpawnedHelperHand();
-        ResetAndStartDelayTimer();
-    }
-
-    // Call this method when the player interacts with the blender jar
     public void OnBlenderJarInteraction()
     {
-        isBlenderJarInteracted = true;
-        DestroySpawnedHelperHand();
-        ResetAndStartDelayTimer();
+        // If all fruits are collected, this should be the final step
+        if (AllFruitsCollected())
+        {
+            DestroySpawnedHelperHand();
+            ResetAndStartDelayTimer(); // Restart delay for next round if needed
+            Debug.Log("Blender jar interaction detected, helper hand and glow reset.");
+        }
     }
 }

@@ -7,19 +7,18 @@ public class LVL5Sc1BoyController : MonoBehaviour
 {
 
     public GameObject Kiki;
-    public GameObject walkRig;
-    public GameObject talkRig;
     public Transform stopPosition;
     public Transform stopPosition2;
     public float walkSpeed = 2f;
-
+    public TextMeshProUGUI subtitleText;
     private bool isWalking;
     private bool hasReachedStopPosition;
     private bool hasReachedStopPosition2;
     private bool talkComplete;
+    private bool ticketBooth;
+    private AudioSource Audio1;
 
-    private Animator walkAnimator;
-    private Animator talkAnimator;
+    private Animator boyAnimator;
     private Animator kikiAnimator;
 
     void Start()
@@ -28,23 +27,20 @@ public class LVL5Sc1BoyController : MonoBehaviour
         hasReachedStopPosition = false;
         hasReachedStopPosition2 = false;
         talkComplete = false;
+        ticketBooth = false;
 
-        walkAnimator = walkRig.GetComponent<Animator>();
-        talkAnimator = talkRig.GetComponent<Animator>();
+        boyAnimator = GetComponent<Animator>();
         kikiAnimator = Kiki.GetComponent<Animator>();
-
-        talkRig.SetActive(true);
-        walkRig.SetActive(false);
+        Audio1 = GetComponent<AudioSource>();
     }
 
 
     void Update()
     {
-        if (!isWalking && talkAnimator.GetCurrentAnimatorStateInfo(0).IsName("Idle") &&
-            talkAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f && !hasReachedStopPosition)
+        if (!isWalking && boyAnimator.GetCurrentAnimatorStateInfo(0).IsName("Idle") &&
+            boyAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.5f && !hasReachedStopPosition)
         {
-            talkRig.SetActive(false);
-            walkRig.SetActive(true);
+            boyAnimator.SetBool("canWalk", true);
             isWalking = true;
         }
 
@@ -53,16 +49,16 @@ public class LVL5Sc1BoyController : MonoBehaviour
             MoveToStopPosition();
         }
 
-        if (!isWalking && kikiAnimator.GetCurrentAnimatorStateInfo(0).IsName("BirdTalk") &&
-            kikiAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.9f && !hasReachedStopPosition2)
+        if (!isWalking && boyAnimator.GetCurrentAnimatorStateInfo(0).IsName("lets go get tickets") &&
+            boyAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.95f && !hasReachedStopPosition2)
         {
-            talkRig.SetActive(false);
-            walkRig.SetActive(true);
+
             isWalking = true;
-            walkAnimator.SetTrigger("canWalk");
+            boyAnimator.SetBool("canWalk2", true);
+            ticketBooth = true;
         }
 
-        if (isWalking && !hasReachedStopPosition2)
+        if (isWalking && !hasReachedStopPosition2 && ticketBooth)
         {
             MoveToStopPosition2();
         }
@@ -76,12 +72,12 @@ public class LVL5Sc1BoyController : MonoBehaviour
         if (Mathf.Abs(transform.position.x - stopPosition.position.x) < 0.1f)
         {
             Debug.Log("positionReached");
+            boyAnimator.SetBool("canWalk", false);
             hasReachedStopPosition = true;
             isWalking = false;
-
-            talkRig.SetActive(true);
-            walkRig.SetActive(false);
-            talkAnimator.SetTrigger("CanTalk");
+            boyAnimator.SetTrigger("canTalk");
+            Audio1.Play();
+            StartCoroutine(RevealTextWordByWord("YAY, We are at the Zoo. Let's go get the entry tickets", 0.5f));
         }
     }
 
@@ -89,6 +85,28 @@ public class LVL5Sc1BoyController : MonoBehaviour
     {
         Vector3 targetPosition = new Vector3(stopPosition2.position.x, transform.position.y, transform.position.z);
         transform.position = Vector3.MoveTowards(transform.position, targetPosition, walkSpeed * Time.deltaTime);
-        
+        /*LeanTween.scale(gameObject, new Vector3(0.9f, 0.9f, 0.9f), 2.5f);*/
+
+        if (Mathf.Abs(transform.position.x - targetPosition.x) < 0.1f)
+        {
+            Debug.Log("positionReached");
+            boyAnimator.SetBool("canWalk2", false);
+
+        }
+    }
+
+    private IEnumerator RevealTextWordByWord(string fullText, float delayBetweenWords)
+    {
+        subtitleText.text = "";
+        subtitleText.gameObject.SetActive(true);
+
+        string[] words = fullText.Split(' ');
+
+        for (int i = 0; i < words.Length; i++)
+        {
+            subtitleText.text = string.Join(" ", words, 0, i + 1);
+            yield return new WaitForSeconds(delayBetweenWords);
+        }
+        subtitleText.text = "";
     }
 }

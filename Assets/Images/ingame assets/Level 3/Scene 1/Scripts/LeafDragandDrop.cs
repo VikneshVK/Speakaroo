@@ -12,8 +12,14 @@ public class LeafDragAndDrop : MonoBehaviour
     public Transform spawnLocation;
     public GameObject spareLeaves;
     public GameObject trashCanSmoke;
+    public GameObject Boy;
+    public GameObject Parrot;
+    public AudioSource Audio1;
+    public AudioSource Audio2;
     public HP_HelperpointerController helperPointerController;
 
+    private Animator boyAnimator;
+    private Animator parrotAnimator;    
     private Animator leavesAnimator;
     private Animator smokeAnimator;
     private Animator binAnimator;
@@ -33,7 +39,8 @@ public class LeafDragAndDrop : MonoBehaviour
         binAnimator = bin.GetComponent<Animator>();
         leavesAnimator = spareLeaves.GetComponent<Animator>();
         smokeAnimator = trashCanSmoke.GetComponent<Animator>();
-
+        boyAnimator = Boy.GetComponent<Animator>();
+        parrotAnimator = Parrot.GetComponent<Animator>();
         anchorGameObjectScript = GetComponent<AnchorGameObject>();
     }
 
@@ -80,6 +87,9 @@ public class LeafDragAndDrop : MonoBehaviour
         {
             // Apply dropOffset for correct positioning and play animations
             transform.position += dropOffset;
+            boyAnimator.SetTrigger("RightDrop");
+            parrotAnimator.SetTrigger("RightDrop");
+            Audio1.Play();
             leavesAnimator.SetTrigger("onDust");
             smokeAnimator.SetTrigger("onDust");
 
@@ -94,6 +104,9 @@ public class LeafDragAndDrop : MonoBehaviour
         else
         {
             // If drop is incorrect, return the object to the start position
+            boyAnimator.SetTrigger("WrongDrop");
+            parrotAnimator.SetTrigger("WrongDrop");
+            Audio2.Play();
             transform.position = startPosition;
             helperPointerController.StartInactivityTimer();
         }

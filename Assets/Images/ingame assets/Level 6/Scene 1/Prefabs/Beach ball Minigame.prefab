@@ -61,8 +61,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a78ee401dc6cd994bb2a69b456379c34, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Boy: {fileID: 3262085437610431735}
   bounceForce: 500
-  bounceDuration: 1
+  bounceDuration: 2
   bounceAudioSource: {fileID: 4657496828815595157}
 --- !u!114 &448007001858843692
 MonoBehaviour:
@@ -104,7 +105,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 1114db60bd9c8b64e8351eada0e44439, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 4feabaf6e11cc5d409c28a0b100f7be1, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -265,6 +266,7 @@ GameObject:
   - component: {fileID: 3665306143518950359}
   - component: {fileID: 1353470408777685416}
   - component: {fileID: 3276130006852769568}
+  - component: {fileID: 4140867241962546774}
   m_Layer: 5
   m_Name: Boy
   m_TagString: Untagged
@@ -329,6 +331,27 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
+--- !u!95 &4140867241962546774
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3262085437610431735}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 21e4f924aaba26346a0b3a79a9552e5c, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &3881228837771025479
 GameObject:
   m_ObjectHideFlags: 0
@@ -427,6 +450,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 708fba385be22b84189fdac29efe20eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  audio1: {fileID: 8300000, guid: 79d24cf928c208d4c81a023f694be860, type: 3}
 --- !u!1 &4835918468277690418
 GameObject:
   m_ObjectHideFlags: 0
@@ -488,8 +512,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a78ee401dc6cd994bb2a69b456379c34, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Boy: {fileID: 3262085437610431735}
   bounceForce: 500
-  bounceDuration: 1
+  bounceDuration: 2
   bounceAudioSource: {fileID: 7193596745620453374}
 --- !u!114 &8267872676354051875
 MonoBehaviour:
@@ -531,7 +556,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 1114db60bd9c8b64e8351eada0e44439, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 4feabaf6e11cc5d409c28a0b100f7be1, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -742,8 +767,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a78ee401dc6cd994bb2a69b456379c34, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Boy: {fileID: 3262085437610431735}
   bounceForce: 500
-  bounceDuration: 1
+  bounceDuration: 2
   bounceAudioSource: {fileID: 2302390581515327630}
 --- !u!114 &150199706313767992
 MonoBehaviour:
@@ -785,7 +811,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 1114db60bd9c8b64e8351eada0e44439, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 4feabaf6e11cc5d409c28a0b100f7be1, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -996,8 +1022,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a78ee401dc6cd994bb2a69b456379c34, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Boy: {fileID: 3262085437610431735}
   bounceForce: 500
-  bounceDuration: 1
+  bounceDuration: 2
   bounceAudioSource: {fileID: 4515603525231720582}
 --- !u!114 &5416453088827816347
 MonoBehaviour:
@@ -1039,7 +1066,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 1114db60bd9c8b64e8351eada0e44439, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 4feabaf6e11cc5d409c28a0b100f7be1, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -1357,8 +1384,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a78ee401dc6cd994bb2a69b456379c34, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Boy: {fileID: 3262085437610431735}
   bounceForce: 500
-  bounceDuration: 1
+  bounceDuration: 2
   bounceAudioSource: {fileID: 6856366544408299284}
 --- !u!114 &1634081704178433910
 MonoBehaviour:
@@ -1400,7 +1428,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 1114db60bd9c8b64e8351eada0e44439, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 4feabaf6e11cc5d409c28a0b100f7be1, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1

@@ -13,6 +13,7 @@ public class boy_Actions1 : MonoBehaviour
     public AudioSource tubeAudiosource;
     public TextMeshProUGUI subtitleText;
 
+    private SpriteRenderer boysprite;
     private Animator boyAnimator;    
     private Animator birdAnimator;
     private TapControl tapControl;
@@ -34,8 +35,9 @@ public class boy_Actions1 : MonoBehaviour
         jojoAudiosource = GetComponent<AudioSource>();
         hoseCollider = Hose.GetComponent<Collider2D>();
         pipeCollider = pipe.GetComponent<Collider2D>();
+        boysprite = GetComponent<SpriteRenderer>();
 
-       
+
         hoseCollider.enabled = false;
         isWalking = false;
         isIdleCompleted = false;
@@ -104,6 +106,7 @@ public class boy_Actions1 : MonoBehaviour
         // Check if the colliding particle system is the water particles
         if (other.CompareTag("spray")) // Make sure the particle system object has the tag "WaterParticles"
         {
+            boysprite.flipX = false;
             boyAnimator.SetBool("waterPlay", true);
             if (!isSubtitleDisplayed)
             {
@@ -125,6 +128,7 @@ public class boy_Actions1 : MonoBehaviour
     {
         if (tapControl != null && !tapControl.isFirstTime)
         {
+            boysprite.flipX = true  ;
             boyAnimator.SetBool("waterPlay", false);
         }
     }

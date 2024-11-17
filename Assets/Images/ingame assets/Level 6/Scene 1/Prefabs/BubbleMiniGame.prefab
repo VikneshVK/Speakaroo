@@ -103,6 +103,7 @@ MonoBehaviour:
   floatDistance: 0.4
   floatDuration: 4.5
   bubbleAnimator: {fileID: 3156881371500973431}
+  boy: {fileID: 3383620994312210333}
   boyAudioSource: {fileID: 5740274170873752208}
 --- !u!95 &3156881371500973431
 Animator:
@@ -171,7 +172,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -267,6 +268,7 @@ GameObject:
   - component: {fileID: 4809541571506314652}
   - component: {fileID: 4621497939803375637}
   - component: {fileID: 5740274170873752208}
+  - component: {fileID: 8744638376490301136}
   m_Layer: 0
   m_Name: jojo Final 1 (1)
   m_TagString: Untagged
@@ -351,7 +353,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 6c863c2213f89734ba0fc21694613438, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 3850c207621d87d45bdc25f554c68b2e, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
@@ -437,6 +439,27 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!95 &8744638376490301136
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3383620994312210333}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 8ee0ad9f05252384a8aedf86e511e377, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &3589420191093459772
 GameObject:
   m_ObjectHideFlags: 0
@@ -540,6 +563,7 @@ MonoBehaviour:
   floatDistance: 0.3
   floatDuration: 5.5
   bubbleAnimator: {fileID: 8578340836815629755}
+  boy: {fileID: 3383620994312210333}
   boyAudioSource: {fileID: 5740274170873752208}
 --- !u!95 &8578340836815629755
 Animator:
@@ -608,7 +632,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -744,6 +768,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ede4ea95a4ee0d342a44a5a0caef5ea7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  audio1: {fileID: 8300000, guid: 79d24cf928c208d4c81a023f694be860, type: 3}
 --- !u!212 &2888853043852009448
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -899,6 +924,7 @@ MonoBehaviour:
   floatDistance: 0.5
   floatDuration: 3
   bubbleAnimator: {fileID: 1791852133054625162}
+  boy: {fileID: 3383620994312210333}
   boyAudioSource: {fileID: 5740274170873752208}
 --- !u!95 &1791852133054625162
 Animator:
@@ -967,7 +993,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -1155,6 +1181,7 @@ MonoBehaviour:
   floatDistance: 0.6
   floatDuration: 7
   bubbleAnimator: {fileID: 7671599673607839920}
+  boy: {fileID: 3383620994312210333}
   boyAudioSource: {fileID: 5740274170873752208}
 --- !u!95 &7671599673607839920
 Animator:
@@ -1223,7 +1250,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0
@@ -1411,6 +1438,7 @@ MonoBehaviour:
   floatDistance: 0.25
   floatDuration: 4
   bubbleAnimator: {fileID: 8839737871479731976}
+  boy: {fileID: 3383620994312210333}
   boyAudioSource: {fileID: 5740274170873752208}
 --- !u!95 &8839737871479731976
 Animator:
@@ -1479,7 +1507,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_PlayOnAwake: 1
+  m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
   Loop: 0

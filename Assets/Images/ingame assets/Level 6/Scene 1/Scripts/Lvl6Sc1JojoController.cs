@@ -1,6 +1,6 @@
 using UnityEngine;
 using System.Collections;
-
+using TMPro;
 
 public class Lvl6Sc1JojoController : MonoBehaviour
 {
@@ -13,26 +13,45 @@ public class Lvl6Sc1JojoController : MonoBehaviour
     private Animator animator;
     private SpriteRenderer spriteRenderer;
     private bool isWalking;
+    private bool dialougeCompleted;
     private bool hasReachedStopPosition;
     private bool isTalking;
+    private bool dialougeDone;
     public bool hasSpawnedPrefab;
     private bool isFinalTalkCompleted;
+    public TextMeshProUGUI subtitleText;
+
+    public AudioClip audio1;
+    public AudioClip audio2;
+    public AudioClip audio3;
+
+    public AudioSource audioSource;
 
     private GameObject spawnedPrefab;
     private MiniGameController miniGameController;
+
+    // Kiki and its Animator reference
+    public GameObject kiki;
+    private Animator kikiAnimator;
 
     private void Start()
     {
         animator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
         miniGameController = FindObjectOfType<MiniGameController>(); // Get reference to MiniGameController
-
+        audioSource = GetComponent<AudioSource>();
+        // Initialize Kiki's Animator
+        if (kiki != null)
+        {
+            kikiAnimator = kiki.GetComponent<Animator>();
+        }
 
         isWalking = false;
         hasReachedStopPosition = false;
         isTalking = false;
         hasSpawnedPrefab = false;
         isFinalTalkCompleted = false;
+        dialougeCompleted = false;
 
         MoveToStopPosition();
     }
@@ -47,7 +66,16 @@ public class Lvl6Sc1JojoController : MonoBehaviour
         // Check if the "Talk" animation has completed
         if (isTalking && IsAnimationStateComplete("Talk"))
         {
-            OnTalkAnimationComplete();
+            animator.SetBool("canTalk", false);
+            isTalking = false;
+            if (kikiAnimator != null)
+            {
+                kikiAnimator.SetTrigger("Dialogue1");
+                audioSource.clip = audio1;
+                audioSource.Play();
+                StartCoroutine(RevealTextWordByWord("What do you want to Play With?", 0.5f));
+            }
+            StartCoroutine(WaitForKikiTalkAnimation());
         }
 
         // Check if the "Talk 0" animation is complete and handle it
@@ -56,19 +84,26 @@ public class Lvl6Sc1JojoController : MonoBehaviour
             if (miniGameController != null && miniGameController.CompletedMiniGamesCount >= 3)
             {
                 animator.SetBool("finalTalk", true);
+                kikiAnimator.SetTrigger("finalTalk");
+                audioSource.clip = audio3;
+                audioSource.Play();
+                StartCoroutine(RevealTextWordByWord("The Beach was a Blast", 0.5f));
                 Debug.Log("All mini-games completed, triggering final talk animation.");
             }
             else
             {
                 animator.SetBool("canTalk", false);
 
-                if (!hasSpawnedPrefab)
+                if (!hasSpawnedPrefab && !dialougeCompleted)
                 {
-                    SpawnSpeechBubble();
-                    hasSpawnedPrefab = true;
-                    Debug.Log("Talk 0 completed, spawning speech bubble once.");
+                    dialougeCompleted = true;
+                    dialougeDone = false;
+                    kikiAnimator.SetTrigger("Dialogue1"); // Trigger Kiki's Talk animation
+                    audioSource.clip = audio1;
+                    audioSource.Play();
+                    StartCoroutine(RevealTextWordByWord("What do you want to Play With?", 0.5f));
+                    StartCoroutine(WaitForKikiTalkAnimation());
                 }
-
             }
         }
 
@@ -82,9 +117,7 @@ public class Lvl6Sc1JojoController : MonoBehaviour
     private void MoveToStopPosition()
     {
         isWalking = true;
-        animator.SetBool("canWalk", true); // Start walking animation
-
-        // Flip the sprite based on the direction to the stop position
+        animator.SetBool("canWalk", true); // Start walking animation        
         spriteRenderer.flipX = stopPosition.position.x < transform.position.x;
     }
 
@@ -100,7 +133,10 @@ public class Lvl6Sc1JojoController : MonoBehaviour
             hasReachedStopPosition = true;
             isWalking = false;
             animator.SetBool("canWalk", false);
-            animator.SetBool("canTalk", true); // Start talking animation            
+            animator.SetBool("canTalk", true); // Start talking animation
+            audioSource.clip = audio2;
+            audioSource.Play();
+            StartCoroutine(RevealTextWordByWord("I love the Beach ", 0.5f));
             isTalking = true;
         }
     }
@@ -112,11 +148,24 @@ public class Lvl6Sc1JojoController : MonoBehaviour
         SpawnSpeechBubble();
     }
 
+    private IEnumerator WaitForKikiTalkAnimation()
+    {
+        // Wait until Kiki's talk animation is complete
+        yield return new WaitUntil(() => kikiAnimator.GetCurrentAnimatorStateInfo(0).IsName("Talk") && kikiAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.9f);
+
+        if (!hasSpawnedPrefab)
+        {
+            SpawnSpeechBubble();
+            hasSpawnedPrefab = true;
+            dialougeCompleted = false;
+            Debug.Log("Talk 0 completed, spawning speech bubble once.");
+        }
+    }
+
     private void SpawnSpeechBubble()
     {
         if (speechBubblePrefab != null)
         {
-
             spawnedPrefab = Instantiate(speechBubblePrefab, prefabSpawnPosition.position, Quaternion.identity);
 
             BoxCollider2D collider = spawnedPrefab.AddComponent<BoxCollider2D>();
@@ -170,5 +219,20 @@ public class Lvl6Sc1JojoController : MonoBehaviour
             transform.position += Vector3.right * moveSpeed * Time.deltaTime;
             yield return null;
         }
+    }
+
+    private IEnumerator RevealTextWordByWord(string fullText, float delayBetweenWords)
+    {
+        subtitleText.text = "";
+        subtitleText.gameObject.SetActive(true);
+
+        string[] words = fullText.Split(' ');
+
+        for (int i = 0; i < words.Length; i++)
+        {
+            subtitleText.text = string.Join(" ", words, 0, i + 1);
+            yield return new WaitForSeconds(delayBetweenWords);
+        }
+        subtitleText.text = "";
     }
 }

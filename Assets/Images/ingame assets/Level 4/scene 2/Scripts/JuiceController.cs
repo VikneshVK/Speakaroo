@@ -8,14 +8,18 @@ public class JuiceController : MonoBehaviour
     public List<string> requiredFruits = new List<string>();
     private SpriteChangeController spriteChangeController;
     public JuiceManager juiceManager;
-    private bool isBlenderClicked = false;
+    public BlenderController blenderController;
     private Coroutine helperHandTimerCoroutine;
+    private float delay;
+    
+    private bool blenderInteractable = false;
 
     void Start()
     {
         spriteChangeController = FindObjectOfType<SpriteChangeController>();
         juiceManager = FindObjectOfType<JuiceManager>();
         DisableJarCollider();
+        delay = 10;
     }
 
     public bool ValidateFruit(List<string> fruitsInBlender)
@@ -24,14 +28,15 @@ public class JuiceController : MonoBehaviour
         juiceManager.requiredFruits.Sort();
         bool isValid = juiceManager.requiredFruits.SequenceEqual(fruitsInBlender);
         Debug.Log($"Validating fruits: {string.Join(", ", fruitsInBlender)}, RequiredFruits: {string.Join(", ", juiceManager.requiredFruits)}, IsValid: {isValid}");
-
+        
         return isValid;
     }
 
     // Called when the player clicks the blender
     public void OnBlenderClick()
     {
-        isBlenderClicked = true;
+        blenderController.isBlenderClicked = true;
+        delay = 0;
         LVL4Sc2HelperHand.Instance.DestroySpawnedHelperHand();
         Debug.Log("Blender clicked, helper hand destroyed if active.");
     }
@@ -39,26 +44,27 @@ public class JuiceController : MonoBehaviour
     // Called to start monitoring for player interaction with the blender
     public void StartBlenderInteractionTimer()
     {
-        if (helperHandTimerCoroutine != null)
+        if (blenderInteractable) 
         {
-            StopCoroutine(helperHandTimerCoroutine);
+            if (helperHandTimerCoroutine != null)
+            {
+                StopCoroutine(helperHandTimerCoroutine);
+            }
+            helperHandTimerCoroutine = StartCoroutine(HelperHandInteractionTimer());
         }
-        helperHandTimerCoroutine = StartCoroutine(HelperHandInteractionTimer());
+        
     }
 
     private IEnumerator HelperHandInteractionTimer()
-    {
-        // Wait for a delay (e.g., 5 seconds) for the player to click the blender
-        float delay = 5f; // You can adjust this delay
+    { 
+
         yield return new WaitForSeconds(delay);
 
-        // If the player didn't interact with the blender, spawn the helper hand
-        if (!isBlenderClicked)
+        if(!blenderController.isBlenderClicked && blenderInteractable)
         {
-            Vector3 outsideViewportPosition = new Vector3(-10, -10, 0); // Position outside of the screen
+            Vector3 outsideViewportPosition = new Vector3(-10, -10, 0); 
             Transform blenderPosition = GameObject.FindGameObjectWithTag("Blender").transform;
-
-            // Spawn helper hand to move from outside the viewport to the blender
+           
             LVL4Sc2HelperHand.Instance.SpawnAndTweenHelperHand(outsideViewportPosition, blenderPosition);
             Debug.Log("Helper hand spawned to guide the player to click the blender.");
         }
@@ -68,12 +74,14 @@ public class JuiceController : MonoBehaviour
     {
         Collider2D blenderCollider = GameObject.FindGameObjectWithTag("Blender").GetComponent<Collider2D>();
         blenderCollider.enabled = true;
+        blenderInteractable = true;
     }
 
     public void DisableBlenderCollider()
     {
         Collider2D blenderCollider = GameObject.FindGameObjectWithTag("Blender").GetComponent<Collider2D>();
         blenderCollider.enabled = false;
+        blenderInteractable = false;
     }
 
     public void EnableJarCollider()

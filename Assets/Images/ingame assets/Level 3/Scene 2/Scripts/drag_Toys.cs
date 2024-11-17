@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
@@ -9,7 +8,7 @@ public class drag_Toys : MonoBehaviour
     public float hitDuration = 2f;
     public Transform targetTransform;
     public float moveTime = 1f;
-    public float scaleTime = 0.5f;
+    public float scaleTime = 0.25f;
     public float scaleDownFactor = 0.85f;
     public static int completedTweens;
     public GameObject kiki;
@@ -17,11 +16,13 @@ public class drag_Toys : MonoBehaviour
     public bool isDragging = false;
     public AudioSource tapAudiosource;
     public TextMeshProUGUI subtitleText;
+    public Tween_Toys tweentoys;
 
     public static bool isTeddyInteracted = false;
     public static bool isDinoInteracted = false;
     public static bool isBunnyInteracted = false;
 
+    private bool colliderHit;
     private Vector3 offset;
     private float hitTimer = 0f;
     private bool spriteChanged = false;
@@ -31,6 +32,9 @@ public class drag_Toys : MonoBehaviour
     private Animator jojoAnimator;
     public bool audioplayed = false;
 
+    private Vector3 initialPosition; // Store the initial position
+
+    private Helper_PointerController helperController;
 
     void Start()
     {
@@ -39,6 +43,9 @@ public class drag_Toys : MonoBehaviour
         kikiAnimator = kiki.GetComponent<Animator>();
         jojoAnimator = jojo.GetComponent<Animator>();
         completedTweens = 0;
+        colliderHit = false;
+
+        helperController = FindObjectOfType<Helper_PointerController>();
     }
 
     void Update()
@@ -53,6 +60,7 @@ public class drag_Toys : MonoBehaviour
     {
         if (!spriteChanged)
         {
+            initialPosition = transform.position;
             Vector3 mousePosition = Input.mousePosition;
             mousePosition.z = Camera.main.WorldToScreenPoint(transform.position).z;
             Vector3 worldPosition = Camera.main.ScreenToWorldPoint(mousePosition);
@@ -60,11 +68,10 @@ public class drag_Toys : MonoBehaviour
             offset = transform.position - worldPosition;
             isDragging = true;
 
-            Helper_PointerController helperController = FindObjectOfType<Helper_PointerController>();
             if (helperController != null)
             {
                 helperController.ResetHelperHand();
-                helperController.ResetAndRestartTimer(isToyInteraction: true);
+                helperController.ResetAndRestartTimer();
             }
         }
     }
@@ -78,19 +85,23 @@ public class drag_Toys : MonoBehaviour
             Vector3 worldPosition = Camera.main.ScreenToWorldPoint(mousePosition) + offset;
 
             transform.position = worldPosition;
-
         }
     }
 
     private void OnMouseUp()
     {
         isDragging = false;
+        if (!colliderHit)
+        {
+            StartCoroutine(BlinkAndResetPosition());
+        }
     }
 
     private void OnParticleCollision(GameObject other)
     {
         if (other.gameObject == waterParticleSystem.gameObject)
         {
+            colliderHit = true;
             hitTimer += Time.deltaTime;
 
             if (hitTimer >= hitDuration && !spriteChanged)
@@ -103,6 +114,33 @@ public class drag_Toys : MonoBehaviour
     private bool IsBeingHitByParticles()
     {
         return hitTimer > 0;
+    }
+
+    private void ResetPositionIfNotCollided()
+    {
+        if (hitTimer < hitDuration && !spriteChanged)
+        {
+            StartCoroutine(BlinkAndResetPosition());
+        }
+    }
+
+    private IEnumerator BlinkAndResetPosition()
+    {
+        Color originalColor = spriteRenderer.color;
+        Color blinkColor = Color.red;
+
+        int blinkCount = 2;
+        float blinkDuration = 0.2f; // Duration for each blink
+
+        for (int i = 0; i < blinkCount; i++)
+        {
+            spriteRenderer.color = blinkColor;
+            yield return new WaitForSeconds(blinkDuration);
+
+            spriteRenderer.color = originalColor;
+            yield return new WaitForSeconds(blinkDuration);
+        }
+        transform.position = initialPosition;
     }
 
     public bool IsInteracted()
@@ -139,18 +177,17 @@ public class drag_Toys : MonoBehaviour
             toysCollider.enabled = false;
 
             LeanTween.move(gameObject, targetTransform.position, moveTime)
-                     .setEase(LeanTweenType.easeOutBack)
+                     .setEase(LeanTweenType.easeInOutQuad)
                      .setOnComplete(() =>
                      {
                          LeanTween.scale(gameObject, transform.localScale * scaleDownFactor, scaleTime)
-                                  .setEase(LeanTweenType.easeOutBack)
+                                  .setEase(LeanTweenType.easeInOutQuad)
                                   .setOnComplete(() =>
                                   {
                                       LeanTween.scale(gameObject, transform.localScale, scaleTime)
-                                               .setEase(LeanTweenType.easeOutBack)
+                                               .setEase(LeanTweenType.easeInOutQuad)
                                                .setOnComplete(() =>
                                                {
-                                                   Helper_PointerController helperController = FindObjectOfType<Helper_PointerController>();
                                                    if (helperController != null)
                                                    {
                                                        helperController.ResetAndRestartTimer();
@@ -168,7 +205,10 @@ public class drag_Toys : MonoBehaviour
                                                            StartCoroutine(RevealTextWordByWord("Super now, let's hang the wet toys", 0.5f));
                                                            audioplayed = true;
                                                        }
-
+                                                   }
+                                                   else
+                                                   {
+                                                       tweentoys.MoveToNextToy();
                                                    }
                                                });
                                   });
@@ -189,7 +229,6 @@ public class drag_Toys : MonoBehaviour
 
         string[] words = fullText.Split(' ');
 
-        // Reveal words one by one
         for (int i = 0; i < words.Length; i++)
         {
             subtitleText.text = string.Join(" ", words, 0, i + 1);

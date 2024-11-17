@@ -3,138 +3,162 @@ using System.Collections;
 
 public class ScrubberController : MonoBehaviour
 {
-    public GameObject maskPrefab;
-    private Vector3 originalPosition; // Store the scrubber's original position
-    public bool isInteracted = false; // Boolean to track if scrubber has been interacted with
+    public GameObject maskPrefab; // The scrubber dummy prefab
+    public Vector3 originalPosition;
+    public bool isInteracted = false;
+    public bool scrubberTimerStarted = false;
+    private GameObject scrubberDummyInstance; // Reference to the spawned scrubber dummy
+    private float scrubberTimerDuration = 10f; // Timer duration
+    public float scrubberTimer = 0f; // Timer variable
+    private LV4DragManager dragManager;
+    private DishController[] dishControllers; // Array to hold references to all DishController instances
+    private bool positionConfirmed;
+    private Coroutine scrubberTimerCoroutine;
 
-    private LVL4Sc3HelperHand helperHandManager; // Reference to the Helper Hand Manager
-    private Coroutine helperHandCoroutine; // Coroutine for the helper hand delay
-    private bool timerStarted = false; // Track if the timer has started
+    public GameObject scrubberBoundary; // Reference to the scrubber boundary
 
     private void Start()
     {
-        // Store the initial position of the scrubber
-        originalPosition = transform.position;
-
-        // Find the helper hand manager in the scene using the "HelperHand" tag
-        GameObject helperHandObject = GameObject.FindWithTag("HelperHand");
-        if (helperHandObject != null)
-        {
-            helperHandManager = helperHandObject.GetComponent<LVL4Sc3HelperHand>();
-        }
-        else
-        {
-            Debug.LogError("Helper hand manager with tag 'HelperHand' not found in the scene.");
-        }
+        dishControllers = FindObjectsOfType<DishController>(); // Get all DishController instances in the scene
+        dragManager = FindAnyObjectByType<LV4DragManager>();
+        positionConfirmed = false;
     }
 
     private void Update()
     {
         HandleScrubbing();
+        CheckScrubberTimer();
     }
 
     private void HandleScrubbing()
     {
-        // Start the helper hand delay timer only when a dish is selected and the timer hasn't started yet
-        if (DishIsSelected() && !timerStarted)
+        if (dragManager.tweenComplete && !positionConfirmed)
         {
-            StartHelperHandDelayTimer();
+            originalPosition = transform.position;
+            positionConfirmed = true;
         }
 
-        // Check if the scrubber itself is clicked
         if (Input.GetMouseButtonDown(0))
         {
             Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             RaycastHit2D hit = Physics2D.Raycast(mousePosition, Vector2.zero);
 
-            // If the clicked object is this scrubber, start the interaction
             if (hit.collider != null && hit.collider.gameObject == gameObject)
             {
-                isInteracted = true; // Set to true when scrubber is clicked
+                isInteracted = true;
             }
         }
 
-        // If the scrubber is being interacted with (clicked), follow the mouse
         if (isInteracted && Input.GetMouseButton(0))
         {
             Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
+            // Restrict the scrubber's position within the boundary
+            if (scrubberBoundary != null)
+            {
+                // Get the bounds of the scrubber boundary
+                Bounds boundaryBounds = scrubberBoundary.GetComponent<Collider2D>().bounds;
+
+                // Clamp the mouse position within the boundary's bounds
+                mousePosition.x = Mathf.Clamp(mousePosition.x, boundaryBounds.min.x, boundaryBounds.max.x);
+                mousePosition.y = Mathf.Clamp(mousePosition.y, boundaryBounds.min.y, boundaryBounds.max.y);
+            }
+
             transform.position = mousePosition;
 
-            // Check if the scrubber is interacting with a dish
             RaycastHit2D hit = Physics2D.Raycast(mousePosition, Vector2.zero);
             if (hit.collider != null && hit.collider.GetComponent<DishController>() != null)
             {
                 hit.collider.GetComponent<DishController>().StartScrubbing();
-
-                // Destroy the helper hand and reset the timer for the next cycle
-                helperHandManager.StopHelperHand();
-                timerStarted = false; // Reset timer started flag
             }
         }
 
-        // Reset interaction if the mouse button is released
         if (Input.GetMouseButtonUp(0))
         {
             isInteracted = false;
         }
     }
 
-    // Function to reset the scrubber back to its original position
-    public void ResetPosition()
+    private void CheckScrubberTimer()
     {
-        LeanTween.move(gameObject, originalPosition, 0.5f); // Smoothly move scrubber back
-        isInteracted = false; // Reset interaction state
-    }
-
-    // Check if any dish is selected
-    private bool DishIsSelected()
-    {
-        DishController[] dishes = FindObjectsOfType<DishController>();
-        foreach (DishController dish in dishes)
+        if (!scrubberTimerStarted)
         {
-            if (dish.isDishSelected) return true;
-        }
-        return false;
-    }
-
-    private void StartHelperHandDelayTimer()
-    {
-        if (helperHandCoroutine != null)
-        {
-            StopCoroutine(helperHandCoroutine);
-        }
-        helperHandCoroutine = StartCoroutine(HelperHandDelayTimer());
-        timerStarted = true; // Set timer started flag
-    }
-
-    private IEnumerator HelperHandDelayTimer()
-    {
-        // Wait for the delay time before spawning the helper hand
-        yield return new WaitForSeconds(helperHandManager.helperHandDelay);
-
-        // If the scrubber has not been interacted with, spawn the helper hand
-        if (!isInteracted)
-        {
-            // Find the first selected dish to tween towards
-            DishController selectedDish = null;
-            DishController[] dishes = FindObjectsOfType<DishController>();
-            foreach (DishController dish in dishes)
+            foreach (DishController dish in dishControllers)
             {
-                if (dish.isDishSelected)
+                if (dish.scrubbertimer)
                 {
-                    selectedDish = dish;
-                    break;
+                    Debug.Log($"Scrubber timer started for game object: {dish.gameObject.name}");
+                    scrubberTimerStarted = true; // Start the timer only once
+                    scrubberTimerCoroutine = StartCoroutine(StartScrubberTimer(dish.gameObject)); // Store the coroutine reference
+                    break; // Only start the timer once
                 }
             }
+        }
+    }
 
-            // Spawn the helper hand at the scrubber's position and tween to the selected dish's position
-            if (selectedDish != null)
-            {
-                helperHandManager.SpawnHelperHand(transform.position, selectedDish.transform.position);
-            }
+
+    private IEnumerator StartScrubberTimer(GameObject dishGameObject)
+    {
+        scrubberTimer = 0f; // Reset timer
+        Debug.Log($"Starting scrubber timer for: {dishGameObject.name}"); // Log the game object name
+
+        while (scrubberTimer < scrubberTimerDuration)
+        {
+            scrubberTimer += Time.deltaTime;
+            yield return null;
         }
 
-        // Reset timer started flag to allow the timer to be started again in the future
-        timerStarted = false;
+        Debug.Log($"Scrubber timer completed for: {dishGameObject.name}"); // Log when the timer completes
+        SpawnAndTweenScrubberDummy(); // Spawn and tween the scrubber dummy once timer completes
+    }
+
+    private void SpawnAndTweenScrubberDummy()
+    {
+        if (maskPrefab != null && scrubberDummyInstance == null)
+        {
+            scrubberDummyInstance = Instantiate(maskPrefab, transform.position, Quaternion.identity);
+
+            // Tween scrubber dummy to viewport center and loop it
+            Vector3 centerScreenPosition = Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, Camera.main.nearClipPlane + 5f));
+            LeanTween.move(scrubberDummyInstance, centerScreenPosition, 1f).setLoopClamp();
+        }
+    }
+
+    private void OnMouseDown()
+    {
+        // Always stop the scrubber timer regardless of scrubberDummy
+        foreach (DishController dish in dishControllers)
+        {
+            dish.scrubbertimer = false; // Stop the scrubber timer
+            scrubberTimer = 0;          // Reset the timer
+        }
+
+        Debug.Log("Scrubber timer stopped.");
+
+        // Stop the running scrubber timer coroutine if it exists
+        if (scrubberTimerCoroutine != null)
+        {
+            StopCoroutine(scrubberTimerCoroutine);
+            scrubberTimerCoroutine = null;
+        }
+
+        // If a scrubber dummy is spawned, destroy it
+        if (scrubberDummyInstance != null)
+        {
+            Destroy(scrubberDummyInstance);
+            Debug.Log("Scrubber dummy destroyed.");
+            scrubberDummyInstance = null;
+        }
+
+        // Reset scrubberTimerStarted so a new timer can be started if needed
+        scrubberTimerStarted = false;
+    }
+
+
+
+    public void ResetPosition()
+    {
+        LeanTween.move(gameObject, originalPosition, 0.5f);
+        isInteracted = false;
     }
 }

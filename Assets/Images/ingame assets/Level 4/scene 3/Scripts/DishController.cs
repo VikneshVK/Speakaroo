@@ -1,109 +1,172 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class DishController : MonoBehaviour
 {
     public GameObject maskPrefab;
     public ScrubberController scrubberController;
-    private bool isSpawning = false;
-    private GameObject instantiatedMask;
+    public TextMeshProUGUI subtitleText;
+    public GameObject glowPrefab;
 
-    private Vector3 originalPosition;  // Store original position manually
-    private Vector3 originalScale;     // Store original scale manually
+    private bool isSpawning = false;
+    private bool isTweening = false; // Flag to ensure the tween occurs only once
+    private GameObject instantiatedMask;
+    private GameObject instantiatedGlow;
+
+    private Vector3 originalPosition;
+    private Vector3 originalScale;
     private bool isScrubbing = false;
 
     public bool isDishSelected = false;
     public bool dishCleaned;
+    public bool scrubbertimer;
 
     private Dictionary<Transform, int> originalSortingOrders = new Dictionary<Transform, int>();
     private Collider2D objectCollider;
     private DishController[] allDishes;
     private DishWashingManager dishWashingManager;
+    private LV4DragManager LV4DragManager;
+    private AudioSource audioSource;
 
-    private LVL4Sc3HelperHand helperHandManager; // Reference to the Helper Hand Manager
-    private Coroutine helperHandCoroutine; // Coroutine for helper hand delay
-
+    private float timer = 0f;
+    public bool helperActive = false;
     private void Start()
     {
-        // Find the helper hand manager in the scene using the "HelperHand" tag
-        GameObject helperHandObject = GameObject.FindWithTag("HelperHand");
-        if (helperHandObject != null)
-        {
-            helperHandManager = helperHandObject.GetComponent<LVL4Sc3HelperHand>();
-        }
-        else
-        {
-            Debug.LogError("Helper hand manager with tag 'HelperHand' not found in the scene.");
-        }
-
-        // Ensure original position and scale are stored, even if they are zero
+        audioSource = gameObject.GetComponent<AudioSource>();
         originalPosition = (transform.position == Vector3.zero) ? transform.localPosition : transform.position;
         originalScale = (transform.localScale == Vector3.zero) ? Vector3.one : transform.localScale;
 
         objectCollider = GetComponent<Collider2D>();
-        allDishes = FindObjectsOfType<DishController>();
         dishWashingManager = FindObjectOfType<DishWashingManager>();
+        LV4DragManager = FindObjectOfType<LV4DragManager>();
         dishCleaned = false;
+        scrubbertimer = false;
         StoreOriginalSortingOrders();
-
-        // Start the helper hand delay timer at the beginning
-        StartHelperHandDelayTimer();
+        allDishes = FindObjectsOfType<DishController>();
     }
 
-    private void StartHelperHandDelayTimer()
+    private void Update()
     {
-        if (helperHandCoroutine != null)
+        if (LV4DragManager.timerRunning)
         {
-            StopCoroutine(helperHandCoroutine);
-        }
-        helperHandCoroutine = StartCoroutine(HelperHandDelayTimer());
-    }
+            timer += Time.deltaTime;
 
-    private IEnumerator HelperHandDelayTimer()
-    {
-        // Wait for the delay time before spawning the helper hand
-        yield return new WaitForSeconds(helperHandManager.helperHandDelay);
-
-        // Check if any dish is selected and not cleaned
-        DishController targetDish = null;
-        foreach (DishController dish in allDishes)
-        {
-            if (dish.isDishSelected || !dish.dishCleaned)
+            if (timer >= 10f)
             {
-                targetDish = dish;
-                break;
+                if (!helperActive)
+                {
+                    Debug.Log($"{gameObject.name} Update: Spawning glow for helperActive = false");
+                    StartCoroutine(SpawnGlowEffect());
+                }
+                timer = 0f;
             }
-        }
-
-        // If no dish is selected or cleaned, spawn the helper hand
-        if (targetDish != null)
-        {
-            // Spawn the helper hand out of the view port and tween it to the target dish's position
-            helperHandManager.SpawnHelperHand(new Vector3(-10, -10, 0), targetDish.transform.position);
         }
     }
 
     public void OnMouseDown()
     {
-        if (isSpawning || isScrubbing) return;
+        if (isSpawning || isScrubbing || isTweening) return; // Check if already tweening or scrubbing
+
+        isTweening = true; // Set tweening flag to true
+
+        Debug.Log($"{gameObject.name} OnMouseDown: Mouse clicked");
 
         DisableOtherColliders();
-
-        // Store the current position as the original position before moving the dish to the center
-        originalPosition = transform.position;  // Save current position
-        originalScale = transform.localScale;   // Save current scale
+        originalPosition = transform.position;
+        originalScale = transform.localScale;
 
         ChangeSortingOrderOfChildren(20);
 
-        // Tween the dish to the center of the viewport and scale it up slightly
         LeanTween.move(gameObject, Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, Camera.main.nearClipPlane + 5f)), 0.5f);
-        LeanTween.scale(gameObject, originalScale * 2f, 0.5f); // Use the stored original scale
-        isDishSelected = true;
-        Debug.Log(gameObject.name + " is selected.");
+        LeanTween.scale(gameObject, originalScale * 2f, 0.5f).setOnComplete(() =>
+        {
+            AnimateBirdInstruction();
+        });
 
-        // Destroy the helper hand
-        helperHandManager.StopHelperHand();
+        isDishSelected = true;
+        helperActive = true;
+        LV4DragManager.timerRunning = false;
+        Debug.Log($"{gameObject.name} OnMouseDown: Dish selected, timerRunning set to false");
+    }
+
+
+    private void AnimateBirdInstruction()
+    {
+        Debug.Log($"{gameObject.name} AnimateBirdInstruction: Called");
+
+        GameObject birdImage = GameObject.FindWithTag("Bird");
+        if (birdImage != null)
+        {
+            RectTransform birdRectTransform = birdImage.GetComponent<RectTransform>();
+            Animator birdAnimator = birdImage.GetComponent<Animator>();
+
+            string subtitleText = "";
+            if (gameObject.name == "Bowl_1")
+            {
+                subtitleText = "scrub scrub scrub the bowl";
+            }
+            else if (gameObject.name == "Plate")
+            {
+                subtitleText = "scrub scrub scrub the plate";
+            }
+            else if (gameObject.name == "Glass")
+            {
+                subtitleText = "scrub scrub scrub the glass";
+            }
+
+            LeanTween.move(birdRectTransform, new Vector2(-250, 250), 0.5f).setOnComplete(() =>
+            {
+                birdAnimator.SetTrigger("instruction");
+
+                if (audioSource != null)
+                {
+                    audioSource.Play();
+                }
+                else
+                {
+                    Debug.LogError("AudioSource is not assigned or missing in the Inspector.");
+                }
+
+                StartCoroutine(RevealTextWordByWord(subtitleText, 0.5f));
+                StartCoroutine(WaitAndReturnBirdImage(birdRectTransform));
+                
+
+                Debug.Log("AnimateBirdInstruction: timerRunning set to true globally");
+            });
+        }
+        else
+        {
+            Debug.LogError("Bird image GameObject with tag 'Bird' not found.");
+        }
+    }
+
+    private IEnumerator WaitAndReturnBirdImage(RectTransform birdRectTransform)
+    {
+        yield return new WaitForSeconds(3f);
+        LeanTween.move(birdRectTransform, new Vector2(-250, -125), 0.5f).setOnComplete(()=>
+        {
+            scrubberController.gameObject.GetComponent<Collider2D>().enabled = true;
+            scrubbertimer = true;
+        });
+    }
+    private IEnumerator SpawnGlowEffect()
+    {
+        if (!helperActive && glowPrefab != null)
+        {
+            Debug.Log($"{gameObject.name} SpawnGlowEffect: Spawning glow as helperActive is false");
+
+            instantiatedGlow = Instantiate(glowPrefab, transform.position, Quaternion.identity);
+            instantiatedGlow.transform.SetParent(transform);
+            LeanTween.scale(instantiatedGlow, new Vector3(10f, 7f, 7f), 0.5f);
+            yield return new WaitForSeconds(2f);
+            LeanTween.scale(instantiatedGlow, Vector3.zero, 0.5f).setOnComplete(() => Destroy(instantiatedGlow));
+        }
+        else
+        {
+            Debug.Log($"{gameObject.name} SpawnGlowEffect: helperActive is true or glowPrefab is null, not spawning glow");
+        }
     }
 
     public void StartScrubbing()
@@ -114,10 +177,8 @@ public class DishController : MonoBehaviour
             StartCoroutine(SpawnPrefabs());
         }
     }
-
     private IEnumerator SpawnPrefabs()
     {
-        Debug.Log("Spawning prefabs started.");
         isSpawning = true;
 
         for (float timer = 0; timer < 3f; timer += Time.deltaTime)
@@ -144,7 +205,6 @@ public class DishController : MonoBehaviour
         }
 
         isSpawning = false;
-        Debug.Log("Spawning prefabs ended.");
 
         Transform dChildToDestroy = FindDChild();
         if (dChildToDestroy != null)
@@ -184,11 +244,11 @@ public class DishController : MonoBehaviour
         yield return new WaitForSeconds(2f);
         Destroy(dChild);
 
-        // Tween the dish back to its original position and scale
         LeanTween.move(gameObject, originalPosition, 0.5f).setOnComplete(() =>
         {
-            transform.localScale = originalScale; // Reset to the original scale
+            transform.localScale = originalScale;
             isDishSelected = false;
+            isTweening = false; // Reset the tweening flag after cleaning is complete
             RestoreOriginalSortingOrders();
             objectCollider.enabled = false;
             EnableOtherColliders();
@@ -202,15 +262,15 @@ public class DishController : MonoBehaviour
             {
                 DishWashingManager.DishWashed();
             }
-
+            scrubberController.gameObject.GetComponent<Collider2D>().enabled = false;
             isScrubbing = false;
+
+            timer = 0f;
+            LV4DragManager.timerRunning = true;
         });
-
-        Debug.Log("Dish cleaned and moved back to original position.");
+        scrubbertimer = false;  
+        scrubberController.scrubberTimerStarted = false; 
         dishCleaned = true;
-
-        // Start the delay timer again and check for interaction with other dishes
-        StartHelperHandDelayTimer();
     }
 
     private void StoreOriginalSortingOrders()
@@ -299,5 +359,20 @@ public class DishController : MonoBehaviour
                 }
             }
         }
+    }
+    private IEnumerator RevealTextWordByWord(string fullText, float delayBetweenWords)
+    {
+        subtitleText.text = "";
+        subtitleText.gameObject.SetActive(true);
+
+        string[] words = fullText.Split(' ');
+
+        // Reveal words one by one
+        for (int i = 0; i < words.Length; i++)
+        {
+            subtitleText.text = string.Join(" ", words, 0, i + 1);
+            yield return new WaitForSeconds(delayBetweenWords);
+        }
+        subtitleText.text = "";
     }
 }

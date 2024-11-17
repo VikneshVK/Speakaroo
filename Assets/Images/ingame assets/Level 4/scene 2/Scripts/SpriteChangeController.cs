@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
 using System.Linq;
+using TMPro;
 
 public class SpriteChangeController : MonoBehaviour
 {
@@ -10,12 +11,24 @@ public class SpriteChangeController : MonoBehaviour
     public List<GameObject> fruitObjectsInBlender = new List<GameObject>();
     private JuiceController juiceController;
     public JuiceManager juiceManager;
+    private bool validationStatus;
+    private bool animationProcess;
+    public bool blenderInteractable;
+
 
     [Header("Bird Settings")]
     public GameObject bird;
     public Transform birdEndPosition;
     public Animator birdAnimator;
     public Vector3 birdInitialPosition;
+
+    [Header("Tween Settings")]
+    public LVL4Sc2AudioManager audioManager;
+    public TextMeshProUGUI subtitleText;
+    public AudioClip audio1;
+    public AudioClip audio2;
+    private string subtitle1 = "Turn on the Blender";
+    private string subtitle2 = "Not Sure about that";
 
     void Start()
     {
@@ -27,11 +40,14 @@ public class SpriteChangeController : MonoBehaviour
         {
             birdInitialPosition = bird.transform.position;
         }
+        validationStatus = false;
+        animationProcess = false;
+
     }
 
     public void ActivateBlenderSprite(bool isDragging)
     {
-        
+
         if (fruitsInBlender.Count == 0 && isDragging)
         {
             blenderJarSpriteRenderer.sprite = Resources.Load<Sprite>("Images/LVL 4 scene 2/blender_active");
@@ -135,7 +151,6 @@ public class SpriteChangeController : MonoBehaviour
                 fruitObjectsInBlender.Add(fruit);
                 Debug.Log($"Fruit added: {fruitTag}. Total fruits in blender: {fruitsInBlender.Count}");
 
-                // Disable the collider of the dropped fruit
                 Collider2D fruitCollider = fruit.GetComponent<Collider2D>();
                 if (fruitCollider != null)
                 {
@@ -148,7 +163,6 @@ public class SpriteChangeController : MonoBehaviour
             }
         }
 
-        // Load the appropriate sprite
         string spriteName = DetermineSpriteName();
         Debug.Log($"Sprite name determined: {spriteName}");
         Sprite newBlenderJarSprite = Resources.Load<Sprite>("Images/LVL 4 scene 2/" + spriteName);
@@ -163,38 +177,42 @@ public class SpriteChangeController : MonoBehaviour
             return;
         }
 
-        // Validate fruits when appropriate
+        // Corrected condition for Kiki's juice and Jojo's juice
         if (juiceManager.isKikiJuice && fruitsInBlender.Count == 2)
         {
-            Debug.Log("Second time and two fruits in blender. Validating fruits...");
-            if (juiceController.ValidateFruit(fruitsInBlender))
+            animationProcess = false;
+            Debug.Log("Kiki's juice mode: Two fruits in blender. Validating fruits...");
+            if (juiceController.ValidateFruit(fruitsInBlender) && !animationProcess)
             {
-                juiceController.EnableBlenderCollider();
-                // Start a coroutine to monitor player interaction with the blender
-                juiceController.StartBlenderInteractionTimer(); // New method added in JuiceController
+                validationStatus = true;                
+                StartBirdTweenSequence("BlenderOn", audio1, subtitle1);
+                 // Start monitoring blender interaction
             }
             else
             {
-                StartBirdTweenSequence();
-                Debug.Log("Fruits validation failed. Starting bird tween sequence.");
+                validationStatus = false;
+                StartBirdTweenSequence("Kiki_negativeFeedback", audio2, subtitle2);
+                Debug.Log("Fruits validation failed for Kiki's juice. Starting bird tween sequence.");
             }
         }
         else if (!juiceManager.isKikiJuice && fruitsInBlender.Count == 1)
         {
-            Debug.Log("First time and one fruit in blender. Validating fruit...");
-            if (juiceController.ValidateFruit(fruitsInBlender))
+            animationProcess = false;
+            Debug.Log("Jojo's juice mode: One fruit in blender. Validating fruit...");
+            if (juiceController.ValidateFruit(fruitsInBlender) && !animationProcess)
             {
-                juiceController.EnableBlenderCollider();
-                // Start a coroutine to monitor player interaction with the blender
-                juiceController.StartBlenderInteractionTimer(); // New method added in JuiceController
+                validationStatus = true;
+                StartBirdTweenSequence("BlenderOn", audio1, subtitle1);
             }
             else
             {
-                StartBirdTweenSequence();
-                Debug.Log("Fruit validation failed. Starting bird tween sequence.");
+                validationStatus = false;                
+                StartBirdTweenSequence("Kiki_negativeFeedback", audio2, subtitle2);
+                Debug.Log("Fruits validation failed for Kiki's juice. Starting bird tween sequence.");
             }
         }
     }
+
 
 
     private string DetermineSpriteName()
@@ -318,26 +336,96 @@ public class SpriteChangeController : MonoBehaviour
         return "default_blender";
     }
 
-    private void StartBirdTweenSequence()
-    {
-        if (bird != null && birdEndPosition != null)
-        {
-            LeanTween.move(bird, birdEndPosition.position, 1f).setEase(LeanTweenType.easeInOutQuad).setOnComplete(() =>
-            {
-                birdAnimator.SetTrigger("canTalk");
 
-                StartCoroutine(WaitAndTweenBack(bird, birdInitialPosition));
-            });
+
+    private void StartBirdTweenSequence(string animationTrigger, AudioClip audioClip, string subtitleTextContent)
+    {
+        Debug.Log($"Starting Tween Sequence: AnimationTrigger={animationTrigger}, AudioClip={audioClip.name}");
+
+        RectTransform birdRectTransform = bird.GetComponent<RectTransform>();
+        if (birdRectTransform == null)
+        {
+            Debug.LogError("Bird does not have a RectTransform component!");
+            return;
         }
+
+        // Set initial position (off-screen, anchored position)
+        birdRectTransform.anchoredPosition = new Vector2(-1300, 320);
+
+        // Tween bird to the end position
+        LeanTween.value(-1300f, -790f, 1f).setEase(LeanTweenType.easeInOutQuad).setOnUpdate((float x) =>
+        {
+            birdRectTransform.anchoredPosition = new Vector2(x, 320f);
+        }).setOnComplete(() =>
+        {
+            Debug.Log("Tween to end position complete!");
+            birdAnimator.SetTrigger(animationTrigger);
+            audioManager.PlayAudio(audioClip);
+
+            // Start subtitle display coroutine
+            StartCoroutine(RevealTextWordByWord(subtitleTextContent, 0.5f));
+
+            StartCoroutine(WaitAndTweenBack(birdRectTransform));
+        });
+    }
+
+
+    private IEnumerator WaitAndTweenBack(RectTransform birdRectTransform)
+    {
+        yield return new WaitForSeconds(2f);
+
+        // Tween bird back to its initial position
+        LeanTween.value(-790f, -1300f, 1f).setEase(LeanTweenType.easeInOutQuad).setOnUpdate((float x) =>
+        {
+            birdRectTransform.anchoredPosition = new Vector2(x, 320f);
+            birdInitialPosition = birdRectTransform.anchoredPosition;
+        }).setOnComplete(() =>
+        {
+            if (validationStatus)
+            {
+                juiceController.EnableBlenderCollider();
+                juiceController.StartBlenderInteractionTimer();
+            }
+            else
+            {
+                ResetBlender();
+            }
+
+            animationProcess = true;
+        });
+    }
+
+    public Sprite GetDefaultBlenderSprite()
+    {
+        return Resources.Load<Sprite>("Images/LVL 4 scene 2/default_blender");
     }
 
     private IEnumerator WaitAndTweenBack(GameObject bird, Vector3 initialPosition)
     {
         yield return new WaitForSeconds(2f);
 
-        LeanTween.move(bird, initialPosition, 1f).setEase(LeanTweenType.easeInOutQuad).setOnComplete(() =>
+        LeanTween.value(-790f, -1300f, 1f).setEase(LeanTweenType.easeInOutQuad).setOnUpdate((float x) =>
         {
             ResetBlender();
         });
+    }
+
+    private IEnumerator RevealTextWordByWord(string fullText, float delayBetweenWords)
+    {
+        subtitleText.text = "";
+        subtitleText.gameObject.SetActive(true);
+
+        string[] words = fullText.Split(' ');
+
+        // Reveal words one by one
+        for (int i = 0; i < words.Length; i++)
+        {
+            subtitleText.text = string.Join(" ", words, 0, i + 1);
+            yield return new WaitForSeconds(delayBetweenWords);
+        }
+
+        yield return new WaitForSeconds(1f); // Wait for a bit after the last word
+        subtitleText.text = "";
+        subtitleText.gameObject.SetActive(false);
     }
 }

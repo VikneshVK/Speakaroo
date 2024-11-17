@@ -21,6 +21,7 @@ public class ShutterController : MonoBehaviour
     private Collider2D[] colliders;
     private Collider2D[] allAnimalColliders;
     private Vector3 originalScale;
+    
 
     void Start()
     {
@@ -63,8 +64,9 @@ public class ShutterController : MonoBehaviour
 
                 RaycastHit2D hit = Physics2D.Raycast(touchPosition, Vector2.zero);
 
-                if (hit.collider != null && hit.collider.gameObject == gameObject)
+                if (hit.collider != null && hit.collider.gameObject == gameObject && !photoQuestManager.isClicked)
                 {
+                    photoQuestManager.isClicked = true;
                     StartCoroutine(TakePhoto());
                     helperController.DestroyHelperHand();
                     helperController.ResetDelayTimer();
@@ -80,8 +82,9 @@ public class ShutterController : MonoBehaviour
 
             RaycastHit2D hit = Physics2D.Raycast(mousePosition, Vector2.zero);
 
-            if (hit.collider != null && hit.collider.gameObject == gameObject)
+            if (hit.collider != null && hit.collider.gameObject == gameObject && !photoQuestManager.isClicked)
             {
+                photoQuestManager.isClicked = true;
                 StartCoroutine(TakePhoto());
                 helperController.DestroyHelperHand();
                 helperController.ResetDelayTimer();
@@ -91,8 +94,9 @@ public class ShutterController : MonoBehaviour
 
     IEnumerator TakePhoto()
     {
-        // Disable camera movement in PhotoCameraController
+
         photoCameraController.canMove = false;
+        helperController.DestroyDirPrefab();
 
         // Calculate the target position for the camera based on the tapped animal
         Vector3 targetPosition = new Vector3(transform.position.x, photoCameraController.transform.position.y, photoCameraController.transform.position.z);
@@ -194,6 +198,7 @@ public class ShutterController : MonoBehaviour
             // Keep the collider of the tapped animal disabled
             EnableOtherColliders(gameObject);
         }
+        
     }
 
     private bool ValidateCurrentPhoto()
@@ -209,7 +214,7 @@ public class ShutterController : MonoBehaviour
         {
             if (collider != null) // Ensure the collider still exists
             {
-                collider.enabled = true;
+                collider.enabled = true;                
             }
         }
     }
@@ -222,6 +227,7 @@ public class ShutterController : MonoBehaviour
             if (collider != null && collider.gameObject != tappedAnimal) // Ensure the collider still exists
             {
                 collider.enabled = true; // Enable only colliders that are not the tapped animal
+                
             }
         }
     }

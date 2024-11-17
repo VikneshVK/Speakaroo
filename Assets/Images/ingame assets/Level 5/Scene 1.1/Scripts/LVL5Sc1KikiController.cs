@@ -6,9 +6,8 @@ using UnityEngine;
 public class LVL5Sc1KikiController : MonoBehaviour
 {
     public Transform birdStopPosition;
-    public GameObject boyTalkRig;
+
     private Animator animator;
-    private Animator boyTalkAnimator;
     private Vector3 targetPosition;
     public float flySpeed = 2f;
 
@@ -22,7 +21,7 @@ public class LVL5Sc1KikiController : MonoBehaviour
         isIdleCompleted = false;
 
         animator = GetComponent<Animator>();
-        boyTalkAnimator = boyTalkRig.GetComponent<Animator>();
+
     }
 
 
@@ -37,18 +36,13 @@ public class LVL5Sc1KikiController : MonoBehaviour
             HandleIdleCompletion();
         }
 
-        if (canTalk && boyTalkAnimator.GetCurrentAnimatorStateInfo(0).IsName("Dialouge 1") &&
-            boyTalkAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.85f)
-        {
-            Debug.Log("kiki will start talk");
-            HandleKikiTalk();
-        }
+
     }
 
     private void HandleIdleCompletion()
     {
         if (!isIdleCompleted && animator.GetCurrentAnimatorStateInfo(0).IsName("Idle") &&
-            animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
+            animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.1f)
         {
             isIdleCompleted = true;
             MoveToStopPosition(); // Start flying to the stop position after idle completes
@@ -61,7 +55,6 @@ public class LVL5Sc1KikiController : MonoBehaviour
         animator.SetBool("CanFly", true);
         targetPosition = birdStopPosition.position;
         isFlying = true;
-
     }
 
     private void FlyToPosition(Vector3 targetPosition)
@@ -73,12 +66,5 @@ public class LVL5Sc1KikiController : MonoBehaviour
             animator.SetBool("CanFly", false);
             canTalk = true;
         }
-    }
-
-    private void HandleKikiTalk()
-    {       
-       animator.SetTrigger("canTalk");
-       canTalk = false;      
-        
     }
 }

@@ -69,7 +69,7 @@ public class BoyWalk1 : MonoBehaviour
         {
             Debug.Log("bird will talk bagTalk");
             boyAnimator.SetBool("canTalk", false);  // Stop the boy from talking again
-            spriteRenderer.flipX = true;
+           
             boyFinishedTalking = true;
 
             // Use dragManager to play the object-specific audio and activate the bag
@@ -103,7 +103,7 @@ public class BoyWalk1 : MonoBehaviour
         if (Mathf.Abs(transform.position.x - stopPosition.position.x) < 0.1f)
         {
             boyAnimator.SetBool("canWalk", false);
-            spriteRenderer.flipX = false;
+            
             boyAnimator.SetBool("canTalk", true);  // Start the "Dialogue 1" animation
             reachedStopPosition = true;  // Mark that the boy reached the stop position
             audioSource.Play();

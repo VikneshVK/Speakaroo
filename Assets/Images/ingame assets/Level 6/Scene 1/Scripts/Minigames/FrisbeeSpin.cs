@@ -1,10 +1,12 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
+using System.Collections.Generic;
 
 public class FrisbeeSpin : MonoBehaviour
 {
     public delegate void FrisbeeDestroyed(FrisbeeSpin frisbee);
     public event FrisbeeDestroyed OnDestroyEvent;
-
+    public GameObject Boy;
     public float spinDuration = 1f; // Time it takes for the frisbee to complete one revolution
     public float flyAwayDuration = 1f; // Time it takes for the frisbee to fly away
     public float ellipseRadiusX = 3f; // Radius on the X-axis of the ellipse
@@ -15,12 +17,28 @@ public class FrisbeeSpin : MonoBehaviour
 
     private bool isSpinning = false;
     private Vector2 lastDirection; // Store the last movement direction
+    private static List<FrisbeeSpin> allFrisbees = new List<FrisbeeSpin>(); // List of all frisbee instances
+
+    private void Awake()
+    {
+        // Add this frisbee to the list of all frisbees
+        allFrisbees.Add(this);
+    }
+
+    private void OnDestroy()
+    {
+        // Remove this frisbee from the list when destroyed
+        allFrisbees.Remove(this);
+    }
 
     private void OnMouseDown()
     {
         if (!isSpinning)
         {
             isSpinning = true;
+            DisableOtherFrisbees(); // Disable interactivity on other frisbees
+
+            Boy.GetComponent<Animator>().SetTrigger("Giggle");
 
             // Play spin audio
             if (spinAudioSource != null)
@@ -67,7 +85,8 @@ public class FrisbeeSpin : MonoBehaviour
             .setEase(LeanTweenType.easeInOutQuad)
             .setOnComplete(() =>
             {
-                // Once the fly away is complete, destroy the frisbee
+                // Once the fly away is complete, re-enable other frisbees and destroy this frisbee
+                EnableOtherFrisbees();
                 OnDestroyEvent?.Invoke(this);
                 Destroy(gameObject);
             });
@@ -80,5 +99,59 @@ public class FrisbeeSpin : MonoBehaviour
         float x = center.x + Mathf.Cos(radianAngle) * radiusX;
         float y = center.y + Mathf.Sin(radianAngle) * radiusY;
         return new Vector3(x, y, center.z);
+    }
+
+    // Disable interactivity on all other frisbees by removing EventTrigger events
+    private void DisableOtherFrisbees()
+    {
+        foreach (var frisbee in allFrisbees)
+        {
+            if (frisbee != this)
+            {
+                frisbee.RemoveDragEvents();
+            }
+        }
+    }
+
+    // Enable interactivity on all other frisbees by adding EventTrigger events back
+    private void EnableOtherFrisbees()
+    {
+        foreach (var frisbee in allFrisbees)
+        {
+            if (frisbee != this)
+            {
+                frisbee.AddDragEvents();
+            }
+        }
+    }
+
+    // Remove EventTrigger events to disable dragging
+    private void RemoveDragEvents()
+    {
+        EventTrigger eventTrigger = GetComponent<EventTrigger>();
+        if (eventTrigger != null)
+        {
+            eventTrigger.triggers.RemoveAll(entry =>
+                entry.eventID == EventTriggerType.PointerDown ||
+                entry.eventID == EventTriggerType.PointerUp);
+        }
+    }
+
+    // Add EventTrigger events to enable dragging
+    private void AddDragEvents()
+    {
+        EventTrigger eventTrigger = GetComponent<EventTrigger>();
+        if (eventTrigger != null)
+        {
+            // Add PointerDown event to start the spin
+            EventTrigger.Entry pointerDownEntry = new EventTrigger.Entry { eventID = EventTriggerType.PointerDown };
+            pointerDownEntry.callback.AddListener((data) => { OnMouseDown(); });
+            eventTrigger.triggers.Add(pointerDownEntry);
+
+            // Add PointerUp event to stop the interaction
+            EventTrigger.Entry pointerUpEntry = new EventTrigger.Entry { eventID = EventTriggerType.PointerUp };
+            pointerUpEntry.callback.AddListener((data) => { /* Optional: Add any OnMouseUp logic here */ });
+            eventTrigger.triggers.Add(pointerUpEntry);
+        }
     }
 }

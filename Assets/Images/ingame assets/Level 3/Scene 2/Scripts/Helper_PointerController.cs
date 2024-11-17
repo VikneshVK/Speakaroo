@@ -13,15 +13,12 @@ public class Helper_PointerController : MonoBehaviour
     public TapControl tapControl;
 
     public GameObject glowPrefab;
-    public GameObject glowInstance;
+    private GameObject glowInstance;
 
     public TextMeshProUGUI subtitleText;
 
     private GameObject helperHandInstance;
     private bool hasSpawnedHelperHand = false;
-    public drag_Toys[] toys = new drag_Toys[3];
-    private bool isToyDragging = false;
-    private int currentToyIndex = 0;
     private bool shouldRestartTimer = true;
 
     public GameObject bird;
@@ -32,18 +29,22 @@ public class Helper_PointerController : MonoBehaviour
     private AudioClip audioClip2;
     private bool hasPlayedAudioClip2 = false;
 
+    private drag_Toys[] toys;
+
     void Start()
     {
-        toys = FindObjectsOfType<drag_Toys>();
-        toys[0] = GameObject.FindWithTag("Teddy").GetComponent<drag_Toys>();
-        toys[1] = GameObject.FindWithTag("Dino").GetComponent<drag_Toys>();
-        toys[2] = GameObject.FindWithTag("Bunny").GetComponent<drag_Toys>();
+        // Manually assign toys to ensure a specific order
+        toys = new drag_Toys[3];
+        toys[0] = GameObject.FindWithTag("Teddy").GetComponent<drag_Toys>(); // Teddy
+        toys[1] = GameObject.FindWithTag("Dino").GetComponent<drag_Toys>();   // Dino
+        toys[2] = GameObject.FindWithTag("Bunny").GetComponent<drag_Toys>();  // Bunny
 
         birdAnimator = bird.GetComponent<Animator>();
         audioSource = GetComponent<AudioSource>();
         audioClip1 = Resources.Load<AudioClip>("audio/Lvl3sc2/Friend, open the tap");
         audioClip2 = Resources.Load<AudioClip>("audio/Lvl3sc2/Now show your toys under the water");
     }
+
 
     public void EnableCollidersAndStartTimer()
     {
@@ -55,48 +56,44 @@ public class Helper_PointerController : MonoBehaviour
 
     private IEnumerator StartHelperHandSequence()
     {
-        float halfDelay = delayBeforeHelp / 2f; // Halfway point (5 seconds if delayBeforeHelp is 10)
+        float halfDelay = delayBeforeHelp / 2f;
 
         yield return new WaitForSeconds(halfDelay);
 
-        Vector3 targetPosition;
         if (tapControl.isFirstTime)
         {
-            Collider2D tapCollider = tapControl.GetComponent<Collider2D>();
-            if (tapCollider != null)
+            Vector3 targetPosition = GetColliderCenter(tapControl);
+            if (targetPosition == Vector3.zero) yield break;
+
+            PauseAndSpawnGlow(targetPosition);
+            while (glowInstance != null)
             {
-                targetPosition = tapCollider.bounds.center;
+                yield return null;
             }
-            else
+
+            yield return new WaitForSeconds(halfDelay);
+
+            if (!hasSpawnedHelperHand)
             {
-                Debug.LogError("Tap Collider not found on the TapControl object.");
-                yield break;
+                SpawnHelperHand(offscreenPosition.position, true);
+                StartHelperHandTweenLoop(targetPosition);
             }
+        }
+    }
+
+    private Vector3 GetColliderCenter(Component obj)
+    {
+        Collider2D collider = obj.GetComponent<Collider2D>();
+        if (collider != null)
+        {
+            return collider.bounds.center;
         }
         else
         {
-            targetPosition = toys[currentToyIndex].transform.position;
+            Debug.LogError("Collider not found on the object.");
+            return Vector3.zero;
         }
-
-        PauseAndSpawnGlow(targetPosition);
-        while (glowInstance != null)
-        {
-            yield return null;
-        }
-
-
-        yield return new WaitForSeconds(halfDelay);
-
-
-        if (tapControl.isFirstTime && !hasSpawnedHelperHand)
-        {
-            SpawnHelperHand(offscreenPosition.position, true);
-            StartHelperHandTweenLoop();
-        }
-
-        StartCoroutine(CheckToyInteraction());
     }
-
 
     public void PauseAndSpawnGlow(Vector3 targetPosition)
     {
@@ -142,112 +139,40 @@ public class Helper_PointerController : MonoBehaviour
         }
     }
 
-    private void StartHelperHandTweenLoop()
+    private void StartHelperHandTweenLoop(Vector3 targetPosition)
     {
         if (helperHandInstance != null)
         {
-            TweenHelperHandToTapPosition();
+            LeanTween.move(helperHandInstance, targetPosition, 1f)
+                     .setEase(LeanTweenType.easeInOutQuad)
+                     .setOnComplete(() =>
+                     {
+                         helperHandInstance.transform.position = offscreenPosition.position;
+                         StartHelperHandTweenLoop(targetPosition);
+                     });
         }
     }
 
-    public void TweenHelperHandToTapPosition()
+    public void TweenHelperHandToParticlesPosition(Vector3 startPosition)
     {
-        if (helperHandInstance != null && tapControl != null)
+        if (helperHandInstance != null)
         {
-            Collider2D tapCollider = tapControl.GetComponent<Collider2D>();
-
-            if (tapCollider != null)
-            {
-                Vector3 targetPosition = tapCollider.bounds.center;
-
-                LeanTween.move(helperHandInstance, targetPosition, 1f)
-                         .setEase(LeanTweenType.easeInOutQuad)
-                         .setOnComplete(() =>
-                         {
-                             helperHandInstance.transform.position = offscreenPosition.position;
-                             TweenHelperHandToTapPosition();
-                         });
-            }
-            else
-            {
-                Debug.LogError("Tap Collider not found on the TapControl object.");
-            }
-        }
-    }
-
-    public void TweenHelperHandToParticlesPosition(int toyIndex)
-    {
-        if (helperHandInstance != null && toyIndex >= 0 && toyIndex < toys.Length)
-        {
-            Debug.Log($"Tweening helper hand for toy index: {toyIndex} - {toys[toyIndex].gameObject.name}");
-
-            GameObject toy = toys[toyIndex].gameObject;
-            Vector3 startPosition = toy.transform.position;
-
             if (!hasPlayedAudioClip2 && audioClip2 != null)
             {
                 audioSource.clip = audioClip2;
                 audioSource.Play();
                 StartCoroutine(RevealTextWordByWord("Now show your toys under the water", 0.5f));
-                hasPlayedAudioClip2 = true; // Mark that audioClip2 has been played
+                hasPlayedAudioClip2 = true;
             }
 
             LeanTween.move(helperHandInstance, waterParticleSystem.transform.position, 1f)
                      .setEase(LeanTweenType.easeInOutQuad)
                      .setOnComplete(() =>
                      {
-                         Debug.Log($"Completed tween for {toy.name}. Resetting helper hand to start position.");
-
                          helperHandInstance.transform.position = startPosition;
-                         TweenHelperHandToParticlesPosition(toyIndex);
+                         TweenHelperHandToParticlesPosition(startPosition);
                      });
         }
-        else
-        {
-            Debug.LogError($"Helper hand tween error: Invalid toy index {toyIndex} or helper hand instance is null.");
-        }
-    }
-
-    private IEnumerator CheckToyInteraction()
-    {
-        while (currentToyIndex < toys.Length)
-        {
-            yield return new WaitForSeconds(toyDragDelay);
-
-            if (!toys[currentToyIndex].GetComponent<Collider2D>().enabled)
-            {
-                Debug.Log($"{toys[currentToyIndex].gameObject.name} collider disabled, skipping.");
-                currentToyIndex++;
-                continue;
-            }
-
-            isToyDragging = toys[currentToyIndex].isDragging;
-
-            if (isToyDragging)
-            {
-                if (hasSpawnedHelperHand)
-                {
-                    ResetHelperHand();
-                }
-                if (glowInstance != null)
-                {
-                    Destroy(glowInstance);
-                    glowInstance = null;
-                }
-            }
-            else
-            {
-                if (!toys[currentToyIndex].IsInteracted() && !hasSpawnedHelperHand)
-                {
-                    SpawnHelperHand(toys[currentToyIndex].transform.position, false); // false for toy
-                    TweenHelperHandToParticlesPosition(currentToyIndex);
-                }
-            }
-
-            currentToyIndex++;
-        }
-
-        StopAllCoroutines();
     }
 
     public void ResetHelperHand()
@@ -270,13 +195,51 @@ public class Helper_PointerController : MonoBehaviour
         }
     }
 
-    public void ResetAndRestartTimer(bool isToyInteraction = false)
+    public void ResetAndRestartTimer()
     {
-        if ((shouldRestartTimer && !hasSpawnedHelperHand) || isToyInteraction)
+        if (shouldRestartTimer && !hasSpawnedHelperHand)
         {
             StopAllCoroutines();
             StartCoroutine(StartHelperHandSequence());
             ResetHelperHand();
+        }
+    }
+
+    public void EnableHelperHandForToy(int toyIndex)
+    {
+        if (toyIndex < 0 || toyIndex >= toys.Length)
+        {
+            Debug.LogError("Invalid toy index passed to EnableHelperHandForToy.");
+            return;
+        }
+
+        GameObject currentToy = toys[toyIndex].gameObject;
+        Debug.Log("Helper hand enabled for toy: " + currentToy.name);
+
+        StartCoroutine(StartHelperHandForToy(currentToy));
+    }
+
+    private IEnumerator StartHelperHandForToy(GameObject toy)
+    {
+        // Wait for the specified delay before showing the helper hand
+        yield return new WaitForSeconds(toyDragDelay);
+
+        drag_Toys toyScript = toy.GetComponent<drag_Toys>();
+
+        // Check if the toy has been interacted with
+        if (!toyScript.IsInteracted())
+        {
+            PauseAndSpawnGlow(toy.transform.position);
+
+            // Wait until glow effect completes
+            while (glowInstance != null)
+            {
+                yield return null;
+            }
+
+            // Spawn and tween helper hand to the toy’s position
+            SpawnHelperHand(toy.transform.position, false);
+            TweenHelperHandToParticlesPosition(toy.transform.position);
         }
     }
 

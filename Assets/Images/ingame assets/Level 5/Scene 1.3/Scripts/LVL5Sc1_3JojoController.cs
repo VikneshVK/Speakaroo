@@ -10,7 +10,10 @@ public class LVL5Sc1_3JojoController : MonoBehaviour
     public GameObject prefab2;                // Prefab to spawn after Talk3
     public Transform prefabSpawnLocation;     // Location to spawn prefabs
     public float walkSpeed = 2f;              // Speed of Jojo while walking
+    public AudioClip Audio1;
+    private AudioSource boyAudioSource;
     private Animator animator;                // Animator component for Jojo
+    private bool Dialouge1;
     private bool isWalking;                   // Check if Jojo is walking
     private bool canWalk;                     // Boolean to trigger walk animation
     public bool canTalk;                      // Boolean controlled by another script to trigger Talk2
@@ -27,6 +30,7 @@ public class LVL5Sc1_3JojoController : MonoBehaviour
     void Start()
     {
         animator = GetComponent<Animator>();
+        boyAudioSource = GetComponent<AudioSource>();
         isWalking = true;
         canWalk = true;
         canTalk = false;
@@ -35,6 +39,7 @@ public class LVL5Sc1_3JojoController : MonoBehaviour
         hasSpawnedPrefab1 = false;
         hasSpawnedPrefab2 = false;
         isWalkingToPosition2 = false;
+        Dialouge1 = false;
 
         // Set the target X positions for walking
         targetXPosition = stopPosition.position.x;
@@ -48,13 +53,7 @@ public class LVL5Sc1_3JojoController : MonoBehaviour
     void Update()
     {
 
-        /*AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
-        Debug.Log("Current State: " + stateInfo);
-
-        if (stateInfo.IsName("Cream Applied"))
-        {
-            Debug.Log("Currently in Cream Applied state.");
-        }*/
+        
         if (canWalk && isWalking)
         {
             if (isWalkingToPosition2)
@@ -67,7 +66,7 @@ public class LVL5Sc1_3JojoController : MonoBehaviour
             }
         }
             
-        else if (animator.GetCurrentAnimatorStateInfo(0).IsName("Talk"))
+        else if (animator.GetCurrentAnimatorStateInfo(0).IsName("Sun burn"))
         {
             HandleTalkCompletion(); // Check if Talk animation is completed
         }
@@ -100,7 +99,7 @@ public class LVL5Sc1_3JojoController : MonoBehaviour
         {
             spriteRenderer.flipX = false; // Facing right (for stopPosition2)
         }
-        // Move Jojo toward the target position
+        
         Vector3 currentPosition = transform.position;
         currentPosition.x = Mathf.MoveTowards(currentPosition.x, targetX, walkSpeed * Time.deltaTime);
         transform.position = currentPosition;
@@ -124,7 +123,14 @@ public class LVL5Sc1_3JojoController : MonoBehaviour
 
     private void HandleTalkCompletion()
     {
-        if (animator.GetCurrentAnimatorStateInfo(0).IsName("Talk") && animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.95f)
+        if (!Dialouge1)
+        {
+            boyAudioSource.clip = Audio1;
+            boyAudioSource.Play();
+
+            Dialouge1 = true;
+        }
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName("Sun burn") && animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.95f)
         {
             // Talk animation is complete, transition to idle and spawn prefab1 only once
             if (!hasSpawnedPrefab1)

@@ -1,24 +1,33 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class LVL5Sc12Jojocontroller : MonoBehaviour
 {
-    public Transform stopPosition;           // Target stop position 1
-    public Transform stopPosition2;          // Target stop position 2
-    public GameObject prefabToSpawn;         // General prefab to spawn after the talk animation
+    public Transform stopPosition;
+    public Transform stopPosition2;
+    public GameObject prefabToSpawn;
     public Transform prefabToSpawnLocation;  // Location where the general prefab will be spawned
     public GameObject ticketPrefab;          // Ticket prefab to spawn and animate
     public Transform ticketPrefabSpawnLocation; // Location where the ticket prefab will be spawned
     public Transform ticketEndLocation;      // End location for the ticket prefab
     public float walkSpeed = 2f;             // Speed of the character while walking
+    public AudioClip Audio1;
+    public AudioClip Audio2;
+    public AudioClip Audio3;
+    public TextMeshProUGUI subtitleText;
+
     private Animator animator;               // Animator for the character
+    private AudioSource boyAudioSource;
     private bool isWalking;                  // Check if the character is walking
     private bool canWalk;                    // Boolean to trigger walk animation
     private bool canTalk;                    // Boolean to trigger talk animation
     public bool canTalk2;                   // Boolean to trigger talk2 animation
     private bool canTalk3;                   // Boolean to trigger talk3 animation
-    private bool isWalkingToPosition2;       // Track whether walking to stopPosition2
+    private bool isWalkingToPosition2;
+    private bool ifDialougeComplete;
+    private SpriteRenderer boySprite;
 
     private bool isIdleCompleted;            // Check if the idle animation is completed
     private bool isTalkCompleted;            // Check if the talk animation is completed
@@ -30,6 +39,8 @@ public class LVL5Sc12Jojocontroller : MonoBehaviour
     void Start()
     {
         animator = GetComponent<Animator>();
+        boySprite = GetComponent<SpriteRenderer>();
+        boyAudioSource = GetComponent<AudioSource>();
         isWalking = false;
         canWalk = false;
         canTalk = false;
@@ -38,7 +49,8 @@ public class LVL5Sc12Jojocontroller : MonoBehaviour
         isIdleCompleted = false;
         isTalkCompleted = false;
         isWalkingToPosition2 = false;
-
+        ifDialougeComplete = false;
+        boySprite.flipX = true;
         // Set the target X positions (only the X axis is considered)
         targetXPosition = stopPosition.position.x;
         targetXPosition2 = stopPosition2.position.x;
@@ -78,8 +90,9 @@ public class LVL5Sc12Jojocontroller : MonoBehaviour
     private void HandleIdleCompletion()
     {
         if (animator.GetCurrentAnimatorStateInfo(0).IsName("Idle") &&
-            animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
+            animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.1f)
         {
+            
             isIdleCompleted = true;
             canWalk = true;
             animator.SetBool("canWalk", true); // Trigger walk animation
@@ -104,8 +117,12 @@ public class LVL5Sc12Jojocontroller : MonoBehaviour
             if (!isWalkingToPosition2)
             {
                 // If it's the first walk phase (to stopPosition1), transition to talking
-                canTalk = true;
+                canTalk = true;               
                 animator.SetBool("canTalk", true); // Trigger talk animation
+                boyAudioSource.clip = Audio1;
+                boyAudioSource.Play();
+                StartCoroutine(RevealTextWordByWord("Ask for the tickets", 0.5f));
+
             }
             else
             {
@@ -145,13 +162,11 @@ public class LVL5Sc12Jojocontroller : MonoBehaviour
     {
         if (ticketPrefab != null && ticketPrefabSpawnLocation != null)
         {
-            // Spawn the ticket prefab at the specified location
+
             GameObject ticket = Instantiate(ticketPrefab, ticketPrefabSpawnLocation.position, ticketPrefabSpawnLocation.rotation);
 
-            // Scale the ticket to 0.75 over 0.5 seconds
             LeanTween.scale(ticket, Vector3.one * 0.75f, 0.5f).setOnComplete(() =>
             {
-                // Tween the ticket to move to the end location
                 LeanTween.move(ticket, ticketEndLocation.position, 1f).setOnComplete(() =>
                 {
                     // After reaching the end location, shrink the ticket back to zero and destroy it
@@ -161,6 +176,9 @@ public class LVL5Sc12Jojocontroller : MonoBehaviour
                         // Transition to Talk3
                         canTalk3 = true;
                         animator.SetBool("canTalk3", true); // Trigger Talk3 animation
+                        boyAudioSource.clip = Audio3;
+                        boyAudioSource.Play();
+                        StartCoroutine(RevealTextWordByWord("lets go in", 0.5f));
                     });
                 });
             });
@@ -173,6 +191,15 @@ public class LVL5Sc12Jojocontroller : MonoBehaviour
 
     private void HandleTalk2Completion()
     {
+        if (!ifDialougeComplete) 
+        {
+            boyAudioSource.clip = Audio2;
+            boyAudioSource.Play();            
+            StartCoroutine(RevealTextWordByWord("Please give me a Ticket", 0.5f));
+            ifDialougeComplete = true;
+        }
+        
+
         if (animator.GetCurrentAnimatorStateInfo(0).IsName("Talk2") &&
             animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.9f)
         {
@@ -193,6 +220,22 @@ public class LVL5Sc12Jojocontroller : MonoBehaviour
             isWalking = true;
             isWalkingToPosition2 = true; // Now moving to stopPosition2
             animator.SetBool("canWalk", true);
+            /*boySprite.flipX = true;*/
         }
+    }
+
+    private IEnumerator RevealTextWordByWord(string fullText, float delayBetweenWords)
+    {
+        subtitleText.text = "";
+        subtitleText.gameObject.SetActive(true);
+
+        string[] words = fullText.Split(' ');
+
+        for (int i = 0; i < words.Length; i++)
+        {
+            subtitleText.text = string.Join(" ", words, 0, i + 1);
+            yield return new WaitForSeconds(delayBetweenWords);
+        }
+        subtitleText.text = "";
     }
 }

@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using TMPro;
 
 public class DraggingController1 : MonoBehaviour
 {
@@ -10,9 +11,9 @@ public class DraggingController1 : MonoBehaviour
     private Quaternion initialRotation;
     private float initialZ;
 
-    private static bool isMilkDropped = false;
-    private static bool isCerealDropped = false;
-    private static bool isCherryDropped = false;
+    public static bool isMilkDropped = false;
+    public static bool isCerealDropped = false;
+    public static bool isCherryDropped = false;
 
     private Sprite newSprite;
     private Sprite milkSprite;
@@ -31,6 +32,20 @@ public class DraggingController1 : MonoBehaviour
     public Transform milkInitialPosition;
     public Transform cherryInitialPosition;
 
+    public LVL4Sc2AudioManager audioManager;
+    public AudioClip Audio1;
+    public AudioClip Audio2;
+    public AudioClip Audio3;
+    public AudioClip Audio4;
+    public AudioClip Audio5;
+
+    public TextMeshProUGUI subtitleText;
+    private string subtitle1 = "Lets make Cereal for Breakfast";
+    private string subtitle2 = "Put the Cereal in the Bowl";
+    private string subtitle3 = "Pour the Milk in the Bowl";
+    private string subtitle4 = "Now Add some Berries on the Top";
+    private string subtitle5 = "mmm Tasty..!";
+
     private BoxCollider2D cerealCollider;
     private BoxCollider2D milkCollider;
 
@@ -43,11 +58,16 @@ public class DraggingController1 : MonoBehaviour
     public GameObject finalBowlSpriteObject;
     public GameObject eatenBowl;
 
-    public LVL4Sc2HelperHand helperHandController;
-    public float helperHandDelay = 5f;
+    public LVL4Sc2HelperController helperHandController;
 
     private Animator objectAnimator;
-    private bool helperHandRoutineRunning = false;
+    private bool isCerealSequenceStarted = false;
+    private bool isMilkSequenceStarted = false;
+    private bool isCherrySequenceStarted = false;
+    /*private bool isTweenBackInProgress = false;*/
+
+
+
 
     private void Start()
     {
@@ -100,144 +120,22 @@ public class DraggingController1 : MonoBehaviour
             tweeningController = tweenManager.GetComponent<TweeningController>();
         }
 
-        StartBirdTweenSequence();
+        StartBirdTweenSequence("Intro", Audio1, subtitle1);
+
         
-        if (!tweeningController.isSecondTime)
-        {
-            helperHandRoutineRunning = true;
-            StartCoroutine(HelperHandRoutine());
-        }
     }
-
-    private IEnumerator HelperHandRoutine()
-    {
-        while (!isCerealDropped || !isMilkDropped || !isCherryDropped)
-        {
-            // Check for cereal drop
-            if (!isCerealDropped)
-            {
-                LVL4Sc2HelperHand.Instance.StartDelayTimer();
-                float timer = 0f;
-
-                while (timer < helperHandDelay)
-                {
-                    if (isCerealDropped)
-                    {
-                        LVL4Sc2HelperHand.Instance.DestroySpawnedHelperHand();
-                        LVL4Sc2HelperHand.Instance.ResetAndStartDelayTimer();
-                        break;
-                    }
-                    timer += Time.deltaTime;
-                    yield return null;
-                }
-
-                if (!isCerealDropped)
-                {
-                    // Check if the helper hand is already spawned
-                    if (!LVL4Sc2HelperHand.Instance.IsHelperHandActive())
-                    {
-                        LVL4Sc2HelperHand.Instance.SpawnAndTweenHelperHand(cerealInitialPosition.position, GameObject.FindGameObjectWithTag("EmptyBowl").transform);
-                    }
-                }
-
-                // Wait until cereal is dropped
-                while (!isCerealDropped)
-                {
-                    yield return null;
-                }
-
-                LVL4Sc2HelperHand.Instance.DestroySpawnedHelperHand();
-                LVL4Sc2HelperHand.Instance.ResetAndStartDelayTimer();
-            }
-
-            // Check for milk drop
-            if (!isMilkDropped)
-            {
-                LVL4Sc2HelperHand.Instance.StartDelayTimer();
-                float timer = 0f;
-
-                while (timer < helperHandDelay)
-                {
-                    if (isMilkDropped)
-                    {
-                        LVL4Sc2HelperHand.Instance.DestroySpawnedHelperHand();
-                        LVL4Sc2HelperHand.Instance.ResetAndStartDelayTimer();
-                        break;
-                    }
-                    timer += Time.deltaTime;
-                    yield return null;
-                }
-
-                if (!isMilkDropped)
-                {
-                    // Check if the helper hand is already spawned
-                    if (!LVL4Sc2HelperHand.Instance.IsHelperHandActive())
-                    {
-                        LVL4Sc2HelperHand.Instance.SpawnAndTweenHelperHand(milkInitialPosition.position, GameObject.FindGameObjectWithTag("EmptyBowl").transform);
-                    }
-                }
-
-                // Wait until milk is dropped
-                while (!isMilkDropped)
-                {
-                    yield return null;
-                }
-
-                LVL4Sc2HelperHand.Instance.DestroySpawnedHelperHand();
-                LVL4Sc2HelperHand.Instance.ResetAndStartDelayTimer();
-            }
-
-            // Check for cherry drop
-            if (!isCherryDropped)
-            {
-                LVL4Sc2HelperHand.Instance.StartDelayTimer();
-                float timer = 0f;
-
-                while (timer < helperHandDelay)
-                {
-                    if (isCherryDropped)
-                    {
-                        LVL4Sc2HelperHand.Instance.DestroySpawnedHelperHand();
-                        LVL4Sc2HelperHand.Instance.ResetAndStartDelayTimer();
-                        break;
-                    }
-                    timer += Time.deltaTime;
-                    yield return null;
-                }
-
-                if (!isCherryDropped)
-                {
-                    // Check if the helper hand is already spawned
-                    if (!LVL4Sc2HelperHand.Instance.IsHelperHandActive())
-                    {
-                        LVL4Sc2HelperHand.Instance.SpawnAndTweenHelperHand(cherryInitialPosition.position, GameObject.FindGameObjectWithTag("EmptyBowl").transform);
-                    }
-                }
-
-                // Wait until cherry is dropped
-                while (!isCherryDropped)
-                {
-                    yield return null;
-                }
-
-                LVL4Sc2HelperHand.Instance.DestroySpawnedHelperHand();
-                LVL4Sc2HelperHand.Instance.ResetAndStartDelayTimer();
-            }
-
-            yield return null;
-        }
-
-        // Reset the routine flag when the loop is completed
-        helperHandRoutineRunning = false;
-    }
-
     private void OnMouseDown()
     {
         Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         offset = transform.position - mousePosition;
         offset.z = 0;
         isDragging = true;
+
+        // Reset the centralized timer when interaction begins
+        helperHandController.StopAndResetTimer();
     }
+
+
 
     private void OnMouseDrag()
     {
@@ -246,7 +144,6 @@ public class DraggingController1 : MonoBehaviour
             Vector3 mousePosition = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, -Camera.main.transform.position.z));
             Vector3 targetPosition = mousePosition + offset;
             transform.position = Vector3.Lerp(transform.position, targetPosition, Time.deltaTime * 10f);
-
             Collider2D bowlCollider = GameObject.FindGameObjectWithTag("EmptyBowl")?.GetComponent<Collider2D>();
             if (bowlCollider != null && bowlCollider.bounds.Contains(transform.position))
             {
@@ -266,7 +163,7 @@ public class DraggingController1 : MonoBehaviour
 
     private void OnMouseUp()
     {
-        if (!tweeningController.isSecondTime) 
+        if (!tweeningController.isSecondTime)
         {
             isDragging = false;
             Collider2D bowlCollider = GameObject.FindGameObjectWithTag("EmptyBowl")?.GetComponent<Collider2D>();
@@ -275,20 +172,17 @@ public class DraggingController1 : MonoBehaviour
             {
                 SpriteRenderer bowlSpriteRenderer = bowlCollider.GetComponent<SpriteRenderer>();
 
-                // Trigger "isPouring" animation
                 if (objectAnimator != null)
                 {
                     objectAnimator.SetTrigger("isPouring");
                 }
-
-                // Reset position and change sprite after animation ends through events
             }
             else
             {
                 ResetPositionAndRotation();
             }
         }
-        
+
     }
 
     private void ResetPositionAndRotation()
@@ -321,8 +215,6 @@ public class DraggingController1 : MonoBehaviour
 
             transform.position = cerealInitialPosition.position;
             Debug.Log("Cereal Position Reset and Sprite Changed");
-            /*helperHandController.DestroySpawnedHelperHand();
-            helperHandController.ResetAndStartDelayTimer();*/
         }
         else if (tag == "Milk")
         {
@@ -332,8 +224,6 @@ public class DraggingController1 : MonoBehaviour
 
             transform.position = milkInitialPosition.position;
             Debug.Log("Milk Position Reset and Sprite Changed");
-            /*helperHandController.DestroySpawnedHelperHand();
-            helperHandController.ResetAndStartDelayTimer();*/
         }
         else if (tag == "Cherry")
         {
@@ -347,40 +237,44 @@ public class DraggingController1 : MonoBehaviour
 
             transform.position = cherryInitialPosition.position;
             Debug.Log("Cherry Position Reset and Sprite Changed");
-            /*helperHandController.DestroySpawnedHelperHand();
-            helperHandController.ResetAndStartDelayTimer();*/
         }
 
         transform.rotation = initialRotation;
 
-        // Enable the collider for the next item
-        if (tag == "Cereal" && milkCollider != null)
-            milkCollider.enabled = true;
-        else if (tag == "Milk" && cherryCollider != null)
-            cherryCollider.enabled = true;
+        // Reset the centralized timer whenever the bowl sprite changes
+        helperHandController.StopAndResetTimer();
+
+        
     }
 
     private void CerealAnimationComplete()
     {
         ResetPositionAndChangeSprite("Cereal");
-        StartBirdTweenSequence();
+        if (isCerealDropped)
+        {
+            StartBirdTweenSequence("Milk", Audio3, subtitle3);
+        }
+        
     }
 
     private void MilkAnimationComplete()
     {
         ResetPositionAndChangeSprite("Milk");
-        StartBirdTweenSequence();
+        if (isMilkDropped) 
+        {
+            StartBirdTweenSequence("Cherry", Audio4, subtitle4);
+        }        
     }
 
     private void CherryAnimationComplete()
     {
         ResetPositionAndChangeSprite("Cherry");
-        StartBirdTweenSequence();
+        /* StartBirdTweenSequence("Cherry");*/
     }
 
     private IEnumerator ExecuteBirdTweenAndReveal()
     {
-        yield return StartCoroutine(WaitAndTweenBack());
+        /*yield return StartCoroutine(WaitAndTweenBack());*/
         yield return StartCoroutine(SpawnMasksAndReveal());
     }
 
@@ -402,7 +296,7 @@ public class DraggingController1 : MonoBehaviour
             finalBowlDisabled = true;
         }
         startSecondTime = true;
-        StartBirdTweenSequence();
+        StartBirdTweenSequence("Tasty", Audio5, subtitle5);
     }
 
     private void InstantiateMaskWithinBounds()
@@ -447,33 +341,51 @@ public class DraggingController1 : MonoBehaviour
         return Vector2.Distance(position, maskCenter) <= radius;
     }
 
-    private void StartBirdTweenSequence()
+    private void StartBirdTweenSequence(string animationTrigger, AudioClip audioClip, string subtitleTextContent)
     {
-        if (bird != null && birdEndPosition != null)
+        RectTransform birdRectTransform = bird.GetComponent<RectTransform>();
+        if (birdRectTransform == null || birdEndPosition == null) return;
+
+        // Set initial position (off-screen, anchored position)
+        birdRectTransform.anchoredPosition = new Vector2(-1300, 320);
+
+        // Tween bird to the end position
+        LeanTween.value(-1300f, -790f, 1f).setEase(LeanTweenType.easeInOutQuad).setOnUpdate((float x) =>
         {
-            LeanTween.move(bird, birdEndPosition.position, 1f).setEase(LeanTweenType.easeInOutQuad).setOnComplete(() =>
-            {
-                birdAnimator.SetTrigger("canTalk");
-                StartCoroutine(WaitAndTweenBack());
-            });
-        }
+            birdRectTransform.anchoredPosition = new Vector2(x, 320f);
+        }).setOnComplete(() =>
+        {
+            birdAnimator.SetTrigger(animationTrigger);
+            audioManager.PlayAudio(audioClip);
+
+            // Start subtitle display coroutine
+            StartCoroutine(RevealTextWordByWord(subtitleTextContent, 0.5f));
+
+            StartCoroutine(WaitAndTweenBack(birdRectTransform));
+        });
     }
 
-    private IEnumerator WaitAndTweenBack()
+    private IEnumerator WaitAndTweenBack(RectTransform birdRectTransform)
     {
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(3f);
 
-        LeanTween.move(bird, birdInitialPosition, 1f).setEase(LeanTweenType.easeInOutQuad).setOnComplete(() =>
+        // Tween bird back to the initial position (off-screen)
+        LeanTween.value(-790f, -1300f, 1f).setEase(LeanTweenType.easeInOutQuad).setOnUpdate((float x) =>
         {
-            if (!isCerealDropped && cerealCollider != null)
+            birdRectTransform.anchoredPosition = new Vector2(x, 320f);
+        }).setOnComplete(() =>
+        {
+            // Enable colliders and handle state transitions
+            if (!isCerealDropped && cerealCollider != null && !isCerealSequenceStarted)
             {
-                cerealCollider.enabled = true;
+                StartCoroutine(EnableCerealWithDelay());
             }
-            else if (!isMilkDropped && milkCollider != null)
+
+            if (!isMilkDropped && milkCollider != null && isCerealDropped)
             {
                 milkCollider.enabled = true;
             }
-            else if (!isCherryDropped && cherryCollider != null)
+            else if (!isCherryDropped && cherryCollider != null && isMilkDropped)
             {
                 cherryCollider.enabled = true;
             }
@@ -486,4 +398,48 @@ public class DraggingController1 : MonoBehaviour
 
         yield return new WaitForSeconds(1f);
     }
+
+    private IEnumerator EnableCerealWithDelay()
+    {
+        StartBirdTweenSequence("Cereal", Audio2, subtitle2);
+        yield return new WaitForSeconds(3f);
+        cerealCollider.enabled = true;
+        helperHandController.StartDelayTimer();
+        isCerealSequenceStarted = true;
+
+    }
+
+    private IEnumerator EnableMilkWithDelay()
+    {
+        yield return new WaitForSeconds(0.5f);
+        milkCollider.enabled = true;
+    }
+
+    private IEnumerator EnableCherryWithDelay()
+    {
+        yield return new WaitForSeconds(0.5f);
+        cherryCollider.enabled = true;
+    }
+
+
+
+    private IEnumerator RevealTextWordByWord(string fullText, float delayBetweenWords)
+    {
+        subtitleText.text = "";
+        subtitleText.gameObject.SetActive(true);
+
+        string[] words = fullText.Split(' ');
+
+        // Reveal words one by one
+        for (int i = 0; i < words.Length; i++)
+        {
+            subtitleText.text = string.Join(" ", words, 0, i + 1);
+            yield return new WaitForSeconds(delayBetweenWords);
+        }
+
+        yield return new WaitForSeconds(1f); // Wait for a bit after the last word
+        subtitleText.text = "";
+        subtitleText.gameObject.SetActive(false);
+    }
+
 }

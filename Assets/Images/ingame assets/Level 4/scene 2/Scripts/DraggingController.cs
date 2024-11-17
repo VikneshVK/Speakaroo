@@ -1,6 +1,5 @@
 using UnityEngine;
-using System.Collections;
-
+using UnityEngine.UI;
 
 public class DraggingController : MonoBehaviour
 {
@@ -10,15 +9,24 @@ public class DraggingController : MonoBehaviour
     private Vector3 originalScale;
     private SpriteChangeController spriteChangeController;
     private JuiceManager juiceManager;
-    public TweeningController tweeningController; // Reference to TweeningController
+    public TweeningController tweeningController;
     public JuiceController juiceController;
-    private bool helperTimerStarted = false; // To track if the helper hand timer has already started
+    private bool helperTimerStarted = false;
+    private LVL4Sc2HelperHand helperHandInstance;
+
+    // References for UI images and sprites
+    public Image Image1;
+    public Image Image2;
+    public Sprite Sprite1; // Kiwi
+    public Sprite Sprite2; // Strawberry
+    public Sprite Sprite3; // Blueberry
 
     void Start()
     {
         originalScale = transform.localScale;
         spriteChangeController = FindObjectOfType<SpriteChangeController>();
         juiceManager = FindObjectOfType<JuiceManager>();
+        helperHandInstance = LVL4Sc2HelperHand.Instance;
     }
 
     void Update()
@@ -27,7 +35,7 @@ public class DraggingController : MonoBehaviour
         {
             Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             transform.position = new Vector3(mousePosition.x + offset.x, mousePosition.y + offset.y, transform.position.z);
-            transform.localScale = originalScale * 1.1f;  // Scale up by 10%
+            transform.localScale = originalScale * 1.1f;
 
             if (gameObject.tag != "Blender_Jar")
             {
@@ -38,13 +46,6 @@ public class DraggingController : MonoBehaviour
         {
             transform.localScale = originalScale;
         }
-
-        if (tweeningController.isSecondTime && !helperTimerStarted)
-        {
-            Debug.Log("Starting helper hand delay timer in DraggingController for the second time.");
-            LVL4Sc2HelperHand.Instance.StartDelayTimer();
-            helperTimerStarted = true; // Ensure the timer is only started once
-        }
     }
 
     void OnMouseDown()
@@ -53,116 +54,87 @@ public class DraggingController : MonoBehaviour
         offset = transform.position - mousePosition;
         startPosition = transform.position;
         isDragging = true;
+
+        // Destroy helper hand and reset timer for inactivity guidance
+        helperHandInstance.DestroySpawnedHelperHand();
+        helperHandInstance.ResetAndStartDelayTimer();
     }
 
     void OnMouseUp()
     {
         isDragging = false;
 
-        Collider2D glassCollider = FindOverlappingGlass();
-        if (glassCollider != null)
-        {
-            HandleDropOnGlass(glassCollider);
-            transform.position = startPosition;
-            transform.rotation = Quaternion.identity;  // Reset rotation after drop
-        }
-        else
-        {
-            transform.position = startPosition;
-            transform.rotation = Quaternion.identity;
-        }
-
-        if (gameObject.tag != "Blender_Jar")
-        {
-            if (!gameObject.CompareTag("Kiwi") && !gameObject.CompareTag("SB") && !gameObject.CompareTag("BB"))
-            {
-                spriteChangeController.ResetBlender();
-            }
-        }
-
         Collider2D fruitCollider = GetComponent<Collider2D>();
         if (spriteChangeController.IsOverlappingBlenderJar(fruitCollider) && gameObject.tag != "Blender_Jar")
         {
             spriteChangeController.UpdateBlenderJarSprite(gameObject.tag, gameObject);
-            LVL4Sc2HelperHand.Instance.DestroySpawnedHelperHand();
+            transform.position = startPosition;
+            transform.rotation = Quaternion.identity;
+            helperHandInstance.DestroySpawnedHelperHand();
         }
 
-        // Handle fruit and blender interactions based on the second time logic
-        if (tweeningController.isSecondTime)
+        if (juiceManager.requiredFruits.Contains(gameObject.tag))
         {
-            if (gameObject.CompareTag("Kiwi") || gameObject.CompareTag("SB") || gameObject.CompareTag("BB"))
-            {
-                juiceController.StartBlenderInteractionTimer();
-            }
-
-            // Check interaction with blender
-            if (gameObject.CompareTag("Blender"))
-            {
-                juiceController.OnBlenderClick();
-            }
-
-            // Check interaction with blender jar
-            if (gameObject.CompareTag("Blender_Jar"))
-            {
-                LVL4Sc2HelperHand.Instance.OnBlenderJarInteraction();
-            }
+            helperHandInstance.OnFruitCollected(gameObject.tag); // Notify HelperHand of fruit collection
+            UpdateImageSpritesOnDrop(gameObject.tag); // Update the image sprites based on the dragged fruit
         }
     }
 
-    private Collider2D FindOverlappingGlass()
+    // Function to update image sprites based on the dragged and dropped fruit
+    private void UpdateImageSpritesOnDrop(string fruitTag)
     {
-        Collider2D[] colliders = Physics2D.OverlapCircleAll(transform.position, 0.5f); // Adjust the radius as needed
-        foreach (Collider2D collider in colliders)
+        if (!juiceManager.isKikiJuice)
         {
-            if (collider.CompareTag("Glass1") || collider.CompareTag("Glass2"))
+            // If only one fruit is required, set Image1 based on the fruit tag
+            if (fruitTag == "Kiwi")
             {
-                return collider;
+                Image1.sprite = Sprite1;
             }
-        }
-        return null;
-    }
-
-    private void HandleDropOnGlass(Collider2D glassCollider)
-    {
-        GlassController glassController = glassCollider.GetComponent<GlassController>();
-        if (glassController != null)
-        {
-            OnGlassCollision(glassController);
-        }
-    }
-
-    public void OnGlassCollision(GlassController glassController)
-    {
-        // Only update sprites when the jar is dropped
-        string glassSpriteName = spriteChangeController.GetJuiceSpriteName();
-        Sprite newGlassSprite = Resources.Load<Sprite>("Images/LVL 4 scene 2/" + glassSpriteName);
-        glassController.GetComponent<SpriteRenderer>().sprite = newGlassSprite;
-
-        spriteChangeController.ResetBlenderJarSprite();
-        StartCoroutine(StartBirdTweenSequence(glassController.CompareTag("Glass2")));
-    }
-
-    private IEnumerator StartBirdTweenSequence(bool isGlass2)
-    {
-        LeanTween.move(spriteChangeController.bird, spriteChangeController.birdEndPosition.position, 1f).setEase(LeanTweenType.easeInOutQuad);
-        yield return new WaitForSeconds(1f);
-
-        spriteChangeController.birdAnimator.SetTrigger("canTalk");
-        yield return new WaitForSeconds(2f);
-
-        LeanTween.move(spriteChangeController.bird, spriteChangeController.birdInitialPosition, 1f).setEase(LeanTweenType.easeInOutQuad);
-        yield return new WaitForSeconds(1f);
-
-        if (isGlass2 && juiceManager.isKikiJuice)
-        {
-            juiceManager.sceneEnded = true;
-            juiceManager.fruitRequirementsText.gameObject.SetActive(false);
+            else if (fruitTag == "SB")
+            {
+                Image1.sprite = Sprite2;
+            }
+            else if (fruitTag == "BB")
+            {
+                Image1.sprite = Sprite3;
+            }
         }
         else
         {
-            juiceManager.isKikiJuice = true;
-            spriteChangeController.ResetBlender();
-            juiceManager.UpdateFruitRequirements(true);
+            // For Kiki's juice with two required fruits, set Image1 and Image2 based on the tags and order
+            if (juiceManager.requiredFruits.Contains("Kiwi") && juiceManager.requiredFruits.Contains("SB"))
+            {
+                if (fruitTag == "Kiwi")
+                {
+                    Image1.sprite = Sprite1;
+                }
+                else if (fruitTag == "SB")
+                {
+                    Image2.sprite = Sprite2;
+                }
+            }
+            else if (juiceManager.requiredFruits.Contains("Kiwi") && juiceManager.requiredFruits.Contains("BB"))
+            {
+                if (fruitTag == "Kiwi")
+                {
+                    Image1.sprite = Sprite1;
+                }
+                else if (fruitTag == "BB")
+                {
+                    Image2.sprite = Sprite3;
+                }
+            }
+            else if (juiceManager.requiredFruits.Contains("SB") && juiceManager.requiredFruits.Contains("BB"))
+            {
+                if (fruitTag == "SB")
+                {
+                    Image1.sprite = Sprite2;
+                }
+                else if (fruitTag == "BB")
+                {
+                    Image2.sprite = Sprite3;
+                }
+            }
         }
     }
 }

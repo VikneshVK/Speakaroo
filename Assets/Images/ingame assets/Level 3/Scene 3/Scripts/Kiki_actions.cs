@@ -4,21 +4,15 @@ public class Kiki_actions : MonoBehaviour
 {
     public Transform birdStopPosition;
     public Transform offScreenPosition;
-    public Transform basketFinalPosition;
-    public Transform TeddyFinalPosition;
-    public Transform DinoFinalPosition;
-    public Transform BunnyFinalPosition;
-    public GameObject toysBasket;
-    public GameObject Teddy;
-    public GameObject Dino;
-    public GameObject Bunny;
+  
     public float flySpeed = 2f;
     public bool hasReachedOffScreen = false; // Boolean to track off-screen position
 
     private Animator animator;
-    /*private SpriteRenderer spriteRenderer;*/
+    private SpriteRenderer spriteRenderer;
 
     private bool isFlying = false;
+    private bool positionreached = false;
     private bool isIdleCompleted = false;
     public bool isReturning = false; // Flag for return trip
 
@@ -28,8 +22,8 @@ public class Kiki_actions : MonoBehaviour
     void Start()
     {
         animator = GetComponent<Animator>();
-        kikiAudio = GetComponent<AudioSource>();    
-        /*spriteRenderer = GetComponent<SpriteRenderer>();*/
+        kikiAudio = GetComponent<AudioSource>();
+        spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     void Update()
@@ -38,25 +32,17 @@ public class Kiki_actions : MonoBehaviour
         {
             FlyToPosition(targetPosition);
         }
-        else if (!isReturning)
+        else if (!isReturning && !positionreached)
         {
-            HandleIdleCompletion();
+            MoveToStopPosition();
         }
     }
 
-    private void HandleIdleCompletion()
-    {
-        if (!isIdleCompleted && animator.GetCurrentAnimatorStateInfo(0).IsName("Idle") &&
-            animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
-        {
-            isIdleCompleted = true;
-            MoveToStopPosition(); // Start flying to the stop position after idle completes
-        }
-    }
+    
 
     public void MoveToStopPosition()
     {
-        /*spriteRenderer.flipX = true; // Ensure sprite is facing correct direction*/
+        spriteRenderer.flipX = false; // Ensure sprite is facing correct direction
         animator.SetBool("canFly", true);
         targetPosition = birdStopPosition.position;
         isFlying = true;
@@ -65,7 +51,7 @@ public class Kiki_actions : MonoBehaviour
 
     public void MoveOffScreen()
     {
-        /*spriteRenderer.flipX = false; // Flip X to true when flying off-screen*/
+        spriteRenderer.flipX = true; // Flip X to true when flying off-screen
         animator.SetBool("canFly2", true);
         targetPosition = offScreenPosition.position;
         /*kikiAudio.Play();*/
@@ -74,7 +60,7 @@ public class Kiki_actions : MonoBehaviour
 
     public void ReturnToStopPosition()
     {
-        /*spriteRenderer.flipX = true; // Flip X to false when returning to stop position*/
+        spriteRenderer.flipX = false; // Flip X to false when returning to stop position
         isReturning = true;
         animator.SetBool("canFly", true);
         targetPosition = birdStopPosition.position;
@@ -93,12 +79,12 @@ public class Kiki_actions : MonoBehaviour
             if (isReturning)
             {
                 EnableAllColliders();
-                NotifyHelperHand(); // Notify the helper hand controller
+               /* NotifyHelperHand(); /*//*/ Notify the helper hand controller*/
             }
             else if (targetPosition == birdStopPosition.position && !isReturning)
             {
-                OnReachedStopPosition();
-                TweenToysToPosition();
+                positionreached = true;
+                              
             }
             else if (targetPosition == offScreenPosition.position)
             {
@@ -107,20 +93,8 @@ public class Kiki_actions : MonoBehaviour
         }
     }
 
-    private void TweenToysToPosition()
-    {
-        LeanTween.move(toysBasket, basketFinalPosition.position, 1f).setEase(LeanTweenType.easeOutBack);
-        LeanTween.move(Teddy, TeddyFinalPosition.position, 1f).setEase(LeanTweenType.easeOutBack);
-        LeanTween.move(Dino, DinoFinalPosition.position, 1f).setEase(LeanTweenType.easeOutBack);
-        LeanTween.move(Bunny, BunnyFinalPosition.position, 1f).setEase(LeanTweenType.easeOutBack);
-    }
+  
 
-    private void OnReachedStopPosition()
-    {
-        // This function is called when Kiki reaches the stop position
-        Debug.Log("Kiki has reached the stop position.");
-        // Add any additional logic here, such as enabling interaction, triggering animations, etc.
-    }
 
     private void EnableAllColliders()
     {
@@ -140,21 +114,5 @@ public class Kiki_actions : MonoBehaviour
         }
     }
 
-    private void NotifyHelperHand()
-    {
-        // Notify the HelpHandController for Kiki's action
-        HelpHandController helperHand = FindObjectOfType<HelpHandController>();
-        if (helperHand != null)
-        {
-            helperHand.StartHelperHandRoutineForKiki(new GameObject[]
-            {
-            GameObject.Find("wet_socK"),
-            GameObject.Find("wet_shirT"),
-            GameObject.Find("wet kuma"),
-            GameObject.Find("wet_shorT"),
-            GameObject.Find("wet dino"),
-            GameObject.Find("wet bunny")
-            });
-        }
-    }
+   
 }

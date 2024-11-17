@@ -22,7 +22,6 @@ public class DragAndDropController : MonoBehaviour
     public float blinkCount;
     public float blinkDuration;
 
-    /*private SpriteRenderer boySpriteRender;*/
     private Animator boyAnimator;
     private Animator birdAnimator;
     private Animator animator;
@@ -48,19 +47,17 @@ public class DragAndDropController : MonoBehaviour
         interactionStatus.Add(miniBuilding, false);
         originalPosition = transform.position;
         interactableObject = GetComponent<InteractableObject>();
-        // Disable colliders for the start, only enable for the first interactable
+
         miniWhale.GetComponent<Collider2D>().enabled = false;
         miniBuilding.GetComponent<Collider2D>().enabled = false;
         objectRenderer = GetComponent<SpriteRenderer>();
         animator = GetComponent<Animator>();
         birdAnimator = bird.GetComponent<Animator>();
 
-        // Load audio clips from Resources
         positiveAudio1 = Resources.Load<AudioClip>("Audio/FeedbackAudio/Audio1");
         positiveAudio2 = Resources.Load<AudioClip>("Audio/FeedbackAudio/Audio2");
         negativeAudio = Resources.Load<AudioClip>("Audio/FeedbackAudio/Audio3");
 
-        // Find the audio source with the tag "FeedbackAudio"
         GameObject audioObject = GameObject.FindGameObjectWithTag("FeedbackAudio");
         if (audioObject != null)
         {
@@ -113,50 +110,47 @@ public class DragAndDropController : MonoBehaviour
     {
         if (IsCorrectDropZone())
         {
-            /*boySpriteRender.flipX = false;*/
             boyAnimator.SetTrigger("isRightDrop");
-
             birdAnimator.SetTrigger("RightDrop");
-            parentController.PlayAudioByIndex(1);
+            feedbackAudioSource.clip = positiveAudio2;
+            feedbackAudioSource.Play();
+            // Start coroutine to add delay before playing audio
+            StartCoroutine(PlayAudioWithDelay());
 
-            // Play a random positive audio clip
-            /*PlayPositiveFeedbackAudio();*/
-
-            // Tween to the correct drop zone's position
             LeanTween.move(gameObject, correctDropZoneObject.transform.position, 0.5f).setOnComplete(() =>
             {
                 transform.rotation = Quaternion.identity;
                 animator.SetTrigger("isRightDrop");
 
-                // Start coroutine to instantiate prefab after audio is done
                 StartCoroutine(InstantiateSpeechBubbleAfterAudio());
 
-                // Disable all colliders
                 DisableAllColliders();
 
-                // Disable the SpriteRenderer of the correctDropZoneObject
                 correctDropZoneObject.GetComponent<SpriteRenderer>().enabled = false;
 
                 EnableMiniatureCollider();
                 MarkAsInteracted(gameObject);
-                /*boySpriteRender.flipX = true;*/
             });
         }
         else
         {
-            /*boySpriteRender.flipX = false;*/
-            /*boyAnimator.SetTrigger("isWrongDrop");*/
             birdAnimator.SetTrigger("wrongDrop");
-            // Play the negative audio clip
+
             PlayNegativeFeedbackAudio();
 
-            // Reset interaction status
             ResetInteractionStatus();
 
             ResetObjectPosition();
-            
         }
     }
+
+    // Coroutine to add delay before playing audio
+    private IEnumerator PlayAudioWithDelay()
+    {
+        yield return new WaitForSeconds(2f); // Adjust delay time as needed
+        parentController.PlayAudioByIndex(1);
+    }
+
 
     void ResetInteractionStatus()
     {
@@ -165,24 +159,12 @@ public class DragAndDropController : MonoBehaviour
             interactionStatus[gameObject] = false;
         }
 
-        // Restart the interaction tracking in the InteractableObject script
         InteractableObject interactableObject = GetComponent<InteractableObject>();
         if (interactableObject != null)
         {
             interactableObject.EnableInteractionTracking();
         }
     }
-
-
-    /*private void PlayPositiveFeedbackAudio()
-    {
-        if (feedbackAudioSource != null)
-        {
-            AudioClip[] positiveAudios = new AudioClip[] { positiveAudio1, positiveAudio2 };
-            feedbackAudioSource.clip = positiveAudios[Random.Range(0, positiveAudios.Length)];
-            feedbackAudioSource.Play();
-        }
-    }*/
 
     private void PlayNegativeFeedbackAudio()
     {
@@ -205,11 +187,9 @@ public class DragAndDropController : MonoBehaviour
 
     IEnumerator InstantiateSpeechBubbleAfterAudio()
     {
-        // Wait until the audio has finished playing
         yield return new WaitUntil(() => !feedbackAudioSource.isPlaying);
         yield return new WaitForSeconds(3.5f);
 
-        // Instantiate the speech bubble prefab
         InstantiateSpeechBubble();
     }
 
@@ -256,7 +236,6 @@ public class DragAndDropController : MonoBehaviour
 
     void ResetObjectPosition()
     {
-        // Reset position if the drop was incorrect
         transform.position = originalPosition;
         boyAnimator.SetTrigger("isWrongDrop");
         StartCoroutine(BlinkRedAndReset());
@@ -275,7 +254,5 @@ public class DragAndDropController : MonoBehaviour
 
         transform.position = originalPosition;
         transform.rotation = originalRotation;
-    }
-
-    
+    }    
 }

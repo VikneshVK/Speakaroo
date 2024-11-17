@@ -2,6 +2,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections;
+using System.Collections.Generic;
+using UnityEngine.EventSystems;
 
 public class DraggableTextHandler : MonoBehaviour
 {
@@ -17,31 +19,52 @@ public class DraggableTextHandler : MonoBehaviour
     public Canvas canvas; // Reference to the canvas
     public TextMeshProUGUI tmpText; // Reference to the TMP component
     public TextMeshProUGUI textComponent;
+    public TextMeshProUGUI textComponent2;
     public Image imageComponent; // Reference to the Image component to change sprite
     public string spriteName;
 
     private Vector3 initialPosition;
     private bool isDropped = false;
     private bool isBeingDragged = false;
-   /* private bool isScaled = false; */// Set to true only when scaling is complete
+    private static List<DraggableTextHandler> allDraggableTextHandlers = new List<DraggableTextHandler>(); // Static list of all instances
 
     private string recordedClipName = "RecordedAudio";
 
+    public BeachBoxHandler beachBoxHandler;
+
+    private void Awake()
+    {
+        // Add this instance to the list of all draggable text handlers
+        allDraggableTextHandlers.Add(this);
+    }
+
+    private void OnDestroy()
+    {
+        // Remove this instance from the list when destroyed
+        allDraggableTextHandlers.Remove(this);
+    }
 
     private void Start()
     {
-        // Initialize positions and set the child text object
-        initialPosition = transform.position;
-
-        /*if (childTextObject != null)
-        {
-            childTextObject.SetActive(false);
-            childTextObject.transform.localScale = Vector3.zero; // Set initial scale to zero
-        }*/
-
-        // Set the ring's fill amount to zero initially
+        // Get the initial position dynamically from BeachBoxHandler once at start
+        UpdateInitialPosition();
         if (ringImage != null) ringImage.fillAmount = 0;
     }
+
+    private void UpdateInitialPosition()
+    {
+        if (beachBoxHandler != null)
+        {
+            initialPosition = beachBoxHandler.GetButtonPosition(gameObject.name);
+            Debug.Log($"Updated initial position for {gameObject.name}: {initialPosition}");
+        }
+        else
+        {
+            initialPosition = transform.position; // Fallback to current position
+            Debug.LogWarning($"BeachBoxHandler not assigned for {gameObject.name}. Using current position.");
+        }
+    }
+
 
     private void Update()
     {
@@ -59,21 +82,19 @@ public class DraggableTextHandler : MonoBehaviour
 
     public void OnMouseDown()
     {
-        // If the text is not dropped and has not been scaled yet, trigger scaling
         if (!isDropped)
         {
-            
             buttonAudioSource.Play();
             isBeingDragged = true;
             tmpText.enabled = false;
 
+            // Disable EventTrigger on other buttons to prevent dragging
+            DisableOtherButtonsEventTriggers();
         }
     }
 
-
-
     public void OnMouseUp()
-    {        
+    {
         isBeingDragged = false;
 
         Vector2 screenDropPosition = RectTransformUtility.WorldToScreenPoint(canvas.worldCamera, dropPosition.position);
@@ -81,8 +102,9 @@ public class DraggableTextHandler : MonoBehaviour
 
         float distance = Vector2.Distance(screenObjectPosition, screenDropPosition);
 
-        if (distance < 100f) // Adjust threshold as needed
+        if (distance < 250f) // Adjust threshold as needed
         {
+            // Dropped correctly
             isDropped = true;
 
             RectTransformUtility.ScreenPointToWorldPointInRectangle(
@@ -92,29 +114,74 @@ public class DraggableTextHandler : MonoBehaviour
                 out Vector3 worldPoint
             );
 
-            transform.position = worldPoint;            
-            Sprite newSprite = Resources.Load<Sprite>($"Images/LVL6 Sc1/{spriteName}");
-            imageComponent.sprite = newSprite;
-            textComponent.text = "Let's Play";
-            audioSource.Play();           
+            transform.position = worldPoint;
+            textComponent2.enabled = false;
+
+            // Disable the sprite image and set text based on the object name
+            imageComponent.enabled = false;
+
+            switch (gameObject.name)
+            {
+                case "Beach Ball":
+                    textComponent.text = "I want to play Ball";
+                    break;
+                case "Bubbles":
+                    textComponent.text = "I want to play Bubbles";
+                    break;
+                case "Frisbee":
+                    textComponent.text = "I want to play Frisbee";
+                    break;
+                default:
+                    textComponent.text = "What do you want to Play?";
+                    break;
+            }
+
+            audioSource.Play();
             StartCoroutine(HandleAudioAndRecording());
         }
         else
         {
-            // Return to initial position if not dropped correctly
-            transform.position = initialPosition;
+            // Dropped incorrectly: Reset to initial position
+            transform.position = initialPosition; // Reset position
             tmpText.enabled = true;
+            EnableAllButtonsEventTriggers(); // Re-enable dragging for all buttons
+            Debug.Log($"Reset position to {initialPosition} for {gameObject.name}");
         }
     }
 
 
+    private void DisableOtherButtonsEventTriggers()
+    {
+        foreach (var handler in allDraggableTextHandlers)
+        {
+            if (handler != this) // Disable EventTrigger only on other buttons
+            {
+                EventTrigger eventTrigger = handler.GetComponent<EventTrigger>();
+                if (eventTrigger != null)
+                {
+                    eventTrigger.enabled = false; // Disable EventTrigger to prevent dragging
+                }
+            }
+        }
+    }
+
+    private void EnableAllButtonsEventTriggers()
+    {
+        foreach (var handler in allDraggableTextHandlers)
+        {
+            EventTrigger eventTrigger = handler.GetComponent<EventTrigger>();
+            if (eventTrigger != null)
+            {
+                eventTrigger.enabled = true; // Re-enable EventTrigger for all buttons
+            }
+        }
+    }
+
     private IEnumerator HandleAudioAndRecording()
     {
-        
         retryButton.gameObject.SetActive(true);
         retryButton.interactable = false;
 
-        
         retryButton.GetComponent<Image>().sprite = Resources.Load<Sprite>("Images/STMechanics/DefaultSprite");
 
         yield return new WaitForSeconds(audioSource.clip.length);
@@ -136,8 +203,8 @@ public class DraggableTextHandler : MonoBehaviour
     {
         retryButton.GetComponent<Image>().sprite = Resources.Load<Sprite>("Images/STMechanics/RetrySprite");
 
-        int recordingDuration = 5; 
-        int frequency = 44100; 
+        int recordingDuration = 5;
+        int frequency = 44100;
 
         audioSource.clip = Microphone.Start(null, false, recordingDuration, frequency);
         Debug.Log("Recording started...");
@@ -182,7 +249,6 @@ public class DraggableTextHandler : MonoBehaviour
         yield return new WaitForSeconds(1f);
 
         retryButton.GetComponent<Image>().sprite = Resources.Load<Sprite>("Images/STMechanics/RetrySprite");
-
     }
 
     private void ScaleDownAndSpawnPrefab()
@@ -198,15 +264,24 @@ public class DraggableTextHandler : MonoBehaviour
             .setOnComplete(() =>
             {
                 GameObject spawnedPrefab = Instantiate(prefabToSpawn, Vector3.zero, Quaternion.identity);
-
                 spawnedPrefab.transform.localScale = Vector3.zero;
-
                 LeanTween.scale(spawnedPrefab, Vector3.one, 0.5f).setEase(LeanTweenType.easeOutBack);
-
                 Debug.Log("Prefab Instantiated and tweened to scale (1, 1, 1)");
             });
+
         textComponent.text = "What do we play Next?";
         gameObject.SetActive(false);
+
+        // Re-enable dragging for all buttons for the next playthrough
+        EnableAllButtonsEventTriggers();
     }
 
+    public void UpdateInitialPositionFromHandler()
+    {
+        if (beachBoxHandler != null)
+        {
+            initialPosition = beachBoxHandler.GetButtonPosition(gameObject.name);
+            Debug.Log($"Updated initial position for {gameObject.name}: {initialPosition}");
+        }
+    }
 }

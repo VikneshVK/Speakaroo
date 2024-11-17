@@ -27,8 +27,8 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
+  m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 6433947524905884927}
   m_Father: {fileID: 0}
@@ -112,7 +112,7 @@ Transform:
   m_GameObject: {fileID: 604541072948802734}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -24.58, y: -0.52, z: 0.07268486}
+  m_LocalPosition: {x: -24.58, y: -0.76, z: 0.07268486}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -140,6 +140,7 @@ MonoBehaviour:
   questImage: {fileID: 0}
   centerReference: {fileID: 0}
   cameraUI: {fileID: 0}
+  helperController: {fileID: 0}
 --- !u!61 &1344325631082917822
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -172,7 +173,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0, y: 1.28}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -211,8 +212,8 @@ Transform:
   m_GameObject: {fileID: 998037447048865932}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.4, y: 0.4, z: 0.4}
+  m_LocalPosition: {x: 0, y: 1.32, z: 0}
+  m_LocalScale: {x: 0.2, y: 0.2, z: 0.2}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 3144999085621898653}
@@ -295,8 +296,8 @@ Transform:
   m_GameObject: {fileID: 1636131666024132400}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.4, y: 0.4, z: 0.4}
+  m_LocalPosition: {x: 1.59, y: 0.47, z: 0}
+  m_LocalScale: {x: 0.25, y: 0.25, z: 0.4}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6124331297428145798}
@@ -380,8 +381,8 @@ Transform:
   m_GameObject: {fileID: 2829548099814251150}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -7.91, y: 0.35, z: 0.07268486}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalPosition: {x: -7.91, y: -2.39, z: 0.07268486}
+  m_LocalScale: {x: 1.5, y: 1.5, z: 1.5}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 7098653963495118724}
@@ -408,6 +409,7 @@ MonoBehaviour:
   questImage: {fileID: 0}
   centerReference: {fileID: 0}
   cameraUI: {fileID: 0}
+  helperController: {fileID: 0}
 --- !u!61 &791087394577461221
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -440,7 +442,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: -0.27, y: 1.45}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -451,7 +453,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 4, y: 4}
+  m_Size: {x: 2.5, y: 2.5}
   m_EdgeRadius: 0
 --- !u!1 &3451767862520412061
 GameObject:
@@ -463,6 +465,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1206993182461590693}
   - component: {fileID: 1739975375775936868}
+  - component: {fileID: 2242709321163114595}
   m_Layer: 0
   m_Name: Lion - Animal
   m_TagString: Untagged
@@ -480,7 +483,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.85, y: 0.85, z: 0.85}
+  m_LocalScale: {x: 1.25, y: 1.25, z: 1.25}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 1098668072005817571}
@@ -526,7 +529,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 7
-  m_Sprite: {fileID: 21300000, guid: 4bdad235f1d63eb4cadc43de8a76968b, type: 3}
+  m_Sprite: {fileID: -541365639, guid: b29a84713ba7cb04fba73cbccd551e08, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -537,6 +540,27 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!95 &2242709321163114595
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3451767862520412061}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 80ff4fa3c2b20eb46a6f61590ee097fe, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &3545134708305354299
 GameObject:
   m_ObjectHideFlags: 0
@@ -547,6 +571,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8791537162662667448}
   - component: {fileID: 7889066051119812436}
+  - component: {fileID: 738198281141952848}
   m_Layer: 0
   m_Name: Tiger - Animal
   m_TagString: Untagged
@@ -563,8 +588,8 @@ Transform:
   m_GameObject: {fileID: 3545134708305354299}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.85, y: 0.85, z: 0.85}
+  m_LocalPosition: {x: 0, y: -1.02, z: 0}
+  m_LocalScale: {x: 1, y: 0.99999994, z: 0.99999994}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 8756895129832120006}
@@ -610,7 +635,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 7
-  m_Sprite: {fileID: 21300000, guid: c1e1ab88001883148b0d702ff41f0a40, type: 3}
+  m_Sprite: {fileID: -549645170, guid: fbd473b32d7fa6a4aa5630303fc2f716, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -621,6 +646,27 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!95 &738198281141952848
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3545134708305354299}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: eff01572314f1254ea0223787966603c, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &3871082609988207604
 GameObject:
   m_ObjectHideFlags: 0
@@ -647,8 +693,8 @@ Transform:
   m_GameObject: {fileID: 3871082609988207604}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.45, y: 0.45, z: 0.45}
+  m_LocalPosition: {x: 0, y: 0.49, z: 0}
+  m_LocalScale: {x: 0.25, y: 0.25, z: 0.25}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 2467617463534430363}
@@ -715,6 +761,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4477926096907929779}
   - component: {fileID: 6286369267954542166}
+  - component: {fileID: 5178492441411690181}
   m_Layer: 0
   m_Name: Croc - Animal
   m_TagString: Untagged
@@ -731,8 +778,8 @@ Transform:
   m_GameObject: {fileID: 4085314266576514621}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.75, y: 0.75, z: 0.75}
+  m_LocalPosition: {x: 1.46, y: -2.26, z: 0}
+  m_LocalScale: {x: 1.25, y: 1.25, z: 1.25}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 6124331297428145798}
@@ -778,7 +825,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 7
-  m_Sprite: {fileID: 21300000, guid: d27211e57906bb149bb42114065798ae, type: 3}
+  m_Sprite: {fileID: 295303164, guid: 869f0a4c1687d704e85881bd51e8e602, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -789,6 +836,27 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!95 &5178492441411690181
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4085314266576514621}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 9db4bff6314e36f4b954462f189ac81c, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &4147920581009837525
 GameObject:
   m_ObjectHideFlags: 0
@@ -816,7 +884,7 @@ Transform:
   m_GameObject: {fileID: 4147920581009837525}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -54.8, y: -2.96, z: 0.07268486}
+  m_LocalPosition: {x: -52.83, y: -3.8, z: 0.07268486}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -844,6 +912,7 @@ MonoBehaviour:
   questImage: {fileID: 0}
   centerReference: {fileID: 0}
   cameraUI: {fileID: 0}
+  helperController: {fileID: 0}
 --- !u!61 &8682732158654839125
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -876,7 +945,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0, y: 2.48}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -915,8 +984,8 @@ Transform:
   m_GameObject: {fileID: 5599422941109445161}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.40000004, y: 0.40000004, z: 0.40000004}
+  m_LocalPosition: {x: 0, y: 2.52, z: 0}
+  m_LocalScale: {x: 0.2, y: 0.2, z: 0.2}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 4725362097777637843}
@@ -962,7 +1031,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 8
-  m_Sprite: {fileID: 21300000, guid: 6756b2c67b1a08a449fadd0540f197c8, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 61e3e890e831ed24396f916e7e735305, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -983,6 +1052,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8144574225013882484}
   - component: {fileID: 2391044941754328533}
+  - component: {fileID: 5190051610653715586}
   m_Layer: 0
   m_Name: Panda - Animal
   m_TagString: Untagged
@@ -999,8 +1069,8 @@ Transform:
   m_GameObject: {fileID: 5755267176461126913}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.4, y: 0, z: 0}
-  m_LocalScale: {x: 0.75, y: 0.75, z: 0.75}
+  m_LocalPosition: {x: -0.1, y: -1.96, z: 0}
+  m_LocalScale: {x: 1.25, y: 1.25, z: 1.25}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 2467617463534430363}
@@ -1046,7 +1116,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 7
-  m_Sprite: {fileID: 21300000, guid: bbc66126397b9e145908bb61581202d3, type: 3}
+  m_Sprite: {fileID: 712473606, guid: ea2916cf0d375424aa4c3346e5ad55ae, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -1057,6 +1127,27 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!95 &5190051610653715586
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5755267176461126913}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 0dc0164fbe924d84b9301996650af2ac, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &6164223399348282070
 GameObject:
   m_ObjectHideFlags: 0
@@ -1121,7 +1212,7 @@ Transform:
   m_GameObject: {fileID: 7151728337628133864}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 9.02, y: -1.72, z: 0.07268486}
+  m_LocalPosition: {x: 9.02, y: -3.97, z: 0.07268486}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1149,6 +1240,7 @@ MonoBehaviour:
   questImage: {fileID: 0}
   centerReference: {fileID: 0}
   cameraUI: {fileID: 0}
+  helperController: {fileID: 0}
 --- !u!61 &4394342868754104190
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1181,7 +1273,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0, y: 2.79}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -1192,7 +1284,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 4, y: 4}
+  m_Size: {x: 3, y: 3}
   m_EdgeRadius: 0
 --- !u!1 &7652793631151989529
 GameObject:
@@ -1204,6 +1296,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7098653963495118724}
   - component: {fileID: 3354876370468516843}
+  - component: {fileID: 3343878326956211008}
   m_Layer: 0
   m_Name: Monkey - Animal
   m_TagString: Untagged
@@ -1267,7 +1360,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 7
-  m_Sprite: {fileID: 21300000, guid: 2e9f625dddf061c408d48413cf162a1c, type: 3}
+  m_Sprite: {fileID: -15304235, guid: 68184499ed2cd4048a54e65455319775, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -1278,6 +1371,27 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!95 &3343878326956211008
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7652793631151989529}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 631dd3af63e498249a97f487f5d862d5, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &7662872727153646557
 GameObject:
   m_ObjectHideFlags: 0
@@ -1305,7 +1419,7 @@ Transform:
   m_GameObject: {fileID: 7662872727153646557}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 29.54, y: -0.25, z: 0}
+  m_LocalPosition: {x: 29.54, y: -1.37, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1333,6 +1447,7 @@ MonoBehaviour:
   questImage: {fileID: 0}
   centerReference: {fileID: 0}
   cameraUI: {fileID: 0}
+  helperController: {fileID: 0}
 --- !u!61 &7676885615783583675
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1365,7 +1480,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0, y: 1.1}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}
@@ -1376,7 +1491,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 4, y: 4}
+  m_Size: {x: 3, y: 3}
   m_EdgeRadius: 0
 --- !u!1 &8673561018163759068
 GameObject:
@@ -1433,6 +1548,7 @@ MonoBehaviour:
   questImage: {fileID: 0}
   centerReference: {fileID: 0}
   cameraUI: {fileID: 0}
+  helperController: {fileID: 0}
 --- !u!61 &2312948922401638989
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1504,8 +1620,8 @@ Transform:
   m_GameObject: {fileID: 8722586111854260189}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.4, y: 0.4, z: 0.4}
+  m_LocalPosition: {x: 0, y: 0.54, z: 0}
+  m_LocalScale: {x: 0.25, y: 0.25, z: 0.25}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 8756895129832120006}
@@ -1572,6 +1688,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2940532540047264769}
   - component: {fileID: 2176056630470709601}
+  - component: {fileID: 7057773109514948943}
   m_Layer: 0
   m_Name: Hippo - Animal
   m_TagString: Untagged
@@ -1635,7 +1752,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 7
-  m_Sprite: {fileID: 21300000, guid: 8240cb596ca4113418b8a3e9cdb62b36, type: 3}
+  m_Sprite: {fileID: 1414044756, guid: b45cca0a1fb9e5b42bb3e10cbdd1488a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 1
   m_FlipY: 0
@@ -1646,6 +1763,27 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!95 &7057773109514948943
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9062101558591277222}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 4c380db9b5c9e3f4cb27c033df0c8757, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &9164891215341244613
 GameObject:
   m_ObjectHideFlags: 0
@@ -1672,8 +1810,8 @@ Transform:
   m_GameObject: {fileID: 9164891215341244613}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
+  m_LocalPosition: {x: 0, y: 2.81, z: 0}
+  m_LocalScale: {x: 0.25, y: 0.25, z: 0.25}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 1098668072005817571}

@@ -5,12 +5,21 @@ using UnityEngine;
 public class fridgeController : MonoBehaviour
 {
     public GameObject Boy;
-    private JojoController jojoController;
+    private Lvl4Sc1JojoController jojoController;
+    private LVL4Sc1HelperController helperController;
 
     void Start()
     {
-
-        jojoController = Boy.GetComponent<JojoController>();
+        GameObject helperHandObject = GameObject.FindGameObjectWithTag("HelperHand");
+        if (helperHandObject != null)
+        {
+            helperController = helperHandObject.GetComponent<LVL4Sc1HelperController>();
+        }
+        else
+        {
+            Debug.Log("helperhand not found");
+        }
+        jojoController = Boy.GetComponent<Lvl4Sc1JojoController>();
     }
 
     void OnMouseDown()
@@ -19,6 +28,7 @@ public class fridgeController : MonoBehaviour
         if (jojoController != null && GetComponent<Collider2D>().enabled)
         {
             jojoController.OnFridgeTapped();
+            helperController?.ResetTimer();
         }
     }
 

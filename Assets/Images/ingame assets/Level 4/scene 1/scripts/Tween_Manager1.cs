@@ -7,7 +7,6 @@ public class Tween_Manager1 : MonoBehaviour
     public bool speechTherapyCompleted = false;
     private Animator birdAnimator;
     private bool isRetryClicked = false;
-    
 
     private void Start()
     {
@@ -69,7 +68,9 @@ public class Tween_Manager1 : MonoBehaviour
             // Set the animator parameters for the bird
             if (birdAnimator != null)
             {
-                birdAnimator.SetBool("startFlying", true);
+                KikiController1.startFlying = true;
+
+                /*birdAnimator.SetTrigger("GoToFood");*/               
             }
 
             // Tween the parent to scale 0
@@ -80,4 +81,9 @@ public class Tween_Manager1 : MonoBehaviour
         });
     }
 
+    public void SkipButton()
+    {
+        StartCoroutine(Timer(0f));
+        speechTherapyCompleted = true;
+    }
 }

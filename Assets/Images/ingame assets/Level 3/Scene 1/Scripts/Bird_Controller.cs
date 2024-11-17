@@ -26,7 +26,7 @@ public class Bird_Controller : MonoBehaviour
     private Vector3 moveTarget;
     private bool isMoving;
     private bool inactivityTimerStarted;
-
+    private bool triggerresetted;
     // Speed variables
     private float moveSpeed = 1.05f;
     private float moveSpeed2 = 4f;
@@ -40,13 +40,14 @@ public class Bird_Controller : MonoBehaviour
     void Start()
     {
         totalLeaves = 2;
-        birdAnimator.SetBool("isFlying", true);
+        birdAnimator.SetBool("is_Flying", true);
         moveTarget = initialPosition.position;
         isMoving = true;
         instructionAudio = helperpointer.GetComponent<AudioSource>();
         helpercontroller = helperpointer.GetComponent<HP_HelperpointerController>();
         inactivityTimerStarted = false;
         LevelComplete = false;
+        triggerresetted = false;
     }
 
     void Update()
@@ -63,7 +64,7 @@ public class Bird_Controller : MonoBehaviour
             if (transform.position == moveTarget)
             {
                 isMoving = false;
-                birdAnimator.SetBool("isFlying", false);
+                birdAnimator.SetBool("is_Flying", false);
             }
         }
     }
@@ -152,6 +153,7 @@ public class Bird_Controller : MonoBehaviour
         currentTarget.localPosition = Vector3.zero;
         birdAnimator.SetTrigger("flyanddrop");
         trashBinAnimator.SetBool("binOpen", true);
+        triggerresetted = false;
     }
 
     void OnFlyAndDropComplete()
@@ -186,7 +188,7 @@ public class Bird_Controller : MonoBehaviour
 
     public void OnBigLeafDropped()
     {
-        birdAnimator.SetBool("isFlying", true);
+        birdAnimator.SetTrigger("jump");
         IsleavesDropped = false;
         DetermineNextTarget();
     }
@@ -208,11 +210,15 @@ public class Bird_Controller : MonoBehaviour
 
     void OnIdle1State()
     {
-        birdAnimator.ResetTrigger("flyanddrop");
-        birdAnimator.ResetTrigger("backtoRest");
-        birdAnimator.ResetTrigger("canTalk2");
-        birdAnimator.ResetTrigger("jump");
-        birdAnimator.ResetTrigger("instruction");
+        if (!triggerresetted)
+        {
+            birdAnimator.ResetTrigger("flyanddrop");
+            birdAnimator.ResetTrigger("backtoRest");
+            birdAnimator.ResetTrigger("canTalk2");
+            birdAnimator.ResetTrigger("jump");
+            birdAnimator.ResetTrigger("instruction");
+            triggerresetted = true;
+        }
 
         if (totalLeaves == 0)
         {

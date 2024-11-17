@@ -23,7 +23,7 @@ AnimatorStateMachine:
     m_Position: {x: 10, y: 520, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 1312824509169166832}
-    m_Position: {x: 520, y: 580, z: 0}
+    m_Position: {x: 570, y: 560, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 4311549187846102972}
     m_Position: {x: 800, y: 540, z: 0}
@@ -32,7 +32,7 @@ AnimatorStateMachine:
     m_Position: {x: 860, y: 410, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -4129796219957028007}
-    m_Position: {x: 400, y: 700, z: 0}
+    m_Position: {x: 410, y: 690, z: 0}
   - serializedVersion: 1
     m_State: {fileID: -3844100401192931910}
     m_Position: {x: 400, y: 930, z: 0}
@@ -47,7 +47,7 @@ AnimatorStateMachine:
     m_Position: {x: 620, y: -90, z: 0}
   - serializedVersion: 1
     m_State: {fileID: 2585177569153349474}
-    m_Position: {x: 400, y: 820, z: 0}
+    m_Position: {x: 410, y: 800, z: 0}
   m_ChildStateMachines: []
   m_AnyStateTransitions: []
   m_EntryTransitions: []
@@ -554,7 +554,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4465ef69baabd6b459abb78790cfae73, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneToLoad: New_Level-Select
+  sceneToLoad: LevelSelect
   booleanToReset: alldone
 --- !u!1101 &644097898466824122
 AnimatorStateTransition:

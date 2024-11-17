@@ -31,8 +31,8 @@ public class HelperHandController : MonoBehaviour
         audioSource = GetComponent<AudioSource>();  // Get the AudioSource component attached to the game object
 
         // Load the audio clips from the Resources folder
-        audioClipBigPillow = Resources.Load<AudioClip>("Audio/Helper Audio/BigPillowAudio");
-        audioClipSmallPillow = Resources.Load<AudioClip>("Audio/Helper Audio/SmallPillowAudio");
+        audioClipBigPillow = Resources.Load<AudioClip>("Audio/Helper Audio/bigpillow");
+        audioClipSmallPillow = Resources.Load<AudioClip>("Audio/Helper Audio/smallpillow");
 
         if (audioClipBigPillow == null || audioClipSmallPillow == null)
         {

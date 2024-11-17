@@ -100,13 +100,10 @@ public class ParrotController : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Pushable") && !pushedObjects.Contains(other.gameObject.name))
         {
-            // Stop moving when a collision happens
             stopWalking = true;
 
-            // Stop the walking animation
             animator.SetBool("startWalking", false);
 
-            // Trigger the next animation (knock)
             StartCoroutine(TriggerKnockAfterStop(other.gameObject));
         }
     }
@@ -115,14 +112,11 @@ public class ParrotController : MonoBehaviour
     {
         yield return new WaitForEndOfFrame(); // Ensure the movement fully stops
 
-        // Trigger the knock animation
         animator.SetTrigger("canKnock");
 
-        // Store the pushed object and disable its collider
         pushedGameObject = otherObject;
         otherObject.GetComponent<Collider2D>().enabled = false;
 
-        // Add the pushed object to the list and continue with knock actions
         pushedObjects.Add(pushedGameObject.name);
         StartCoroutine(WaitForKnockToComplete()); // Handle knock completion
         UpdateColliderStatus(pushedGameObject.name); // Update other objects' collider statuses

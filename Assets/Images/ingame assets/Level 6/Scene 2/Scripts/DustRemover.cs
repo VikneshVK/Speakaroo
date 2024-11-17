@@ -84,7 +84,7 @@ public class DustRemover : MonoBehaviour
 
         // Tween to the center of the viewport
         LeanTween.move(spawnedPrefab, viewportCenter, 1.0f);
-        LeanTween.scale(spawnedPrefab, originalScale * 1.5f, 1.0f).setOnComplete(() =>
+        LeanTween.scale(spawnedPrefab, originalScale * 2.5f, 1.0f).setOnComplete(() =>
         {
             // Enable particle effect if found
             if (particleEffect != null)
