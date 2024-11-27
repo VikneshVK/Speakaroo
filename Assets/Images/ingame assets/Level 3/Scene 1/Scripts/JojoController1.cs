@@ -48,7 +48,7 @@ public class JojoController1 : MonoBehaviour
     private void HandleIdleCompletion()
     {
         if (!isIdleCompleted && boyAnimator.GetCurrentAnimatorStateInfo(0).IsName("Idle") &&
-            boyAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
+            boyAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.1f)
         {
             isIdleCompleted = true;
             isWalking = true;
@@ -79,7 +79,7 @@ public class JojoController1 : MonoBehaviour
                 
                 boyAnimator.SetBool("canTalk", true);
                 audioSource.Play();
-                StartCoroutine(RevealTextWordByWord("Mom asked if we can help clean our garden", 0.3f));
+                StartCoroutine(RevealTextWordByWord("Mom asked if we can Sweep the dry leaves in the Garden", 0.5f));
             }
 
         }
@@ -126,6 +126,7 @@ public class JojoController1 : MonoBehaviour
             subtitleText.text = string.Join(" ", words, 0, i + 1);  
             yield return new WaitForSeconds(delayBetweenWords);  
         }
-        subtitleText.gameObject.SetActive(false);
+        
+        subtitleText.text = "";
     }
 }

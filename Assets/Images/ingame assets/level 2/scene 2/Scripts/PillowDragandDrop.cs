@@ -63,9 +63,9 @@ public class PillowDragAndDrop : MonoBehaviour
         }
 
         // Load audio clips from Resources
-        positiveAudio1 = Resources.Load<AudioClip>("Audio/FeedbackAudio/Audio1");
-        positiveAudio2 = Resources.Load<AudioClip>("Audio/FeedbackAudio/Audio2");
-        negativeAudio = Resources.Load<AudioClip>("Audio/FeedbackAudio/Audio3");
+        positiveAudio1 = Resources.Load<AudioClip>("Audio/FeedbackAudio/GOOD JOB");
+        positiveAudio2 = Resources.Load<AudioClip>("Audio/FeedbackAudio/KEEP GOING");
+        negativeAudio = Resources.Load<AudioClip>("Audio/FeedbackAudio/THAT_S NOT RIGHT ");
 
         audioClipBigPillow = Resources.Load<AudioClip>("Audio/Helper Audio/bigpillow");
         audioClipSmallPillow = Resources.Load<AudioClip>("Audio/Helper Audio/smallpillow");

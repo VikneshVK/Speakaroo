@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 295342151062284808}
   - component: {fileID: 6260036498234821596}
   - component: {fileID: 6473716415382832147}
+  - component: {fileID: 4714287480782476138}
   m_Layer: 0
   m_Name: Suncream
   m_TagString: Untagged
@@ -75,13 +76,13 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 9
-  m_Sprite: {fileID: 21300000, guid: 1f1a2bb04dfb8874f88f5cd014631f98, type: 3}
+  m_SortingOrder: 11
+  m_Sprite: {fileID: 21300000, guid: fdd506ffbafc0a44bb861c7a7aee94d9, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
-  m_FlipY: 1
+  m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1.53, y: 4.7}
+  m_Size: {x: 5.12, y: 5.12}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -99,6 +100,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ad723af2b3ac2fb45b2a41fd993c34cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  suncreamAnimator: {fileID: 8391158712424628716}
   sprite1: {fileID: 21300000, guid: 5d2c354e21f5fa24192e905ee5ee7f38, type: 3}
   sprite2: {fileID: 21300000, guid: a8ae5ab1919e0b548b38abe745657df3, type: 3}
   sprite3: {fileID: 21300000, guid: ae5ce2ed9ea07d841aedfff72e8dda4c, type: 3}
@@ -139,8 +141,8 @@ BoxCollider2D:
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1.53, y: 4.7}
-    newSize: {x: 1.53, y: 4.7}
+    oldSize: {x: 5.12, y: 5.12}
+    newSize: {x: 5.12, y: 5.12}
     adaptiveTilingThreshold: 0.5
     drawMode: 0
     adaptiveTiling: 0
@@ -148,6 +150,27 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1.53, y: 4.7}
   m_EdgeRadius: 0
+--- !u!95 &4714287480782476138
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2650868039876761170}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: a6cad6d215a675747b9fbea6be56d6e9, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &5772790172158552414
 GameObject:
   m_ObjectHideFlags: 0
@@ -175,7 +198,7 @@ Transform:
   m_GameObject: {fileID: 5772790172158552414}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.68, y: -11.61, z: 0}
+  m_LocalPosition: {x: -0.89, y: -11.61, z: 0}
   m_LocalScale: {x: 1, y: 3, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -221,7 +244,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 7
+  m_SortingOrder: 10
   m_Sprite: {fileID: 1804569476, guid: 65c32e3cb9233fb4386e552b94803e8b, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0

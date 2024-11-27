@@ -7,13 +7,14 @@ using UnityEngine;
 public class ShowerController : MonoBehaviour
 {
     public List<GameObject> foamObjects = new List<GameObject>(); // List to store foam objects
-    public Animator hotTapAnimator, coldTapAnimator; // References to the tap animators
+    public Animator hotTapAnimator; // References to the tap animators
     public ParticleSystem showerParticles; // Reference to the water particles
     public Collider2D hotTapCollider, coldTapCollider; // Colliders for the hot and cold taps for interaction
     public Animator boyAnimator; // Reference to the boy's Animator
     public GameObject boyGameObject; // Reference to the boy GameObject
+    public Lvl1Sc2HelperFunction helperFunctionScript;
 
-    private bool tapsOn = false; // To track if taps are currently turned on
+    public bool tapsOn = false; // To track if taps are currently turned on
     private Scene_Manager sceneManager;
     private bool foamDestroyed = false;
 
@@ -24,9 +25,10 @@ public class ShowerController : MonoBehaviour
             Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             Vector2 mousePos2D = new Vector2(mousePos.x, mousePos.y);
 
-            if (hotTapCollider.OverlapPoint(mousePos2D) || coldTapCollider.OverlapPoint(mousePos2D))
+            if (hotTapCollider.OverlapPoint(mousePos2D))
             {
                 OnTapClicked();
+                helperFunctionScript.ResetTimer();
             }
         }
 
@@ -50,9 +52,9 @@ public class ShowerController : MonoBehaviour
         {
             tapsOn = true;
             hotTapAnimator.SetTrigger("TapOn");
-            coldTapAnimator.SetTrigger("TapOn");
+            
             showerParticles.Play();
-           
+            boyAnimator.SetBool("IsNormal", true);
 
             StartCoroutine(DestroyFoamObjects());
         }
@@ -60,7 +62,7 @@ public class ShowerController : MonoBehaviour
         {
             tapsOn = false;
             hotTapAnimator.SetTrigger("TapOff");
-            coldTapAnimator.SetTrigger("TapOff");
+            boyAnimator.SetBool("IsNormal", false);
             showerParticles.Stop();
         }
         if (foamDestroyed && tapsOn == false )

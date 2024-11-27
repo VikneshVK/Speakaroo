@@ -11,6 +11,7 @@ public class Brush_Controller : MonoBehaviour
 
     private Camera mainCamera;
     private Animator animator;
+    
     private bool isDragging = false;
 
     void Start()
@@ -52,7 +53,7 @@ public class Brush_Controller : MonoBehaviour
                 if (!animator.GetBool("paste_On"))
                 {
                     animator.SetBool("paste_On", true);
-                    teeth.SetActive(true);
+                    boyAnimator.SetTrigger("dirtyTeeth");
                     hit.collider.enabled = false;
                     Destroy(Paste);
                 }

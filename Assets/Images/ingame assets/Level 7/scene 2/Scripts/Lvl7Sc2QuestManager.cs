@@ -8,12 +8,22 @@ public class Lvl7Sc2QuestManager : MonoBehaviour
     public GameObject questDisplayPanel;
     public RectTransform bannerImage;
     public TMP_Text questText;
-    public Vector2 offScreenPos = new Vector2(-1920, 0); 
+    public Vector2 offScreenPos = new Vector2(-1920, 0);
     public Vector2 centerScreenPos = new Vector2(-500, 0);
     public GameObject ing_borad;
-    public float tweenTime = 0.5f;       
+    public float tweenTime = 0.5f;
+    public GameObject kikiImage;
+    public GameObject pizzaEatingPanel;
+    private Animator kikiAnimator;
 
     private int _pizzaMade = 0;
+
+    public AudioClip cheesePizzaAudio;
+    public AudioClip mushroomPizzaAudio;
+    public AudioClip pepperoniPizzaAudio;
+    public AudioClip FinalAudio;
+    // Reference to AudioManager
+    public Lvl7Sc2AudioManager audioManager;
 
 
     public int PizzaMade
@@ -48,6 +58,32 @@ public class Lvl7Sc2QuestManager : MonoBehaviour
     public GameObject pepperoniTopping;
 
     public Lvl7Sc2DragManager dragManager;
+
+    public RectTransform jojoFinalImage;
+    public RectTransform kikiFinalImage;
+    private Animator jojoAnimator;
+    private Animator kikiFinalAnimator;
+
+    public TextMeshProUGUI subtitleText;
+
+    void Start()
+    {
+        if (kikiImage != null)
+        {
+            kikiAnimator = kikiImage.GetComponent<Animator>();
+            if (kikiAnimator == null)
+            {
+                Debug.LogError("Kiki image is missing an Animator component.");
+            }
+        }
+        else
+        {
+            Debug.LogError("Kiki image is not assigned.");
+        }
+
+        jojoAnimator = jojoFinalImage.GetComponent<Animator>();
+        kikiFinalAnimator = kikiFinalImage.GetComponent<Animator>();
+    }
 
 
     public void UpdateQuestDisplay()
@@ -129,14 +165,50 @@ public class Lvl7Sc2QuestManager : MonoBehaviour
     // This method can be called from other scripts to increment the pizzaMade count
     public void MakePizza()
     {
-        if (PizzaMade < 3) // Assuming you want a maximum of 3 pizzas
-        {
-            PizzaMade++; // Using the property here ensures UpdateQuestDisplay() is called
-            ResetToppingsAndIcons();
-            dragManager.ResetDragManager();
-            UpdateQuestDisplay();
 
+        if (PizzaMade < 2) // Assuming you want a maximum of 3 pizzas
+        {
+            LeanTween.scale(pizzaEatingPanel, Vector3.zero, 0.4f).setEase(LeanTweenType.easeInOutQuad).setOnComplete(() =>
+            {
+                PizzaMade++;
+                ResetToppingsAndIcons();
+                dragManager.ResetDragManager();
+                UpdateQuestDisplay();
+            });
         }
+        else if (PizzaMade >= 2)
+        {
+            TriggerLevelEndSequence();
+        }
+    }
+    private void TriggerLevelEndSequence()
+    {
+        // Tween the final images into the viewport
+        LeanTween.move(kikiFinalImage, new Vector2(132, 130), 1.0f).setEase(LeanTweenType.easeOutQuad);
+        LeanTween.move(jojoFinalImage, new Vector2(-256, 56), 1.0f).setEase(LeanTweenType.easeOutQuad).setOnComplete(() =>
+        {
+            // Trigger the level end animations
+            if (kikiFinalAnimator != null)
+                kikiFinalAnimator.SetTrigger("LevelEnd");
+
+            if (jojoAnimator != null)
+                jojoAnimator.SetTrigger("LevelEnd");
+
+            audioManager.PlayAudio(FinalAudio);
+
+            // Wait for the animations to complete before tweening them back out
+            StartCoroutine(WaitForLevelEndAnimationAndReset());
+        });
+    }
+
+    private IEnumerator WaitForLevelEndAnimationAndReset()
+    {
+        // Wait for the longest animation length (example: assuming 2 seconds here)
+        yield return new WaitForSeconds(2.0f);
+
+        // Tween the final images back to their original positions
+        LeanTween.move(kikiFinalImage, new Vector2(132, -130), 1.0f).setEase(LeanTweenType.easeInQuad);
+        LeanTween.move(jojoFinalImage, new Vector2(-256, -400), 1.0f).setEase(LeanTweenType.easeInQuad);
     }
 
     public void ResetToppingsAndIcons()
@@ -165,6 +237,35 @@ public class Lvl7Sc2QuestManager : MonoBehaviour
         // Reset the banner image to its off-screen start position (outside the viewport)
         bannerImage.anchoredPosition = offScreenPos;
 
+        // Trigger the Kiki animation based on PizzaMade value
+        if (kikiAnimator != null)
+        {
+            switch (PizzaMade)
+            {
+                case 0:
+                    kikiAnimator.SetTrigger("CheesePizza");
+                    if (audioManager != null && cheesePizzaAudio != null)
+                        audioManager.PlayAudio(cheesePizzaAudio);
+                        StartCoroutine(RevealTextWordByWord("Let's make a Cheese Pizza", 0.5f));
+                    break;
+                case 1:
+                    kikiAnimator.SetTrigger("MushroomPizza");
+                    if (audioManager != null && mushroomPizzaAudio != null)
+                        audioManager.PlayAudio(mushroomPizzaAudio);
+                        StartCoroutine(RevealTextWordByWord("Let's make Mushroom Pizza", 0.5f));
+                    break;
+                case 2:
+                    kikiAnimator.SetTrigger("PepperoniPizza");
+                    if (audioManager != null && pepperoniPizzaAudio != null)
+                        audioManager.PlayAudio(pepperoniPizzaAudio);
+                        StartCoroutine(RevealTextWordByWord("Let's make Pepperoni Pizza", 0.5f));
+                    break;
+                default:
+                    Debug.LogWarning("Invalid PizzaMade value for Kiki animation.");
+                    break;
+            }
+        }
+
         // Tween the banner to the center of the screen
         LeanTween.move(bannerImage, centerScreenPos, tweenTime).setOnComplete(() =>
         {
@@ -184,6 +285,7 @@ public class Lvl7Sc2QuestManager : MonoBehaviour
         });
     }
 
+
     private IEnumerator HideQuestBannerAfterDelay(float delay)
     {
         yield return new WaitForSeconds(delay);
@@ -194,9 +296,20 @@ public class Lvl7Sc2QuestManager : MonoBehaviour
             {
                 questDisplayPanel.SetActive(false);
                 ing_borad.SetActive(true);
+
+                // Notify the Drag Manager to enable the next topping after the banner is hidden
+                if (dragManager != null)
+                {
+                    dragManager.EnableNextTopping();
+                }
+                else
+                {
+                    Debug.LogError("Drag Manager is not assigned in Lvl7Sc2QuestManager.");
+                }
             });
         });
     }
+
 
 
     // Helper method to get the quest text based on the number of pizzas made
@@ -209,5 +322,20 @@ public class Lvl7Sc2QuestManager : MonoBehaviour
             case 2: return "Let's make a Pepperoni Pizza!";
             default: return "Let's make a Pizza!";
         }
+    }
+
+    private IEnumerator RevealTextWordByWord(string fullText, float delayBetweenWords)
+    {
+        subtitleText.text = "";
+        subtitleText.gameObject.SetActive(true);
+
+        string[] words = fullText.Split(' ');
+
+        for (int i = 0; i < words.Length; i++)
+        {
+            subtitleText.text = string.Join(" ", words, 0, i + 1);
+            yield return new WaitForSeconds(delayBetweenWords);
+        }
+        subtitleText.text = "";
     }
 }

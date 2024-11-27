@@ -10,12 +10,14 @@ public class BirdControllerScene2 : MonoBehaviour
     private Rigidbody2D rb;
     public Transform shampoo; // Reference to the shampoo
     public Transform shampooContainer; // Reference to the final position of the shampoo
+    public Lvl1Sc2HelperFunction helperFunctionScript;
+    private SpriteRenderer Sprite;
 
     void Start()
     {
         animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
-
+        Sprite = GetComponent<SpriteRenderer>();
         if (rb == null)
         {
             Debug.LogError("Rigidbody2D component not found on the GameObject");
@@ -29,6 +31,7 @@ public class BirdControllerScene2 : MonoBehaviour
         {
             Debug.LogError("Shampoo or shampoo container not assigned in the inspector");
         }
+
     }
 
     void Update()
@@ -41,10 +44,7 @@ public class BirdControllerScene2 : MonoBehaviour
             }
             rb.velocity = Vector2.left * speed;
         }
-        else
-        {
-            StopFlying();
-        }
+        
     }
 
     public void StartFlying()
@@ -76,7 +76,7 @@ public class BirdControllerScene2 : MonoBehaviour
     {
         // Play knockShampoo animation on bird
         animator.SetTrigger("knock");
-
+        
         // Wait for half of the knockShampoo animation duration
         yield return new WaitForSeconds(GetCurrentAnimationLength() / 2);
 
@@ -84,16 +84,32 @@ public class BirdControllerScene2 : MonoBehaviour
         if (shampoo != null && shampooContainer != null)
         {
             // Animate the shampoo to move to the position of the shampooContainer
-            LeanTween.move(shampoo.gameObject, shampooContainer.position, 1.0f).setEase(LeanTweenType.easeInOutQuad);
+            LeanTween.move(shampoo.gameObject, shampooContainer.position, 1.0f)
+                .setEase(LeanTweenType.easeInOutQuad)
+                .setOnComplete(() =>
+                {
+                    Sprite.flipX = false;
 
-            // Rotate the shampoo to 0 degrees during the movement
-            LeanTween.rotateZ(shampoo.gameObject, -30f, 1.0f);
+                    // On tween complete, reference the helper script and start the timer for shampoo
+                    if (helperFunctionScript != null)
+                    {
+                        helperFunctionScript.StartTimer(false); // Start the helper timer for the shampoo
+                    }
+                    else
+                    {
+                        Debug.LogError("Helper function script not assigned in the inspector.");
+                    }
+                });
+
+            // Rotate the shampoo to -30 degrees during the movement
+            LeanTween.rotateZ(shampoo.gameObject, 30f, 1.0f);
         }
         else
         {
             Debug.LogError("Shampoo or shampoo container not assigned in the inspector.");
         }
     }
+
 
     private float GetCurrentAnimationLength()
     {

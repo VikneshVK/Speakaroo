@@ -1,23 +1,40 @@
 
+
 using UnityEngine;
+using System.Collections;
 using UnityEngine.UI;
+using TMPro;
 
 public class Lvl7Sc1JojoController : MonoBehaviour
 {
     public Transform[] stopPositions; // Array of stop positions
+    public Transform[] birdStopPositions;
     public Transform[] speechBubbleSpawnPositions; // Array of speech bubble spawn positions for each stop
     public GameObject speechBubblePrefab;
     public Animator jojoAnimator;
+    public GameObject birdGameObject;
     public Camera mainCamera; // Reference to the main camera
     public FoodContainerController foodController; // Reference to FoodContainerController script
     public GameObject panelToScale; // Reference to ST Canvas prefab for PrefabTouchHandler
     public float moveSpeed = 2f;
     public float cameraFollowSpeed = 2f; // Speed at which the camera follows Jojo
 
+    public AudioClip Audio1;
+    public AudioClip audio1;
+    public AudioClip Audio2;
+    public AudioClip Audio3;
+    public AudioClip Audio4;
+    private AudioSource boyAudioSource;
     public static int currentStopIndex = 0; // Current stop position index
+    private Animator kikiAnimator;
+    private bool AudioPlayed = false;
     private bool isWalking = false;
     private bool isTalking = false;
     private bool cameraFollowing = false; // Whether the camera should follow Jojo
+    private bool hasCompletedTalk = false;
+    private bool levelEnded = false;
+    private bool finaldialouge = false;
+    public bool audioPlaying = false;
     private GameObject spawnedPrefab;
     public Sprite sprite1; // Reference to Sprite 1 (assigned in inspector)
     public Sprite sprite2; // Reference to Sprite 2 (assigned in inspector)
@@ -25,11 +42,13 @@ public class Lvl7Sc1JojoController : MonoBehaviour
     public Image panelImage; // Reference to the Image component on the panel
 
     public float cameraXOffset = 0f; // Constant offset between Jojo and the camera on the x-axis
-
+    public TextMeshProUGUI subtitleText;
     public Transform cameraFollowPoint; // New reference to child object of Jojo for camera to follow
 
     void Start()
     {
+        kikiAnimator = birdGameObject.GetComponent<Animator>();
+        boyAudioSource = GetComponent<AudioSource>();
         MoveToNextStopPosition();
     }
 
@@ -45,25 +64,101 @@ public class Lvl7Sc1JojoController : MonoBehaviour
             FollowCharacterWithCamera();
         }
 
-        if (isTalking && IsAnimationStateComplete("Talk"))
+        if (isTalking)
         {
-            OnTalkAnimationComplete();
+            AnimatorStateInfo jojoStateInfo = jojoAnimator.GetCurrentAnimatorStateInfo(0);
+            if (jojoStateInfo.IsName("Talk") && jojoStateInfo.normalizedTime >= 1.0f) // Jojo's "Talk" animation is complete
+            {
+                isTalking = false;
+                jojoAnimator.SetBool("canTalk", false); // Reset Jojo's "canTalk"
+
+                // Trigger the bird's "Talk" animation
+                kikiAnimator.SetBool("canTalk", true);
+                if (!AudioPlayed)
+                {
+                    AudioPlayed = true;
+                    boyAudioSource.clip = Audio2;
+                    boyAudioSource.Play();
+                    StartCoroutine(RevealTextWordByWord("What do you want to Eat?", 0.5f));
+                }
+            }
         }
 
-        AnimatorStateInfo stateInfo = jojoAnimator.GetCurrentAnimatorStateInfo(0);
-        if (stateInfo.IsName("Talk 0") && stateInfo.normalizedTime >= 1.0f) // Animation is complete
+        AnimatorStateInfo kikiStateInfo = kikiAnimator.GetCurrentAnimatorStateInfo(0);
+        if (kikiStateInfo.IsName("Talk") && kikiStateInfo.normalizedTime >= 1.0f && !hasCompletedTalk) // Bird's "Talk" animation is complete
         {
-            // Set canTalk to false and move Jojo to the next stop
+            kikiAnimator.SetBool("canTalk", false); // Reset Bird's "canTalk"
+            OnTalkAnimationComplete(); // Call the method once bird's Talk animation is done
+        }
+
+        // Handle "Talk 0" animation completion
+        if (jojoAnimator.GetCurrentAnimatorStateInfo(0).IsName("Talk 0") &&
+            jojoAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f) // Animation is complete
+        {
             jojoAnimator.SetBool("canTalk", false);
+            StartCoroutine(DelayMoveToNextStopPosition());
+        }
+
+        // Check if the LevelEnd animation is complete and trigger movement to the right
+        if (levelEnded && IsAnimationStateComplete("LevelEnd"))
+        {
+            MoveJojoRightAndEndScene();
+        }
+
+        AnimatorStateInfo chewStateInfo = jojoAnimator.GetCurrentAnimatorStateInfo(0);
+        if (chewStateInfo.IsName("Chew") && chewStateInfo.normalizedTime >= 0.9f && !audioPlaying) // Animation is complete
+        {
+            audioPlaying = true;
+            jojoAnimator.SetBool("canTalk", true);
+            kikiAnimator.SetTrigger("Talk");
+
+            // Play the boy's audio clip if set
+            if (audio1 != null && !boyAudioSource.isPlaying) // Avoid replaying if already playing
+            {
+                
+                boyAudioSource.clip = audio1;
+                boyAudioSource.Play();
+            }
+            else if (audio1 == null)
+            {
+                Debug.LogWarning("Audio1 is not set in the Inspector!");
+            }
+        }
+    }
+
+    private IEnumerator DelayMoveToNextStopPosition()
+    {
+        yield return new WaitForSeconds(1.5f); // Wait for 1.5 seconds
+        if (!levelEnded) // Only move to the next stop if the level has not ended
+        {
             MoveToNextStopPosition();
         }
     }
 
+
+
+
+
     private void MoveCharacter()
     {
         // Move Jojo towards the current stop position
-        Transform targetStop = stopPositions[currentStopIndex];
-        transform.position = Vector3.MoveTowards(transform.position, targetStop.position, moveSpeed * Time.deltaTime);
+        Transform jojoTargetStop = stopPositions[currentStopIndex];
+        transform.position = Vector3.MoveTowards(transform.position, jojoTargetStop.position, moveSpeed * Time.deltaTime);
+
+        Transform birdTargetStop = birdStopPositions[currentStopIndex];
+
+        if (birdGameObject != null)
+        {
+            birdGameObject.transform.position = Vector3.MoveTowards(
+                birdGameObject.transform.position,
+                birdTargetStop.position,
+                moveSpeed * Time.deltaTime
+            );
+        }
+        else
+        {
+            Debug.LogWarning("Bird GameObject not found! Make sure it's tagged as 'Bird'.");
+        }
 
         // Only start following the camera if current stop is not 1
         if (currentStopIndex > 0)
@@ -72,15 +167,49 @@ public class Lvl7Sc1JojoController : MonoBehaviour
         }
 
         // Check if Jojo has reached the stop position
-        if (Vector3.Distance(transform.position, targetStop.position) < 0.1f)
+        if (Vector3.Distance(transform.position, jojoTargetStop.position) < 0.1f &&
+            Vector3.Distance(birdGameObject.transform.position, birdTargetStop.position) < 0.1f)
         {
             isWalking = false;
             jojoAnimator.SetBool("canWalk", false);
+            kikiAnimator.SetBool("canFly", false);
 
             // Stop the camera from following when reaching the stop position
             cameraFollowing = false;
-            jojoAnimator.SetBool("canTalk", true);
+
+            if (currentStopIndex == 3)
+            {
+                // Play LevelEnd animation and Audio4 when at the last stop
+                jojoAnimator.SetBool("LevelEnd", true);
+                if (!boyAudioSource.isPlaying && !finaldialouge)
+                {
+                    finaldialouge = true;
+                    boyAudioSource.clip = Audio4;
+                    boyAudioSource.Play();
+                    StartCoroutine(RevealTextWordByWord("Look..! It's a Pizza Shop", 0.5f));
+                }
+                levelEnded = true; // Mark level as ended
+                return;
+            }
+            else if (currentStopIndex == 0)
+            {
+                // Play Audio1 when at the first stop
+                jojoAnimator.SetBool("canTalk", true);
+                boyAudioSource.clip = Audio1;
+                boyAudioSource.Play();
+                StartCoroutine(RevealTextWordByWord("Iam Hungry..! Lets buy some Food", 0.5f));
+            }
+            else
+            {
+                // Play Audio3 for all other stops
+                jojoAnimator.SetBool("canTalk", true);
+                boyAudioSource.clip = Audio3;
+                boyAudioSource.Play();
+                StartCoroutine(RevealTextWordByWord("I want omething Sweet", 0.5f));
+            }
+
             isTalking = true;
+            AudioPlayed = false;
         }
     }
 
@@ -101,14 +230,17 @@ public class Lvl7Sc1JojoController : MonoBehaviour
         if (currentStopIndex < stopPositions.Length)
         {
             isWalking = true;
+            hasCompletedTalk = false;
             jojoAnimator.SetBool("canWalk", true); // Start walking animation
+            kikiAnimator.SetBool("canFly", true);
+            Debug.Log($"Moving to the next stop. Current Stop Index: {currentStopIndex}");
         }
     }
 
     private void OnTalkAnimationComplete()
     {
-        isTalking = false;
-        jojoAnimator.SetBool("canTalk", false);
+        /*Debug.Log("OnTalkAnimationComplete called"); // Log to confirm the method is called
+        isTalking = false;*/
 
         if (currentStopIndex < 3)
         {
@@ -119,11 +251,16 @@ public class Lvl7Sc1JojoController : MonoBehaviour
         if (currentStopIndex < stopPositions.Length - 1)
         {
             currentStopIndex++;
+            hasCompletedTalk = true; // Reset flag for the next stop
+            Debug.Log($"Current Stop Index updated to: {currentStopIndex}");
         }
-        else if (currentStopIndex == stopPositions.Length - 1)
-        {
-            MoveJojoRightAndEndScene();
-        }
+        /*else if (currentStopIndex == stopPositions.Length - 1)
+        { 
+            Debug.Log("Reached the final stop position. Ending the scene.");
+            jojoAnimator.SetBool("LevelEnd", true);
+            boyAudioSource.clip = Audio4;
+            boyAudioSource.Play();
+        }*/
     }
 
     private void SpawnSpeechBubble(int stopIndex)
@@ -154,7 +291,7 @@ public class Lvl7Sc1JojoController : MonoBehaviour
 
     private void ChangePanelSprite()
     {
-      // Change the sprite based on the stop index
+        // Change the sprite based on the stop index
         switch (currentStopIndex)
         {
             case 1:
@@ -174,9 +311,19 @@ public class Lvl7Sc1JojoController : MonoBehaviour
 
     private void MoveJojoRightAndEndScene()
     {
-        // Make Jojo move to the right without camera following
+        jojoAnimator.SetBool("canTalk", false);
+        jojoAnimator.SetBool("canWalk", true);
+        kikiAnimator.SetBool("canFly2", true);
         isWalking = true;
-        cameraFollowing = false; // Stop camera movement
+
+        // Move Jojo and Kiki to the right indefinitely
+        transform.position += Vector3.right * moveSpeed * Time.deltaTime;
+        if (birdGameObject != null)
+        {
+            birdGameObject.transform.position += Vector3.right * moveSpeed * Time.deltaTime;
+        }
+
+        cameraFollowing = false; // Stop camera movement after the level ends
     }
 
     // Check if a specific animation state is complete
@@ -184,5 +331,20 @@ public class Lvl7Sc1JojoController : MonoBehaviour
     {
         return jojoAnimator.GetCurrentAnimatorStateInfo(0).IsName(stateName) &&
                jojoAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f;
+    }
+
+    private IEnumerator RevealTextWordByWord(string fullText, float delayBetweenWords)
+    {
+        subtitleText.text = "";
+        subtitleText.gameObject.SetActive(true);
+
+        string[] words = fullText.Split(' ');
+
+        for (int i = 0; i < words.Length; i++)
+        {
+            subtitleText.text = string.Join(" ", words, 0, i + 1);
+            yield return new WaitForSeconds(delayBetweenWords);
+        }
+        subtitleText.text = "";
     }
 }

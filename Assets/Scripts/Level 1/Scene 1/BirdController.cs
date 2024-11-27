@@ -5,6 +5,7 @@ using UnityEngine;
 public class BirdController : MonoBehaviour
 {
     public float speed = 5.0f;
+    private SpriteRenderer Sprite;
     private Animator animator;
     private bool isFlying = false;
     private Rigidbody2D rb;
@@ -23,7 +24,7 @@ public class BirdController : MonoBehaviour
         }
         rb.isKinematic = true;
         rb.gravityScale = 0;
-
+        Sprite = GetComponent<SpriteRenderer>();
         if (brushHolder == null || brushContainer == null || brushCollider == null)
         {
             Debug.LogError("Brush holder, brush container or brush collider not assigned in the inspector");
@@ -40,10 +41,7 @@ public class BirdController : MonoBehaviour
             }
             rb.velocity = Vector2.left * speed;
         }
-        else
-        {
-            StopFlying();
-        }
+        
     }
 
     public void StartFlying()
@@ -58,6 +56,7 @@ public class BirdController : MonoBehaviour
         animator.SetBool("isFlying", false);
         rb.velocity = Vector2.zero;
         animator.SetBool("knock", true);
+        StartCoroutine(FlipKiki());
     }
 
     void OnTriggerEnter2D(Collider2D other)
@@ -69,7 +68,11 @@ public class BirdController : MonoBehaviour
             StartCoroutine(TriggerBrushKnockAtMidpoint());
         }
     }
-
+    private IEnumerator FlipKiki()
+    {
+        yield return new WaitForSeconds(2.5f);
+        Sprite.flipX = false;
+    }
     private IEnumerator TriggerBrushKnockAtMidpoint()
     {
         /*animator.SetTrigger("knockBrush");*/
@@ -84,9 +87,9 @@ public class BirdController : MonoBehaviour
 
             if (brushContainer != null)
             {
-                LeanTween.rotateZ(brushHolder.gameObject, 85f, 0.5f);
+                LeanTween.rotateZ(brushHolder.gameObject, 0f, 0.5f);
                 var tween = LeanTween.move(brushTransform.gameObject, brushContainer.position, 1.0f).setEase(LeanTweenType.easeInOutQuad);
-                LeanTween.rotateZ(brushTransform.gameObject, 0f, 1.0f);
+                LeanTween.rotateZ(brushTransform.gameObject, -90f, 1.0f);
 
                 // Wait for the tween to complete before activating the collider
                 yield return new WaitForSeconds(tween.time);

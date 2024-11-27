@@ -6,7 +6,8 @@ public class SuncreamDragHandler : MonoBehaviour
     private Vector3 initialPosition;
     private bool isDragging;
     private Collider2D suncreamCollider;
-    private Animator suncreamAnimator;
+    public Animator suncreamAnimator;
+    private Animator LotionAnimator;
     private LVL5Sc1_3JojoController1 jojoController;
 
     public Sprite sprite1;
@@ -32,7 +33,8 @@ public class SuncreamDragHandler : MonoBehaviour
     {
         initialPosition = transform.position;
         suncreamCollider = GetComponent<Collider2D>();
-        suncreamAnimator = GetComponentInChildren<Animator>();
+        /*suncreamAnimator = GetComponentInChildren<Animator>();*/
+        LotionAnimator = GetComponent<Animator>();
 
         // Find the positions
         position1 = GameObject.Find("Position1").transform;
@@ -124,6 +126,7 @@ public class SuncreamDragHandler : MonoBehaviour
             if (hitCollider.transform == position2)
             {
                 transform.position = position2.position;
+                /*LotionAnimator.SetTrigger("Lotion");*/
                 suncreamAnimator.SetTrigger("LeftHand");
                 SetPositionState(position2, false);
                 StartCoroutine(ChangeSpriteAfterAnimation(sunburnLeftArm, sprite1, position2.position, position3));
@@ -131,6 +134,7 @@ public class SuncreamDragHandler : MonoBehaviour
             else if (hitCollider.transform == position3)
             {
                 transform.position = position3.position;
+                /*LotionAnimator.SetTrigger("Lotion");*/
                 suncreamAnimator.SetTrigger("Head");
                 SetPositionState(position3, false);
                 StartCoroutine(ChangeSpriteAfterAnimation(sunburnFace, sprite2, position3.position, position4));
@@ -138,6 +142,7 @@ public class SuncreamDragHandler : MonoBehaviour
             else if (hitCollider.transform == position4)
             {
                 transform.position = position4.position;
+                /*LotionAnimator.SetTrigger("Lotion");*/
                 suncreamAnimator.SetTrigger("Righthand");
                 SetPositionState(position4, false);
                 StartCoroutine(ChangeSpriteAfterAnimation(sunburnRightArm, sprite3, position4.position, null));

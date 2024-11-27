@@ -24,7 +24,7 @@ public class LV4DragManager : MonoBehaviour
     public bool PrefabSpawned;
 
     private Coroutine helperHandCoroutine;
-    private int currentIndex = 0;
+    /*private int currentIndex = 0;*/
 
     public AudioSource audioSource1; // Drag Audio 1 here
     public AudioSource audioSource2; // Drag Audio 2 here

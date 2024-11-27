@@ -10,6 +10,7 @@ public class ShampooController : MonoBehaviour
     public float spawnCooldown = 0.5f; // Cooldown time in seconds between spawns
     public GameObject boyGameObject; // Reference to the boy GameObject
     public GameObject showerGameObject; // Reference to the shower GameObject
+    public Lvl1Sc2HelperFunction helperFunctionScript;
 
     private bool isDragging = false;
     private Vector3 offset;
@@ -48,6 +49,7 @@ public class ShampooController : MonoBehaviour
         {
             isDragging = true;
             offset = transform.position - GetMouseWorldPos(); // Calculate offset
+            helperFunctionScript.ResetTimer();
         }
     }
 
@@ -75,7 +77,7 @@ public class ShampooController : MonoBehaviour
                             SpawnFoam();
                             if (foamCount == 1) // Trigger script switch on first foam
                             {
-                                showerMechanics.enabled = false;
+                                showerMechanics.DisableTapInteraction(); // New method to disable tap interaction
                                 showerController.enabled = true;
                             }
                         }
@@ -117,7 +119,7 @@ public class ShampooController : MonoBehaviour
     {
         transform.position = shampooFinalPosition.position; // Reset the position
         transform.rotation = Quaternion.identity; // Reset the rotation
-
+        helperFunctionScript.StartTimer(true);
         isDragging = false; // Stop dragging
         isDraggable = false; // Make non-draggable
         shampooCollider.enabled = false; // Deactivate the collider

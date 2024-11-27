@@ -31,9 +31,10 @@ public class ParrotController : MonoBehaviour
     private List<string> pushedObjects = new List<string>();
     private Dictionary<string, GameObject> mainObjects;
     private List<string> requiredObjects = new List<string> { "bus S", "whale s", "building blocks s" };
-    private bool isWalkingCoroutineRunning = false;
+    /*private bool isWalkingCoroutineRunning = false;*/
     private bool audioPlayed = false;
-    private bool stopWalking = false;
+    private bool stopWalking = false; 
+    
     private AudioSource ReferenceaudioSource;
 
     void Start()
@@ -80,7 +81,7 @@ public class ParrotController : MonoBehaviour
 
     IEnumerator MoveRight()
     {
-        isWalkingCoroutineRunning = true;
+        /*isWalkingCoroutineRunning = true;*/
         
         yield return new WaitForSeconds(2.5f);
 
@@ -93,7 +94,7 @@ public class ParrotController : MonoBehaviour
             yield return null; 
         }
 
-        isWalkingCoroutineRunning = false; 
+        /*isWalkingCoroutineRunning = false; */
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -172,9 +173,14 @@ public class ParrotController : MonoBehaviour
             if(pushedObjects.Count < requiredObjects.Count)
             {
                 ReferenceaudioSource.Play();
+                ResetAnimatorBooleans();
+            }
+            else
+            {
+                animator.SetTrigger("doNotReset");
             }
 
-            ResetAnimatorBooleans();
+            
             kikiSprite.flipX = false;
            
             isReturning = false;

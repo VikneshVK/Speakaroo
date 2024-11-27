@@ -1,4 +1,6 @@
 using UnityEngine;
+using System.Collections;
+using TMPro;
 
 public class Lvl7Sc2DragManager : MonoBehaviour
 {
@@ -13,13 +15,38 @@ public class Lvl7Sc2DragManager : MonoBehaviour
     // Reference to the PizzaDrag script
     public PizzaDrag pizzaDrag;
 
+    public GameObject kikiImage;
+    private Animator kikiAnimator;
+
     private GameObject[] currentToppings;  // Array to store the toppings for this pizza
     private int currentToppingIndex = 0;   // Track the current topping being dropped
     private int totalToppings = 0;         // Total number of toppings for this pizza
 
+    public AudioClip sauceAudio;
+    public AudioClip cheeseAudio;
+    public AudioClip mushroomAudio;
+    public AudioClip pepperoniAudio;
+
+    // Reference to AudioManager
+    public Lvl7Sc2AudioManager audioManager;
+
+    public TextMeshProUGUI subtitleText;
+
     void Start()
     {
-        // Initialize the colliders based on the current pizza state
+        if (kikiImage != null)
+        {
+            kikiAnimator = kikiImage.GetComponent<Animator>();
+            if (kikiAnimator == null)
+            {
+                Debug.LogError("Kiki image is missing an Animator component.");
+            }
+        }
+        else
+        {
+            Debug.LogError("Kiki image is not assigned.");
+        }
+
         UpdateColliders();
     }
 
@@ -44,8 +71,9 @@ public class Lvl7Sc2DragManager : MonoBehaviour
             currentToppings = new GameObject[] { sauceTopping, cheeseTopping, mushroomTopping, pepperoniTopping };
             totalToppings = 4;
         }
+
         questManager.UpdateQuestDisplay();
-        EnableNextTopping();
+        
     }
 
     // Enable the next topping in the sequence
@@ -54,9 +82,111 @@ public class Lvl7Sc2DragManager : MonoBehaviour
         if (currentToppingIndex < totalToppings)
         {
             GameObject topping = currentToppings[currentToppingIndex];
+
+            // Trigger the appropriate animation on the Kiki Animator
+            string animationTrigger = GetKikiAnimationTrigger(topping);
+            if (!string.IsNullOrEmpty(animationTrigger) && kikiAnimator != null)
+            {
+                kikiAnimator.SetTrigger(animationTrigger);
+
+                PlayToppingAudio(topping);
+                
+                StartCoroutine(WaitForAnimationAndEnableCollider(animationTrigger, topping));
+            }
+            else
+            {
+                Debug.LogError("Invalid topping or missing Kiki Animator.");
+            }
+        }
+    }
+
+    private void PlayToppingAudio(GameObject topping)
+    {
+        if (audioManager == null)
+        {
+            Debug.LogError("AudioManager is not assigned.");
+            return;
+        }
+
+        if (topping == sauceTopping && sauceAudio != null)
+        {
+            audioManager.PlayAudio(sauceAudio);
+            StartCoroutine(RevealTextWordByWord("Put on the Tomato Sause", 0.5f));
+        }
+        else if (topping == cheeseTopping && cheeseAudio != null)
+        {
+            audioManager.PlayAudio(cheeseAudio);
+            StartCoroutine(RevealTextWordByWord("Put on the Cheese", 0.5f));
+        }
+        else if (topping == mushroomTopping && mushroomAudio != null)
+        {
+            audioManager.PlayAudio(mushroomAudio);
+            StartCoroutine(RevealTextWordByWord("Put on the Mushrooms", 0.5f));
+        }
+        else if (topping == pepperoniTopping && pepperoniAudio != null)
+        {
+            audioManager.PlayAudio(pepperoniAudio);
+            StartCoroutine(RevealTextWordByWord("Put on the Pepperoni", 0.5f));
+        }
+        else
+        {
+            Debug.LogWarning($"Audio clip for {topping.name} is not assigned.");
+        }
+    }
+    private IEnumerator WaitForAnimationAndEnableCollider(string stateName, GameObject topping)
+    {
+        if (kikiAnimator == null)
+        {
+            Debug.LogError("Kiki Animator is null.");
+            yield break;
+        }
+
+        // Wait for the Animator to enter the desired state
+        while (!kikiAnimator.GetCurrentAnimatorStateInfo(0).IsName(stateName))
+        {
+            yield return null; // Wait for the next frame
+        }
+
+        // Get the length of the current state
+        float animationLength = kikiAnimator.GetCurrentAnimatorStateInfo(0).length;
+
+        // Wait for the animation to complete
+        yield return new WaitForSeconds(animationLength);
+
+        // Enable the collider for the topping
+        if (topping != null && topping.GetComponent<Collider2D>() != null)
+        {
+            topping.GetComponent<Collider2D>().enabled = true;
+            Debug.Log($"{topping.name} collider enabled after Kiki animation.");
+        }
+        else
+        {
+            Debug.LogError("Topping or Collider2D is null.");
+        }
+
+        // Update the opacity of the ingredient icon
+        UpdateIconOpacityForTopping(topping);
+    }
+
+
+
+    private void EnableToppingCollider()
+    {
+        if (currentToppingIndex < totalToppings)
+        {
+            GameObject topping = currentToppings[currentToppingIndex];
             topping.GetComponent<Collider2D>().enabled = true;
             UpdateIconOpacityForTopping(topping);
         }
+    }
+
+    private string GetKikiAnimationTrigger(GameObject topping)
+    {
+        if (topping == sauceTopping) return "Sauce";
+        if (topping == cheeseTopping) return "Cheese";
+        if (topping == mushroomTopping) return "Mushroom";
+        if (topping == pepperoniTopping) return "Pepperoni";
+        return string.Empty;
     }
 
     // Call this method when a topping is dropped successfully
@@ -72,12 +202,10 @@ public class Lvl7Sc2DragManager : MonoBehaviour
             // If the required number of toppings have been dropped, enable the pizza collider
             if (currentToppingIndex == totalToppings)
             {
-                // Enable the pizza collider by calling PizzaDrag's method
                 pizzaDrag.EnablePizzaCollider();
             }
             else
             {
-                // Enable the next topping collider
                 EnableNextTopping();
             }
             UpdateIconOpacityForTopping(droppedTopping);
@@ -105,23 +233,79 @@ public class Lvl7Sc2DragManager : MonoBehaviour
 
     private void UpdateIconOpacityForTopping(GameObject topping)
     {
-        // Update the icon opacity based on the collider enabled status
+        bool isColliderActive = topping.GetComponent<Collider2D>().enabled;
+
         if (topping == sauceTopping)
         {
-            questManager.UpdateIconOpacity(questManager.sauceIcon, topping.GetComponent<Collider2D>().enabled);
+            questManager.UpdateIconOpacity(questManager.sauceIcon, isColliderActive);
         }
         else if (topping == cheeseTopping)
         {
-            questManager.UpdateIconOpacity(questManager.cheeseIcon, topping.GetComponent<Collider2D>().enabled);
+            questManager.UpdateIconOpacity(questManager.cheeseIcon, isColliderActive);
         }
         else if (topping == mushroomTopping)
         {
-            questManager.UpdateIconOpacity(questManager.toppingsIcon, topping.GetComponent<Collider2D>().enabled);
+            questManager.UpdateIconOpacity(questManager.toppingsIcon, isColliderActive);
         }
         else if (topping == pepperoniTopping)
         {
-            questManager.UpdateIconOpacity(questManager.pepperoniIcon, topping.GetComponent<Collider2D>().enabled);
+            questManager.UpdateIconOpacity(questManager.pepperoniIcon, isColliderActive);
         }
+        else
+        {
+            Debug.LogWarning("Topping not recognized for opacity update.");
+        }
+
+        Debug.Log($"Updated opacity for {topping.name}, Collider Active: {isColliderActive}");
+    }
+
+
+
+    private IEnumerator WaitForStateAndEnableCollider(string stateName, GameObject topping)
+    {
+        if (kikiAnimator == null)
+        {
+            Debug.LogError("Kiki Animator is null.");
+            yield break;
+        }
+
+        // Wait for the Animator to enter the state
+        while (!kikiAnimator.GetCurrentAnimatorStateInfo(0).IsName(stateName))
+        {
+            yield return null; // Wait for the next frame
+        }
+
+        // Get the length of the state
+        float animationLength = kikiAnimator.GetCurrentAnimatorStateInfo(0).length;
+
+        // Wait for the animation to complete
+        yield return new WaitForSeconds(animationLength);
+
+        // Enable the collider for the topping
+        if (topping != null && topping.GetComponent<Collider2D>() != null)
+        {
+            topping.GetComponent<Collider2D>().enabled = true;
+            Debug.Log($"{topping.name} collider enabled after Kiki animation.");
+        }
+        else
+        {
+            Debug.LogError("Topping or Collider2D is null.");
+        }
+    }
+
+    private IEnumerator RevealTextWordByWord(string fullText, float delayBetweenWords)
+    {
+        subtitleText.text = "";
+        subtitleText.gameObject.SetActive(true);
+
+        string[] words = fullText.Split(' ');
+
+        for (int i = 0; i < words.Length; i++)
+        {
+            subtitleText.text = string.Join(" ", words, 0, i + 1);
+            yield return new WaitForSeconds(delayBetweenWords);
+        }
+        subtitleText.text = "";
     }
 
 }

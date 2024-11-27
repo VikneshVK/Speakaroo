@@ -33,11 +33,11 @@ public class dragManager : MonoBehaviour
         helperPointer = FindObjectOfType<HelperPointer>();
         InitializeGameObjects();
 
-        // Make sure the first object is active
+        /*// Make sure the first object is active
         if (gameObjects.Length > 0)
         {
             ActivateNextObject(0);  // Activate the first object
-        }
+        }*/
 
         Debug.Log("Game Initialized. Ready to start.");
         totalCorrectDrops = 0;

@@ -15,7 +15,7 @@ public class BoyWalk1 : MonoBehaviour
 
     private bool isWalking;
     private bool reachedStopPosition;
-    private bool birdFinishedTalking;
+   /* private bool birdFinishedTalking;*/
     private bool boyFinishedTalking;
     private AudioSource audioSource;
     private SpriteRenderer spriteRenderer;
@@ -41,7 +41,7 @@ public class BoyWalk1 : MonoBehaviour
 
         isWalking = false;
         reachedStopPosition = false;
-        birdFinishedTalking = false;
+        /*birdFinishedTalking = false;*/
         boyFinishedTalking = false;
     }
 
@@ -49,7 +49,7 @@ public class BoyWalk1 : MonoBehaviour
     {
         // Check if the boy can start walking (when the "Idle" animation is finished)
         if (boyAnimator.GetCurrentAnimatorStateInfo(0).IsName("Idle") &&
-            boyAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f &&
+            boyAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.1f &&
             !isWalking)
         {             
             boyAnimator.SetBool("canWalk",true);

@@ -15,6 +15,7 @@ public class LVL5Sc1_3JojoController1 : MonoBehaviour
     public float walkSpeed = 2f;
     public Image Kiki;
     public GameObject glowPrefab;
+    public GameObject Mom;
 
     public AudioClip Audio1;
     public AudioClip Audio2;
@@ -30,6 +31,7 @@ public class LVL5Sc1_3JojoController1 : MonoBehaviour
 
     private Animator animator;
     private Animator kikiAnimator;
+    private Animator MomAnimator;
 
     private bool canWalk;
     public bool suncreamSpawned;
@@ -42,6 +44,7 @@ public class LVL5Sc1_3JojoController1 : MonoBehaviour
         animator = GetComponent<Animator>();
         boyAudioSource = GetComponent<AudioSource>();
         kikiAnimator = Kiki.GetComponent<Animator>();
+        MomAnimator = Mom.GetComponent<Animator>();
         canWalk = true;
         minigameComplete = false;
         suncreamSpawned = false;
@@ -58,7 +61,8 @@ public class LVL5Sc1_3JojoController1 : MonoBehaviour
 
         if (suncreamSpawned)
         {
-            HandleSuncreamSpawn();
+            MomAnimator.SetTrigger("suncream");
+            StartCoroutine(GiveSuncreamAnimation());            
             suncreamSpawned = false; // Reset to prevent repeated calls
         }
         if (minigameComplete && !finalDialogueTriggered)
@@ -66,6 +70,12 @@ public class LVL5Sc1_3JojoController1 : MonoBehaviour
             finalDialogueTriggered = true; // Ensure this block runs only once
             StartCoroutine(PlayFinalDialogue());
         }
+    }
+
+    private IEnumerator GiveSuncreamAnimation()
+    {
+        yield return new WaitForSeconds(1f);
+        HandleSuncreamSpawn();
     }
 
     private void WalkToPosition()

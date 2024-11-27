@@ -54,9 +54,9 @@ public class DragAndDropController : MonoBehaviour
         animator = GetComponent<Animator>();
         birdAnimator = bird.GetComponent<Animator>();
 
-        positiveAudio1 = Resources.Load<AudioClip>("Audio/FeedbackAudio/Audio1");
-        positiveAudio2 = Resources.Load<AudioClip>("Audio/FeedbackAudio/Audio2");
-        negativeAudio = Resources.Load<AudioClip>("Audio/FeedbackAudio/Audio3");
+        positiveAudio1 = Resources.Load<AudioClip>("Audio/FeedbackAudio/GOOD JOB");
+        positiveAudio2 = Resources.Load<AudioClip>("Audio/FeedbackAudio/KEEP GOING");
+        negativeAudio = Resources.Load<AudioClip>("Audio/FeedbackAudio/THAT_S NOT RIGHT");
 
         GameObject audioObject = GameObject.FindGameObjectWithTag("FeedbackAudio");
         if (audioObject != null)

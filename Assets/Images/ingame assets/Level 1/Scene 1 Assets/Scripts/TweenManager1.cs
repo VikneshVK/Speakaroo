@@ -65,7 +65,7 @@ public class TweenManager1 : MonoBehaviour
         // Wait for the children to finish tweening
         LeanTween.delayedCall(0.5f, () =>
         {
-             speechTherapyCompleted = true;
+            speechTherapyCompleted = true;
             // Set the animator parameters for the bird
             if (birdAnimator != null)
             {
@@ -80,6 +80,12 @@ public class TweenManager1 : MonoBehaviour
                 Destroy(gameObject);
             });
         });
+    }
+
+    public void SkipButton()
+    {
+        StartCoroutine(Timer(0f));
+        speechTherapyCompleted = true;
     }
 }
 

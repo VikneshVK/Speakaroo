@@ -359,6 +359,17 @@ public class Lvl6QuestManager : MonoBehaviour
             if (pos.childCount > 0)
             {
                 pos.GetChild(0).gameObject.SetActive(true);
+                SpriteRenderer spriteRenderer = pos.GetChild(0).gameObject.GetComponent<SpriteRenderer>();
+                if (spriteRenderer != null)
+                {
+                    Color color = spriteRenderer.color;
+                    color.a = 1.0f; // Set alpha to full opacity
+                    spriteRenderer.color = color; // Assign the modified color back
+                }
+                else
+                {
+                    Debug.LogWarning("SpriteRenderer is null. Cannot reset alpha.");
+                }
             }
         }
     }

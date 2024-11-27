@@ -1234,6 +1234,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5292709569205229216, guid: 5cc33678a45eebd4eb94af593e86f318, type: 3}
+      propertyPath: m_Camera
+      value: 
+      objectReference: {fileID: 1199197493}
     - target: {fileID: 6136466633251383564, guid: 5cc33678a45eebd4eb94af593e86f318, type: 3}
       propertyPath: m_RaycastTarget
       value: 0
@@ -1712,7 +1716,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: 863da12770a4f9e4f91ce151dd81b991, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 4dde01cc722a25d4187d0fcfbae121f7, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -2568,9 +2572,17 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1191957361617267137, guid: 9f5d6a765748c4b4eb5466f6d02bdcdc, type: 3}
+      propertyPath: m_SortingOrder
+      value: 9
+      objectReference: {fileID: 0}
     - target: {fileID: 1693674582433494529, guid: 9f5d6a765748c4b4eb5466f6d02bdcdc, type: 3}
       propertyPath: m_Name
       value: tyreswing
+      objectReference: {fileID: 0}
+    - target: {fileID: 3351301185949058845, guid: 9f5d6a765748c4b4eb5466f6d02bdcdc, type: 3}
+      propertyPath: m_SortingOrder
+      value: 9
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -3072,7 +3084,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
-  m_audioClip: {fileID: 8300000, guid: c632de609c8ce5343a4881ada583586b, type: 3}
+  m_audioClip: {fileID: 8300000, guid: 87ca88e55a0e4014db45cccca0c07047, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -5969,7 +5981,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 7
+  m_SortingOrder: 8
   m_Sprite: {fileID: -1101047245335984643, guid: 5190236f6b4e49944b5794164556972e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0

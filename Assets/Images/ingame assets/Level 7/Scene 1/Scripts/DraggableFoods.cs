@@ -17,30 +17,35 @@ public class DraggableFoods : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
     public Transform foodDropPoint; // Reference to the food drop point
     public float tweenDuration = 0.5f; // Duration for tweening panel scale
     public Animator jojoAnimator; // Reference to Jojo animator to set 'canTalk' parameter
+    public Animator kikiAnimator;
+    public Lvl7Sc1JojoController Lvl7Sc1JojoController;
     public Button retryButton; // Reference to the Retry Button
     public Image ringImage; // Ring image for progress indication during recording/playback
     public Image foodContainerImage;
     public Canvas canvas;
     public FoodContainerController foodContainerController;
-    public AudioClip textAudioClip; // Audio clip to play when text is enabled
+    
     public Sprite[] foodSprites;
+    public AudioClip[] foodAudioClips;
     public RectTransform targetPosition; // Target position to teleport when dropped correctly
-    public float dropOffset = 75f; // Configurable offset for drop area detection
+    public float dropOffset = 125f; // Configurable offset for drop area detection
+    public AudioClip audio1;
 
-
+    private AudioSource boyAudioSource;
     private Vector3 initialPosition;
     
     private AudioClip micRecording;
     
     private bool isInitialPositionStored = false;    
     private bool recordingCompleteFlag = false;
-    private bool revealText = false;
+    /*private bool revealText = false;*/
 
 
 
     void Start()
     {
         retryButton.gameObject.SetActive(false);
+        boyAudioSource = jojoAnimator.gameObject.GetComponent<AudioSource>();
     }
 
     public void OnBeginDrag(PointerEventData eventData)
@@ -82,7 +87,7 @@ public class DraggableFoods : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
             transform.position = targetPosition.position; // Teleport the dragged object
 
             // Change the sprite based on currentStopIndex
-            ChangeSpriteBasedOnStopIndex();
+            ChangeSpriteAndAudioBasedOnStopIndex();
 
             playbackText.text = "I want to eat    ";
             StartCoroutine(HandleSuccessfulDrop());
@@ -97,18 +102,36 @@ public class DraggableFoods : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
     }
 
 
-    private void ChangeSpriteBasedOnStopIndex()
+    private void ChangeSpriteAndAudioBasedOnStopIndex()
     {
         int currentStopIndex = Lvl7Sc1JojoController.currentStopIndex;
 
+        // Change the sprite based on currentStopIndex
         if (currentStopIndex >= 1 && currentStopIndex <= foodSprites.Length)
         {
-            // Change the sprite to the one corresponding to the currentStopIndex
             GetComponent<Image>().sprite = foodSprites[currentStopIndex - 1]; // Array is 0-based, so subtract 1
         }
         else
         {
             Debug.LogError("Invalid stop index or sprite not assigned.");
+        }
+
+        // Set the corresponding audio clip based on currentStopIndex
+        if (currentStopIndex >= 1 && currentStopIndex <= foodAudioClips.Length)
+        {
+            AudioClip clipToSet = foodAudioClips[currentStopIndex - 1]; // Array is 0-based, so subtract 1
+            if (clipToSet != null)
+            {
+                audioSource.clip = clipToSet; // Set the clip but don't play it
+            }
+            else
+            {
+                Debug.LogWarning("Audio clip not assigned for current stop index: " + currentStopIndex);
+            }
+        }
+        else
+        {
+            Debug.LogError("Invalid stop index or audio clip not assigned.");
         }
     }
 
@@ -119,9 +142,15 @@ public class DraggableFoods : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
         retryButton.interactable = false;
         retryButton.GetComponent<Image>().sprite = Resources.Load<Sprite>("Images/STMechanics/DefaultSprite");
 
-        // Play the audio attached to the GameObject (initial drop audio)
-        audioSource.Play();
-        yield return new WaitWhile(() => audioSource.isPlaying);
+        if (audioSource.clip != null)
+        {
+            audioSource.Play();
+            yield return new WaitWhile(() => audioSource.isPlaying);
+        }
+        else
+        {
+            Debug.LogWarning("No audio clip set for playback.");
+        }
 
         // Start recording using the microphone
         StartCoroutine(StartRecording());
@@ -211,17 +240,18 @@ public class DraggableFoods : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
          {
              // Destroy the prefab after the tweening finishes
              Destroy(spawnedPrefab);
+             jojoAnimator.SetTrigger("Chew");
+
          });
         }
-        foodContainerImage.enabled = true;
+                foodContainerImage.enabled = true;
         foodContainerController.ResetClickCount();
 
-        // Set 'canTalk' animation parameter to true
-        jojoAnimator.SetBool("canTalk", true);
-    }
+    }   
 
     private void ResetBooleans()
     {
+        Lvl7Sc1JojoController.audioPlaying = false;
         foodContainerController.clicked = false;
         isInitialPositionStored = false;
         transform.localPosition = initialPosition;

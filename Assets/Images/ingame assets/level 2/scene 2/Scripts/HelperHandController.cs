@@ -14,7 +14,7 @@ public class HelperHandController : MonoBehaviour
     private GameObject glowInstance; // Instance of the Glow object
     private PillowDragAndDrop currentPillow;
 
-    private bool timerPaused = false;
+    /*private bool timerPaused = false;*/
     private bool isPingPongActive = false;
     private float halfHelperDelay;
 
@@ -55,7 +55,7 @@ public class HelperHandController : MonoBehaviour
         if (currentPillow != null && !currentPillow.HasInteracted)
         {
             Debug.Log("Pausing timer and starting Glow effect for: " + currentPillow.gameObject.name);
-            timerPaused = true;
+            /*timerPaused = true;*/
             StartGlowEffect();
         }
         else
@@ -96,7 +96,7 @@ public class HelperHandController : MonoBehaviour
         {
             // Resume the timer after the glow effect is done
             Debug.Log("Resuming helper timer.");
-            timerPaused = false;
+            /*timerPaused = false;*/
 
             // After the timer resumes, complete the helper hand tweening
             Invoke(nameof(CompleteHelperHandTimer), halfHelperDelay);
@@ -149,7 +149,7 @@ public class HelperHandController : MonoBehaviour
 
         // Reset states
         isPingPongActive = false;
-        timerPaused = false;
+        /*timerPaused = false;*/
         isPlayingAudio = false;
 
         // Cancel any delayed invocations

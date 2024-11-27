@@ -30,7 +30,7 @@ public class boyController1 : MonoBehaviour
     private bool pillowAudioPlayer;
     private bool isWalking;
     private bool hasReachedStopPosition;
-    private bool shouldContinueWalking;
+    /*private bool shouldContinueWalking;*/
     private AudioSource audioSource;
     private bool isFinalWalk;
     private bool birdaudioplayed;
@@ -62,7 +62,7 @@ public class boyController1 : MonoBehaviour
         birdaudioplayed = false;
         isWalking = false;
         hasReachedStopPosition = false;
-        shouldContinueWalking = false;
+        /*shouldContinueWalking = false;*/
         isFinalWalk = false;
         hasPlayedAudio = false;
 

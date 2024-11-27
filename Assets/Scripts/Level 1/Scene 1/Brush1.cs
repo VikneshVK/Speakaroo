@@ -22,7 +22,7 @@ public class Brush1 : MonoBehaviour
     private Sprite brushBackSprite;
 
     private float originalOrthographicSize;
-    private CameraViewportHandler viewportHandler;
+   
 
     private Vector3 dragOffset;
 
@@ -47,7 +47,7 @@ public class Brush1 : MonoBehaviour
         }
 
         originalCameraPosition = mainCamera.transform.position;
-        viewportHandler = mainCamera.GetComponent<CameraViewportHandler>();
+       
 
         // Calculate the target position for the brush
         Vector3 brushTargetPosition = brushingPlace.transform.position;
@@ -58,7 +58,7 @@ public class Brush1 : MonoBehaviour
 
     IEnumerator ZoomAndMove(Vector3 brushTargetPosition)
     {
-        viewportHandler.enabled = false;
+        
 
         // Smoothly change the orthographic size to zoom in
         LeanTween.value(gameObject, mainCamera.orthographicSize, zoomSize, zoomDuration)
@@ -220,9 +220,14 @@ public class Brush1 : MonoBehaviour
             .setOnUpdate((float val) => mainCamera.orthographicSize = val);
 
         // Tween to move the camera back to its original position
-        LeanTween.move(mainCamera.gameObject, originalCameraPosition, zoomDuration).setOnComplete(() => {
-            Destroy(gameObject); // Optionally, destroy the brush object here
-            viewportHandler.enabled = true;
+        LeanTween.move(mainCamera.gameObject, originalCameraPosition, zoomDuration).setOnComplete(() =>
+        {
+            // Add a 2-second delay before destroying the game object
+            LeanTween.delayedCall(2f, () =>
+            {
+                Destroy(gameObject); // Optionally, destroy the brush object here
+            });
         });
     }
+
 }

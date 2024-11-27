@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using TMPro;
+using Firebase.Analytics;
 
 public class LVL6Sc2KikiController : MonoBehaviour
 {
@@ -28,12 +29,12 @@ public class LVL6Sc2KikiController : MonoBehaviour
     }
 
     private IEnumerator HandleTweens()
-    {
+    {  
+        TweenBirdandback("FirstTalk");
+        yield return new WaitForSeconds(0.5f);
         audioSource.clip = audioClip1;
         audioSource.Play();
-        
         StartCoroutine(RevealTextWordByWord("Something is under the Sand", 0.5f));
-        TweenBirdandback("FirstTalk");
         yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).IsName("FirstTalk") &&
                                         animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.9f);
 
@@ -80,6 +81,12 @@ public class LVL6Sc2KikiController : MonoBehaviour
 
     public void PlayQuestAudio(AudioClip questAudio)
     {
+        StartCoroutine(PlayingAudio(questAudio));
+    }
+
+    private IEnumerator PlayingAudio(AudioClip questAudio)
+    {
+        yield return new WaitForSeconds(0.5f);
         audioSource.clip = questAudio;
         audioSource.Play();
     }

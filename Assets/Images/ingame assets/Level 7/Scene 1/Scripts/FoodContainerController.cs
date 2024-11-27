@@ -15,6 +15,9 @@ public class FoodContainerController : MonoBehaviour
     public float padding = 50f; // Padding for the left and right images
     public Canvas canvas; // Reference to the Canvas component for screen space calculations
 
+    public AudioClip[] audioClips; // Array to hold audio clips for each sprite
+    private AudioSource audioSource;
+
     public int clickCount = 0;
     public bool clicked = false;
     public RectTransform highlighter;
@@ -32,6 +35,7 @@ public class FoodContainerController : MonoBehaviour
         textComponent1.gameObject.SetActive(false); // Disable the text at the start
         textComponent2.gameObject.SetActive(false); // Disable the text at the start
         highlighter.localScale = Vector3.zero;
+        audioSource = GetComponent<AudioSource>();
     }
 
     void OnEnable()
@@ -126,6 +130,7 @@ public class FoodContainerController : MonoBehaviour
     private void LoadImagesForStopPosition(int stopIndex)
     {
         string leftSpritePath = "", centerSpritePath = "", rightSpritePath = "";
+        int audioIndexOffset = 0;
 
         switch (stopIndex)
         {
@@ -133,16 +138,19 @@ public class FoodContainerController : MonoBehaviour
                 leftSpritePath = "Images/LVL7Sc1/Sprite1";
                 centerSpritePath = "Images/LVL7Sc1/Sprite2";
                 rightSpritePath = "Images/LVL7Sc1/Sprite3";
+                audioIndexOffset = 0; // AudioClips[0-2]
                 break;
             case 2:
                 leftSpritePath = "Images/LVL7Sc1/Sprite4";
                 centerSpritePath = "Images/LVL7Sc1/Sprite5";
                 rightSpritePath = "Images/LVL7Sc1/Sprite6";
+                audioIndexOffset = 3; // AudioClips[3-5]
                 break;
             case 3:
                 leftSpritePath = "Images/LVL7Sc1/Sprite7";
                 centerSpritePath = "Images/LVL7Sc1/Sprite8";
                 rightSpritePath = "Images/LVL7Sc1/Sprite9";
+                audioIndexOffset = 6; // AudioClips[6-8]
                 break;
             default:
                 Debug.Log("No images to load for stop position 4.");
@@ -156,6 +164,11 @@ public class FoodContainerController : MonoBehaviour
         if (leftSprite != null && centerSprite != null && rightSprite != null)
         {
             LoadImages(leftSprite, centerSprite, rightSprite);
+
+            // Assign audio clips to images
+            imagesToTween[0].GetComponent<AudioSource>().clip = audioClips[audioIndexOffset];
+            imagesToTween[1].GetComponent<AudioSource>().clip = audioClips[audioIndexOffset + 1];
+            imagesToTween[2].GetComponent<AudioSource>().clip = audioClips[audioIndexOffset + 2];
         }
         else
         {
@@ -165,6 +178,7 @@ public class FoodContainerController : MonoBehaviour
         // Load dynamic text for child TMP
         LoadDynamicText(stopIndex);
     }
+
 
     public void LoadImages(Sprite leftImage, Sprite centerImage, Sprite rightImage)
     {
@@ -291,39 +305,50 @@ public class FoodContainerController : MonoBehaviour
     {
         for (int i = 0; i < imagesToTween.Length; i++)
         {
-            // Get the childText (TextMeshProUGUI) from each image in imagesToTween
+            // Get the child text of the current image
             TextMeshProUGUI childText = imagesToTween[i].GetComponentInChildren<TextMeshProUGUI>();
-            AudioSource audioSource = childText.GetComponent<AudioSource>();
+
+            // Get the AudioSource of the current image
+            AudioSource imageAudioSource = imagesToTween[i].GetComponent<AudioSource>();
+            if (imageAudioSource == null || imageAudioSource.clip == null)
+            {
+                Debug.LogWarning($"Audio clip for image {i} is missing or not assigned.");
+            }
 
             // Move the highlighter to the position of the current image
             Vector3 targetPosition = imagesToTween[i].rectTransform.position;
             highlighter.position = targetPosition;
 
-            // Tween the child text scale to 1 and highlighter scale to 10
+            // Tween the child text scale and highlighter scale
             LeanTween.scale(childText.rectTransform, Vector3.one, 0.5f).setEaseOutBack();
-            LeanTween.scale(highlighter, Vector3.one * 8, 0.5f).setEaseOutBack(); // Tween highlighter to scale 10
+            LeanTween.scale(highlighter, Vector3.one * 8, 0.5f).setEaseOutBack();
 
-            // Wait for the tween to complete and play the audio
+            // Wait for the tween animation to complete
             yield return new WaitForSeconds(0.5f);
 
-            // Play the audio during the wait time
-            if (audioSource != null && audioSource.clip != null)
+            // Play the audio clip for the current image
+            if (imageAudioSource != null && imageAudioSource.clip != null)
             {
-                audioSource.Play();
+                imageAudioSource.Play();
             }
 
-            // Wait for 1 second while the audio plays
-            yield return new WaitForSeconds(1f);
+            // Wait for the audio clip duration or a fallback delay
+            float waitTime = imageAudioSource != null && imageAudioSource.clip != null
+                ? imageAudioSource.clip.length
+                : 1f; // Fallback to 1 second if no clip
+            yield return new WaitForSeconds(waitTime);
 
-            /*// Tween the child text scale back to 0 and highlighter scale back to 0
-            LeanTween.scale(childText.rectTransform, Vector3.zero, 0.5f).setEaseInBack();*/
+            // Tween the highlighter scale back to zero
             LeanTween.scale(highlighter, Vector3.zero, 0.5f).setEaseInBack();
 
-            // Wait for the tween to complete before moving to the next item
+            // Wait for the tween animation to complete
             yield return new WaitForSeconds(0.5f);
+
+            // Re-enable interactivity for all images after the sequence
             SetImagesInteractable(true);
         }
     }
+
 
     private void SetImagesInteractable(bool interactable)
     {

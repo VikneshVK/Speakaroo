@@ -16,7 +16,7 @@ public class Lvl6Sc1JojoController : MonoBehaviour
     private bool dialougeCompleted;
     private bool hasReachedStopPosition;
     private bool isTalking;
-    private bool dialougeDone;
+    /*private bool dialougeDone;*/
     public bool hasSpawnedPrefab;
     private bool isFinalTalkCompleted;
     public TextMeshProUGUI subtitleText;
@@ -97,7 +97,7 @@ public class Lvl6Sc1JojoController : MonoBehaviour
                 if (!hasSpawnedPrefab && !dialougeCompleted)
                 {
                     dialougeCompleted = true;
-                    dialougeDone = false;
+                    /*dialougeDone = false;*/
                     kikiAnimator.SetTrigger("Dialogue1"); // Trigger Kiki's Talk animation
                     audioSource.clip = audio1;
                     audioSource.Play();

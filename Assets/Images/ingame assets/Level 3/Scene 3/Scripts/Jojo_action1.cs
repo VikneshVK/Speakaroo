@@ -11,7 +11,7 @@ public class Jojo_action1 : MonoBehaviour
     public float walkSpeed = 2f;
     public bool hasReachedOffScreen = false; // New boolean to track off-screen position
     public List<GameObject> objectsToEnable;
-    public static event Action<GameObject[]> OnCollidersEnabled;
+    /*public static event Action<GameObject[]> OnCollidersEnabled;*/
     public Lvl3Sc3DragManager dragmanager;
     public GameObject clothStand;
     public GameObject sun;
@@ -32,7 +32,7 @@ public class Jojo_action1 : MonoBehaviour
     private bool isWalking = false;
     private bool positionreached = false;
     private bool audioPlayed = false;
-    private bool isIdleCompleted = false;
+   /* private bool isIdleCompleted = false;*/
     private bool collidersEnabled = false; // To ensure colliders are enabled only once
     private bool isReturning = false; // Flag for return trip
     private bool isTalk2Triggered = false; // Flag to track when canTalk2 is triggered

@@ -14,7 +14,7 @@ public class LVL5Sc1KikiController : MonoBehaviour
     private bool isFlying;
     private bool isIdleCompleted;
 
-    private bool canTalk;
+   /* private bool canTalk;*/
     void Start()
     {
         isFlying = false;
@@ -64,7 +64,7 @@ public class LVL5Sc1KikiController : MonoBehaviour
         {
             isFlying = false; // Stop flying
             animator.SetBool("CanFly", false);
-            canTalk = true;
+            /*canTalk = true;*/
         }
     }
 }

@@ -37,8 +37,33 @@ public class DustRemover : MonoBehaviour
 
     private IEnumerator BrushRoutine()
     {
-        // Wait for 2 seconds before moving brush back
-        yield return new WaitForSeconds(2.0f);
+        // Get the sprite renderer of the first child
+        SpriteRenderer firstChildSpriteRenderer = transform.GetChild(0).GetComponent<SpriteRenderer>();
+
+        if (firstChildSpriteRenderer != null)
+        {
+            // Tween the opacity of the first child to 0 over 2 seconds
+            LeanTween.value(gameObject, 1f, 0f, 2f).setOnUpdate((float alpha) =>
+            {
+                Color color = firstChildSpriteRenderer.color;
+                color.a = alpha;
+                firstChildSpriteRenderer.color = color;
+            });
+        }
+        else
+        {
+            Debug.LogWarning("First child does not have a SpriteRenderer component.");
+        }
+
+        // Animate the brush
+        Animator brushAnimator = spawnedBrush.GetComponent<Animator>();
+        brushAnimator.SetBool("Brush", true);
+
+        yield return new WaitForSeconds(2f);
+
+        brushAnimator.SetBool("Brush", false);
+
+        yield return new WaitForSeconds(0.5f);
 
         // Move brush back to spawn point
         LeanTween.move(spawnedBrush, brushSpawnPoint.position, 1.0f).setOnComplete(() =>
@@ -49,8 +74,8 @@ public class DustRemover : MonoBehaviour
             // Perform dust removal on children
             RemoveDust();
         });
-        
     }
+
 
     // Assuming this is within DustRemover and calling QuestValidation
     private void RemoveDust()
