@@ -240,11 +240,24 @@ public class KikiController1 : MonoBehaviour
 
     private IEnumerator HandleDropWithDelay(GameObject droppedItem)
     {
-        boyAnimator.SetTrigger("FeedBack");
+        switch (itemsDropped)
+        {
+            case 0:
+                boyAnimator.SetTrigger("FeedBack");
+                break;
+            case 1:
+                boyAnimator.SetTrigger("FeedBack1");
+                break;
+            case 2:
+                boyAnimator.SetTrigger("FeedBack2");
+                break;
+        }
+
         StartCoroutine(TweenAndDestroy(droppedItem));
 
-        yield return new WaitForSeconds(2.5f);
-        if(itemsDropped < 2)
+        yield return new WaitForSeconds(2f);
+
+        if (itemsDropped < 2)
         {
             itemsDropped++;
             boyAnimator.SetTrigger("Expression");
@@ -258,11 +271,8 @@ public class KikiController1 : MonoBehaviour
             boyAnimator.SetTrigger("SoFull");
             StartCoroutine(DelayedAnimationAndSpawn(1.5f));
         }
-
     }
-
-
-    private IEnumerator TweenAndDestroy(GameObject item)
+        private IEnumerator TweenAndDestroy(GameObject item)
     {
         LeanTween.scale(item, Vector3.zero, 0.5f).setEase(LeanTweenType.easeInOutBack);
 

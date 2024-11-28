@@ -1765,7 +1765,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1261242162691769517, guid: 5cc33678a45eebd4eb94af593e86f318, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3220799799381724627, guid: 5cc33678a45eebd4eb94af593e86f318, type: 3}
       propertyPath: m_Pivot.x
@@ -3581,79 +3581,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 660435548}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1001 &842779402328677906
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 1827436058674287980, guid: 5c38f2fbeb367504b906792fd740e059, type: 3}
-      propertyPath: flySpeed
-      value: 3.5
-      objectReference: {fileID: 0}
-    - target: {fileID: 1827436058674287980, guid: 5c38f2fbeb367504b906792fd740e059, type: 3}
-      propertyPath: boyTalkRig
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 1827436058674287980, guid: 5c38f2fbeb367504b906792fd740e059, type: 3}
-      propertyPath: birdStopPosition
-      value: 
-      objectReference: {fileID: 408232530}
-    - target: {fileID: 6120322812427231483, guid: 5c38f2fbeb367504b906792fd740e059, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -19.95
-      objectReference: {fileID: 0}
-    - target: {fileID: 6120322812427231483, guid: 5c38f2fbeb367504b906792fd740e059, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: -1.55
-      objectReference: {fileID: 0}
-    - target: {fileID: 6120322812427231483, guid: 5c38f2fbeb367504b906792fd740e059, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6120322812427231483, guid: 5c38f2fbeb367504b906792fd740e059, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6120322812427231483, guid: 5c38f2fbeb367504b906792fd740e059, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6120322812427231483, guid: 5c38f2fbeb367504b906792fd740e059, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6120322812427231483, guid: 5c38f2fbeb367504b906792fd740e059, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6120322812427231483, guid: 5c38f2fbeb367504b906792fd740e059, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6120322812427231483, guid: 5c38f2fbeb367504b906792fd740e059, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6120322812427231483, guid: 5c38f2fbeb367504b906792fd740e059, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7858792698623254911, guid: 5c38f2fbeb367504b906792fd740e059, type: 3}
-      propertyPath: m_Name
-      value: Kiki 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 7858792698623254911, guid: 5c38f2fbeb367504b906792fd740e059, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 5c38f2fbeb367504b906792fd740e059, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -3676,7 +3603,6 @@ SceneRoots:
   - {fileID: 772685039}
   - {fileID: 580708132}
   - {fileID: 660435548}
-  - {fileID: 842779402328677906}
   - {fileID: 1126748098}
   - {fileID: 1377826794}
   - {fileID: 373017237}

@@ -17,7 +17,12 @@ public class ShowerController : MonoBehaviour
     public bool tapsOn = false; // To track if taps are currently turned on
     private Scene_Manager sceneManager;
     private bool foamDestroyed = false;
-
+    private AudioSource SfxAudioSoure;
+    public AudioClip sfxAudio1;
+    private void Awake()
+    {
+        SfxAudioSoure = GameObject.FindWithTag("SFXAudioSource").GetComponent<AudioSource>();
+    }
     private void Update()
     {
         if (Input.GetMouseButtonDown(0))
@@ -52,8 +57,14 @@ public class ShowerController : MonoBehaviour
         {
             tapsOn = true;
             hotTapAnimator.SetTrigger("TapOn");
-            
+
             showerParticles.Play();
+            if (SfxAudioSoure != null)
+            {
+                SfxAudioSoure.clip = sfxAudio1;
+                SfxAudioSoure.loop = true;
+                SfxAudioSoure.Play();
+            }
             boyAnimator.SetBool("IsNormal", true);
 
             StartCoroutine(DestroyFoamObjects());
@@ -64,6 +75,11 @@ public class ShowerController : MonoBehaviour
             hotTapAnimator.SetTrigger("TapOff");
             boyAnimator.SetBool("IsNormal", false);
             showerParticles.Stop();
+            if (SfxAudioSoure != null)
+            {
+                SfxAudioSoure.loop = false;
+                SfxAudioSoure.Stop();
+            }
         }
         if (foamDestroyed && tapsOn == false )
         {

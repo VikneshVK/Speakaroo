@@ -17,6 +17,7 @@ public class ShowerMechanics : MonoBehaviour
     public AudioClip audio2;
     public AudioClip audio3;
     public AudioClip audio4;
+    public AudioClip sfxAudio1;
     public TextMeshProUGUI subtitleText;
 
     [Header("Helper Timer")]
@@ -31,6 +32,12 @@ public class ShowerMechanics : MonoBehaviour
     private bool hasShowerDoneStarted = false;
     private bool birdanimation = false;
     private bool allowTapInteraction = true;
+    private AudioSource SfxAudioSoure;
+
+    private void Awake()
+    {
+        SfxAudioSoure = GameObject.FindWithTag("SFXAudioSource").GetComponent<AudioSource>();
+    }
     void Update()
     {
         if (allowTapInteraction)
@@ -76,10 +83,21 @@ public class ShowerMechanics : MonoBehaviour
         if (hotTapOn)
         {
             showerParticles.Play(); // Turn on shower
+            if (SfxAudioSoure != null)
+            {
+                SfxAudioSoure.clip = sfxAudio1;
+                SfxAudioSoure.loop = true;
+                SfxAudioSoure.Play();
+            }
         }
         else
         {
             showerParticles.Stop(); // Turn off shower
+            if (SfxAudioSoure != null)
+            {                
+                SfxAudioSoure.loop = false;
+                SfxAudioSoure.Stop();
+            }
         }
     }
 
@@ -196,6 +214,7 @@ public class ShowerMechanics : MonoBehaviour
 
     void SpawnPrefab()
     {
+        HotTap.GetComponent<Collider2D>().enabled = false;
         Instantiate(prefabToSpawn, spawnLocation.position, Quaternion.identity);
         EnableShampooCollider(); // Enable the shampoo's collider after spawning the prefab
     }

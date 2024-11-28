@@ -4,6 +4,8 @@ using System.Collections;
 public class Brush_Controller : MonoBehaviour
 {
     public GameObject teeth;
+    public GameObject SfxAudio;
+    public AudioClip SfxAudio1;
     public Transform initialPosition;
     public Animator boyAnimator;
     public LayerMask interactionLayers;
@@ -11,13 +13,18 @@ public class Brush_Controller : MonoBehaviour
 
     private Camera mainCamera;
     private Animator animator;
-    
+    private AudioSource SfxAudioSouce;
+
     private bool isDragging = false;
 
     void Start()
     {
         mainCamera = Camera.main;
         animator = GetComponent<Animator>();
+        if (SfxAudio != null)
+        {
+            SfxAudioSouce = SfxAudio.GetComponent<AudioSource>();
+        }
     }
 
     void Update()
@@ -49,10 +56,17 @@ public class Brush_Controller : MonoBehaviour
             if (hit.collider.gameObject.CompareTag("DropPoint"))
             {
                 transform.position = hit.collider.transform.position;
+                transform.rotation = Quaternion.identity;
+                /*GetComponent<SpriteRenderer>().flipX = false;*/
                 GetComponent<Collider2D>().enabled = false;
                 if (!animator.GetBool("paste_On"))
                 {
                     animator.SetBool("paste_On", true);
+                    if (SfxAudioSouce != null)
+                    {
+                        SfxAudioSouce.clip = SfxAudio1;
+                        SfxAudioSouce.Play();
+                    }
                     boyAnimator.SetTrigger("dirtyTeeth");
                     hit.collider.enabled = false;
                     Destroy(Paste);

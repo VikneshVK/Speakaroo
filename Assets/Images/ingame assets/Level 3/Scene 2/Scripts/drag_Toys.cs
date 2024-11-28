@@ -17,6 +17,9 @@ public class drag_Toys : MonoBehaviour
     public AudioSource tapAudiosource;
     public TextMeshProUGUI subtitleText;
     public Tween_Toys tweentoys;
+    public AudioClip SfxAudio1;
+    public AudioSource SfxAudioSource;
+    public AudioSource SfxAudioSource1;
 
     public static bool isTeddyInteracted = false;
     public static bool isDinoInteracted = false;
@@ -107,6 +110,12 @@ public class drag_Toys : MonoBehaviour
             if (hitTimer >= hitDuration && !spriteChanged)
             {
                 ChangeSprite();
+                if (SfxAudioSource != null)
+                {
+                    SfxAudioSource.clip = SfxAudio1;
+                    SfxAudioSource.loop = false;
+                    SfxAudioSource.Play();
+                }
             }
         }
     }
@@ -197,6 +206,7 @@ public class drag_Toys : MonoBehaviour
                                                    if (completedTweens >= 3)
                                                    {
                                                        waterParticleSystem.Stop();
+                                                       SfxAudioSource1.Stop();
                                                        kikiAnimator.SetBool("toysWashed", true);
                                                        jojoAnimator.SetBool("toysWashed", true);
                                                        if (!audioplayed)

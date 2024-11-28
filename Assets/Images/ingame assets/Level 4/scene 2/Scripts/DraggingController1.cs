@@ -32,6 +32,10 @@ public class DraggingController1 : MonoBehaviour
     public Transform milkInitialPosition;
     public Transform cherryInitialPosition;
 
+    public Transform pouringPosition1; // New reference for Cereal
+    public Transform pouringPosition2; // New reference for Milk
+    public Transform pouringPosition3; // New reference for Cherry
+
     public LVL4Sc2AudioManager audioManager;
     public AudioClip Audio1;
     public AudioClip Audio2;
@@ -163,26 +167,41 @@ public class DraggingController1 : MonoBehaviour
 
     private void OnMouseUp()
     {
-        if (!tweeningController.isSecondTime)
-        {
-            isDragging = false;
-            Collider2D bowlCollider = GameObject.FindGameObjectWithTag("EmptyBowl")?.GetComponent<Collider2D>();
-            transform.rotation = Quaternion.identity;
-            if (bowlCollider != null && bowlCollider.bounds.Contains(transform.position))
-            {
-                SpriteRenderer bowlSpriteRenderer = bowlCollider.GetComponent<SpriteRenderer>();
+        isDragging = false;
+        Collider2D bowlCollider = GameObject.FindGameObjectWithTag("EmptyBowl")?.GetComponent<Collider2D>();
+        transform.rotation = Quaternion.identity;
 
+        if (bowlCollider != null && bowlCollider.bounds.Contains(transform.position))
+        {
+            if (gameObject.CompareTag("Cereal"))
+            {
+                transform.position = pouringPosition1.position; // Move to Cereal pouring position
                 if (objectAnimator != null)
                 {
                     objectAnimator.SetTrigger("isPouring");
                 }
             }
-            else
+            else if (gameObject.CompareTag("Milk"))
             {
-                ResetPositionAndRotation();
+                transform.position = pouringPosition2.position; // Move to Milk pouring position
+                if (objectAnimator != null)
+                {
+                    objectAnimator.SetTrigger("isPouring");
+                }
+            }
+            else if (gameObject.CompareTag("Cherry"))
+            {
+                transform.position = pouringPosition3.position; // Move to Cherry pouring position
+                if (objectAnimator != null)
+                {
+                    objectAnimator.SetTrigger("isPouring");
+                }
             }
         }
-
+        else
+        {
+            ResetPositionAndRotation();
+        }
     }
 
     private void ResetPositionAndRotation()

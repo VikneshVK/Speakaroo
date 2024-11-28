@@ -438,6 +438,8 @@ MonoBehaviour:
   audio1: {fileID: 8300000, guid: 39de4af8281006842889f0d030f41651, type: 3}
   audio2: {fileID: 8300000, guid: 08ecdd4fbc827294482e71a506c9db49, type: 3}
   audio3: {fileID: 8300000, guid: f7e3effa0e09fd0478db754816c4f074, type: 3}
+  sfxAudio1: {fileID: 8300000, guid: 0119c61077f4a1d44a557af5ca2096b0, type: 3}
+  sfxAudio2: {fileID: 8300000, guid: 68ee517703c2adc43acbb40401c3d4d0, type: 3}
 --- !u!4 &177478326
 Transform:
   m_ObjectHideFlags: 0
@@ -527,7 +529,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 6
+  m_SortingOrder: 7
   m_Sprite: {fileID: 21300000, guid: 959d47a1940d01a46b7639fba64eedba, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -611,7 +613,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 6
+  m_SortingOrder: 8
   m_Sprite: {fileID: 21300000, guid: 47f5d1edd65c0fb4dbd38a81477b44c8, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -797,6 +799,63 @@ Transform:
   - {fileID: 1431912425}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &365198600
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 6855002319895802494, guid: ca6fb5d26ec489b4d9ada36edf9c1d1b, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -4.2459407
+      objectReference: {fileID: 0}
+    - target: {fileID: 6855002319895802494, guid: ca6fb5d26ec489b4d9ada36edf9c1d1b, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -5.553461
+      objectReference: {fileID: 0}
+    - target: {fileID: 6855002319895802494, guid: ca6fb5d26ec489b4d9ada36edf9c1d1b, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.07436826
+      objectReference: {fileID: 0}
+    - target: {fileID: 6855002319895802494, guid: ca6fb5d26ec489b4d9ada36edf9c1d1b, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6855002319895802494, guid: ca6fb5d26ec489b4d9ada36edf9c1d1b, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6855002319895802494, guid: ca6fb5d26ec489b4d9ada36edf9c1d1b, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6855002319895802494, guid: ca6fb5d26ec489b4d9ada36edf9c1d1b, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6855002319895802494, guid: ca6fb5d26ec489b4d9ada36edf9c1d1b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6855002319895802494, guid: ca6fb5d26ec489b4d9ada36edf9c1d1b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6855002319895802494, guid: ca6fb5d26ec489b4d9ada36edf9c1d1b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8683779801299673293, guid: ca6fb5d26ec489b4d9ada36edf9c1d1b, type: 3}
+      propertyPath: m_Name
+      value: SfxAudio
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: ca6fb5d26ec489b4d9ada36edf9c1d1b, type: 3}
 --- !u!1001 &387563757
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1110,7 +1169,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 6
+  m_SortingOrder: 8
   m_Sprite: {fileID: 21300000, guid: 904e25942860a484b9b3545d07ec0ba0, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -1362,7 +1421,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 6
+  m_SortingOrder: 7
   m_Sprite: {fileID: 21300000, guid: 30f94e9f40d44e140bbd4adac423bc2d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -1529,6 +1588,8 @@ MonoBehaviour:
   audio1: {fileID: 8300000, guid: 39de4af8281006842889f0d030f41651, type: 3}
   audio2: {fileID: 8300000, guid: 08ecdd4fbc827294482e71a506c9db49, type: 3}
   audio3: {fileID: 8300000, guid: f7e3effa0e09fd0478db754816c4f074, type: 3}
+  sfxAudio1: {fileID: 8300000, guid: 0119c61077f4a1d44a557af5ca2096b0, type: 3}
+  sfxAudio2: {fileID: 8300000, guid: 68ee517703c2adc43acbb40401c3d4d0, type: 3}
 --- !u!4 &1048676453
 Transform:
   m_ObjectHideFlags: 0
@@ -1792,7 +1853,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 6
+  m_SortingOrder: 7
   m_Sprite: {fileID: 21300000, guid: 39fc4c805983cc148a9b80ae6e56b246, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -1846,6 +1907,8 @@ MonoBehaviour:
   audio1: {fileID: 8300000, guid: 39de4af8281006842889f0d030f41651, type: 3}
   audio2: {fileID: 8300000, guid: 08ecdd4fbc827294482e71a506c9db49, type: 3}
   audio3: {fileID: 8300000, guid: f7e3effa0e09fd0478db754816c4f074, type: 3}
+  sfxAudio1: {fileID: 8300000, guid: 0119c61077f4a1d44a557af5ca2096b0, type: 3}
+  sfxAudio2: {fileID: 8300000, guid: 68ee517703c2adc43acbb40401c3d4d0, type: 3}
 --- !u!61 &1102011283
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2835,6 +2898,8 @@ SceneRoots:
   m_Roots:
   - {fileID: 70940335}
   - {fileID: 1116987632}
+  - {fileID: 365198600}
+  - {fileID: 387563757}
   - {fileID: 1341670132}
   - {fileID: 1729054892}
   - {fileID: 71857155}
@@ -2847,7 +2912,6 @@ SceneRoots:
   - {fileID: 1048676453}
   - {fileID: 1102011284}
   - {fileID: 869317727}
-  - {fileID: 387563757}
   - {fileID: 324970982}
   - {fileID: 1180143030}
   - {fileID: 964575536}

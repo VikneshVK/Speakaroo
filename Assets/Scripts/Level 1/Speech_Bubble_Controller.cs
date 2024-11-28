@@ -33,10 +33,9 @@ public class Speech_Bubble_Controller : MonoBehaviour
 
     private IEnumerator DeferChanges()
     {
-        // Yielding to WaitForEndOfFrame waits until all other Updates, LateUpdates, and rendering are done
+       
         yield return new WaitForEndOfFrame();
-
-        // Perform deferred actions after everything else has been processed
+        
         Collider2D collider = GetComponent<Collider2D>();
         if (collider != null)
         {

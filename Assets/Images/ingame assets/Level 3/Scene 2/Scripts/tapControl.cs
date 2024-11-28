@@ -11,6 +11,9 @@ public class TapControl : MonoBehaviour
     public float resetDelay = 2f; // Delay before resetting position
     public float gravityModifierValue = 1f; // Gravity modifier to apply when conditions are met
 
+    public AudioClip SfxAudio1;
+    public AudioSource SfxAudioSource;
+
     private Collider2D hoseCollider;
     private Collider2D tapCollider;
     private DragScript dragScript;
@@ -28,6 +31,7 @@ public class TapControl : MonoBehaviour
             tapCollider = GetComponent<Collider2D>();
             dragScript = hose.GetComponent<DragScript>();
         }
+        /*SfxAudioSource = GameObject.FindWithTag("SFXAudioSource").GetComponent<AudioSource>();*/
     }
 
     private void OnMouseDown()
@@ -58,6 +62,12 @@ public class TapControl : MonoBehaviour
     {
         Debug.Log("Tap interacted, setting isFirstTime to false");
         waterParticleSystem.Play();
+        if (SfxAudioSource != null)
+        {
+            SfxAudioSource.clip = SfxAudio1;
+            SfxAudioSource.loop = true;
+            SfxAudioSource.Play();
+        }
         yield return new WaitForSeconds(duration);
 
         if (hoseCollider != null)
@@ -95,6 +105,12 @@ public class TapControl : MonoBehaviour
         else
         {
             waterParticleSystem.Play();
+            if (SfxAudioSource != null )
+            {                
+                SfxAudioSource.clip = SfxAudio1;
+                SfxAudioSource.loop = true;
+                SfxAudioSource.Play();                
+            }
         }
     }
 }

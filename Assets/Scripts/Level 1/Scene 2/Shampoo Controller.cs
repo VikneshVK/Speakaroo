@@ -11,6 +11,7 @@ public class ShampooController : MonoBehaviour
     public GameObject boyGameObject; // Reference to the boy GameObject
     public GameObject showerGameObject; // Reference to the shower GameObject
     public Lvl1Sc2HelperFunction helperFunctionScript;
+    public GameObject HotTap;
 
     private bool isDragging = false;
     private Vector3 offset;
@@ -20,6 +21,9 @@ public class ShampooController : MonoBehaviour
     private float nextSpawnTime = 0f; // Time when the next foam can be spawned
     private Collider2D shampooCollider; // Collider of the shampoo
 
+    private AudioSource SfxAudioSource;
+    public AudioClip SfxAudio1;
+
     private ShowerMechanics showerMechanics; // ShowerMechanics script reference
     private ShowerController showerController; // ShowerController script reference
 
@@ -28,7 +32,7 @@ public class ShampooController : MonoBehaviour
         mainCamera = Camera.main;
         initialPosition = transform.position;
         shampooCollider = GetComponent<Collider2D>();
-
+        SfxAudioSource = GameObject.FindWithTag("SFXAudioSource").GetComponent<AudioSource>();
         // Ensure the shower GameObject is active before fetching components
         if (showerGameObject.activeSelf)
         {
@@ -95,6 +99,11 @@ public class ShampooController : MonoBehaviour
 
     private void SpawnFoam()
     {
+        if (SfxAudioSource != null)
+        {            
+            SfxAudioSource.loop = false;
+            SfxAudioSource.PlayOneShot(SfxAudio1);
+        }
         Vector3 randomPosition = foamSpawnLocation.position + new Vector3(
             Random.Range(-foamSpawnLocation.localScale.x / 2, foamSpawnLocation.localScale.x / 2),
             Random.Range(-foamSpawnLocation.localScale.y / 2, foamSpawnLocation.localScale.y / 2),
@@ -117,6 +126,7 @@ public class ShampooController : MonoBehaviour
 
     private void ResetPosition()
     {
+        HotTap.GetComponent<Collider2D>().enabled = true;
         transform.position = shampooFinalPosition.position; // Reset the position
         transform.rotation = Quaternion.identity; // Reset the rotation
         helperFunctionScript.StartTimer(true);

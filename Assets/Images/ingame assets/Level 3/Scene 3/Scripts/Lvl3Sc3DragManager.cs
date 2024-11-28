@@ -20,6 +20,9 @@ public class Lvl3Sc3DragManager : MonoBehaviour
     public Kiki_actions kiki; // Reference to Kiki's script
     public TextMeshProUGUI subtitleText;
 
+    public AudioClip SfxAudio1;
+    private AudioSource SfxAudioSource;
+
     // Helper hand functionality
     public Lvl3sc3HelperHand helperHand; // Reference to HelperHand script
     private int currentIndex = 0; // Tracks the current object being monitored by helper hand
@@ -32,6 +35,7 @@ public class Lvl3Sc3DragManager : MonoBehaviour
         InitializeDryClothes();
         activeHangers.AddRange(availableHangers);
         ObjectsOnLine = 6;
+        SfxAudioSource = GameObject.FindWithTag("SFXAudioSource").GetComponent<AudioSource>();
     }
 
     private void InitializeDryClothes()
@@ -145,10 +149,23 @@ public class Lvl3Sc3DragManager : MonoBehaviour
 
         yield return new WaitForSeconds(3f);
 
+        if (SfxAudioSource != null)
+        {
+            SfxAudioSource.clip = SfxAudio1;
+            SfxAudioSource.loop = true;
+            SfxAudioSource.Play();
+        }
+
         LeanTween.move(sun, sunFinalPosition.position, 10f);
         LeanTween.color(sky, new Color32(229, 137, 93, 255), 10f);
 
         yield return new WaitForSeconds(10f);
+
+        if (SfxAudioSource != null)
+        {
+            SfxAudioSource.loop = false;
+            SfxAudioSource.Stop();
+        }
 
         isEvening = true;
 

@@ -206,6 +206,63 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
+--- !u!1001 &66356934
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 6855002319895802494, guid: ca6fb5d26ec489b4d9ada36edf9c1d1b, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -4.2459407
+      objectReference: {fileID: 0}
+    - target: {fileID: 6855002319895802494, guid: ca6fb5d26ec489b4d9ada36edf9c1d1b, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -5.553461
+      objectReference: {fileID: 0}
+    - target: {fileID: 6855002319895802494, guid: ca6fb5d26ec489b4d9ada36edf9c1d1b, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.07436826
+      objectReference: {fileID: 0}
+    - target: {fileID: 6855002319895802494, guid: ca6fb5d26ec489b4d9ada36edf9c1d1b, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6855002319895802494, guid: ca6fb5d26ec489b4d9ada36edf9c1d1b, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6855002319895802494, guid: ca6fb5d26ec489b4d9ada36edf9c1d1b, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6855002319895802494, guid: ca6fb5d26ec489b4d9ada36edf9c1d1b, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6855002319895802494, guid: ca6fb5d26ec489b4d9ada36edf9c1d1b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6855002319895802494, guid: ca6fb5d26ec489b4d9ada36edf9c1d1b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6855002319895802494, guid: ca6fb5d26ec489b4d9ada36edf9c1d1b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8683779801299673293, guid: ca6fb5d26ec489b4d9ada36edf9c1d1b, type: 3}
+      propertyPath: m_Name
+      value: SfxAudio
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: ca6fb5d26ec489b4d9ada36edf9c1d1b, type: 3}
 --- !u!1001 &68924912
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1045,6 +1102,7 @@ MonoBehaviour:
   boyGameObject: {fileID: 2063642303}
   helperFunctionScript: {fileID: 1065795624}
   tapsOn: 0
+  sfxAudio1: {fileID: 8300000, guid: dd341c225c69fc2458d1a8c045d6cd98, type: 3}
 --- !u!1 &857276096
 GameObject:
   m_ObjectHideFlags: 0
@@ -2263,13 +2321,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1824060252}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0.32391736, w: 0.94608533}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -14.559999, y: 6.51375, z: 0}
   m_LocalScale: {x: 0.6, y: 0.6, z: 0.6}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 37.8}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &1824060254
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -2388,6 +2446,8 @@ MonoBehaviour:
   boyGameObject: {fileID: 2063642303}
   showerGameObject: {fileID: 854984596}
   helperFunctionScript: {fileID: 1065795624}
+  HotTap: {fileID: 892564470}
+  SfxAudio1: {fileID: 8300000, guid: 75dd82a485dda1545b4d848c5a3869f0, type: 3}
 --- !u!1 &1909357512
 GameObject:
   m_ObjectHideFlags: 0
@@ -2589,6 +2649,7 @@ MonoBehaviour:
   audio2: {fileID: 8300000, guid: cf7b423fd213c8949bbc4522edbe2303, type: 3}
   audio3: {fileID: 8300000, guid: 2705bc63d7b2fc14bbebd7948b8bf70a, type: 3}
   audio4: {fileID: 8300000, guid: 489c6907f495ecb42a6bbb2796702a5c, type: 3}
+  sfxAudio1: {fileID: 8300000, guid: dd341c225c69fc2458d1a8c045d6cd98, type: 3}
   subtitleText: {fileID: 93283274}
   helperFunctionScript: {fileID: 1065795624}
   hotTapOn: 0
@@ -7543,8 +7604,10 @@ SceneRoots:
   m_Roots:
   - {fileID: 1613879415}
   - {fileID: 1094710134}
-  - {fileID: 1808676489122509527}
+  - {fileID: 623110033}
   - {fileID: 68924912}
+  - {fileID: 66356934}
+  - {fileID: 1808676489122509527}
   - {fileID: 935869109}
   - {fileID: 801371184}
   - {fileID: 1206043916}
@@ -7555,7 +7618,6 @@ SceneRoots:
   - {fileID: 466289299}
   - {fileID: 892564473}
   - {fileID: 1781354325}
-  - {fileID: 623110033}
   - {fileID: 1406682776}
   - {fileID: 1909357515}
   - {fileID: 208804689}

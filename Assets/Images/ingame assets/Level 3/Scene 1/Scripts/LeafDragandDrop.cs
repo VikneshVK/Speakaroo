@@ -16,6 +16,8 @@ public class LeafDragAndDrop : MonoBehaviour
     public GameObject Parrot;
     public AudioSource Audio1;
     public AudioSource Audio2;
+    public AudioClip SfxAudio1;
+    public AudioClip SfxAudio2;
     public HP_HelperpointerController helperPointerController;
 
     private Animator boyAnimator;
@@ -23,7 +25,11 @@ public class LeafDragAndDrop : MonoBehaviour
     private Animator leavesAnimator;
     private Animator smokeAnimator;
     private Animator binAnimator;
+    private AudioSource SfxAudioSource;
+    private bool SfxaudioPlaying = false;
+
     public bool dragging = false; // Changed to public
+
 
     private Vector3 offset;
     private Vector3 startPosition;
@@ -42,6 +48,7 @@ public class LeafDragAndDrop : MonoBehaviour
         boyAnimator = Boy.GetComponent<Animator>();
         parrotAnimator = Parrot.GetComponent<Animator>();
         anchorGameObjectScript = GetComponent<AnchorGameObject>();
+        SfxAudioSource = GameObject.FindWithTag("SFXAudioSource").GetComponent<AudioSource>();
     }
 
     private void Update()
@@ -51,6 +58,13 @@ public class LeafDragAndDrop : MonoBehaviour
             binAnimator.SetBool("binOpen", true);
             Vector3 mousePosition = new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10);
             transform.position = Camera.main.ScreenToWorldPoint(mousePosition) + offset;
+            if (SfxAudioSource != null && !SfxaudioPlaying) 
+            {
+                SfxaudioPlaying = true;
+                /*SfxAudioSource.loop = true;*/
+                SfxAudioSource.clip = SfxAudio1;
+                SfxAudioSource.Play();
+            }
             if (leafType == LeafType.Leaf1)
             {
                 helperPointerController.OnLeaf1Interacted();
@@ -81,7 +95,13 @@ public class LeafDragAndDrop : MonoBehaviour
     {
         dragging = false;
         binAnimator.SetBool("binOpen", false);
-
+        if (SfxAudioSource != null)
+        {           
+            SfxAudioSource.loop = false;
+            SfxAudioSource.clip = SfxAudio2;
+            SfxAudioSource.Play();
+        }
+        SfxaudioPlaying = false;
         // If the leaf is dropped correctly in the bin
         if (bin && gameObject.GetComponent<Collider2D>().bounds.Intersects(bin.GetComponent<Collider2D>().bounds))
         {

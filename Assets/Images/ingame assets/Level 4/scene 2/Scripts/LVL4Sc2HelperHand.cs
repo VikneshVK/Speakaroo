@@ -151,19 +151,25 @@ public class LVL4Sc2HelperHand : MonoBehaviour
             spawnedGlow = Instantiate(glowPrefab, fruit.transform.position, Quaternion.identity);
             spawnedGlow.transform.localScale = Vector3.zero;
 
-            // Scale up
-            LeanTween.scale(spawnedGlow, Vector3.one * 15, 1f).setOnComplete(() =>
+            if (spawnedGlow != null)
             {
-                Debug.Log("Glow scale up completed for: " + fruitTag);
-            });
+                LeanTween.scale(spawnedGlow, Vector3.one * 15, 1f).setOnComplete(() =>
+                {
+                    Debug.Log("Glow scale up completed for: " + fruitTag);
+                });
+            }
+                
             yield return new WaitForSeconds(2f);
 
-            // Scale down and destroy
-            LeanTween.scale(spawnedGlow, Vector3.zero, 1f).setOnComplete(() =>
+            if (spawnedGlow != null) 
             {
-                Debug.Log("Glow scale down completed for: " + fruitTag);
-                Destroy(spawnedGlow);
-            });
+                LeanTween.scale(spawnedGlow, Vector3.zero, 1f).setOnComplete(() =>
+                {
+                    Debug.Log("Glow scale down completed for: " + fruitTag);
+                    Destroy(spawnedGlow);
+                });
+            }
+            
         }
         else
         {

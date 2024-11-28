@@ -19,10 +19,14 @@ public class DressDragDrop : MonoBehaviour
     public AudioClip audio2;
     public AudioClip audio3;
     private bool hasboyTalkStarted;
+    private AudioSource SfxAudioSource;
+    public AudioClip sfxAudio1;
+    public AudioClip sfxAudio2;
     void Start()
     {
         initialPosition = transform.position;
         hasboyTalkStarted = false;
+        SfxAudioSource = GameObject.FindWithTag("SFXAudioSource").GetComponent<AudioSource>();
     }
 
     void Update()
@@ -32,15 +36,24 @@ public class DressDragDrop : MonoBehaviour
             Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             mousePosition.z = 0f; // Ensure the z position is 0 for 2D games
             transform.position = mousePosition;
+
+            // Set the layer order of all children to 10
+            SetChildrenSortingOrder(10);
         }
+        else
+        {
+            // Reset the layer order of all children to default when not dragging
+            SetChildrenSortingOrder(6);
+        }
+
         Collider2D collider = GetComponent<Collider2D>();
         if (boyAnimator.GetCurrentAnimatorStateInfo(0).IsName("Idle 0") &&
-           boyAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
+            boyAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
         {
             collider.enabled = true;
         }
         if (boyAnimator.GetCurrentAnimatorStateInfo(0).IsName("Talk sample") &&
-           boyAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.1f && !hasboyTalkStarted)
+            boyAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.1f && !hasboyTalkStarted)
         {
             hasboyTalkStarted = true;
             audiomanager.PlayAudio(audio3);
@@ -51,11 +64,20 @@ public class DressDragDrop : MonoBehaviour
     void OnMouseDown()
     {
         isDragging = true;
+
+        SetChildrenSortingOrder(10);
+
+        if (SfxAudioSource != null)
+        {            
+            SfxAudioSource.PlayOneShot(sfxAudio1);
+        }
     }
 
     void OnMouseUp()
     {
         isDragging = false;
+
+        SetChildrenSortingOrder(6);
 
         if (IsDroppedOnBoy())
         {
@@ -64,6 +86,18 @@ public class DressDragDrop : MonoBehaviour
         else
         {
             transform.position = initialPosition; // Reset to initial position if not dropped on boy
+        }
+    }
+
+    private void SetChildrenSortingOrder(int order)
+    {
+        foreach (Transform child in transform)
+        {
+            SpriteRenderer spriteRenderer = child.GetComponent<SpriteRenderer>();
+            if (spriteRenderer != null)
+            {
+                spriteRenderer.sortingOrder = order;
+            }
         }
     }
 
@@ -78,6 +112,10 @@ public class DressDragDrop : MonoBehaviour
             if (hit.collider.gameObject == boyCharacter)
             {
                 Debug.Log("Collider check is good");
+                if (SfxAudioSource != null)
+                {
+                    SfxAudioSource.PlayOneShot(sfxAudio2);
+                }
                 return true;
             }
         }

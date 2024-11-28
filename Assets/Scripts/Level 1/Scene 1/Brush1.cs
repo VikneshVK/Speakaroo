@@ -11,6 +11,7 @@ public class Brush1 : MonoBehaviour
     public float zoomSize = 5f;
     public float zoomDuration = 2f;
     public float hoverDuration = 5f;
+    public AudioClip sfxaudio1;
 
     private Vector3 originalCameraPosition;
     private bool isDraggable = false;
@@ -22,7 +23,7 @@ public class Brush1 : MonoBehaviour
     private Sprite brushBackSprite;
 
     private float originalOrthographicSize;
-   
+    private AudioSource SfxAudioSource;
 
     private Vector3 dragOffset;
 
@@ -37,6 +38,7 @@ public class Brush1 : MonoBehaviour
         brushSpriteRenderer = GetComponent<SpriteRenderer>();
         originalSprite = brushSpriteRenderer.sprite;
         brushBackSprite = Resources.Load<Sprite>("Images/brush-back");
+        SfxAudioSource = GameObject.FindWithTag("SFXAudioSource").GetComponent<AudioSource>();
 
         GameObject brushingPlace = GameObject.FindWithTag("Brushing Place");
 
@@ -58,18 +60,13 @@ public class Brush1 : MonoBehaviour
 
     IEnumerator ZoomAndMove(Vector3 brushTargetPosition)
     {
-        
-
-        // Smoothly change the orthographic size to zoom in
         LeanTween.value(gameObject, mainCamera.orthographicSize, zoomSize, zoomDuration)
             .setOnUpdate((float val) => mainCamera.orthographicSize = val)
             .setEase(LeanTweenType.easeInOutQuad);
 
-        // Smoothly move the camera to the teeth's position
         LeanTween.move(mainCamera.gameObject, new Vector3(teeth.transform.position.x, teeth.transform.position.y, mainCamera.transform.position.z), zoomDuration)
             .setEase(LeanTweenType.easeInOutQuad);
 
-        // Smoothly move the brush to its own target position
         LeanTween.move(gameObject, brushTargetPosition, zoomDuration)
             .setEase(LeanTweenType.easeInOutQuad)
             .setOnComplete(() => isDraggable = true);
@@ -91,30 +88,26 @@ public class Brush1 : MonoBehaviour
         if (Input.GetMouseButtonDown(0) && GetComponent<Collider2D>().enabled)
         {
             Vector3 mousePos = mainCamera.ScreenToWorldPoint(Input.mousePosition);
-            mousePos.z = 0; // Ensure the z position is not altered
+            mousePos.z = 0; 
             dragOffset = transform.position - mousePos;
         }
 
         if (Input.GetMouseButton(0) && GetComponent<Collider2D>().enabled)
         {
             Vector3 mousePos = mainCamera.ScreenToWorldPoint(Input.mousePosition);
-            mousePos.z = 0; // Ensure the z position is not altered
+            mousePos.z = 0; 
             Vector3 targetPosition = mousePos + dragOffset;
 
-            // Calculate the bounds based on the orthographic size and the camera's aspect ratio
             float cameraHeight = mainCamera.orthographicSize * 2f;
             float cameraWidth = cameraHeight * mainCamera.aspect;
 
-            // Calculate the draggable area below the center and within the center horizontally
             float horizontalLimit = cameraWidth * 0.5f;  // Full width of the viewport
             float verticalLimit = 0f;  // Center of the viewport is the upper limit
             float lowerLimit = -cameraHeight * 0.5f; // Bottom of the viewport
 
-            // Apply the same 50% limit horizontally
             float leftLimit = -horizontalLimit * 0.5f;
             float rightLimit = horizontalLimit * 0.5f;
 
-            // Clamp the position within the bounds
             targetPosition.x = Mathf.Clamp(targetPosition.x, leftLimit, rightLimit);
             targetPosition.y = Mathf.Clamp(targetPosition.y, lowerLimit, verticalLimit);
 
@@ -131,6 +124,12 @@ public class Brush1 : MonoBehaviour
                     {
                         isHovering = true;
                         foamParticles.Play();
+                        if(SfxAudioSource != null)
+                        {
+                            SfxAudioSource.clip = sfxaudio1;
+                            SfxAudioSource.loop = true;
+                            SfxAudioSource.Play();
+                        }
                         brushSpriteRenderer.sprite = brushBackSprite;
                         StartCoroutine(HandleHover());
                     }
@@ -140,6 +139,10 @@ public class Brush1 : MonoBehaviour
             {
                 isHovering = false;
                 foamParticles.Stop();
+                if (SfxAudioSource != null)
+                {                    
+                    SfxAudioSource.Pause();
+                }
                 brushSpriteRenderer.sprite = originalSprite;
                 transform.rotation = Quaternion.identity; // Reset rotation
                 StopCoroutine(HandleHover());
@@ -151,6 +154,12 @@ public class Brush1 : MonoBehaviour
                 if (!foamParticles.isPlaying)
                 {
                     foamParticles.Play();
+                    if (SfxAudioSource != null)
+                    {
+                        SfxAudioSource.clip = sfxaudio1;
+                        SfxAudioSource.loop = true;
+                        SfxAudioSource.Play();
+                    }
                 }
             }
             else
@@ -158,6 +167,10 @@ public class Brush1 : MonoBehaviour
                 if (foamParticles.isPlaying)
                 {
                     foamParticles.Stop();
+                    if (SfxAudioSource != null)
+                    {
+                        SfxAudioSource.Pause();
+                    }
                 }
             }
         }
@@ -166,6 +179,10 @@ public class Brush1 : MonoBehaviour
             if (foamParticles.isPlaying)
             {
                 foamParticles.Stop();
+                if (SfxAudioSource != null)
+                {
+                    SfxAudioSource.Pause();
+                }
             }
         }
     }
@@ -214,6 +231,7 @@ public class Brush1 : MonoBehaviour
         Destroy(teeth);
         Destroy(foamParticles);
         gameObject.SetActive(false);
+        SfxAudioSource.loop = false;
 
         // Tween to change the orthographic size of the camera back to its original size
         LeanTween.value(gameObject, mainCamera.orthographicSize, originalOrthographicSize, zoomDuration)

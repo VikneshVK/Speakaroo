@@ -80,6 +80,7 @@ public class Draggable : MonoBehaviour
             transform.position = dropLocation.position;
         }
         playerAnimator.SetBool("openMouth", false);
+        /*playerAnimator.SetTrigger("Chew");*/
     }
 
     private bool CheckDropTargetCollision()

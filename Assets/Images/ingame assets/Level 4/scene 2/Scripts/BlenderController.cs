@@ -20,6 +20,8 @@ public class BlenderController : MonoBehaviour
     public LVL4Sc2AudioManager audioManager;
     public TextMeshProUGUI subtitleText;
     public AudioClip Audio1;
+    public GameObject juiceDrinkingPanel;
+    public GameObject jojoImage;
     private string subtitle1 = "mmm Tasty..!";
 
 
@@ -52,7 +54,6 @@ public class BlenderController : MonoBehaviour
             }
             else
             {
-                // Check if there is at least one fruit in the list before accessing it
                 if (spriteChangeController.fruitsInBlender.Count > 0)
                 {
                     string fruitTag = spriteChangeController.fruitsInBlender[0];
@@ -96,51 +97,136 @@ public class BlenderController : MonoBehaviour
         yield return new WaitForSeconds(1f);
 
         UpdateGlassSprite(targetGlass);
+
         jarSpriteRenderer.sprite = spriteChangeController.GetDefaultBlenderSprite();
-
-        if (!juiceController.juiceManager.isKikiJuice)
-        {
-            spriteChangeController.ResetBlender();
-            helperHand.ResetAndStartDelayTimer();
-        }
-
+        
         LeanTween.rotateZ(jarSpriteRenderer.gameObject, 0f, 1f).setEase(LeanTweenType.easeInOutQuad);
         yield return new WaitForSeconds(1f);
 
         LeanTween.move(jarSpriteRenderer.gameObject, originalPosition, 2f).setEase(LeanTweenType.easeInOutQuad);
         yield return new WaitForSeconds(2f);
 
+        juiceDrinkingPanel.SetActive(true); // Assuming juiceDrinkingPanel is assigned in the Inspector.
+
+        GameObject glassImage = juiceDrinkingPanel.transform.Find("Glass").gameObject; // Find the Glass image game object.
+        LeanTween.scale(glassImage, Vector3.one, 0.5f).setEase(LeanTweenType.easeInOutBack);
+        yield return new WaitForSeconds(0.5f);
+
+        // Trigger animation based on the juice type
+        string juiceSpriteName = spriteChangeController.GetJuiceSpriteName();
+        Animator glassAnimator = glassImage.GetComponent<Animator>();
+
+        if (glassAnimator != null)
+        {
+            switch (juiceSpriteName)
+            {
+                case "kiwiSBJuice_glass":
+                    glassAnimator.SetTrigger("KiwiSB");
+                    break;
+                case "KiwiBBJuice_glass":
+                    glassAnimator.SetTrigger("BBKiwi");
+                    break;
+                case "BBSBJuice_glass":
+                    glassAnimator.SetTrigger("BBSB");
+                    break;
+                case "kiwiJuice_glass":
+                    glassAnimator.SetTrigger("Kiwi");
+                    break;
+                case "SBJuice_glass":
+                    glassAnimator.SetTrigger("SB");
+                    break;
+                case "BBJuice_glass":
+                    glassAnimator.SetTrigger("BB");
+                    break;
+                default:
+                    Debug.LogWarning($"Unhandled juice sprite name: {juiceSpriteName}");
+                    break;
+            }
+        }
+        else
+        {
+            Debug.LogError("Glass image does not have an Animator component!");
+        }
+        yield return new WaitUntil(() => glassAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1 && !glassAnimator.IsInTransition(0));
+
+        RectTransform jojoRectTransform = jojoImage.GetComponent<RectTransform>();
+        Animator jojoAnimator = jojoImage.GetComponent<Animator>();
+
+        if (jojoRectTransform != null && jojoAnimator != null)
+        {
+            LeanTween.value(-350f, 105f, 1f).setEase(LeanTweenType.easeInOutQuad)
+            .setOnUpdate((float yPos) =>
+            {
+                jojoRectTransform.anchoredPosition = new Vector2(jojoRectTransform.anchoredPosition.x, yPos);
+            })
+            .setOnComplete(() =>
+            {
+                jojoAnimator.SetTrigger("Tasty");
+
+                // Wait for the "Tasty" animation to end before tweening back
+                StartCoroutine(WaitForAnimationToEndAndTweenBack(jojoRectTransform));
+            });
+            if (Finalplay)
+            {
+                StartBirdTweenSequence("allDone", Audio1, subtitle1);
+            }
+            else
+            {
+                StartBirdTweenSequence("Tasty", Audio1, subtitle1);
+                if (!juiceController.juiceManager.isKikiJuice)
+                {
+                    spriteChangeController.ResetBlender();
+                    helperHand.ResetAndStartDelayTimer();
+                }
+            }            
+        }
+        else
+        {
+            Debug.LogError("Jojo image does not have a RectTransform or Animator component!");
+        }
+
+
+        yield return new WaitForSeconds(5f);
+
+        juiceDrinkingPanel.SetActive(false);
         juiceController.juiceManager.isKikiJuice = true;
         isBlenderClicked = false;
+
         if (!Finalplay)
         {
             juiceController.juiceManager.UpdateFruitRequirements(true);
             Finalplay = true;
         }
-        else
-        {
-            StartBirdTweenSequence("allDone", Audio1, subtitle1);
-        }
+        
     }
+
+    private IEnumerator WaitForAnimationToEndAndTweenBack (RectTransform jojoRectTransform)
+    {
+        yield return new WaitForSeconds(2.5f);
+
+        LeanTween.value(105f, -350f, 1f)
+            .setEase(LeanTweenType.easeInOutQuad)
+            .setOnUpdate((float yPos) =>
+            {
+                jojoRectTransform.anchoredPosition = new Vector2(jojoRectTransform.anchoredPosition.x, yPos);
+            });
+    }
+
 
     private void StartBirdTweenSequence(string animationTrigger, AudioClip audioClip, string subtitleTextContent)
     {
         RectTransform parrotRectTransform = parrot.GetComponent<RectTransform>();
         if (parrotRectTransform == null) return;
 
-        // Set initial position (off-screen, anchored position)
         parrotRectTransform.anchoredPosition = new Vector2(-1300, 320);
 
-        // Tween parrot to the end position
         LeanTween.value(-1300f, -790f, 1f).setEase(LeanTweenType.easeInOutQuad).setOnUpdate((float x) =>
         {
             parrotRectTransform.anchoredPosition = new Vector2(x, 320f);
         }).setOnComplete(() =>
         {
             parrotAnimator.SetTrigger(animationTrigger);
-            audioManager.PlayAudio(audioClip);
-
-            // Start subtitle display coroutine
+            audioManager.PlayAudio(audioClip); 
             StartCoroutine(RevealTextWordByWord(subtitleTextContent, 0.5f));
         });
     }
@@ -163,14 +249,13 @@ public class BlenderController : MonoBehaviour
 
         string[] words = fullText.Split(' ');
 
-        // Reveal words one by one
         for (int i = 0; i < words.Length; i++)
         {
             subtitleText.text = string.Join(" ", words, 0, i + 1);
             yield return new WaitForSeconds(delayBetweenWords);
         }
 
-        yield return new WaitForSeconds(1f); // Wait for a bit after the last word
+        yield return new WaitForSeconds(1f); 
         subtitleText.text = "";
         subtitleText.gameObject.SetActive(false);
     }
