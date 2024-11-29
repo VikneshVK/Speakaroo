@@ -15,6 +15,7 @@ public class FrisbeeSpin : MonoBehaviour
     public float flyAwayRandomness = 0.5f; // How much randomness to add to the fly-away direction
     public AudioSource spinAudioSource; // Assign the audio source in the inspector
 
+    public AudioSource boyAudioSource;
     private bool isSpinning = false;
     private Vector2 lastDirection; // Store the last movement direction
     private static List<FrisbeeSpin> allFrisbees = new List<FrisbeeSpin>(); // List of all frisbee instances
@@ -41,9 +42,10 @@ public class FrisbeeSpin : MonoBehaviour
             Boy.GetComponent<Animator>().SetTrigger("Giggle");
 
             // Play spin audio
-            if (spinAudioSource != null)
+            if (spinAudioSource != null && boyAudioSource != null)
             {
                 spinAudioSource.Play();
+                boyAudioSource.Play();
             }
 
             // Store the initial rotation to maintain it throughout

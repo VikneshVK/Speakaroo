@@ -21,12 +21,16 @@ public class DraggingController : MonoBehaviour
     public Sprite Sprite2; // Strawberry
     public Sprite Sprite3; // Blueberry
 
+    private AudioSource SfxAudioSource;
+    public AudioClip SfxAudio1;
+
     void Start()
     {
         originalScale = transform.localScale;
         spriteChangeController = FindObjectOfType<SpriteChangeController>();
         juiceManager = FindObjectOfType<JuiceManager>();
         helperHandInstance = LVL4Sc2HelperHand.Instance;
+        SfxAudioSource = GameObject.FindWithTag("SFXAudioSource").GetComponent<AudioSource>();
     }
 
     void Update()
@@ -67,6 +71,12 @@ public class DraggingController : MonoBehaviour
         Collider2D fruitCollider = GetComponent<Collider2D>();
         if (spriteChangeController.IsOverlappingBlenderJar(fruitCollider) && gameObject.tag != "Blender_Jar")
         {
+            if (SfxAudioSource != null)
+            {
+                SfxAudioSource.loop = false;
+                SfxAudioSource.PlayOneShot(SfxAudio1);
+            }
+
             spriteChangeController.UpdateBlenderJarSprite(gameObject.tag, gameObject);
             transform.position = startPosition;
             transform.rotation = Quaternion.identity;

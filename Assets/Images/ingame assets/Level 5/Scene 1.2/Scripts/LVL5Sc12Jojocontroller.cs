@@ -18,6 +18,9 @@ public class LVL5Sc12Jojocontroller : MonoBehaviour
     public AudioClip Audio3;
     public TextMeshProUGUI subtitleText;
 
+    private AudioSource SfxAudioSource;
+    public AudioClip SfxAudio1;
+
     private Animator animator;               // Animator for the character
     private AudioSource boyAudioSource;
     private bool isWalking;                  // Check if the character is walking
@@ -54,6 +57,7 @@ public class LVL5Sc12Jojocontroller : MonoBehaviour
         // Set the target X positions (only the X axis is considered)
         targetXPosition = stopPosition.position.x;
         targetXPosition2 = stopPosition2.position.x;
+        SfxAudioSource = GameObject.FindWithTag("SFXAudioSource").GetComponent<AudioSource>();
     }
 
     void Update()
@@ -206,6 +210,11 @@ public class LVL5Sc12Jojocontroller : MonoBehaviour
             canTalk2 = false;
             animator.SetBool("canTalk2", false); // End talk2 animation
             SpawnTicket();  // Now only spawning the ticket after Talk2
+            if (SfxAudioSource != null)
+            {
+                SfxAudioSource.loop = false;
+                SfxAudioSource.PlayOneShot(SfxAudio1);
+            }
         }
     }
 

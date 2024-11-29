@@ -24,6 +24,9 @@ public class BlenderController : MonoBehaviour
     public GameObject jojoImage;
     private string subtitle1 = "mmm Tasty..!";
 
+    private AudioSource SfxAudioSource;
+    public AudioClip SfxAudio1;
+
 
 
     void Start()
@@ -37,6 +40,7 @@ public class BlenderController : MonoBehaviour
         parrotAnimator = parrot.GetComponent<Animator>();
         isBlenderClicked = false;
         Finalplay = false;
+        SfxAudioSource = GameObject.FindWithTag("SFXAudioSource").GetComponent<AudioSource>();
     }
     void OnMouseDown()
     {
@@ -47,6 +51,12 @@ public class BlenderController : MonoBehaviour
             originalPosition = jarSpriteRenderer.transform.position;
             jarSpriteRenderer.enabled = false;
             juiceController.OnBlenderClick();
+
+            if (SfxAudioSource != null)
+            {
+                SfxAudioSource.loop = false;
+                SfxAudioSource.PlayOneShot(SfxAudio1);
+            }
 
             if (juiceController.juiceManager.isKikiJuice)
             {

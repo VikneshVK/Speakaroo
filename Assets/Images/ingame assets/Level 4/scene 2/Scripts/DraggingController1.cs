@@ -36,6 +36,9 @@ public class DraggingController1 : MonoBehaviour
     public Transform pouringPosition2; // New reference for Milk
     public Transform pouringPosition3; // New reference for Cherry
 
+    private AudioSource SfxAudioSource;
+    public AudioClip SfxAudio1;
+
     public LVL4Sc2AudioManager audioManager;
     public AudioClip Audio1;
     public AudioClip Audio2;
@@ -79,7 +82,7 @@ public class DraggingController1 : MonoBehaviour
         initialPosition = transform.position;
         initialRotation = transform.rotation;
         initialZ = transform.position.z;
-
+        SfxAudioSource = GameObject.FindWithTag("SFXAudioSource").GetComponent<AudioSource>();
         objectAnimator = GetComponent<Animator>();
 
         if (gameObject.CompareTag("Milk"))
@@ -173,6 +176,12 @@ public class DraggingController1 : MonoBehaviour
 
         if (bowlCollider != null && bowlCollider.bounds.Contains(transform.position))
         {
+            if (SfxAudioSource != null)
+            {
+                SfxAudioSource.loop = false;
+                SfxAudioSource.PlayOneShot(SfxAudio1);
+            }
+
             if (gameObject.CompareTag("Cereal"))
             {
                 transform.position = pouringPosition1.position; // Move to Cereal pouring position

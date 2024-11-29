@@ -279,6 +279,7 @@ MonoBehaviour:
   plateDropTarget2: {fileID: 246743516}
   bowlDropTarget1: {fileID: 1443174394}
   bowlDropTarget2: {fileID: 249685395}
+  SfxAudio1: {fileID: 8300000, guid: 0119c61077f4a1d44a557af5ca2096b0, type: 3}
 --- !u!1 &90656466
 GameObject:
   m_ObjectHideFlags: 0
@@ -1098,6 +1099,7 @@ MonoBehaviour:
   plateDropTarget2: {fileID: 246743516}
   bowlDropTarget1: {fileID: 1443174394}
   bowlDropTarget2: {fileID: 249685395}
+  SfxAudio1: {fileID: 8300000, guid: 0119c61077f4a1d44a557af5ca2096b0, type: 3}
 --- !u!1 &546013811
 GameObject:
   m_ObjectHideFlags: 0
@@ -1445,6 +1447,7 @@ MonoBehaviour:
   plateDropTarget2: {fileID: 246743516}
   bowlDropTarget1: {fileID: 1443174394}
   bowlDropTarget2: {fileID: 249685395}
+  SfxAudio1: {fileID: 8300000, guid: 0119c61077f4a1d44a557af5ca2096b0, type: 3}
 --- !u!1 &626639652
 GameObject:
   m_ObjectHideFlags: 0
@@ -1870,6 +1873,7 @@ MonoBehaviour:
   plateDropTarget2: {fileID: 246743516}
   bowlDropTarget1: {fileID: 1443174394}
   bowlDropTarget2: {fileID: 249685395}
+  SfxAudio1: {fileID: 8300000, guid: 0119c61077f4a1d44a557af5ca2096b0, type: 3}
 --- !u!1 &730377545
 GameObject:
   m_ObjectHideFlags: 0
@@ -2243,6 +2247,7 @@ MonoBehaviour:
   plateDropTarget2: {fileID: 246743516}
   bowlDropTarget1: {fileID: 1443174394}
   bowlDropTarget2: {fileID: 249685395}
+  SfxAudio1: {fileID: 8300000, guid: 0119c61077f4a1d44a557af5ca2096b0, type: 3}
 --- !u!1 &906819339
 GameObject:
   m_ObjectHideFlags: 0
@@ -2995,6 +3000,63 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &1262855955
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 6855002319895802494, guid: ca6fb5d26ec489b4d9ada36edf9c1d1b, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6855002319895802494, guid: ca6fb5d26ec489b4d9ada36edf9c1d1b, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6855002319895802494, guid: ca6fb5d26ec489b4d9ada36edf9c1d1b, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6855002319895802494, guid: ca6fb5d26ec489b4d9ada36edf9c1d1b, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6855002319895802494, guid: ca6fb5d26ec489b4d9ada36edf9c1d1b, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6855002319895802494, guid: ca6fb5d26ec489b4d9ada36edf9c1d1b, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6855002319895802494, guid: ca6fb5d26ec489b4d9ada36edf9c1d1b, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6855002319895802494, guid: ca6fb5d26ec489b4d9ada36edf9c1d1b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6855002319895802494, guid: ca6fb5d26ec489b4d9ada36edf9c1d1b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6855002319895802494, guid: ca6fb5d26ec489b4d9ada36edf9c1d1b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8683779801299673293, guid: ca6fb5d26ec489b4d9ada36edf9c1d1b, type: 3}
+      propertyPath: m_Name
+      value: SfxAudio
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: ca6fb5d26ec489b4d9ada36edf9c1d1b, type: 3}
 --- !u!1 &1275932625
 GameObject:
   m_ObjectHideFlags: 0
@@ -3040,6 +3102,7 @@ MonoBehaviour:
   audioSource3: {fileID: 626639655}
   audioSource4: {fileID: 90656469}
   subtitleText: {fileID: 1488048269}
+  SfxAudio1: {fileID: 8300000, guid: f53eed53b0cda544cb442dbc1b27e14a, type: 3}
   timerRunning: 0
 --- !u!4 &1275932627
 Transform:
@@ -3625,6 +3688,7 @@ MonoBehaviour:
   plateDropTarget2: {fileID: 246743516}
   bowlDropTarget1: {fileID: 1443174394}
   bowlDropTarget2: {fileID: 249685395}
+  SfxAudio1: {fileID: 8300000, guid: 0119c61077f4a1d44a557af5ca2096b0, type: 3}
 --- !u!1 &1443174393
 GameObject:
   m_ObjectHideFlags: 0
@@ -4464,6 +4528,8 @@ SceneRoots:
   - {fileID: 185146206}
   - {fileID: 1148792313}
   - {fileID: 404589399}
+  - {fileID: 1262855955}
+  - {fileID: 1226800785}
   - {fileID: 1933697896}
   - {fileID: 1143621111}
   - {fileID: 1756675172}
@@ -4475,7 +4541,6 @@ SceneRoots:
   - {fileID: 1578345603}
   - {fileID: 919507648}
   - {fileID: 740028947}
-  - {fileID: 1226800785}
   - {fileID: 546013814}
   - {fileID: 1963341607}
   - {fileID: 363599500}

@@ -69,6 +69,7 @@ MonoBehaviour:
   flyAwayForce: 1000
   flyAwayRandomness: 1.25
   spinAudioSource: {fileID: 4657496828815595157}
+  boyAudioSource: {fileID: 6239207248482868476}
 --- !u!114 &448007001858843692
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -271,6 +272,7 @@ GameObject:
   - component: {fileID: 1353470408777685416}
   - component: {fileID: 3276130006852769568}
   - component: {fileID: 864956754111765703}
+  - component: {fileID: 6239207248482868476}
   m_Layer: 5
   m_Name: Boy
   m_TagString: Untagged
@@ -356,6 +358,102 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!82 &6239207248482868476
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3262085437610431735}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 8300000, guid: 3e36b87f395e46943ad66ae9f3a6c77b, type: 3}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &3881228837771025479
 GameObject:
   m_ObjectHideFlags: 0
@@ -524,6 +622,7 @@ MonoBehaviour:
   flyAwayForce: 1000
   flyAwayRandomness: 1
   spinAudioSource: {fileID: 7193596745620453374}
+  boyAudioSource: {fileID: 6239207248482868476}
 --- !u!114 &8267872676354051875
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -783,6 +882,7 @@ MonoBehaviour:
   flyAwayForce: 1000
   flyAwayRandomness: 0.5
   spinAudioSource: {fileID: 2302390581515327630}
+  boyAudioSource: {fileID: 6239207248482868476}
 --- !u!114 &150199706313767992
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1042,6 +1142,7 @@ MonoBehaviour:
   flyAwayForce: 1000
   flyAwayRandomness: 0.75
   spinAudioSource: {fileID: 4515603525231720582}
+  boyAudioSource: {fileID: 6239207248482868476}
 --- !u!114 &5416453088827816347
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1408,6 +1509,7 @@ MonoBehaviour:
   flyAwayForce: 1000
   flyAwayRandomness: 2
   spinAudioSource: {fileID: 6856366544408299284}
+  boyAudioSource: {fileID: 6239207248482868476}
 --- !u!114 &1634081704178433910
 MonoBehaviour:
   m_ObjectHideFlags: 0

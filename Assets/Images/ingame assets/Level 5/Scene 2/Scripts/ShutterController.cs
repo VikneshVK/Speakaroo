@@ -15,6 +15,13 @@ public class ShutterController : MonoBehaviour
     public Transform centerReference;
     public GameObject cameraUI;
     public LVL5Sc2HelperController helperController;
+    private AudioSource SfxAudioSource;
+    public AudioClip SfxAudio1;
+    public AudioClip SfxAudio2;
+    public AudioClip SfxAudio3;
+    public AudioClip SfxAudio4;        
+    public AudioClip SfxAudio5;
+    public AudioClip SfxAudio6;
 
     private Transform photoChild;
     private Transform animalChild;
@@ -43,6 +50,7 @@ public class ShutterController : MonoBehaviour
 
         colliders = GetComponents<Collider2D>();
         allAnimalColliders = FindObjectsOfType<Collider2D>();
+        SfxAudioSource = GameObject.FindWithTag("SFXAudioSource").GetComponent<AudioSource>();
     }
 
     void Update()
@@ -179,6 +187,33 @@ public class ShutterController : MonoBehaviour
             Vector3 photoTargetPosition = centerReference.position;
             photoTargetPosition.z = photoChild.position.z;
             LeanTween.move(photoChild.gameObject, photoTargetPosition, 1.5f).setEaseOutBack();
+            if (SfxAudioSource != null)
+            {
+                if (gameObject.name == "Hippo" && SfxAudio1 != null)
+                {
+                    SfxAudioSource.PlayOneShot(SfxAudio1);
+                }
+                else if (gameObject.name == "Croc" && SfxAudio2 != null)
+                {
+                    SfxAudioSource.PlayOneShot(SfxAudio2);
+                }
+                else if (gameObject.name == "Lion" && SfxAudio3 != null)
+                {
+                    SfxAudioSource.PlayOneShot(SfxAudio3);
+                }
+                else if (gameObject.name == "Monkey" && SfxAudio4 != null)
+                {
+                    SfxAudioSource.PlayOneShot(SfxAudio4);
+                }
+                else if (gameObject.name == "Panda" && SfxAudio5 != null)
+                {
+                    SfxAudioSource.PlayOneShot(SfxAudio5);
+                }
+                else if (gameObject.name == "Tiger" && SfxAudio6 != null)
+                {
+                    SfxAudioSource.PlayOneShot(SfxAudio6);
+                }
+            }
         }
 
         yield return new WaitForSeconds(3f);

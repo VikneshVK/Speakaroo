@@ -29,6 +29,10 @@ public class KikiController1 : MonoBehaviour
     public AudioClip Audio8;
     public TextMeshProUGUI subtitleText;
 
+    private AudioSource SfxAudioSource;
+    public AudioClip SfxAudio1;
+    public AudioClip SfxAudio2;
+
     private Animator birdAnimator;
     private Animator boyAnimator;
     private AudioSource audioSource;
@@ -58,6 +62,7 @@ public class KikiController1 : MonoBehaviour
         transform.position = startPosition.position;
         lvl4Sc1Audiomanger = AudioManager.GetComponent<Lvl4Sc1Audiomanger>();
         jojoController = boy.GetComponent<JojoController>();
+        SfxAudioSource = GameObject.FindWithTag("SFXAudioSource").GetComponent<AudioSource>();
     }
 
     void Update()
@@ -158,6 +163,11 @@ public class KikiController1 : MonoBehaviour
                     currentItem.transform.position = dropLocation.position;
                 }
                 audioSource.Play();
+                if (SfxAudioSource != null)
+                {
+                    SfxAudioSource.loop = false;
+                    SfxAudioSource.PlayOneShot(SfxAudio1);
+                }
                 StartCoroutine(RevealTextWordByWord("Okay, Here you Go..!", 0.5f));
                 birdAnimator.SetTrigger("GoToRest");
 
@@ -251,6 +261,11 @@ public class KikiController1 : MonoBehaviour
             case 2:
                 boyAnimator.SetTrigger("FeedBack2");
                 break;
+        }
+        if (SfxAudioSource != null)
+        {
+            SfxAudioSource.loop = false;
+            SfxAudioSource.PlayOneShot(SfxAudio2);
         }
 
         StartCoroutine(TweenAndDestroy(droppedItem));

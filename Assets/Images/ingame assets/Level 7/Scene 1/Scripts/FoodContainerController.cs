@@ -18,6 +18,9 @@ public class FoodContainerController : MonoBehaviour
     public AudioClip[] audioClips; // Array to hold audio clips for each sprite
     private AudioSource audioSource;
 
+    private AudioSource SfxAudioSource;
+    public AudioClip SfxAudio1;
+
     public int clickCount = 0;
     public bool clicked = false;
     public RectTransform highlighter;
@@ -36,6 +39,7 @@ public class FoodContainerController : MonoBehaviour
         textComponent2.gameObject.SetActive(false); // Disable the text at the start
         highlighter.localScale = Vector3.zero;
         audioSource = GetComponent<AudioSource>();
+        SfxAudioSource = GameObject.FindWithTag("SFXAudioSource").GetComponent<AudioSource>();
     }
 
     void OnEnable()
@@ -60,6 +64,11 @@ public class FoodContainerController : MonoBehaviour
         if (clickCount == 3)
         {
             SetImagesInteractable(false);
+            if (SfxAudioSource != null)
+            {
+                SfxAudioSource.loop = false;
+                SfxAudioSource.PlayOneShot(SfxAudio1);
+            }
             TweenImages();
 
             // Set text for textComponent1 and textComponent2 after the third click

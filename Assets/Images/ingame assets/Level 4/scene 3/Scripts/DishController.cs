@@ -23,6 +23,9 @@ public class DishController : MonoBehaviour
     public bool dishCleaned;
     public bool scrubbertimer;
 
+    private AudioSource SfxAudioSource;
+    public AudioClip SfxAudio1;
+
     private Dictionary<Transform, int> originalSortingOrders = new Dictionary<Transform, int>();
     private Collider2D objectCollider;
     private DishController[] allDishes;
@@ -45,6 +48,7 @@ public class DishController : MonoBehaviour
         scrubbertimer = false;
         StoreOriginalSortingOrders();
         allDishes = FindObjectsOfType<DishController>();
+        SfxAudioSource = GameObject.FindWithTag("SFXAudioSource").GetComponent<AudioSource>();
     }
 
     private void Update()
@@ -173,6 +177,11 @@ public class DishController : MonoBehaviour
     {
         if (!isScrubbing)
         {
+            if (SfxAudioSource != null)
+            {
+                SfxAudioSource.loop = false;
+                SfxAudioSource.PlayOneShot(SfxAudio1);
+            }
             isScrubbing = true;
             StartCoroutine(SpawnPrefabs());
         }

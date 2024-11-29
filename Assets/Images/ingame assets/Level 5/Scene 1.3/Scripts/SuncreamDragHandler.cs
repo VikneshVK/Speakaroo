@@ -13,7 +13,10 @@ public class SuncreamDragHandler : MonoBehaviour
     public Sprite sprite1;
     public Sprite sprite2;
     public Sprite sprite3;
-    public GameObject glowPrefab; 
+    public GameObject glowPrefab;
+
+    private AudioSource SfxAudioSource;
+    public AudioClip SfxAudio1;
 
     private Transform position1;
     private Transform position2;
@@ -54,6 +57,7 @@ public class SuncreamDragHandler : MonoBehaviour
         sunburnFace = jojo.transform.Find("sunburn-face").gameObject;
         sunburnRightArm = jojo.transform.Find("sunburn-right-arm").gameObject;
         focusObject = jojo.transform.Find("FocusObject").gameObject.transform;
+        SfxAudioSource = GameObject.FindWithTag("SFXAudioSource").GetComponent<AudioSource>();
 
         // Enable only position2's collider and sprite renderer initially
         SetPositionState(position1, false);
@@ -123,10 +127,16 @@ public class SuncreamDragHandler : MonoBehaviour
         if (hitCollider != null)
         {
             Debug.Log("Hit Collider: " + hitCollider.name);
+            if (SfxAudioSource != null)
+            {
+                SfxAudioSource.loop = false;
+                SfxAudioSource.PlayOneShot(SfxAudio1);
+            }
+
             if (hitCollider.transform == position2)
             {
                 transform.position = position2.position;
-                /*LotionAnimator.SetTrigger("Lotion");*/
+                LotionAnimator.SetTrigger("Lotion");
                 suncreamAnimator.SetTrigger("LeftHand");
                 SetPositionState(position2, false);
                 StartCoroutine(ChangeSpriteAfterAnimation(sunburnLeftArm, sprite1, position2.position, position3));
@@ -134,7 +144,7 @@ public class SuncreamDragHandler : MonoBehaviour
             else if (hitCollider.transform == position3)
             {
                 transform.position = position3.position;
-                /*LotionAnimator.SetTrigger("Lotion");*/
+                LotionAnimator.SetTrigger("Lotion");
                 suncreamAnimator.SetTrigger("Head");
                 SetPositionState(position3, false);
                 StartCoroutine(ChangeSpriteAfterAnimation(sunburnFace, sprite2, position3.position, position4));
@@ -142,7 +152,7 @@ public class SuncreamDragHandler : MonoBehaviour
             else if (hitCollider.transform == position4)
             {
                 transform.position = position4.position;
-                /*LotionAnimator.SetTrigger("Lotion");*/
+                LotionAnimator.SetTrigger("Lotion");
                 suncreamAnimator.SetTrigger("Righthand");
                 SetPositionState(position4, false);
                 StartCoroutine(ChangeSpriteAfterAnimation(sunburnRightArm, sprite3, position4.position, null));
