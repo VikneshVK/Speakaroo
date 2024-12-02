@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 public class SentenceManager : MonoBehaviour
@@ -45,12 +46,11 @@ public class SentenceManager : MonoBehaviour
     }
 
     // This method will be called when the object is clicked
-    private void OnMouseDown()
+    public void OnPointerClick(PointerEventData eventData)
     {
-        if (isIdle) // Check if it's in idle state
+        if (isIdle) // Ensure it's in idle state before restarting the action
         {
-            // Play the action animation (e.g., Eating) and audio
-            StartCoroutine(PlayActionAndWords()); // Play the action and words again
+            StartCoroutine(PlayActionAndWords());
         }
     }
 
@@ -124,7 +124,7 @@ public class SentenceManager : MonoBehaviour
     }
 
     // Method to play the action animation and the individual word audio clips in succession
-    private IEnumerator PlayActionAndWords()
+    public IEnumerator PlayActionAndWords()
     {
         isIdle = false; // Set idle to false while playing action
 
@@ -153,6 +153,14 @@ public class SentenceManager : MonoBehaviour
         foreach (Button button in wordButtons)
         {
             button.interactable = isInteractable;
+        }
+    }
+
+    public void OnCharacterClick()
+    {
+        if (isIdle) // Ensure it's in idle state before restarting the action
+        {
+            StartCoroutine(PlayActionAndWords());
         }
     }
 }
