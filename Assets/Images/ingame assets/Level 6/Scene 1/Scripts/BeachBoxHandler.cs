@@ -19,6 +19,8 @@ public class BeachBoxHandler : MonoBehaviour
     private RectTransform rectTransform;
     private bool beachBoxDestroyed = false;
     public bool playRestared = false;
+    private AudioSource SfxAudioSource;
+    public AudioClip SfxAudio1;
 
     private MiniGameController miniGameController;
 
@@ -34,6 +36,7 @@ public class BeachBoxHandler : MonoBehaviour
         // Get the reference to MiniGameController
         miniGameController = FindObjectOfType<MiniGameController>();
         beachboxSprite = GetComponent<Image>();
+        SfxAudioSource = GameObject.FindWithTag("SFXAudioSource").GetComponent<AudioSource>();
     }
 
     public void Update()
@@ -130,6 +133,11 @@ public class BeachBoxHandler : MonoBehaviour
 
         if (tapCount >= 3)
         {
+            if (SfxAudioSource != null)
+            {
+                SfxAudioSource.loop = false;
+                SfxAudioSource.PlayOneShot(SfxAudio1);
+            }
             DestroyBoxAndShowButtons();
         }
     }

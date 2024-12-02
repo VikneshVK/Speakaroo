@@ -27,6 +27,10 @@ public class PizzaDrag : MonoBehaviour
     public GameObject kikiImage;
     private Animator kikiAnimator;
 
+    private AudioSource SfxAudioSource;
+    public AudioClip SfxAudio1;
+    public AudioClip SfxAudio2;
+
     public bool pizzaDropped = false;
     private bool canTapPizzaBox = false;
     public bool canTapPizzaImage = false;
@@ -37,7 +41,7 @@ public class PizzaDrag : MonoBehaviour
     [Header("Pizza Piece Sprites")]
     public Sprite Piece1;
     public Sprite Piece5;
-    public Sprite Piece9;
+    public Sprite Piece9;   
 
     public AudioClip OvenAudio;
     public TextMeshProUGUI subtitleText;
@@ -68,6 +72,8 @@ public class PizzaDrag : MonoBehaviour
         {
             Debug.LogError("Kiki image is not assigned.");
         }
+
+        SfxAudioSource = GameObject.FindWithTag("SFXAudioSource").GetComponent<AudioSource>();
     }
 
     void Update()
@@ -148,6 +154,12 @@ public class PizzaDrag : MonoBehaviour
 
                     LeanTween.delayedCall(0.3f, () =>
                     {
+                        if (SfxAudioSource != null)
+                        {
+                            SfxAudioSource.loop = false;
+                            SfxAudioSource.PlayOneShot(SfxAudio1);
+                        }
+
                         LeanTween.move(gameObject, pizzaPoint2.position, 0.7f).setOnComplete(() =>
                         {
                             canTapPizzaBox = true;
@@ -266,7 +278,11 @@ public class PizzaDrag : MonoBehaviour
 
             childAnimator.SetTrigger(triggerName);
             canTapPizzaImage = false;
-
+            if (SfxAudioSource != null)
+            {
+                SfxAudioSource.loop = false;
+                SfxAudioSource.PlayOneShot(SfxAudio2);
+            }
             // Wait for the animation length based on the state name
             StartCoroutine(WaitForAnimationAndProceed(childAnimator, triggerName, () =>
             {

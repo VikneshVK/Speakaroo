@@ -572,6 +572,7 @@ MonoBehaviour:
   pouringPosition1: {fileID: 1518000783}
   pouringPosition2: {fileID: 558054790}
   pouringPosition3: {fileID: 1177913053}
+  SfxAudio1: {fileID: 8300000, guid: 003ac51311adabf40a111507dc574c8b, type: 3}
   audioManager: {fileID: 1817041811}
   Audio1: {fileID: 8300000, guid: 10585a4fa192f504c872c4dfd2c6d2f3, type: 3}
   Audio2: {fileID: 8300000, guid: 04eb051606f6fbf478c3fd17053e66a2, type: 3}
@@ -605,6 +606,63 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!1001 &175711176
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 6855002319895802494, guid: ca6fb5d26ec489b4d9ada36edf9c1d1b, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6855002319895802494, guid: ca6fb5d26ec489b4d9ada36edf9c1d1b, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6855002319895802494, guid: ca6fb5d26ec489b4d9ada36edf9c1d1b, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6855002319895802494, guid: ca6fb5d26ec489b4d9ada36edf9c1d1b, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6855002319895802494, guid: ca6fb5d26ec489b4d9ada36edf9c1d1b, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6855002319895802494, guid: ca6fb5d26ec489b4d9ada36edf9c1d1b, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6855002319895802494, guid: ca6fb5d26ec489b4d9ada36edf9c1d1b, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6855002319895802494, guid: ca6fb5d26ec489b4d9ada36edf9c1d1b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6855002319895802494, guid: ca6fb5d26ec489b4d9ada36edf9c1d1b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6855002319895802494, guid: ca6fb5d26ec489b4d9ada36edf9c1d1b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8683779801299673293, guid: ca6fb5d26ec489b4d9ada36edf9c1d1b, type: 3}
+      propertyPath: m_Name
+      value: SfxAudio
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: ca6fb5d26ec489b4d9ada36edf9c1d1b, type: 3}
 --- !u!1 &287426171
 GameObject:
   m_ObjectHideFlags: 0
@@ -776,6 +834,7 @@ MonoBehaviour:
   Sprite1: {fileID: 21300000, guid: 7cd03dfe1926fa848a6924593d1cc3d3, type: 3}
   Sprite2: {fileID: 21300000, guid: 38dd25b438941a64dad161ca027a109b, type: 3}
   Sprite3: {fileID: 21300000, guid: a4f74c6987d3a134c8a912a8020d405b, type: 3}
+  SfxAudio1: {fileID: 8300000, guid: 003ac51311adabf40a111507dc574c8b, type: 3}
 --- !u!1 &293104774
 GameObject:
   m_ObjectHideFlags: 0
@@ -1378,6 +1437,7 @@ MonoBehaviour:
   pouringPosition1: {fileID: 1518000783}
   pouringPosition2: {fileID: 558054790}
   pouringPosition3: {fileID: 1177913053}
+  SfxAudio1: {fileID: 8300000, guid: 003ac51311adabf40a111507dc574c8b, type: 3}
   audioManager: {fileID: 1817041811}
   Audio1: {fileID: 8300000, guid: 10585a4fa192f504c872c4dfd2c6d2f3, type: 3}
   Audio2: {fileID: 8300000, guid: 04eb051606f6fbf478c3fd17053e66a2, type: 3}
@@ -2613,6 +2673,7 @@ MonoBehaviour:
   pouringPosition1: {fileID: 1518000783}
   pouringPosition2: {fileID: 558054790}
   pouringPosition3: {fileID: 1177913053}
+  SfxAudio1: {fileID: 8300000, guid: 003ac51311adabf40a111507dc574c8b, type: 3}
   audioManager: {fileID: 1817041811}
   Audio1: {fileID: 8300000, guid: 10585a4fa192f504c872c4dfd2c6d2f3, type: 3}
   Audio2: {fileID: 8300000, guid: 04eb051606f6fbf478c3fd17053e66a2, type: 3}
@@ -2786,6 +2847,7 @@ MonoBehaviour:
   Sprite1: {fileID: 21300000, guid: 7cd03dfe1926fa848a6924593d1cc3d3, type: 3}
   Sprite2: {fileID: 21300000, guid: 38dd25b438941a64dad161ca027a109b, type: 3}
   Sprite3: {fileID: 21300000, guid: a4f74c6987d3a134c8a912a8020d405b, type: 3}
+  SfxAudio1: {fileID: 8300000, guid: 003ac51311adabf40a111507dc574c8b, type: 3}
 --- !u!1 &939997623
 GameObject:
   m_ObjectHideFlags: 0
@@ -3629,6 +3691,7 @@ MonoBehaviour:
   Sprite1: {fileID: 21300000, guid: 7cd03dfe1926fa848a6924593d1cc3d3, type: 3}
   Sprite2: {fileID: 21300000, guid: 38dd25b438941a64dad161ca027a109b, type: 3}
   Sprite3: {fileID: 21300000, guid: a4f74c6987d3a134c8a912a8020d405b, type: 3}
+  SfxAudio1: {fileID: 8300000, guid: 003ac51311adabf40a111507dc574c8b, type: 3}
 --- !u!1 &1440013095
 GameObject:
   m_ObjectHideFlags: 0
@@ -5660,6 +5723,7 @@ MonoBehaviour:
   Audio1: {fileID: 8300000, guid: 3eedc2f7da496b64c9b1b423e193f674, type: 3}
   juiceDrinkingPanel: {fileID: 444467321}
   jojoImage: {fileID: 1981511347}
+  SfxAudio1: {fileID: 8300000, guid: 9d04257456862cf4884dcd0587281c1f, type: 3}
 --- !u!95 &2088277175
 Animator:
   serializedVersion: 5
@@ -5720,6 +5784,8 @@ SceneRoots:
   - {fileID: 1492096025}
   - {fileID: 1990269432}
   - {fileID: 1921039242}
+  - {fileID: 1682426788}
+  - {fileID: 175711176}
   - {fileID: 399465459}
   - {fileID: 665024637}
   - {fileID: 608699202}
@@ -5740,6 +5806,5 @@ SceneRoots:
   - {fileID: 939997626}
   - {fileID: 1605762247}
   - {fileID: 1440013097}
-  - {fileID: 1682426788}
   - {fileID: 1817041812}
   - {fileID: 400208562}

@@ -25,6 +25,9 @@ public class DishdragController : MonoBehaviour
 
     public static int dishesArranged = 0;
 
+    private AudioSource SfxAudioSource;
+    public AudioClip SfxAudio1;
+
     private Vector3 startPosition;
     private bool isDragging = false;
     private Coroutine helperHandCoroutine;
@@ -34,6 +37,7 @@ public class DishdragController : MonoBehaviour
         startPosition = transform.position;
         allDishControllers.Add(this);
         GetComponent<Collider2D>().enabled = false;
+        SfxAudioSource = GameObject.FindWithTag("SFXAudioSource").GetComponent<AudioSource>();
     }
 
     private void Update()
@@ -94,6 +98,11 @@ public class DishdragController : MonoBehaviour
             if (Vector3.Distance(transform.position, bowlDropTarget1.position) < 1.0f ||
                 Vector3.Distance(transform.position, bowlDropTarget2.position) < 1.0f)
             {
+                if (SfxAudioSource != null)
+                {
+                    SfxAudioSource.loop = false;
+                    SfxAudioSource.PlayOneShot(SfxAudio1);
+                }
                 OnDropped(true, isBowl: true);
             }
             else
@@ -108,6 +117,11 @@ public class DishdragController : MonoBehaviour
             if (Vector3.Distance(transform.position, glassDropTarget1.position) < 1.0f ||
                 Vector3.Distance(transform.position, glassDropTarget2.position) < 1.0f)
             {
+                if (SfxAudioSource != null)
+                {
+                    SfxAudioSource.loop = false;
+                    SfxAudioSource.PlayOneShot(SfxAudio1);
+                }
                 OnDropped(true, isGlass: true);
             }
             else
@@ -122,6 +136,11 @@ public class DishdragController : MonoBehaviour
             if (Vector3.Distance(transform.position, plateDropTarget1.position) < 1.0f ||
                 Vector3.Distance(transform.position, plateDropTarget2.position) < 1.0f)
             {
+                if (SfxAudioSource != null)
+                {
+                    SfxAudioSource.loop = false;
+                    SfxAudioSource.PlayOneShot(SfxAudio1);
+                }
                 OnDropped(true, isPlate: true);
             }
             else

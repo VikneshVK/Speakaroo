@@ -9,13 +9,16 @@ public class DustRemover : MonoBehaviour
     public LVL6Sc2Helperhand helperhand;
     public GameObject blackoutpanel;
     private GameObject spawnedBrush;
-
+    private AudioSource SfxAudioSource;
+    public AudioClip SfxAudio1;
+    
     private Lvl6QuestManager questManager;
     private ParticleSystem particleEffect;
 
     private void Start()
     {
         questManager = FindObjectOfType<Lvl6QuestManager>();
+        SfxAudioSource = GameObject.FindWithTag("SFXAudioSource").GetComponent<AudioSource>();
     }
 
     private void OnMouseDown()
@@ -58,7 +61,11 @@ public class DustRemover : MonoBehaviour
         // Animate the brush
         Animator brushAnimator = spawnedBrush.GetComponent<Animator>();
         brushAnimator.SetBool("Brush", true);
-
+        if (SfxAudioSource != null)
+        {
+            SfxAudioSource.loop = false;
+            SfxAudioSource.PlayOneShot(SfxAudio1);
+        }
         yield return new WaitForSeconds(2f);
 
         brushAnimator.SetBool("Brush", false);
@@ -115,6 +122,7 @@ public class DustRemover : MonoBehaviour
             if (particleEffect != null)
             {
                 particleEffect.Play();
+                
             }
             blackoutpanel.SetActive(true);
             spawnedPrefab.GetComponent<SpriteRenderer>().sortingOrder = 15;

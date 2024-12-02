@@ -10,7 +10,7 @@ public class BouncingBall : MonoBehaviour
     public float bounceForce = 500f; // How far the ball should bounce
     public float bounceDuration = 2f; // Time it takes for the ball to bounce away
     public AudioSource bounceAudioSource; // Assign the audio source in the inspector
-
+    public AudioSource boyAudioSource;
     private bool isBouncing = false;
     private bool isAudioPlayed = false;
     private static List<BouncingBall> allBalls = new List<BouncingBall>(); // List of all ball instances
@@ -40,6 +40,7 @@ public class BouncingBall : MonoBehaviour
             if (bounceAudioSource != null && !isAudioPlayed)
             {
                 bounceAudioSource.Play();
+                boyAudioSource.Play();
                 isAudioPlayed = true;
             }
 

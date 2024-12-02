@@ -29,8 +29,12 @@ public class LV4DragManager : MonoBehaviour
     public AudioSource audioSource1; // Drag Audio 1 here
     public AudioSource audioSource2; // Drag Audio 2 here
     public AudioSource audioSource3;
-    public AudioSource audioSource4;    
+    public AudioSource audioSource4;
     public TextMeshProUGUI subtitleText;
+
+    private AudioSource SfxAudioSource;
+    public AudioClip SfxAudio1;
+
     public bool timerRunning;
 
     void Start()
@@ -46,7 +50,7 @@ public class LV4DragManager : MonoBehaviour
             originalScales[child] = child.localScale;
         }
         timerRunning = false;
-
+        SfxAudioSource = GameObject.FindWithTag("SFXAudioSource").GetComponent<AudioSource>();
         StartCoroutine(PlayAnimationsWithAudio());
     }
 
@@ -81,6 +85,11 @@ public class LV4DragManager : MonoBehaviour
         }
         else if (Input.GetMouseButtonUp(0) && isDragging)
         {
+            if (SfxAudioSource != null)
+            {
+                SfxAudioSource.loop = false;
+                SfxAudioSource.PlayOneShot(SfxAudio1);
+            }
             OnDirtyDishesDropped();
             isDragging = false;
         }

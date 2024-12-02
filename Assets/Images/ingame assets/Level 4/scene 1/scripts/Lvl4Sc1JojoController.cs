@@ -32,6 +32,8 @@ public class Lvl4Sc1JojoController : MonoBehaviour
     private bool fridgeColliderEnabled;
     private bool spriteChanged;
 
+   
+
     void Start()
     {
         animator = GetComponent<Animator>();
@@ -42,7 +44,7 @@ public class Lvl4Sc1JojoController : MonoBehaviour
         prefabSpawned = false;
         fridgeColliderEnabled = false;
         spriteChanged = false;
-
+       
         if (fridge != null)
         {
             fridgeCollider = fridge.GetComponent<Collider2D>();
@@ -139,7 +141,7 @@ public class Lvl4Sc1JojoController : MonoBehaviour
     {
         if (!spriteChanged && fridgeSpriteRenderer != null)
         {
-            // Load and set the new sprite
+            
             Sprite newSprite = Resources.Load<Sprite>("Images/LVL 4/fridge_open");
             if (newSprite != null)
             {

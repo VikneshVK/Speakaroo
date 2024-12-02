@@ -7,6 +7,8 @@ public class fridgeController : MonoBehaviour
     public GameObject Boy;
     private Lvl4Sc1JojoController jojoController;
     private LVL4Sc1HelperController helperController;
+    private AudioSource SfxAudioSource;
+    public AudioClip SfxAudio1;
 
     void Start()
     {
@@ -20,6 +22,7 @@ public class fridgeController : MonoBehaviour
             Debug.Log("helperhand not found");
         }
         jojoController = Boy.GetComponent<Lvl4Sc1JojoController>();
+        SfxAudioSource = GameObject.FindWithTag("SFXAudioSource").GetComponent<AudioSource>();
     }
 
     void OnMouseDown()
@@ -27,6 +30,11 @@ public class fridgeController : MonoBehaviour
         
         if (jojoController != null && GetComponent<Collider2D>().enabled)
         {
+            if (SfxAudioSource != null)
+            {
+                SfxAudioSource.loop = false;
+                SfxAudioSource.PlayOneShot(SfxAudio1);
+            }
             jojoController.OnFridgeTapped();
             helperController?.ResetTimer();
         }

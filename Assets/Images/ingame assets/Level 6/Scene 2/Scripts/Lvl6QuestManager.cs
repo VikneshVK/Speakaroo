@@ -50,6 +50,9 @@ public class Lvl6QuestManager : MonoBehaviour
     public AudioClip wrongDropAudio;
     public AudioClip finalAudio;
 
+    private AudioSource SfxAudioSource;
+    public AudioClip SfxAudio1;
+
     public GameObject BlackoutPanel;
 
     private List<GameObject> spawnedObjects = new List<GameObject>();
@@ -60,7 +63,7 @@ public class Lvl6QuestManager : MonoBehaviour
     private void Start()
     {
         kikiController = Kiki.GetComponent<LVL6Sc2KikiController>();
-
+        SfxAudioSource = GameObject.FindWithTag("SFXAudioSource").GetComponent<AudioSource>();
         Debug.Log("Spawning Items. ItemstobeFound: " + ItemstobeFound);
 
     }
@@ -229,7 +232,11 @@ public class Lvl6QuestManager : MonoBehaviour
 
         if (itemName == expectedItem)
         {
-
+            if (SfxAudioSource != null)
+            {
+                SfxAudioSource.loop = false;
+                SfxAudioSource.PlayOneShot(SfxAudio1);
+            }
             DisableAllColliders();
             EnableDescriptionCanvas();
             kikiController.TweenBirdandback("RightTalk");

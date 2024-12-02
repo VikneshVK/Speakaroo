@@ -14,6 +14,9 @@ public class ToppingDrag : MonoBehaviour
     public Sprite sprite3;  // Toppings dropped
     public Sprite sprite4;  // Pepperoni dropped
 
+    private AudioSource SfxAudioSource;
+    public AudioClip SfxAudio1;
+
     private SpriteRenderer dropTargetRenderer;
     private SpriteRenderer toppingRenderer;
     private int initialSortingOrder;  // Store the original sorting order of the topping
@@ -26,6 +29,7 @@ public class ToppingDrag : MonoBehaviour
         dropTargetRenderer = dropTarget.GetComponent<SpriteRenderer>();  // Get the SpriteRenderer for the pizza (drop target)
         toppingRenderer = GetComponent<SpriteRenderer>();  // Get the SpriteRenderer for the topping
         initialSortingOrder = toppingRenderer.sortingOrder;  // Save the original sorting order
+        SfxAudioSource = GameObject.FindWithTag("SFXAudioSource").GetComponent<AudioSource>();
     }
 
     void Update()
@@ -58,7 +62,12 @@ public class ToppingDrag : MonoBehaviour
         // Check if the topping is dropped over the pizza (drop target)
         if (IsDroppedOnTarget())
         {
-            // Change the sprite of the drop target (pizza) based on the topping that was dropped
+            if (SfxAudioSource != null)
+            {
+                SfxAudioSource.loop = false;
+                SfxAudioSource.PlayOneShot(SfxAudio1);
+            }
+
             ChangeDropTargetSprite();
 
             // Reset the dragged object back to its starting position

@@ -15,6 +15,7 @@ public class Lvl3Sc3DragManager : MonoBehaviour
     public GameObject sky; // Reference to the sky GameObject
     public bool levelComplete = false;
     public bool isEvening = false;
+    public CloudManager cloudManager;
 
     public Jojo_action1 jojo; // Reference to Jojo's script
     public Kiki_actions kiki; // Reference to Kiki's script
@@ -156,10 +157,45 @@ public class Lvl3Sc3DragManager : MonoBehaviour
             SfxAudioSource.Play();
         }
 
-        LeanTween.move(sun, sunFinalPosition.position, 10f);
-        LeanTween.color(sky, new Color32(229, 137, 93, 255), 10f);
+        LeanTween.move(sun, sunFinalPosition.position, 5f);
 
-        yield return new WaitForSeconds(10f);
+        foreach (var handler in clothesHandlers)
+        {
+            if (handler != null)
+            {
+                if (handler.gameObject.name.Contains("socK"))
+                {
+                    // If the name contains "Sock", check for Animator components in the children
+                    Animator[] childAnimators = handler.GetComponentsInChildren<Animator>();
+                    foreach (var childAnimator in childAnimators)
+                    {
+                        if (childAnimator != null)
+                        {
+                            childAnimator.enabled = true; // Disable child animators
+                        }
+                    }
+                }
+                else
+                {
+                    // For other objects, check for an Animator on the handler itself
+                    Animator animator = handler.GetComponent<Animator>();
+                    if (animator != null)
+                    {
+                        animator.enabled = true; // Disable the animator
+                    }
+                }
+            }
+        }
+
+        if (cloudManager != null)
+        {
+            cloudManager.minSpeed = 50f;
+            cloudManager.maxSpeed = 50f;
+            cloudManager.UpdateCloudSpeeds();
+        }
+        LeanTween.color(sky, new Color32(229, 137, 93, 255), 5f);
+
+        yield return new WaitForSeconds(5f);
 
         if (SfxAudioSource != null)
         {
@@ -168,6 +204,41 @@ public class Lvl3Sc3DragManager : MonoBehaviour
         }
 
         isEvening = true;
+
+        foreach (var handler in clothesHandlers)
+        {
+            if (handler != null)
+            {
+                if (handler.gameObject.name.Contains("socK"))
+                {
+                    // If the name contains "Sock", check for Animator components in the children
+                    Animator[] childAnimators = handler.GetComponentsInChildren<Animator>();
+                    foreach (var childAnimator in childAnimators)
+                    {
+                        if (childAnimator != null)
+                        {
+                            childAnimator.enabled = false; // Disable child animators
+                        }
+                    }
+                }
+                else
+                {
+                    // For other objects, check for an Animator on the handler itself
+                    Animator animator = handler.GetComponent<Animator>();
+                    if (animator != null)
+                    {
+                        animator.enabled = false; // Disable the animator
+                    }
+                }
+            }
+        }
+
+        if (cloudManager != null)
+        {
+            cloudManager.minSpeed = 0.5f;
+            cloudManager.maxSpeed = 1f;
+            cloudManager.UpdateCloudSpeeds();
+        }
 
         jojo.ReturnToStopPosition();
         kiki.ReturnToStopPosition();

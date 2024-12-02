@@ -24,6 +24,9 @@ public class Lvl5Sc3FeedingManager : MonoBehaviour
     public AudioClip audio9;
     public AudioClip audio10;
 
+    private AudioSource SfxAudioSource;
+    public AudioClip SfxAudio1;
+
     public Sprite sprite1;
     public Sprite sprite2;
     public Sprite sprite3;
@@ -49,6 +52,7 @@ public class Lvl5Sc3FeedingManager : MonoBehaviour
             
         StartCoroutine(HideBoard());
         StartCoroutine(StartFeedingSequence());
+        SfxAudioSource = GameObject.FindWithTag("SFXAudioSource").GetComponent<AudioSource>();
     }
 
     private IEnumerator StartFeedingSequence()
@@ -220,6 +224,11 @@ public class Lvl5Sc3FeedingManager : MonoBehaviour
 
         Animator animator = animals[currentAnimalIndex].GetComponent<Animator>();
         animator.SetTrigger("eat");
+        if (SfxAudioSource != null)
+        {
+            SfxAudioSource.loop = false;
+            SfxAudioSource.PlayOneShot(SfxAudio1);
+        }
         LeanTween.scale(food.gameObject, Vector3.zero, 0.5f);
 
         yield return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(0).length);
