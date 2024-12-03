@@ -90,7 +90,7 @@ public class SentenceManager : MonoBehaviour
     }
 
     // Play the corresponding audio clip when a word button is clicked
-    private void PlayWordAudio(int index)
+    public void PlayWordAudio(int index)
     {
         if (index == 0)
         {

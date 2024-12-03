@@ -185,7 +185,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1754149006}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: SentenceManager_Numbers, Assembly-CSharp
         m_MethodName: PlayWordAudio
         m_Mode: 3
@@ -449,7 +449,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1754149006}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: SentenceManager_Numbers, Assembly-CSharp
         m_MethodName: PlayWordAudio
         m_Mode: 3
@@ -525,7 +525,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1754149006}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: SentenceManager_Numbers, Assembly-CSharp
         m_MethodName: playAll
         m_Mode: 1
@@ -959,7 +959,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1754149007}
-  - component: {fileID: 1754149006}
+  - component: {fileID: 1754149008}
   m_Layer: 0
   m_Name: Sentence_Number_Manager
   m_TagString: Untagged
@@ -967,30 +967,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1754149006
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1754149005}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8c38da7c5dcd6a843af810ab8c0c30fb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  uiObject: {fileID: 1218333244}
-  targetPosition: {x: 452, y: 0.0001220703, z: 0}
-  objectAnimator: {fileID: 1218333245}
-  wordAudioClips:
-  - {fileID: 8300000, guid: 13af1053eceec934bb03241758824963, type: 3}
-  - {fileID: 8300000, guid: 0545bd3e1830acb4581a48495ee59f73, type: 3}
-  - {fileID: 8300000, guid: dda750a98cc3fec46bbbf215324bc93a, type: 3}
-  wordButtons:
-  - {fileID: 1883120164}
-  - {fileID: 1064579388}
-  - {fileID: 508176872}
-  audioSource: {fileID: 1465079857}
 --- !u!4 &1754149007
 Transform:
   m_ObjectHideFlags: 0
@@ -1006,6 +982,23 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1754149008
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1754149005}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 76adbe1df411441168c8bcb405800f51, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  objectAnimator: {fileID: 0}
+  wordAudioClips: []
+  wordButtons: []
+  audioSource: {fileID: 0}
+  buttonCooldown: 0
 --- !u!1 &1774116969
 GameObject:
   m_ObjectHideFlags: 0
@@ -1401,7 +1394,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1754149006}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: SentenceManager_Numbers, Assembly-CSharp
         m_MethodName: PlayWordAudio
         m_Mode: 3
@@ -1417,8 +1410,8 @@ MonoBehaviour:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
-  - {fileID: 1397473436}
   - {fileID: 1774116973}
+  - {fileID: 1397473436}
+  - {fileID: 1754149007}
   - {fileID: 1465079858}
   - {fileID: 1459445744}
-  - {fileID: 1754149007}

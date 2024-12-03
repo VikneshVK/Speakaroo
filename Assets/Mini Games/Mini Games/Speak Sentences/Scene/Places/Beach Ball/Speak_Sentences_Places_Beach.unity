@@ -157,7 +157,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 403, y: -99.00002}
+  m_AnchoredPosition: {x: 495, y: -11.000023}
   m_SizeDelta: {x: 800, y: 800}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &203364471
@@ -236,7 +236,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 24ef759646ca91f4e88061a8f509e3ef, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 7ec92878ef232d64788d94b6d11eecd5, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -406,7 +406,7 @@ GameObject:
   - component: {fileID: 498886769}
   - component: {fileID: 498886772}
   m_Layer: 5
-  m_Name: Brushing_Bathroom
+  m_Name: Playing_Beach
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -428,8 +428,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 417, y: 539.87}
-  m_SizeDelta: {x: 1500, y: 1500}
+  m_AnchoredPosition: {x: 466, y: 567}
+  m_SizeDelta: {x: 1000, y: 1000}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!95 &498886769
 Animator:
@@ -441,7 +441,7 @@ Animator:
   m_GameObject: {fileID: 498886767}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: ea3308440246fdf4f9bcd9cea9adb1a8, type: 2}
+  m_Controller: {fileID: 9100000, guid: 520a24c56b7cc3d49891697402369f52, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -472,9 +472,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -986596815, guid: c3d2bb80667056246804b9f7d318750e, type: 3}
+  m_Sprite: {fileID: 1278687298, guid: 696d144740952f8498aaff704705a92c, type: 3}
   m_Type: 0
-  m_PreserveAspect: 0
+  m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
@@ -1173,7 +1173,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 403, y: 69.99998}
+  m_AnchoredPosition: {x: 495, y: 157.99997}
   m_SizeDelta: {x: 800, y: 800}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1435533450
@@ -1252,7 +1252,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 1ae18cb83737a264aa7826de2b9fa058, type: 3}
+  m_Sprite: {fileID: 21300000, guid: e1bb06c93c7dda84a97b83a06de234fc, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -1281,7 +1281,7 @@ GameObject:
   - component: {fileID: 1479655581}
   - component: {fileID: 1479655580}
   m_Layer: 0
-  m_Name: Animal_Audio Source
+  m_Name: Places_Audio Source
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1433,7 +1433,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 403, y: 234}
+  m_AnchoredPosition: {x: 495, y: 322}
   m_SizeDelta: {x: 800, y: 800}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1907535199
@@ -1512,7 +1512,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: cd2c1c4459b37dd4a8efc964770bec5c, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 135185ee49649da43850b94aa54490cf, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
