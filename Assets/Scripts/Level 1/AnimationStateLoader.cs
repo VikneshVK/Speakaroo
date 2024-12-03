@@ -26,7 +26,7 @@ public class AnimationStateLoader : StateMachineBehaviour
     // This method will be called when the state machine finishes evaluating this state
     override public void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        Scene_Manager sceneManager = FindObjectOfType<Scene_Manager>();
+        Scene_Manager_Final sceneManager = FindObjectOfType<Scene_Manager_Final>();
         if (sceneManager != null && !string.IsNullOrEmpty(sceneToLoad))
         {
             Debug.Log("Loading level: " + sceneToLoad);
