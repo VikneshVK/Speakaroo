@@ -334,6 +334,7 @@ GameObject:
   - component: {fileID: 569417512}
   - component: {fileID: 569417511}
   - component: {fileID: 569417510}
+  - component: {fileID: 569417513}
   m_Layer: 5
   m_Name: Button (1)
   m_TagString: Untagged
@@ -442,6 +443,46 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 569417508}
   m_CullTransparentMesh: 1
+--- !u!114 &569417513
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 569417508}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b79b5624d944058bd39aad2b90fb275, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  productId: lifetime
+  buttonType: 0
+  consumePurchase: 1
+  onTransactionsRestored:
+    m_PersistentCalls:
+      m_Calls: []
+  onPurchaseComplete:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1461957829}
+        m_TargetAssemblyTypeName: IAP_Manager, Assembly-CSharp
+        m_MethodName: OnPurchaseCompleted
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  onPurchaseFailed:
+    m_PersistentCalls:
+      m_Calls: []
+  onProductFetched:
+    m_PersistentCalls:
+      m_Calls: []
+  button: {fileID: 569417510}
 --- !u!1 &737235978
 GameObject:
   m_ObjectHideFlags: 0
@@ -614,7 +655,7 @@ MonoBehaviour:
   onProductFetched:
     m_PersistentCalls:
       m_Calls: []
-  button: {fileID: 0}
+  button: {fileID: 737235980}
 --- !u!1 &961173735
 GameObject:
   m_ObjectHideFlags: 0

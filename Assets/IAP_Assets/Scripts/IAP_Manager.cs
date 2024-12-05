@@ -9,6 +9,7 @@ public class IAP_Manager : MonoBehaviour, IStoreListener
     private static IExtensionProvider storeExtensionProvider; // Handles platform-specific details
 
     private string YearlySub = "com.littlelearninglab.speakaroo.yearly_subscription";
+    private string LifetimeSub = "lifetime";
 
     public static IAP_Manager Instance
     {
@@ -110,6 +111,12 @@ public class IAP_Manager : MonoBehaviour, IStoreListener
             SaveSubscriptionStatus(true);
             GrantPremiumAccess();
         }
+        else if(product.definition.id == LifetimeSub)
+        {
+            Debug.Log("Lifetime subscription Activated!");
+            SaveSubscriptionStatus(true);
+            GrantPremiumAccess();
+        }
     }
 
     private void GrantPremiumAccess()
@@ -136,6 +143,10 @@ public class IAP_Manager : MonoBehaviour, IStoreListener
         storeController = controller;
         storeExtensionProvider = extensions;
         Debug.Log("IAP initialized successfully.");
+        foreach (var product in controller.products.all)
+        {
+            Debug.Log($"Product: {product.definition.id}, Type: {product.definition.type}");
+        }
     }
 
     public void OnInitializeFailed(InitializationFailureReason error)
@@ -143,13 +154,14 @@ public class IAP_Manager : MonoBehaviour, IStoreListener
         Debug.LogError("IAP Initialization failed: " + error);
     }
 
+   
+
     public PurchaseProcessingResult ProcessPurchase(PurchaseEventArgs args)
     {
-        if (args.purchasedProduct.definition.id == YearlySub)
+        if (args.purchasedProduct.definition.id == LifetimeSub || args.purchasedProduct.definition.id == YearlySub)
         {
-            Debug.Log("Purchase processed: " + args.purchasedProduct.definition.id);
-            SaveSubscriptionStatus(true);
-            GrantPremiumAccess();
+            Debug.Log("Lifetime purchase processed!");
+            SaveSubscriptionStatus(true); // Update your logic for lifetime access
         }
         else
         {
@@ -158,6 +170,7 @@ public class IAP_Manager : MonoBehaviour, IStoreListener
 
         return PurchaseProcessingResult.Complete;
     }
+
 
     public void OnInitializeFailed(InitializationFailureReason error, string message)
     {
