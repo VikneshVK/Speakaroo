@@ -8,10 +8,11 @@ public class Scene_Manager_Final : MonoBehaviour
 {
     public Animator TransitionAnim;
 
-    private string[] freeScenes = { "StartMenu", "Purchase page", "Learn Words", "Learn to Speak", "Learn Sentences", "Follow Direction", "Downloads", "Scene 1" };
+    /*private string[] freeScenes = { "StartMenu", "Purchase page", "Learn Words", "Learn to Speak", "Learn Sentences", "Follow Direction", "Downloads", "Scene 1" };*/
 
     void Start()
     {
+        SetNativeRefreshRate();
         if (SceneManager.GetActiveScene().name == "StartMenu")
         {
             ResetGameState();
@@ -19,17 +20,27 @@ public class Scene_Manager_Final : MonoBehaviour
         }
     }
 
+    private void SetNativeRefreshRate()
+    {
+        float refreshRate = (float)Screen.currentResolution.refreshRateRatio.value;
+
+        Application.targetFrameRate = Mathf.RoundToInt(refreshRate);
+
+        Debug.Log($"Screen Refresh Rate: {refreshRate} Hz. Target Frame Rate set to: {Application.targetFrameRate}");
+    }
+
     public void LoadLevel(string LvlName)
     {
-        if (IsSceneAccessible(LvlName))
-        {
-            StartCoroutine(LoadScene(LvlName));
-        }
-        else
-        {
-            Debug.Log("Access Denied: This scene is locked.");
-            ShowLockedSceneMessage();
-        }
+        StartCoroutine(LoadScene(LvlName));
+        /* if (IsSceneAccessible(LvlName))
+         {
+             StartCoroutine(LoadScene(LvlName));
+         }
+         else
+         {
+             Debug.Log("Access Denied: This scene is locked.");
+             ShowLockedSceneMessage();
+         }*/
     }
 
     IEnumerator LoadScene(string LvlName)
@@ -67,10 +78,10 @@ public class Scene_Manager_Final : MonoBehaviour
         }
     }
 
-    private bool IsSceneAccessible(string sceneName)
+    /*private bool IsSceneAccessible(string sceneName)
     {
         return HasPremiumAccess() || System.Array.Exists(freeScenes, scene => scene == sceneName);
-    }
+    }*/
 
     private bool HasPremiumAccess()
     {
@@ -95,8 +106,6 @@ public class Scene_Manager_Final : MonoBehaviour
     {
         Debug.Log("This scene is locked. Unlock premium to access it.");        
     }
-
-   
 
     public int GetLastCompletedLevel()
     {
