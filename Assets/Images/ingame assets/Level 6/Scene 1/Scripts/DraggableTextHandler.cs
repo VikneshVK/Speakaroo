@@ -4,14 +4,17 @@ using TMPro;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.EventSystems;
+using UnityEngine.Audio;
 
 public class DraggableTextHandler : MonoBehaviour
 {
     public Transform dropPosition; // Set this in the inspector for the drop target
     public AudioSource audioSource; // AudioSource attached to this text
+    public AudioSource audioSource2;
     public Image ringImage; // The ring to show progress
     public GameObject panel; // Reference to the panel containing buttons and texts
     public GameObject prefabToSpawn; // Reference to the prefab to spawn after panel scales down
+    public AudioMixer audioMixer;
 
     public AudioSource buttonAudioSource; // AudioSource attached to the button
     public GameObject childTextObject; // The TextMeshPro child object to enable and scale
@@ -28,9 +31,11 @@ public class DraggableTextHandler : MonoBehaviour
     private bool isBeingDragged = false;
     private static List<DraggableTextHandler> allDraggableTextHandlers = new List<DraggableTextHandler>(); // Static list of all instances
 
-    private string recordedClipName = "RecordedAudio";
+    /*private string recordedClipName = "RecordedAudio";*/
 
     public BeachBoxHandler beachBoxHandler;
+
+     private const string musicVolumeParam = "MusicVolume";
 
     private void Awake()
     {
@@ -149,6 +154,22 @@ public class DraggableTextHandler : MonoBehaviour
         }
     }
 
+    private void SetMusicVolume(float volume)
+    {
+        if (audioMixer != null)
+        {
+            bool result = audioMixer.SetFloat(musicVolumeParam, volume); // "MusicVolume" should match the exposed parameter name
+            if (!result)
+            {
+                Debug.LogError($"Failed to set MusicVolume to {volume}. Is the parameter exposed?");
+            }
+        }
+        else
+        {
+            Debug.LogError("AudioMixer is not assigned in the Inspector.");
+        }
+    }
+
 
     private void DisableOtherButtonsEventTriggers()
     {
@@ -201,12 +222,15 @@ public class DraggableTextHandler : MonoBehaviour
 
     private IEnumerator StartRecording()
     {
+        // Mute the music before recording
+        SetMusicVolume(-80f);
+
         retryButton.GetComponent<Image>().sprite = Resources.Load<Sprite>("Images/STMechanics/RetrySprite");
 
         int recordingDuration = 5;
         int frequency = 44100;
 
-        audioSource.clip = Microphone.Start(null, false, recordingDuration, frequency);
+        audioSource2.clip = Microphone.Start(null, false, recordingDuration, frequency);
         Debug.Log("Recording started...");
 
         float timeElapsed = 0f;
@@ -224,16 +248,23 @@ public class DraggableTextHandler : MonoBehaviour
         }
 
         Debug.Log("Recording completed.");
+
+        // Restore the music volume after recording
+        SetMusicVolume(0f);
     }
+
 
     private IEnumerator PlayRecordedAudio()
     {
+        // Mute the music before playback
+        SetMusicVolume(-80f);
+
         retryButton.GetComponent<Image>().sprite = Resources.Load<Sprite>("Images/STMechanics/PlaybackSprite");
 
-        audioSource.Play();
+        audioSource2.Play();
         Debug.Log("Playing back recorded audio...");
 
-        float playbackDuration = audioSource.clip.length;
+        float playbackDuration = audioSource2.clip.length;
         float timeElapsed = 0f;
 
         while (timeElapsed < playbackDuration)
@@ -249,7 +280,11 @@ public class DraggableTextHandler : MonoBehaviour
         yield return new WaitForSeconds(1f);
 
         retryButton.GetComponent<Image>().sprite = Resources.Load<Sprite>("Images/STMechanics/RetrySprite");
+
+        // Restore the music volume after playback
+        SetMusicVolume(0f);
     }
+
 
     private void ScaleDownAndSpawnPrefab()
     {

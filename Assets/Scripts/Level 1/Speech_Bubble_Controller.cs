@@ -1,10 +1,14 @@
 using UnityEngine;
 using System.Collections;
+using UnityEngine.Audio;
+using UnityEngine.Rendering;
 
 [RequireComponent(typeof(Collider2D))]
 public class Speech_Bubble_Controller : MonoBehaviour
 {
     public GameObject prefab;  // Prefab containing the "BG" object with children.
+    public AudioMixer audioMixer;
+    private const string musicVolumeParam = "MusicVolume";
 
     void Awake()
     {
@@ -30,6 +34,21 @@ public class Speech_Bubble_Controller : MonoBehaviour
         // Start the coroutine to defer changes to the end of the frame
         StartCoroutine(DeferChanges());
     }
+    private void SetMusicVolume(float volume)
+    {
+        if (audioMixer != null)
+        {
+            bool result = audioMixer.SetFloat(musicVolumeParam, volume); // "MusicVolume" should match the exposed parameter name
+            if (!result)
+            {
+                Debug.LogError($"Failed to set MusicVolume to {volume}. Is the parameter exposed?");
+            }
+        }
+        else
+        {
+            Debug.LogError("AudioMixer is not assigned in the Inspector.");
+        }
+    }
 
     private IEnumerator DeferChanges()
     {
@@ -46,6 +65,7 @@ public class Speech_Bubble_Controller : MonoBehaviour
         {
             Destroy(gameObject);
             GameObject bgInstance = Instantiate(prefab, Vector3.zero, Quaternion.identity);
+            SetMusicVolume(-80f);
             bgInstance.transform.localScale = Vector3.zero;  // Start from scale zero
 
             if (bgInstance.transform.position == Vector3.zero)

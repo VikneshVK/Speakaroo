@@ -34,7 +34,10 @@ public class colliderManager : MonoBehaviour
         // Wait until the Retry button becomes non-interactable
         yield return new WaitUntil(() => !retryButton.retryButton.interactable);
 
-        // Enable the collider for card2Front
-        card2Front.GetComponent<Collider2D>().enabled = true;
+        if(card2Front != null)
+        {
+            card2Front.GetComponent<Collider2D>().enabled = true;
+        }
+        
     }
 }

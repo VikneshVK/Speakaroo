@@ -154,7 +154,6 @@ GameObject:
   m_Component:
   - component: {fileID: 4931713634085602473}
   - component: {fileID: 1543524102827936178}
-  - component: {fileID: 9127627201645925217}
   - component: {fileID: 7171694675391843556}
   - component: {fileID: 2844519433388113555}
   - component: {fileID: 878630859560142254}
@@ -239,21 +238,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &9127627201645925217
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 681227826393822397}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b67dda73a78d4b149aea233d3ef42090, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  executeInUpdate: 1
-  anchorType: 4
-  anchorOffset: {x: 0, y: 0, z: 0}
 --- !u!114 &7171694675391843556
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -268,8 +252,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   retryButton: {fileID: 4829617909842716813}
   card2: {fileID: 670242834472814222}
-  scratchAudioClip: {fileID: 0}
-  revealAudioClip: {fileID: 0}
 --- !u!114 &2844519433388113555
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -297,6 +279,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5fdbd69c5e7f9774cb126a31d07a55f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  audioMixer: {fileID: 24100000, guid: 83279ef8d1c8a0649a8e6d4d2ff5f0c4, type: 2}
 --- !u!82 &5103716065445051004
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1319,7 +1302,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -1654,6 +1637,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29e9f2daa7cdb7e4391e8600af799315, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  audioMixer: {fileID: 0}
   audioSourceCard1: {fileID: 5048524093735466136}
   audioSourceCard2: {fileID: 8060207300254878409}
   recordedAudioSource: {fileID: 8513605010604780879}
@@ -1672,7 +1656,7 @@ AudioSource:
   m_GameObject: {fileID: 8106651651803658136}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: -7577815199503380295, guid: 83279ef8d1c8a0649a8e6d4d2ff5f0c4, type: 2}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
   m_Volume: 1
