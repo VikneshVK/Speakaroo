@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Audio;
 
 public class Lvl8Sc1TweenManager : MonoBehaviour
 {
@@ -12,6 +13,9 @@ public class Lvl8Sc1TweenManager : MonoBehaviour
     private LVL5Sc12Jojocontroller jojoController;
     /*private List<GameObject> spriteMasks = new List<GameObject>();*/
 
+    public AudioMixer audioMixer;
+    private const string musicVolumeParam = "MusicVolume";
+
     private void Start()
     {
         ST_AudioManager.Instance.OnPlaybackComplete += HandlePlaybackComplete;
@@ -20,7 +24,7 @@ public class Lvl8Sc1TweenManager : MonoBehaviour
         GameObject Boy = GameObject.FindGameObjectWithTag("Player");
         if (Boy != null)
         {
-            BoyAnimator = Boy.GetComponent<Animator>();            
+            BoyAnimator = Boy.GetComponent<Animator>();
         }
         GameObject manager = GameObject.FindGameObjectWithTag("lvl8Manager");
         if (manager != null)
@@ -31,14 +35,30 @@ public class Lvl8Sc1TweenManager : MonoBehaviour
         GameObject uiCanvas = GameObject.FindGameObjectWithTag("UiPanel");
         if (uiCanvas != null)
         {
-            buttonToActivate = uiCanvas.transform.Find("RetryButton").gameObject; 
+            buttonToActivate = uiCanvas.transform.Find("RetryButton").gameObject;
         }
 
         if (buttonToActivate == null)
         {
             Debug.LogWarning("Button not found inside the UICanvas.");
         }
-        
+
+    }
+
+    private void SetMusicVolume(float volume)
+    {
+        if (audioMixer != null)
+        {
+            bool result = audioMixer.SetFloat(musicVolumeParam, volume); // "MusicVolume" should match the exposed parameter name
+            if (!result)
+            {
+                Debug.LogError($"Failed to set MusicVolume to {volume}. Is the parameter exposed?");
+            }
+        }
+        else
+        {
+            Debug.LogError("AudioMixer is not assigned in the Inspector.");
+        }
     }
 
     private void OnDestroy()
@@ -60,6 +80,7 @@ public class Lvl8Sc1TweenManager : MonoBehaviour
 
     private IEnumerator Timer(float time)
     {
+        SetMusicVolume(0f);
         float counter = 0;
         isRetryClicked = false;
 

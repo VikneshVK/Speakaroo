@@ -258,7 +258,7 @@ AudioSource:
   m_GameObject: {fileID: 69865272}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 2787212909641865064, guid: 83279ef8d1c8a0649a8e6d4d2ff5f0c4, type: 2}
   m_audioClip: {fileID: 8300000, guid: 4dde01cc722a25d4187d0fcfbae121f7, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
@@ -509,7 +509,7 @@ AudioSource:
   m_GameObject: {fileID: 211681280}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 2787212909641865064, guid: 83279ef8d1c8a0649a8e6d4d2ff5f0c4, type: 2}
   m_audioClip: {fileID: 8300000, guid: 8bee569e828d0394a8e376321d2bcd4a, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
@@ -1017,6 +1017,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 931781705018570846, guid: ca6fb5d26ec489b4d9ada36edf9c1d1b, type: 3}
+      propertyPath: OutputAudioMixerGroup
+      value: 
+      objectReference: {fileID: 883554225825436019, guid: 83279ef8d1c8a0649a8e6d4d2ff5f0c4, type: 2}
     - target: {fileID: 6855002319895802494, guid: ca6fb5d26ec489b4d9ada36edf9c1d1b, type: 3}
       propertyPath: m_LocalPosition.x
       value: -4.2459407
@@ -1360,7 +1364,7 @@ AudioSource:
   m_GameObject: {fileID: 1043632577}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 2787212909641865064, guid: 83279ef8d1c8a0649a8e6d4d2ff5f0c4, type: 2}
   m_audioClip: {fileID: 8300000, guid: 87ca88e55a0e4014db45cccca0c07047, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
@@ -1751,7 +1755,7 @@ AudioSource:
   m_GameObject: {fileID: 1186814544}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 1848686740772083292, guid: 83279ef8d1c8a0649a8e6d4d2ff5f0c4, type: 2}
   m_audioClip: {fileID: 8300000, guid: 7780702046d2354408b48fb989d482fc, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
@@ -2406,7 +2410,7 @@ AudioSource:
   m_GameObject: {fileID: 1425595982}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 1848686740772083292, guid: 83279ef8d1c8a0649a8e6d4d2ff5f0c4, type: 2}
   m_audioClip: {fileID: 8300000, guid: 9973ad05243a0bf4e800eece923dabde, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
@@ -3175,6 +3179,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: AstheticAudio
       objectReference: {fileID: 0}
+    - target: {fileID: 5768619107812014426, guid: eb04860acf596be4a820dfef017586d4, type: 3}
+      propertyPath: OutputAudioMixerGroup
+      value: 
+      objectReference: {fileID: -864484246215247855, guid: 83279ef8d1c8a0649a8e6d4d2ff5f0c4, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

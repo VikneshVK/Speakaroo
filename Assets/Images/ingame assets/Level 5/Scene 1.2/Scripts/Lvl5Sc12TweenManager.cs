@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Audio;
 
 public class Lvl5Sc12TweenManager : MonoBehaviour
 {
@@ -10,6 +11,8 @@ public class Lvl5Sc12TweenManager : MonoBehaviour
     private GameObject buttonToActivate;
     private LVL5Sc12Jojocontroller jojoController;
     /*private List<GameObject> spriteMasks = new List<GameObject>();*/
+    public AudioMixer audioMixer;
+    private const string musicVolumeParam = "MusicVolume";
 
     private void Start()
     {
@@ -40,6 +43,22 @@ public class Lvl5Sc12TweenManager : MonoBehaviour
         Debug.Log("Number of sprite masks found: " + spriteMasks.Count);*/
     }
 
+    private void SetMusicVolume(float volume)
+    {
+        if (audioMixer != null)
+        {
+            bool result = audioMixer.SetFloat(musicVolumeParam, volume); // "MusicVolume" should match the exposed parameter name
+            if (!result)
+            {
+                Debug.LogError($"Failed to set MusicVolume to {volume}. Is the parameter exposed?");
+            }
+        }
+        else
+        {
+            Debug.LogError("AudioMixer is not assigned in the Inspector.");
+        }
+    }
+
     private void OnDestroy()
     {
         ST_AudioManager.Instance.OnPlaybackComplete -= HandlePlaybackComplete;
@@ -59,6 +78,7 @@ public class Lvl5Sc12TweenManager : MonoBehaviour
 
     private IEnumerator Timer(float time)
     {
+        SetMusicVolume(0f);
         float counter = 0;
         isRetryClicked = false;
 

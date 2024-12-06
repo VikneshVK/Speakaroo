@@ -1,13 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Audio;
 
 public class STMechanicsSpawner : MonoBehaviour
 {
     public GameObject prefabToSpawn;
     private Dictionary<Transform, Vector3> originalScales = new Dictionary<Transform, Vector3>();
+    public AudioMixer audioMixer;
+    private const string musicVolumeParam = "MusicVolume";
 
-    
 
     void OnMouseDown()
     {
@@ -15,8 +17,25 @@ public class STMechanicsSpawner : MonoBehaviour
         Destroy(gameObject); // Destroy this game object after spawning the prefab
     }
 
+    private void SetMusicVolume(float volume)
+    {
+        if (audioMixer != null)
+        {
+            bool result = audioMixer.SetFloat(musicVolumeParam, volume); // "MusicVolume" should match the exposed parameter name
+            if (!result)
+            {
+                Debug.LogError($"Failed to set MusicVolume to {volume}. Is the parameter exposed?");
+            }
+        }
+        else
+        {
+            Debug.LogError("AudioMixer is not assigned in the Inspector.");
+        }
+    }
+
     void SpawnAndAnimatePrefab()
     {
+        SetMusicVolume(-80f);
         GameObject instantiatedPrefab = Instantiate(prefabToSpawn, Vector3.zero, Quaternion.identity);
 
         SaveAndResetScales(instantiatedPrefab);

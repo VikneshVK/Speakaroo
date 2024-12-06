@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Audio;
 
 public class SpeechBubbleEggs : MonoBehaviour
 {
@@ -12,6 +13,9 @@ public class SpeechBubbleEggs : MonoBehaviour
 
     private Collider2D objectCollider;
     private SpriteRenderer objectSpriteRenderer;
+
+    public AudioMixer audioMixer;
+    private const string musicVolumeParam = "MusicVolume";
 
     void Start()
     {
@@ -32,8 +36,24 @@ public class SpeechBubbleEggs : MonoBehaviour
         SpawnAndAnimatePrefab();
     }
 
+    private void SetMusicVolume(float volume)
+    {
+        if (audioMixer != null)
+        {
+            bool result = audioMixer.SetFloat(musicVolumeParam, volume); // "MusicVolume" should match the exposed parameter name
+            if (!result)
+            {
+                Debug.LogError($"Failed to set MusicVolume to {volume}. Is the parameter exposed?");
+            }
+        }
+        else
+        {
+            Debug.LogError("AudioMixer is not assigned in the Inspector.");
+        }
+    }
     void SpawnAndAnimatePrefab()
     {
+        SetMusicVolume(-80f);
         GameObject instantiatedPrefab = Instantiate(prefabToSpawn, Vector3.zero, Quaternion.identity);
         SaveAndResetScales(instantiatedPrefab);
 

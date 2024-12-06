@@ -1,13 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Audio;
 
 public class Tween_Manager1 : MonoBehaviour
 {
     public bool speechTherapyCompleted = false;
     private Animator birdAnimator;
     private bool isRetryClicked = false;
-
+    public AudioMixer audioMixer;
+    private const string musicVolumeParam = "MusicVolume";
     private void Start()
     {
         ST_AudioManager.Instance.OnPlaybackComplete += HandlePlaybackComplete;
@@ -18,6 +20,22 @@ public class Tween_Manager1 : MonoBehaviour
         if (bird != null)
         {
             birdAnimator = bird.GetComponent<Animator>();
+        }
+    }
+
+    private void SetMusicVolume(float volume)
+    {
+        if (audioMixer != null)
+        {
+            bool result = audioMixer.SetFloat(musicVolumeParam, volume); // "MusicVolume" should match the exposed parameter name
+            if (!result)
+            {
+                Debug.LogError($"Failed to set MusicVolume to {volume}. Is the parameter exposed?");
+            }
+        }
+        else
+        {
+            Debug.LogError("AudioMixer is not assigned in the Inspector.");
         }
     }
 
@@ -41,6 +59,7 @@ public class Tween_Manager1 : MonoBehaviour
 
     private IEnumerator Timer(float time)
     {
+        SetMusicVolume(0f);
         float counter = 0;
         isRetryClicked = false;
 

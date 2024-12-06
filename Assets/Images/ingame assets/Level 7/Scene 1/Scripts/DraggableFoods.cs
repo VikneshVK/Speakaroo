@@ -4,10 +4,13 @@ using TMPro;
 using UnityEngine.EventSystems;
 using System.Collections;
 using System;
+using UnityEngine.Audio;
 
 public class DraggableFoods : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     public AudioSource audioSource; // Reference to the AudioSource attached to the GameObject
+    public GameObject Container;
+    public AudioMixer audioMixer;
     public AudioClip recordedAudio; // Reference to the recorded audio
     public TextMeshProUGUI dropTargetText; // Reference to TextComponent2 (drop target)
     public TextMeshProUGUI playbackText; // Reference to TextComponent1 (for playback)
@@ -38,6 +41,7 @@ public class DraggableFoods : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
     
     private bool isInitialPositionStored = false;    
     private bool recordingCompleteFlag = false;
+    private const string musicVolumeParam = "MusicVolume";
     /*private bool revealText = false;*/
 
 
@@ -135,6 +139,22 @@ public class DraggableFoods : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
         }
     }
 
+    private void SetMusicVolume(float volume)
+    {
+        if (audioMixer != null)
+        {
+            bool result = audioMixer.SetFloat(musicVolumeParam, volume); // "MusicVolume" should match the exposed parameter name
+            if (!result)
+            {
+                Debug.LogError($"Failed to set MusicVolume to {volume}. Is the parameter exposed?");
+            }
+        }
+        else
+        {
+            Debug.LogError("AudioMixer is not assigned in the Inspector.");
+        }
+    }
+
     private IEnumerator HandleSuccessfulDrop()
     {
         // Enable Retry Button (not interactable) with default sprite
@@ -152,30 +172,14 @@ public class DraggableFoods : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
             Debug.LogWarning("No audio clip set for playback.");
         }
 
-        // Start recording using the microphone
         StartCoroutine(StartRecording());
         yield return new WaitForSeconds(5); // Record for 5 seconds
         StopRecording();
 
-        // Get the AudioSource attached to TextComponent1 (playbackText)
-        AudioSource playbackSource = playbackText.GetComponent<AudioSource>();
+        AudioSource playbackSource = Container.GetComponent<AudioSource>();
 
-        if (playbackSource == null)
-        {
-            Debug.LogError("No AudioSource found on playbackText GameObject!");
-            yield break; // Stop if there's no AudioSource
-        }
-
-        if (recordedAudio == null)
-        {
-            Debug.LogError("No recorded audio available!");
-            yield break; // Stop if recording failed
-        }
-
-        // Assign the recorded audio to the AudioSource
         playbackSource.clip = recordedAudio;
 
-        // Debug logs to ensure everything is working as expected
         Debug.Log("Playing recorded audio... Clip length: " + playbackSource.clip.length);
 
         // Play back the recorded audio
@@ -267,7 +271,8 @@ public class DraggableFoods : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
 
     private IEnumerator StartRecording()
     {
-        // Change Retry Button sprite to RetrySprite during recording
+        SetMusicVolume(-80f);
+
         retryButton.GetComponent<Image>().sprite = Resources.Load<Sprite>("Images/STMechanics/RetrySprite");
 
         int recordingDuration = 5;
@@ -291,11 +296,12 @@ public class DraggableFoods : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
         }
 
         Debug.Log("Recording completed.");
+        
     }
 
     private void StopRecording()
     {
-        // Use the default microphone (null for default)
+        SetMusicVolume(0f);
         int recordingLength = Microphone.GetPosition(null);
         Microphone.End(null); // End the default microphone
 
