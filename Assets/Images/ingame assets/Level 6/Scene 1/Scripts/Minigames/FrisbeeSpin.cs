@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
+using TMPro;
+using System.Collections;
 
 public class FrisbeeSpin : MonoBehaviour
 {
@@ -14,7 +16,8 @@ public class FrisbeeSpin : MonoBehaviour
     public float flyAwayForce = 500f; // Force to fly the frisbee away
     public float flyAwayRandomness = 0.5f; // How much randomness to add to the fly-away direction
     public AudioSource spinAudioSource; // Assign the audio source in the inspector
-
+    public TextMeshProUGUI subtitleText1;
+    public TextMeshProUGUI subtitleText2;
     public AudioSource boyAudioSource;
     private bool isSpinning = false;
     private Vector2 lastDirection; // Store the last movement direction
@@ -46,6 +49,7 @@ public class FrisbeeSpin : MonoBehaviour
             {
                 spinAudioSource.Play();
                 boyAudioSource.Play();
+                StartCoroutine(RevealTextWordByWord("Throw..!", 1.5f));
             }
 
             // Store the initial rotation to maintain it throughout
@@ -155,5 +159,24 @@ public class FrisbeeSpin : MonoBehaviour
             pointerUpEntry.callback.AddListener((data) => { /* Optional: Add any OnMouseUp logic here */ });
             eventTrigger.triggers.Add(pointerUpEntry);
         }
+    }
+
+    private IEnumerator RevealTextWordByWord(string fullText, float delayBetweenWords)
+    {
+        subtitleText1.text = "";
+        subtitleText2.text = "";
+        subtitleText1.gameObject.SetActive(true);
+        subtitleText2.gameObject.SetActive(true);
+
+        string[] words = fullText.Split(' ');
+
+        for (int i = 0; i < words.Length; i++)
+        {
+            subtitleText1.text = string.Join(" ", words, 0, i + 1);
+            subtitleText2.text = string.Join(" ", words, 0, i + 1);
+            yield return new WaitForSeconds(delayBetweenWords);
+        }
+        subtitleText1.text = "";
+        subtitleText2.text = "";
     }
 }

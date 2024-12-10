@@ -60,7 +60,7 @@ public class BeachBallMiniGame : MonoBehaviour, IMiniGame
     public void EndMiniGame()
     {
         // Scale down the mini-game prefab
-        LeanTween.scale(gameObject, Vector3.zero, 0.5f).setEase(LeanTweenType.easeInBack).setOnComplete(() =>
+        LeanTween.scale(gameObject, Vector3.zero, 0.25f).setEase(LeanTweenType.easeInBack).setOnComplete(() =>
         {
             // Destroy the mini-game prefab after scaling down
             Debug.Log("Mini-game scaled down, destroying the game object.");

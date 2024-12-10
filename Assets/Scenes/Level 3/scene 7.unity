@@ -2217,8 +2217,8 @@ MonoBehaviour:
   Parrot: {fileID: 1425595982}
   Audio1: {fileID: 1043632580}
   Audio2: {fileID: 69865274}
-  SfxAudio1: {fileID: 0}
-  SfxAudio2: {fileID: 0}
+  SfxAudio1: {fileID: 8300000, guid: 38cfce84d6c382c46b1fe36ccc4ed473, type: 3}
+  SfxAudio2: {fileID: 8300000, guid: ce3572a00278c4c47b3faf5c6a83afa2, type: 3}
   helperPointerController: {fileID: 211681282}
   dragging: 0
   leaves1Collider: {fileID: 8783514866351162436}
@@ -2255,7 +2255,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0.09161043, y: -0.052586675}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -2266,7 +2266,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 2.83, y: 1.62}
+  m_Size: {x: 3.4382915, y: 2.408944}
   m_EdgeRadius: 0
 --- !u!1 &1425595982
 GameObject:
@@ -4236,7 +4236,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: -0.063709736, y: 0.08803862}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -4247,7 +4247,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 2.83, y: 1.62}
+  m_Size: {x: 3.589796, y: 2.6266603}
   m_EdgeRadius: 0
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

@@ -10,6 +10,7 @@ public class ShowerMechanics : MonoBehaviour
     public Transform spawnLocation;
     public GameObject shampooGameObject; // Reference to the shampoo GameObject
     public GameObject HotTap;
+    public ShampooController ShampooController;
 
     [Header("Audio")]
     public Lvl1Sc1AudioManager Audiomanager; // Reference to the audio source
@@ -17,6 +18,10 @@ public class ShowerMechanics : MonoBehaviour
     public AudioClip audio2;
     public AudioClip audio3;
     public AudioClip audio4;
+    public AudioClip audio5;
+    public AudioClip audio6;
+    public AudioClip audio7;
+    public AudioClip audio8;
     public AudioClip sfxAudio1;
     public TextMeshProUGUI subtitleText;
 
@@ -32,6 +37,7 @@ public class ShowerMechanics : MonoBehaviour
     private bool hasShowerDoneStarted = false;
     private bool birdanimation = false;
     private bool allowTapInteraction = true;
+    private bool handReachingAudioPlayed = false;
     private AudioSource SfxAudioSoure;
 
     private void Awake()
@@ -51,6 +57,8 @@ public class ShowerMechanics : MonoBehaviour
         CheckAskKikiAnimation();
         CheckBirdAniamtion();
         CheckShowerDoneAnimation();
+        CheckHandReachingAnimation();
+        CheckShampooAnimation();
     }
 
     void HandleTapInput()
@@ -89,18 +97,45 @@ public class ShowerMechanics : MonoBehaviour
                 SfxAudioSoure.loop = true;
                 SfxAudioSoure.Play();
             }
+
+            // Start coroutine to trigger "close tap" after 2 seconds
+            StartCoroutine(TriggerCloseTapAfterDelay());
         }
         else
         {
             showerParticles.Stop(); // Turn off shower
             if (SfxAudioSoure != null)
-            {                
+            {
                 SfxAudioSoure.loop = false;
                 SfxAudioSoure.Stop();
             }
         }
     }
 
+    private IEnumerator TriggerCloseTapAfterDelay()
+    {
+        yield return new WaitForSeconds(2f);
+
+        // Trigger "close tap" on the bird animator
+        if (birdAnimator != null)
+        {
+            birdAnimator.SetTrigger("close tap");
+            Audiomanager.PlayAudio(audio6);
+            StartCoroutine(RevealTextWordByWord("Close the Tap", 0.5f));
+        }
+    }
+
+    void CheckHandReachingAnimation()
+    {
+        AnimatorStateInfo stateInfo = boyAnimator.GetCurrentAnimatorStateInfo(0);
+
+        // Check if "Hand Reaching" animation has started
+        if (stateInfo.IsName("hand reaching") && stateInfo.normalizedTime < 0.1f && !handReachingAudioPlayed)
+        {
+            handReachingAudioPlayed = true;
+            Audiomanager.PlayAudio(audio7);
+        }
+    }
     void CheckAnimationAndSpawnPrefab()
     {
         AnimatorStateInfo stateInfo = boyAnimator.GetCurrentAnimatorStateInfo(0);
@@ -136,6 +171,9 @@ public class ShowerMechanics : MonoBehaviour
         if (stateInfo.IsName("Talk sample") && stateInfo.normalizedTime >= 1.0f && !hasTalkEnded)
         {
             hasTalkEnded = true;
+            birdAnimator.SetTrigger("open tap");
+            Audiomanager.PlayAudio(audio5);
+            StartCoroutine(RevealTextWordByWord("Open the Tap", 0.5f));
             StartHelperTimerForTap();
         }
 
@@ -167,7 +205,40 @@ public class ShowerMechanics : MonoBehaviour
             Audiomanager.PlayAudio(audio4);
             StartCoroutine(RevealTextWordByWord("Here you go...! JoJo ", 0.5f));
         }
+
+        if (stateInfo.IsName("birdKnock") && stateInfo.normalizedTime >= 0.9f && birdanimation)
+        {
+            birdanimation = false;
+            StartCoroutine(TriggerShampooAfterDelay());
+        }
+
+        CheckShampooAnimation(); // Check for completion of "shampoo" animation
     }
+
+    private IEnumerator TriggerShampooAfterDelay()
+    {
+        yield return new WaitForSeconds(2f);
+
+        // Trigger "shampoo" parameter on the bird animator
+        if (birdAnimator != null)
+        {
+            birdAnimator.SetTrigger("shampoo");
+            Audiomanager.PlayAudio(audio8);
+            StartCoroutine(RevealTextWordByWord("Put the Shampoo", 0.5f));
+        }
+    }
+
+    private void CheckShampooAnimation()
+    {
+        AnimatorStateInfo stateInfo = birdAnimator.GetCurrentAnimatorStateInfo(0);
+
+        // Check if "shampoo" animation is complete
+        if (stateInfo.IsName("shampoo") && stateInfo.normalizedTime >= 0.9f)
+        {
+            ShampooController.isDraggable = true;
+        }
+    }
+
     void CheckGiggleAnimation()
     {
         AnimatorStateInfo stateInfo = boyAnimator.GetCurrentAnimatorStateInfo(0);

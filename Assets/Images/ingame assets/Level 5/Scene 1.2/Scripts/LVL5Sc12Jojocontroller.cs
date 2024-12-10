@@ -35,7 +35,7 @@ public class LVL5Sc12Jojocontroller : MonoBehaviour
     private bool isIdleCompleted;            // Check if the idle animation is completed
     private bool isTalkCompleted;            // Check if the talk animation is completed
     private bool isTalk2Completed;           // Check if the talk2 animation is completed
-
+    private bool ticketSpawned;
     private float targetXPosition;           // Target x position for the character (stopPosition 1)
     private float targetXPosition2;          // Target x position for the character (stopPosition 2)
 
@@ -54,6 +54,7 @@ public class LVL5Sc12Jojocontroller : MonoBehaviour
         isWalkingToPosition2 = false;
         ifDialougeComplete = false;
         boySprite.flipX = true;
+        ticketSpawned = false;
         // Set the target X positions (only the X axis is considered)
         targetXPosition = stopPosition.position.x;
         targetXPosition2 = stopPosition2.position.x;
@@ -166,23 +167,23 @@ public class LVL5Sc12Jojocontroller : MonoBehaviour
     {
         if (ticketPrefab != null && ticketPrefabSpawnLocation != null)
         {
-
             GameObject ticket = Instantiate(ticketPrefab, ticketPrefabSpawnLocation.position, ticketPrefabSpawnLocation.rotation);
 
             LeanTween.scale(ticket, Vector3.one * 0.75f, 0.5f).setOnComplete(() =>
             {
                 LeanTween.move(ticket, ticketEndLocation.position, 1f).setOnComplete(() =>
                 {
-                    // After reaching the end location, shrink the ticket back to zero and destroy it
                     LeanTween.scale(ticket, Vector3.zero, 0.5f).setOnComplete(() =>
                     {
-                        Destroy(ticket);
-                        // Transition to Talk3
-                        canTalk3 = true;
-                        animator.SetBool("canTalk3", true); // Trigger Talk3 animation
-                        boyAudioSource.clip = Audio3;
-                        boyAudioSource.Play();
-                        StartCoroutine(RevealTextWordByWord("lets go in", 0.5f));
+                        Destroy(ticket); 
+                        animator.SetBool("canTalk2", true); // Trigger Talk2 animation
+                        if (!ifDialougeComplete)
+                        {
+                            boyAudioSource.clip = Audio2;
+                            boyAudioSource.Play();
+                            StartCoroutine(RevealTextWordByWord("Please give me a Ticket", 0.5f));
+                            ifDialougeComplete = true;
+                        }
                     });
                 });
             });
@@ -195,26 +196,30 @@ public class LVL5Sc12Jojocontroller : MonoBehaviour
 
     private void HandleTalk2Completion()
     {
-        if (!ifDialougeComplete) 
+        if (!ticketSpawned)
         {
-            boyAudioSource.clip = Audio2;
-            boyAudioSource.Play();            
-            StartCoroutine(RevealTextWordByWord("Please give me a Ticket", 0.5f));
-            ifDialougeComplete = true;
-        }
-        
-
-        if (animator.GetCurrentAnimatorStateInfo(0).IsName("Talk2") &&
-            animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.9f)
-        {
-            canTalk2 = false;
-            animator.SetBool("canTalk2", false); // End talk2 animation
-            SpawnTicket();  // Now only spawning the ticket after Talk2
+            ticketSpawned = true;
+            SpawnTicket();
             if (SfxAudioSource != null)
             {
                 SfxAudioSource.loop = false;
                 SfxAudioSource.PlayOneShot(SfxAudio1);
             }
+        }
+        
+
+        if (animator.GetCurrentAnimatorStateInfo(0).IsName("Talk2") &&
+            animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
+        {
+            canTalk2 = false; // End Talk2 animation
+            animator.SetBool("canTalk2", false);
+
+            // Transition to Talk3
+            canTalk3 = true;
+            animator.SetBool("canTalk3", true); // Trigger Talk3 animation
+            boyAudioSource.clip = Audio3;
+            boyAudioSource.Play();
+            StartCoroutine(RevealTextWordByWord("Let's go in", 0.5f));
         }
     }
 

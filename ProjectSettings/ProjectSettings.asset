@@ -84,7 +84,7 @@ PlayerSettings:
   runInBackground: 0
   captureSingleScreen: 0
   muteOtherAudioSources: 0
-  Prepare IOS For Recording: 0
+  Prepare IOS For Recording: 1
   Force IOS Speakers When Recording: 0
   deferSystemGesturesMode: 0
   hideHomeButton: 0
@@ -508,7 +508,8 @@ PlayerSettings:
   enableCrashReportAPI: 0
   cameraUsageDescription: 
   locationUsageDescription: 
-  microphoneUsageDescription: 
+  microphoneUsageDescription: We need microphone access to record your voice for
+    Speech Therpy.
   bluetoothUsageDescription: 
   macOSTargetOSVersion: 10.13.0
   switchNMETAOverride: 

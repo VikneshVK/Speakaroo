@@ -54,7 +54,7 @@ public class BubbleMinigame : MonoBehaviour, IMiniGame
 
     public void EndMiniGame()
     {
-        LeanTween.scale(gameObject, Vector3.zero, 0.5f).setEase(LeanTweenType.easeInBack).setOnComplete(() =>
+        LeanTween.scale(gameObject, Vector3.zero, 0.25f).setEase(LeanTweenType.easeInBack).setOnComplete(() =>
         {
             Debug.Log("Mini-game scaled down, destroying the game object.");
             Destroy(gameObject);

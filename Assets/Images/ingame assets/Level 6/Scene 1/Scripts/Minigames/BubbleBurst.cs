@@ -1,11 +1,14 @@
 using UnityEngine;
 using System.Collections.Generic;
+using TMPro;
+using System.Collections;
 
 public class BubbleBurst : MonoBehaviour
 {
     public delegate void BubbleDestroyed(BubbleBurst bubble);
     public event BubbleDestroyed OnDestroyEvent;
-
+    public TextMeshProUGUI subtitleText1;
+    public TextMeshProUGUI subtitleText2;
     public float floatDistance = 0.5f; // Maximum distance the bubble can float in any direction
     public float floatDuration = 2f; // Time it takes for one float cycle
     public Animator bubbleAnimator; // Reference to the Animator component
@@ -97,6 +100,7 @@ public class BubbleBurst : MonoBehaviour
             if (boyAudioSource != null)
             {
                 boyAudioSource.Play();
+                StartCoroutine(RevealTextWordByWord("Pop..!", 0.25f));
             }
 
             // Trigger the "Pop" animation
@@ -148,5 +152,24 @@ public class BubbleBurst : MonoBehaviour
                 }
             }
         }
+    }
+
+    private IEnumerator RevealTextWordByWord(string fullText, float delayBetweenWords)
+    {
+        subtitleText1.text = "";
+        subtitleText2.text = "";
+        subtitleText1.gameObject.SetActive(true);
+        subtitleText2.gameObject.SetActive(true);
+
+        string[] words = fullText.Split(' ');
+
+        for (int i = 0; i < words.Length; i++)
+        {
+            subtitleText1.text = string.Join(" ", words, 0, i + 1);
+            subtitleText2.text = string.Join(" ", words, 0, i + 1);
+            yield return new WaitForSeconds(delayBetweenWords);
+        }
+        subtitleText1.text = "";
+        subtitleText2.text = "";
     }
 }

@@ -23,21 +23,47 @@ public class colliderManager : MonoBehaviour
         ST_AudioManager.Instance.OnCard1PlaybackComplete -= EnableCard2FrontCollider;
     }
 
-    private void EnableCard2FrontCollider()
+    public void EnableCard2FrontCollider()
     {
-        // Start a coroutine to wait until the Retry button becomes non-interactable
-        StartCoroutine(WaitForRetryButtonToDisable());
+        // Ensure the retry button is interactable
+        if (retryButton.retryButton.interactable)
+        {
+            Debug.Log("Retry button is interactable. Waiting for player interaction or timeout...");
+            // Start the coroutine to wait for 4 seconds for retry button action
+            StartCoroutine(WaitForRetryButtonToDisable());
+        }
+        else
+        {
+            Debug.LogWarning("Retry button is not interactable, which is unexpected in this flow.");
+        }
     }
+
 
     private IEnumerator WaitForRetryButtonToDisable()
     {
-        // Wait until the Retry button becomes non-interactable
-        yield return new WaitUntil(() => !retryButton.retryButton.interactable);
+        // Wait for 4 seconds to give the player a chance to interact with the retry button
+        yield return new WaitForSeconds(4f);
 
-        if(card2Front != null)
+        // Check again if the retry button is still interactable
+        if (retryButton.retryButton.interactable)
         {
-            card2Front.GetComponent<Collider2D>().enabled = true;
+            Debug.Log("Retry button was not clicked in 4 seconds. Enabling Card 2's collider.");
+
+            // Enable Card 2's collider
+            if (card2Front != null)
+            {
+                card2Front.GetComponent<Collider2D>().enabled = true;
+                Debug.Log("Card 2 collider enabled.");
+            }
+            else
+            {
+                Debug.LogError("Card 2 GameObject is null. Cannot enable collider.");
+            }
         }
-        
+        else
+        {
+            Debug.Log("Retry button is no longer interactable after timeout.");
+        }
     }
+
 }

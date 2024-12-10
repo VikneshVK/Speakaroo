@@ -4,8 +4,8 @@ using TMPro;
 
 public class KikiController1 : MonoBehaviour
 {
-    public static int itemsDropped = 0;
-    public static bool startFlying = false; // New boolean to track if flying should start
+    public static int itemsDropped;
+    public static bool startFlying; // New boolean to track if flying should start
 
     public Transform dropLocation;
     public Transform startPosition;
@@ -63,6 +63,9 @@ public class KikiController1 : MonoBehaviour
         lvl4Sc1Audiomanger = AudioManager.GetComponent<Lvl4Sc1Audiomanger>();
         jojoController = boy.GetComponent<JojoController>();
         SfxAudioSource = GameObject.FindWithTag("SFXAudioSource").GetComponent<AudioSource>();
+        itemsDropped = 0;
+        startFlying = false;
+
     }
 
     void Update()

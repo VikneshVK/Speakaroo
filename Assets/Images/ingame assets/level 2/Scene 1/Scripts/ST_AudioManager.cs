@@ -14,13 +14,14 @@ public class ST_AudioManager : MonoBehaviour
     public string scratchAudioClipPath = "Audio/ScratchAudio";
     public string revealAudioClipPath = "Audio/RevealAudio";
     public float recordLength = 5f;
-    public float highPitchFactor = 1.2f;
+    public float highPitchFactor = 1f;
     public GameObject ST_Canvas;
     private TextMeshProUGUI displayText;
     private Button retryButton;
     public string currentCardTag;
     private RetryButton retryButtonScript;  // Reference to the RetryButton script.
    
+
 
     public event Action OnRecordingStart;
     public event Action<int> OnRecordingComplete;
@@ -31,11 +32,13 @@ public class ST_AudioManager : MonoBehaviour
 
     // New events
     public event Action OnRecordingPlaybackStart;  // Triggered before the recorded audio plays
-    public event Action OnRecordingPlaybackEnd;    // Triggered after the recorded audio finishes playing
+    public event Action<int> OnRecordingPlaybackEnd;    // Triggered after the recorded audio finishes playing
 
     // Added the OnRetryClicked event
     public event Action OnRetryClicked;
 
+    public bool isCard1PlaybackComplete = false; // Tracks playback completion for Card 1
+    public bool isCard2PlaybackComplete = false; // Tracks playback completion for Card 2
     private void Awake()
     {
         if (Instance == null)
@@ -58,6 +61,7 @@ public class ST_AudioManager : MonoBehaviour
 
     private void Start()
     {
+        
         displayText = ST_Canvas.transform.Find("DisplayText").GetComponent<TextMeshProUGUI>();
         retryButton = ST_Canvas.transform.Find("RetryButton").GetComponent<Button>();
         retryButton.onClick.AddListener(OnRetryButtonClick);
@@ -66,13 +70,6 @@ public class ST_AudioManager : MonoBehaviour
         displayText.text = "Scratch the Cards to Reveal the Word";
     }
 
-   
-
-   
-
-    
-
-   
     public void PlayScratchAudio()
     {
         if (retryButtonScript != null)
@@ -99,60 +96,69 @@ public class ST_AudioManager : MonoBehaviour
 
     public void PlayRecordedClipWithFunnyVoice(AudioClip recordedClip)
     {
-        recordedAudioSource.clip = recordedClip;
+        recordedAudioSource.clip = recordedClip; // Already set, but this ensures consistency
         recordedAudioSource.pitch = highPitchFactor;
         recordedAudioSource.Play();
     }
 
     private IEnumerator RecordAndAnalyzeAudio(int cardNumber)
     {
-        
-        AudioClip recordedClip = Microphone.Start(null, false, Mathf.CeilToInt(recordLength), 44100);
+        int minFreq, maxFreq;
+        Microphone.GetDeviceCaps(null, out minFreq, out maxFreq); // Get supported frequencies
+        int chosenFreq = (maxFreq == 0 || maxFreq < 44100) ? Mathf.Clamp(44100, minFreq, maxFreq) : 44100;
+
+        // Start recording
+        AudioClip recordedClip = Microphone.Start(null, false, Mathf.CeilToInt(recordLength), chosenFreq);
         yield return StartCoroutine(WaitForSecondsRealtime(recordLength));
         Microphone.End(null);
-        
 
-        // Assign the recorded clip to the recordedAudioSource
-        recordedAudioSource.clip = recordedClip;
-
-        // Analyze the recorded audio
-        float[] samples = new float[Mathf.CeilToInt(44100 * recordLength)];
+        // Process the recorded audio
+        float[] samples = new float[Mathf.CeilToInt(chosenFreq * recordLength)];
         recordedClip.GetData(samples, 0);
-        bool detectedVoice = AnalyzeRecordedAudio(samples);
 
-        if (detectedVoice)
+        // Analyze and process audio
+        float[] processedSamples = AnalyzeRecordedAudio(samples);
+
+        // Create processed audio clip
+        AudioClip processedClip = AudioClip.Create("ProcessedAudio", processedSamples.Length, 1, chosenFreq, false);
+        processedClip.SetData(processedSamples, 0);
+
+        // Assign to the recordedAudioSource
+        recordedAudioSource.clip = processedClip;
+
+        // Voice detection and playback logic
+        if (DetectVoicePresence(processedSamples))
         {
             displayText.text = "Did You Say..?";
-
-            // Trigger OnRecordingPlaybackStart event
             OnRecordingPlaybackStart?.Invoke();
-
-            PlayRecordedClipWithFunnyVoice(recordedClip);
-            yield return StartCoroutine(WaitForSecondsRealtime(recordedClip.length));
-
-            // Trigger OnRecordingPlaybackEnd event
-            OnRecordingPlaybackEnd?.Invoke();
+            PlayRecordedClipWithFunnyVoice(processedClip); // Play processed clip
+            yield return StartCoroutine(WaitForSecondsRealtime(processedClip.length));
+            OnRecordingPlaybackEnd?.Invoke(cardNumber);
         }
         else
         {
             displayText.text = "No sound detected. Please Retry";
         }
 
-        // Update feedback text after recording and playback are complete
+        // Post-recording feedback
         if (cardNumber == 1)
         {
             displayText.text = "Good Job..! Scratch the cards to reveal word";
             OnCard1PlaybackComplete?.Invoke();
+            isCard1PlaybackComplete = true;
         }
         else if (cardNumber == 2)
         {
-            displayText.text = "Good Job..!";
+            displayText.text = "Good Job..! Scratch the cards to reveal word";
             OnPlaybackComplete?.Invoke();
+            isCard2PlaybackComplete = true;
         }
 
-        // Trigger OnRecordingComplete event
         OnRecordingComplete?.Invoke(cardNumber);
     }
+
+
+
 
     private IEnumerator WaitForSecondsRealtime(float time)
     {
@@ -164,11 +170,22 @@ public class ST_AudioManager : MonoBehaviour
         }
     }
 
-    private bool AnalyzeRecordedAudio(float[] samples)
+    private float[] AnalyzeRecordedAudio(float[] samples)
+    {
+        NormalizeAudio(samples);
+        Debug.Log($"Raw Sample [0]: {samples[0]}");
+        ApplyNoiseReduction(samples);
+        Debug.Log($"Processed Sample [0]: {samples[0]}");
+        ApplyBandpassFilter(samples, 80, 3000);
+
+        return samples; // Return the processed samples
+    }
+
+    private bool DetectVoicePresence(float[] samples)
     {
         foreach (float sample in samples)
         {
-            if (Mathf.Abs(sample) > 0.01f)
+            if (Mathf.Abs(sample) > 0.01f) // Example threshold for vocal detection
             {
                 return true;
             }
@@ -176,8 +193,62 @@ public class ST_AudioManager : MonoBehaviour
         return false;
     }
 
+    private void NormalizeAudio(float[] samples)
+    {
+        float maxAmplitude = 0f;
+        // Find the maximum amplitude
+        foreach (float sample in samples)
+        {
+            if (Mathf.Abs(sample) > maxAmplitude)
+                maxAmplitude = Mathf.Abs(sample);
+        }
+
+        // Normalize if necessary
+        if (maxAmplitude > 0f)
+        {
+            for (int i = 0; i < samples.Length; i++)
+            {
+                samples[i] /= maxAmplitude; // Scale all samples down by the max amplitude
+            }
+        }
+    }
+
+    private void ApplyNoiseReduction(float[] samples)
+    {
+        // Adjust noise threshold dynamically for Android
+        float noiseThreshold = Application.platform == RuntimePlatform.Android ? 0.05f : 0.02f;
+
+        for (int i = 0; i < samples.Length; i++)
+        {
+            // Suppress low-level background noise
+            if (Mathf.Abs(samples[i]) < noiseThreshold)
+            {
+                samples[i] = 0f; // Set very low values to zero
+            }
+        }
+    }
+
+
+    private void ApplyBandpassFilter(float[] samples, float lowFreq, float highFreq)
+    {
+        // Example implementation using a simple bandpass algorithm
+        // Note: For high-quality filtering, consider using DSP libraries (e.g., SoX, Unity's audio filters)
+        float sampleRate = 44100f; // Assuming 44.1 kHz sample rate
+        float low = lowFreq / sampleRate;
+        float high = highFreq / sampleRate;
+
+        for (int i = 1; i < samples.Length - 1; i++)
+        {
+            // Simple bandpass filter logic
+            samples[i] = samples[i] * (high - low);
+        }
+    }
+
     private void OnRetryButtonClick()
     {
+        Debug.Log("Retry Button Clicked: Invoking OnRetryClicked event");
+        isCard1PlaybackComplete = false;
+        isCard2PlaybackComplete = false;
         OnRetryClicked?.Invoke();  // Trigger the OnRetryClicked event
         StopAllCoroutines();
         PlayAudioAfterDestroy(currentCardTag);
@@ -214,7 +285,7 @@ public class ST_AudioManager : MonoBehaviour
 
     private IEnumerator PlayOriginalClipAndRecord(AudioSource originalAudioSource, int cardNumber)
     {
-        OnPlaybackStart?.Invoke();  
+        OnPlaybackStart?.Invoke();
 
         originalAudioSource.Play();
         yield return StartCoroutine(WaitForSecondsRealtime(originalAudioSource.clip.length));

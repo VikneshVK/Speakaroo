@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 
 public class CardManager : MonoBehaviour
@@ -7,19 +8,26 @@ public class CardManager : MonoBehaviour
     public GameObject card2;
     public GameObject maskPrefab;
     public RetryButton retryButton;
+    public colliderManager colliderManager;
 
-    private bool isCard1Shaking = false;
-    private bool isCard2Shaking = false;
+    private bool isCard1Shaking;
+    private bool isCard2Shaking;
 
     private void Start()
     {
-        ST_AudioManager.Instance.OnRetryClicked += OnRetryButtonClicked;
-        ST_AudioManager.Instance.OnRecordingPlaybackStart += OnRecordingPlaybackStart;
-        ST_AudioManager.Instance.OnRecordingPlaybackEnd += OnRecordingPlaybackEnd;
+        isCard1Shaking = false;
+        isCard2Shaking = false;
 
+        if (ST_AudioManager.Instance != null)
+        {
+            ST_AudioManager.Instance.OnRetryClicked += OnRetryButtonClicked;
+            ST_AudioManager.Instance.OnRecordingPlaybackStart += OnRecordingPlaybackStart;
+            ST_AudioManager.Instance.OnRecordingPlaybackEnd += OnRecordingPlaybackEnd; // Updated subscription
+        }
         StartCoroutine(MonitorCard(card1));
         StartCoroutine(MonitorCard(card2));
     }
+
 
     private void OnDestroy()
     {
@@ -33,21 +41,49 @@ public class CardManager : MonoBehaviour
 
     private void OnRetryButtonClicked()
     {
-        if (card1 == null)
-        {
-            if (card2 != null)
-            {
-                Collider2D card2Collider = card2.GetComponent<Collider2D>();
-                if (card2Collider != null) card2Collider.enabled = false;
+        Debug.Log("Retry button clicked, handling collider states.");
 
-                if (isCard2Shaking)
-                {
-                    StopCoroutine(ShakeCard(card2));
-                    isCard2Shaking = false;
-                }
+        if (retryButton != null)
+        {
+            // Disable raycast for retry button
+            retryButton.retryButton.interactable = false;
+            retryButton.retryButton.GetComponent<Image>().raycastTarget = false;
+        }
+
+        if (card2 != null)
+        {
+            Collider2D card2Collider = card2.GetComponent<Collider2D>();
+            if (card2Collider != null)
+            {
+                Debug.Log("Disabling Card 2 Collider in OnRetryButtonClicked.");
+                card2Collider.enabled = false; // Disable Card 2 collider
+            }
+            else
+            {
+                Debug.LogError("Card 2 Collider is null.");
             }
         }
+        else
+        {
+            Debug.LogError("Card 2 reference is null in CardManager.");
+        }
+
+        // Use colliderManager to re-enable Card 2's collider after retry button becomes non-interactable
+        if (colliderManager != null)
+        {
+            Debug.Log("Calling EnableCard2FrontCollider in ColliderManager.");
+            colliderManager.EnableCard2FrontCollider();
+        }
+
+        // Stop shaking behavior for Card 2
+        if (isCard2Shaking)
+        {
+            Debug.Log("Stopping Card 2 shake coroutine.");
+            StopCoroutine(ShakeCard(card2));
+            isCard2Shaking = false;
+        }
     }
+
 
     private void OnRecordingPlaybackStart()
     {
@@ -57,25 +93,46 @@ public class CardManager : MonoBehaviour
             Collider2D card2Collider = card2.GetComponent<Collider2D>();
             if (card2Collider != null) card2Collider.enabled = false;
 
+            // Stop shaking for Card 2 if it's active
             if (isCard2Shaking)
             {
                 StopCoroutine(ShakeCard(card2));
                 isCard2Shaking = false;
             }
         }
+
+        // Disable raycast for retry button during playback
+        if (retryButton != null)
+        {
+            retryButton.retryButton.interactable = false;
+            retryButton.retryButton.GetComponent<Image>().raycastTarget = false;
+        }
     }
 
-    private void OnRecordingPlaybackEnd()
+
+    private void OnRecordingPlaybackEnd(int cardNumber)
     {
-        // Re-enable Card 2 interaction and shaking after Card 1's playback is done
-        if (card2 != null)
+        if (cardNumber == 1 && card2 != null) // Handle Card 2
         {
             Collider2D card2Collider = card2.GetComponent<Collider2D>();
             if (card2Collider != null) card2Collider.enabled = true;
 
             StartCoroutine(ShakeCard(card2));
         }
+        else if (cardNumber == 2) // Handle completion for Card 2
+        {
+            Debug.Log("Recording and playback workflow completed for Card 2.");
+            // Add any additional logic for Card 2 here, if needed.
+        }
+
+        // Re-enable retry button raycast after playback ends
+        if (retryButton != null)
+        {
+            retryButton.retryButton.interactable = true;
+            retryButton.retryButton.GetComponent<Image>().raycastTarget = true;
+        }
     }
+
 
     private IEnumerator MonitorCard(GameObject card)
     {

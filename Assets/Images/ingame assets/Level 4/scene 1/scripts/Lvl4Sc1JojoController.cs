@@ -16,6 +16,7 @@ public class Lvl4Sc1JojoController : MonoBehaviour
     public GameObject AudioManager;
     public AudioClip Audioclip1;
     public AudioClip AudioClip2;
+    public AudioClip AudioClip3;
     public TextMeshProUGUI subtitleText;
 
 
@@ -132,9 +133,19 @@ public class Lvl4Sc1JojoController : MonoBehaviour
                 fridgeCollider.enabled = true; // Enable the fridge collider
                 fridgeColliderEnabled = true; // Ensure this happens only once
             }
+
             animator.SetBool("canTalk", false);
+
+            // Trigger the "Fridge" animation on the bird animator
+            if (birdAnimator != null)
+            {
+                birdAnimator.SetTrigger("fridge");
+                lvl4Sc1Audiomanger.PlayAudio(AudioClip3);
+                StartCoroutine(RevealTextWordByWord("Open the Fridge", 0.5f));
+            }
         }
     }
+
 
     // Method to handle fridge tapping
     public void OnFridgeTapped()

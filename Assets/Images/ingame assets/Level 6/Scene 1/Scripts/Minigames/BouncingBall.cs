@@ -1,6 +1,8 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 using System.Collections.Generic;
+using TMPro;
+using System.Collections;
 
 public class BouncingBall : MonoBehaviour
 {
@@ -14,12 +16,15 @@ public class BouncingBall : MonoBehaviour
     private bool isBouncing = false;
     private bool isAudioPlayed = false;
     private static List<BouncingBall> allBalls = new List<BouncingBall>(); // List of all ball instances
+    public TextMeshProUGUI subtitleText1;
+    public TextMeshProUGUI subtitleText2;
 
     private void Awake()
     {
         // Add this ball to the list of all balls
         allBalls.Add(this);
     }
+   
 
     private void OnDestroy()
     {
@@ -41,6 +46,7 @@ public class BouncingBall : MonoBehaviour
             {
                 bounceAudioSource.Play();
                 boyAudioSource.Play();
+                StartCoroutine(RevealTextWordByWord("Bounce", 1.5f));
                 isAudioPlayed = true;
             }
 
@@ -115,5 +121,24 @@ public class BouncingBall : MonoBehaviour
             pointerUpEntry.callback.AddListener((data) => { /* Optional: Add any OnMouseUp logic here */ });
             eventTrigger.triggers.Add(pointerUpEntry);
         }
+    }
+
+    private IEnumerator RevealTextWordByWord(string fullText, float delayBetweenWords)
+    {
+        subtitleText1.text = "";
+        subtitleText2.text = "";
+        subtitleText1.gameObject.SetActive(true);
+        subtitleText2.gameObject.SetActive(true);
+
+        string[] words = fullText.Split(' ');
+
+        for (int i = 0; i < words.Length; i++)
+        {
+            subtitleText1.text = string.Join(" ", words, 0, i + 1);
+            subtitleText2.text = string.Join(" ", words, 0, i + 1);
+            yield return new WaitForSeconds(delayBetweenWords);
+        }
+        subtitleText1.text = "";
+        subtitleText2.text = "";
     }
 }

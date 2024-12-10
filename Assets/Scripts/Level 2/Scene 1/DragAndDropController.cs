@@ -112,7 +112,7 @@ public class DragAndDropController : MonoBehaviour
         {
             boyAnimator.SetTrigger("isRightDrop");
             birdAnimator.SetTrigger("RightDrop");
-            feedbackAudioSource.clip = positiveAudio2;
+            feedbackAudioSource.clip = positiveAudio1;
             feedbackAudioSource.Play();
             // Start coroutine to add delay before playing audio
             StartCoroutine(PlayAudioWithDelay());

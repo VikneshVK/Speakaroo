@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -9,14 +10,20 @@ public class Scratch_Card : MonoBehaviour
     private float positionTolerance = 0.1f;
     private bool isSpawning = false;
     private bool timerStarted = false;
-
+    public GameObject retryButton;
     private AudioSource audioSource;
-
+    private Image buttonImage;
+    private Image ringImage;
     private void Awake()
     {
         audioSource = gameObject.AddComponent<AudioSource>();
     }
 
+    private void Start()
+    {
+        buttonImage = retryButton.GetComponent<Image>();
+        ringImage = retryButton.transform.Find("Ring").GetComponent<Image>();
+    }
     void Update()
     {
         if (Input.GetMouseButton(0))
@@ -48,8 +55,11 @@ public class Scratch_Card : MonoBehaviour
     private IEnumerator SpawnPrefabs()
     {
         isSpawning = true;
-
-        // Play scratch audio through the AudioManager
+        retryButton.GetComponent<Button>().interactable = false; // Disable interaction
+        
+        SetAlpha(buttonImage, 20);
+        SetAlpha(ringImage, 20);
+        
         ST_AudioManager.Instance.PlayScratchAudio();
 
         while (isSpawning)
@@ -96,5 +106,12 @@ public class Scratch_Card : MonoBehaviour
         {
             ST_AudioManager.Instance.PlayRevealAudio(parentTransform.tag); // Play reveal audio after destruction
         }
+    }
+
+    private void SetAlpha(Image image, float alphaValue)
+    {
+        Color color = image.color;
+        color.a = alphaValue / 255f;
+        image.color = color;
     }
 }

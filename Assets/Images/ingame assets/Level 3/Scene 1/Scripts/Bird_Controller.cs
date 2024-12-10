@@ -27,6 +27,7 @@ public class Bird_Controller : MonoBehaviour
     private bool isMoving;
     private bool inactivityTimerStarted;
     private bool triggerresetted;
+    private bool colliderEnabled;
     // Speed variables
     private float moveSpeed = 1.05f;
     private float moveSpeed2 = 4f;
@@ -48,6 +49,7 @@ public class Bird_Controller : MonoBehaviour
         inactivityTimerStarted = false;
         LevelComplete = false;
         triggerresetted = false;
+        colliderEnabled = false;
     }
 
     void Update()
@@ -110,9 +112,10 @@ public class Bird_Controller : MonoBehaviour
             OnReturnToInitialPositionComplete(); // Add a slight delay before calling OnReturnToInitialPositionComplete
         }
 
-        if (stateInfo.IsName("Idle1"))
+        if (stateInfo.IsName("Idle1") && !colliderEnabled)
         {
-            OnIdle1State();
+            colliderEnabled = true;
+            OnIdle1State();            
         }
     }
 
@@ -169,7 +172,7 @@ public class Bird_Controller : MonoBehaviour
             IsleavesDropped = true;
             totalLeaves--;
         }
-
+        colliderEnabled = false;
         birdAnimator.SetTrigger("backtoRest");
         trashBinAnimator.SetBool("binOpen", false);
     }
@@ -177,12 +180,19 @@ public class Bird_Controller : MonoBehaviour
     void OnReturnToInitialPositionComplete()
     {
         IsleavesDropped = false;
-        birdAnimator.SetTrigger("canTalk2");
-        if (totalLeaves > 0)
+
+        if (totalLeaves == 0)
         {
+            LevelComplete = true;
+            birdAnimator.SetBool("levelComplete", true);
+            birdAnimator.SetTrigger("leavesDropped"); // Trigger "leavesDropped" to transition directly to Idle1 state
+        }
+        else
+        {
+            birdAnimator.SetTrigger("canTalk2");
             instructionAudio.Play();
             inactivityTimerStarted = false;
-            StartCoroutine(RevealTextWordByWord("Put the Dry Leaves inside the Bin", 0.5f));
+            StartCoroutine(RevealTextWordByWord("Put the Leaves inside the Bin", 0.5f));
         }
     }
 

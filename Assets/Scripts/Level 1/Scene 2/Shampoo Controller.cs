@@ -1,4 +1,6 @@
+using TMPro;
 using UnityEngine;
+using System.Collections;
 
 public class ShampooController : MonoBehaviour
 {
@@ -12,12 +14,16 @@ public class ShampooController : MonoBehaviour
     public GameObject showerGameObject; // Reference to the shower GameObject
     public Lvl1Sc2HelperFunction helperFunctionScript;
     public GameObject HotTap;
-
+    public Animator birdAnimator;
+    public AudioClip audio1;
+    public AudioClip audio2;
+    public Lvl1Sc1AudioManager audiomanager;
+    public TextMeshProUGUI subtitleText;
     private bool isDragging = false;
     private Vector3 offset;
     private Camera mainCamera;
     private int foamCount = 0; // Current count of spawned foams
-    private bool isDraggable = true;
+    public bool isDraggable = false;
     private float nextSpawnTime = 0f; // Time when the next foam can be spawned
     private Collider2D shampooCollider; // Collider of the shampoo
 
@@ -100,7 +106,7 @@ public class ShampooController : MonoBehaviour
     private void SpawnFoam()
     {
         if (SfxAudioSource != null)
-        {            
+        {
             SfxAudioSource.loop = false;
             SfxAudioSource.PlayOneShot(SfxAudio1);
         }
@@ -129,9 +135,56 @@ public class ShampooController : MonoBehaviour
         HotTap.GetComponent<Collider2D>().enabled = true;
         transform.position = shampooFinalPosition.position; // Reset the position
         transform.rotation = Quaternion.identity; // Reset the rotation
+        birdAnimator.SetTrigger("open tap");
+        audiomanager.PlayAudio(audio1);
+        StartCoroutine(RevealTextWordByWord("Open the Tap", 0.5f));
         helperFunctionScript.StartTimer(true);
         isDragging = false; // Stop dragging
         isDraggable = false; // Make non-draggable
         shampooCollider.enabled = false; // Deactivate the collider
+
+        if (showerMechanics == null)
+        {
+            Debug.LogError("showerMechanics is null!");
+        }
+        else
+        {
+            Debug.Log($"showerMechanics.hotTapOn: {showerMechanics.hotTapOn}");
+        }
+
+        if (showerMechanics != null && showerMechanics.hotTapOn)
+        {
+            Debug.Log("Tap is on, closing the tap.");
+            StartCoroutine(TriggerCloseTapAfterDelay());
+        }
+    }
+
+    private IEnumerator TriggerCloseTapAfterDelay()
+    {
+        Debug.Log("closing the tap");
+        yield return new WaitForSeconds(2f);
+        
+        // Trigger "close tap" on the bird animator
+        if (birdAnimator != null)
+        {
+            birdAnimator.SetTrigger("close tap");
+            audiomanager.PlayAudio(audio2);
+            StartCoroutine(RevealTextWordByWord("Close the Tap", 0.5f));
+        }
+    }
+
+    private IEnumerator RevealTextWordByWord(string fullText, float delayBetweenWords)
+    {
+        subtitleText.text = "";
+        subtitleText.gameObject.SetActive(true);
+
+        string[] words = fullText.Split(' ');
+
+        for (int i = 0; i < words.Length; i++)
+        {
+            subtitleText.text = string.Join(" ", words, 0, i + 1);
+            yield return new WaitForSeconds(delayBetweenWords);
+        }
+        subtitleText.text = "";
     }
 }

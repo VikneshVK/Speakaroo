@@ -111,10 +111,10 @@ public class Lvl5Sc12TweenManager : MonoBehaviour
             speechTherapyCompleted = true;
             jojoController.canTalk2 = true;
             
-            if (BoyAnimator != null)
+            /*if (BoyAnimator != null)
             {
                 BoyAnimator.SetBool("canTalk2", true);                
-            }
+            }*/
 
             LeanTween.scale(gameObject, Vector3.zero, 0.5f).setEase(LeanTweenType.easeInOutBack).setOnComplete(() =>
             {

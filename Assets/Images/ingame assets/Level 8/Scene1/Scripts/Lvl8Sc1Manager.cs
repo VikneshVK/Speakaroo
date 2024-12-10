@@ -33,29 +33,30 @@ public class Lvl8Sc1Manager : MonoBehaviour
     public Transform pencilPosition2;
 
     // Public variables
-    public bool jojoCanTalk = false;
-    public bool jojoCanAsk = false;
+    public bool jojoCanTalk ;
+    public bool jojoCanAsk ;
 
     // Internal state tracking
-    private bool npcTalkCompleted = false;
-    private bool kikiTalkCompleted = false;
-    private bool jojoTalkTriggered = false;
-    private bool jojoTalkCompleted = false;
-    private bool teacherTalkTriggered = false;
-    private bool teacherTalkCompleted = false;
-    private bool teacherTurnCompleted = false;
-    private bool jojoDontHavePencilTriggered = false;
-    private bool jojoDontHavePencilCompleted = false;
-    private bool kikiDialogue3Triggered = false;
-    private bool kikiDialogue3Completed = false;
-    private bool npcTurnTriggered = false;
-    private bool npcTurnCompleted = false;
-    private bool pencilAnimationCompleted = false;
+    private bool npcTalkCompleted;
+    private bool kikiTalkCompleted;
+    private bool jojoTalkTriggered ;
+    private bool jojoTalkCompleted;
+    private bool teacherTalkTriggered;
+    private bool teacherTalkCompleted;
+    private bool teacherTurnCompleted;
+    private bool jojoDontHavePencilTriggered;
+    private bool jojoDontHavePencilCompleted;
+    private bool kikiDialogue3Triggered;
+    private bool kikiDialogue3Completed;
+    private bool npcTurnTriggered;
+    private bool npcTurnCompleted;
+    private bool pencilAnimationCompleted;
 
     void Start()
     {
         // Start the scene
         StartScene();
+        ResetBooleans();        
     }
 
     private void StartScene()
@@ -110,7 +111,7 @@ public class Lvl8Sc1Manager : MonoBehaviour
         }
 
         // Check if Jojo's talk animation is complete
-        if (jojoTalkTriggered && !jojoTalkCompleted && IsAnimationComplete(jojoAnimator, "Talk"))
+        if (jojoTalkTriggered && !jojoTalkCompleted && IsAnimationComplete(kikiAnimator, "hello teacher kiki"))
         {
             jojoTalkCompleted = true;
             TriggerTeacherLearn();
@@ -156,7 +157,7 @@ public class Lvl8Sc1Manager : MonoBehaviour
         yield return new WaitForSeconds(0.5f); // Optional delay for better pacing
         npcAnimator.SetTrigger("Talk");
         PlayAudio(npcTalkAudio);
-        StartCoroutine(RevealTextWordByWord("Good Morning Teacher", 0.5f));
+        StartCoroutine(RevealTextWordByWord("Hello Teacher", 0.5f));
     }
     private void TriggerKikiTalk()
     {
@@ -167,14 +168,24 @@ public class Lvl8Sc1Manager : MonoBehaviour
 
     private void TriggerJojoTalk()
     {
-        StartCoroutine(RevealTextWordByWord("Hello Teacher", 0.5f));
+        StartCoroutine(TriggerTalkSequence());
+    }
 
+    private IEnumerator TriggerTalkSequence()
+    {
+        
+        StartCoroutine(RevealTextWordByWord("Hello Teacher", 0.5f));
+        
         if (jojoAudio1 != null && audioSource != null)
         {
             audioSource.clip = jojoAudio1;
             audioSource.Play();
         }
-        jojoAnimator.SetTrigger("Talk");       
+
+        jojoAnimator.SetTrigger("Talk");
+
+        yield return new WaitForSeconds(1f);
+
         kikiAnimator.SetTrigger("talk2");
         if (kikiAudioSource != null)
         {
@@ -283,6 +294,26 @@ public class Lvl8Sc1Manager : MonoBehaviour
     {
         AnimatorStateInfo currentState = animator.GetCurrentAnimatorStateInfo(0);
         return currentState.IsName(animationName) && currentState.normalizedTime >= 0.95f;
+    }
+
+    private void ResetBooleans()
+    {
+        jojoCanTalk = false;
+        jojoCanAsk = false;
+        npcTalkCompleted = false;
+        kikiTalkCompleted = false;
+        jojoTalkTriggered = false;
+        jojoTalkCompleted = false;
+        teacherTalkTriggered = false;
+        teacherTalkCompleted = false;
+        teacherTurnCompleted = false;
+        jojoDontHavePencilTriggered = false;
+        jojoDontHavePencilCompleted = false;
+        kikiDialogue3Triggered = false;
+        kikiDialogue3Completed = false;
+        npcTurnTriggered = false;
+        npcTurnCompleted = false;
+        pencilAnimationCompleted = false;
     }
 
     private IEnumerator RevealTextWordByWord(string fullText, float delayBetweenWords)

@@ -16,6 +16,7 @@ public class BoyAnimationController : MonoBehaviour
     public AudioClip audio2;
     public AudioClip audio3;
     public AudioClip audio4;
+    public AudioClip audio5;
     public AudioClip FinalDialouge;
     public Lvl1Sc1AudioManager audiomanager;
     public GameObject speechBubblePrefab;
@@ -147,7 +148,7 @@ public class BoyAnimationController : MonoBehaviour
 
         mainCamera.orthographicSize = zoomSize;
         animator.SetBool("showTeeth", true);
-
+        audiomanager.PlayAudio(audio5);
         yield return new WaitForSeconds(3.5f);
         StartCoroutine(ZoomOut());
     }

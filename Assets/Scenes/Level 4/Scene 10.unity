@@ -1848,6 +1848,7 @@ MonoBehaviour:
   AudioManager: {fileID: 1431207224}
   Audioclip1: {fileID: 8300000, guid: 521569e6ff6ddaf41a4dc439dfe0cddb, type: 3}
   AudioClip2: {fileID: 8300000, guid: f26e6951a0bf9d946aa39fe2b21ec373, type: 3}
+  AudioClip3: {fileID: 8300000, guid: 655558d0343ecf84bae07bba705e45eb, type: 3}
   subtitleText: {fileID: 1598527368}
   prefabSpawned: 0
 --- !u!95 &1306510786
@@ -3152,7 +3153,7 @@ MonoBehaviour:
   glowPrefab: {fileID: 6008917645427281803, guid: a9985fe6fdf67784dbbc44104ed5e186, type: 3}
   subtitleText: {fileID: 1598527368}
   AudioManager: {fileID: 1431207224}
-  Audio1: {fileID: 8300000, guid: 99a6ca77c50abb24fba156eed67c14c2, type: 3}
+  Audio1: {fileID: 8300000, guid: 655558d0343ecf84bae07bba705e45eb, type: 3}
 --- !u!4 &2070172353
 Transform:
   m_ObjectHideFlags: 0
@@ -3348,6 +3349,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5292709569205229216, guid: 5cc33678a45eebd4eb94af593e86f318, type: 3}
+      propertyPath: m_Camera
+      value: 
+      objectReference: {fileID: 928436310}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

@@ -135,6 +135,7 @@ public class LeafDragAndDrop : MonoBehaviour
     // Disables both leaves1 and leaves2 colliders when a correct drop occurs
     private void DisableColliders()
     {
+        Debug.Log("Colliders Disabled");
         if (leaves1Collider != null)
         {
             leaves1Collider.enabled = false;
