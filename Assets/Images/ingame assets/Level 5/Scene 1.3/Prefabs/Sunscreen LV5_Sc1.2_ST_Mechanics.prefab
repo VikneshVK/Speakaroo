@@ -361,6 +361,7 @@ Transform:
   - {fileID: 8563937145907727035}
   - {fileID: 1447125943748956097}
   - {fileID: 6174636502513974940}
+  - {fileID: 5851562298163917849}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &8673317651995614699
@@ -442,7 +443,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   retryButton: {fileID: 6988325343574809455}
-  card2: {fileID: 2253269620511074187}
+  colliderManager: {fileID: 5575182874481522414}
+  card1: {fileID: 5267022382683483385}
 --- !u!114 &5575182874481522414
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1543,6 +1545,54 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!1 &6823491241289352557
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 5851562298163917849}
+  - component: {fileID: 5014927542498295852}
+  m_Layer: 0
+  m_Name: CardManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &5851562298163917849
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6823491241289352557}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 3.3333333, y: 3.3333333, z: 3.3333333}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 5281686057119677487}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5014927542498295852
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6823491241289352557}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 89cfd8d997d8d8b4095eae8fc42aac36, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  card1: {fileID: 5267022382683483385}
+  card2: {fileID: 5068880499364640640}
+  retryButton: {fileID: 4138314664446258938}
+  colliderManager: {fileID: 5575182874481522414}
 --- !u!1 &6972929817868127411
 GameObject:
   m_ObjectHideFlags: 0
@@ -1909,16 +1959,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29e9f2daa7cdb7e4391e8600af799315, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  audioMixer: {fileID: 24100000, guid: 83279ef8d1c8a0649a8e6d4d2ff5f0c4, type: 2}
   audioSourceCard1: {fileID: 4682628095749860758}
   audioSourceCard2: {fileID: 7910349626895105692}
   recordedAudioSource: {fileID: 5797003204771772095}
   scratchAudioClipPath: Audio/ScratchAudio
   revealAudioClipPath: Audio/RevealAudio
   recordLength: 5
-  highPitchFactor: 1.5
+  highPitchFactor: 1
   ST_Canvas: {fileID: 6972929817868127411}
   currentCardTag: 
+  isCard1PlaybackComplete: 0
+  isCard2PlaybackComplete: 0
 --- !u!82 &5797003204771772095
 AudioSource:
   m_ObjectHideFlags: 0

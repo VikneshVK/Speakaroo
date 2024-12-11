@@ -5,7 +5,7 @@ public class EggController : MonoBehaviour
 {
     private Animator animator;
     private Collider2D boxCollider;
-    private int tapCount = 0;
+    public int tapCount = 0;
     private Vector3 originalWordScale;
 
     public GameObject word; // Reference to the word GameObject

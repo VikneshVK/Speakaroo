@@ -9,6 +9,7 @@ public class DishController : MonoBehaviour
     public ScrubberController scrubberController;
     public TextMeshProUGUI subtitleText;
     public GameObject glowPrefab;
+    public GameObject blackoutPanel;
 
     private bool isSpawning = false;
     private bool isTweening = false; // Flag to ensure the tween occurs only once
@@ -86,6 +87,7 @@ public class DishController : MonoBehaviour
         LeanTween.move(gameObject, Camera.main.ViewportToWorldPoint(new Vector3(0.5f, 0.5f, Camera.main.nearClipPlane + 5f)), 0.5f);
         LeanTween.scale(gameObject, originalScale * 2f, 0.5f).setOnComplete(() =>
         {
+            LeanTween.scale(blackoutPanel, Vector2.one, 0.5f);
             AnimateBirdInstruction();
         });
 
@@ -255,6 +257,7 @@ public class DishController : MonoBehaviour
 
         LeanTween.move(gameObject, originalPosition, 0.5f).setOnComplete(() =>
         {
+            LeanTween.scale(blackoutPanel, Vector2.zero, 0.5f);
             transform.localScale = originalScale;
             isDishSelected = false;
             isTweening = false; // Reset the tweening flag after cleaning is complete

@@ -11,7 +11,7 @@ public class TweeningController : MonoBehaviour
     [Header("Set 1 Game Objects and Target Positions")]
     public GameObject[] set1Objects;
     public Transform[] set1Targets;
-
+    public bool JuiceTweenCompleted;
     [Header("Set 2 Game Objects and Target Positions")]
     public GameObject[] set2Objects;
     public Transform[] set2Targets;
@@ -41,7 +41,7 @@ public class TweeningController : MonoBehaviour
     private void Start()
     {
         juiceManager = FindObjectOfType<JuiceManager>();
-
+        JuiceTweenCompleted = false;
         // Store initial positions of the game objects
         set1InitialPositions = new Vector3[set1Objects.Length];
         set2InitialPositions = new Vector3[set2Objects.Length];
@@ -111,7 +111,7 @@ public class TweeningController : MonoBehaviour
         if (isSecondTime)
         {
             TweenSetToInitial(set1Objects, set1InitialPositions);
-            TweenSetToTarget(set2Objects, set2Targets);
+            TweenSetToTarget(set2Objects, set2Targets);            
             CallBirdTween(); // Call bird tweening here when isSecondTime is true
         }
         else
@@ -128,12 +128,12 @@ public class TweeningController : MonoBehaviour
         if (birdRectTransform != null)
         {
             // Set initial position (outside the viewport)
-            birdRectTransform.anchoredPosition = new Vector2(-1300, 320);
+            birdRectTransform.anchoredPosition = new Vector2(-1300, 20);
 
             // Tween bird to final position (inside the viewport)
             LeanTween.value(bird, -1300, -790, tweenDuration).setEase(easeType).setOnUpdate((float x) =>
             {
-                birdRectTransform.anchoredPosition = new Vector2(x, 320);
+                birdRectTransform.anchoredPosition = new Vector2(x, 20);
             }).setOnComplete(() =>
             {
                 StartCoroutine(BirdAnimationSequence(birdRectTransform));
@@ -156,10 +156,11 @@ public class TweeningController : MonoBehaviour
         // Tween bird back to initial position (outside the viewport)
         LeanTween.value(bird, -790, -1300, tweenDuration).setEase(easeType).setOnUpdate((float x) =>
         {
-            birdRectTransform.anchoredPosition = new Vector2(x, 320);
+            birdRectTransform.anchoredPosition = new Vector2(x, 21);
         });
 
         TweenComplete = true;
+        JuiceTweenCompleted = true;
     }
 
     private void TweenSetToTarget(GameObject[] objects, Transform[] targets)

@@ -99,6 +99,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maskPrefab: {fileID: 1433547584507210601, guid: 1d26dd531982ed445a9d65d037809122, type: 3}
+  retryButton: {fileID: 727333224559527312}
 --- !u!61 &8872215780239452039
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -251,7 +252,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   retryButton: {fileID: 4829617909842716813}
-  card2: {fileID: 670242834472814222}
+  colliderManager: {fileID: 2844519433388113555}
+  card1: {fileID: 6441429343506500955}
 --- !u!114 &2844519433388113555
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1285,6 +1287,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maskPrefab: {fileID: 1433547584507210601, guid: 1d26dd531982ed445a9d65d037809122, type: 3}
+  retryButton: {fileID: 727333224559527312}
 --- !u!61 &8171713126479263056
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -1638,7 +1641,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29e9f2daa7cdb7e4391e8600af799315, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  audioMixer: {fileID: 24100000, guid: 83279ef8d1c8a0649a8e6d4d2ff5f0c4, type: 2}
   audioSourceCard1: {fileID: 5048524093735466136}
   audioSourceCard2: {fileID: 8060207300254878409}
   recordedAudioSource: {fileID: 8513605010604780879}
@@ -1648,6 +1650,8 @@ MonoBehaviour:
   highPitchFactor: 1.2
   ST_Canvas: {fileID: 9062221607789034392}
   currentCardTag: 
+  isCard1PlaybackComplete: 0
+  isCard2PlaybackComplete: 0
 --- !u!82 &8513605010604780879
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1876,6 +1880,7 @@ MonoBehaviour:
   card2: {fileID: 670242834472814222}
   maskPrefab: {fileID: 1433547584507210601, guid: 1d26dd531982ed445a9d65d037809122, type: 3}
   retryButton: {fileID: 7171694675391843556}
+  colliderManager: {fileID: 2844519433388113555}
 --- !u!1 &8941812265670300472
 GameObject:
   m_ObjectHideFlags: 0

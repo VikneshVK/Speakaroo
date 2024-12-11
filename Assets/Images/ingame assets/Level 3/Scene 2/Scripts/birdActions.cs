@@ -12,7 +12,7 @@ public class birdActions : MonoBehaviour
     public GameObject objectsToEnable;
     public float helperHandDelay = 5f;
     public TextMeshProUGUI subtitleText;
-
+    public boy_Actions1 jojoController;
     private Animator animator;
     private TapControl tapControl;
     /*private SpriteRenderer spriteRenderer;*/
@@ -49,7 +49,7 @@ public class birdActions : MonoBehaviour
     private void HandleIdleCompletion()
     {
         if (!isIdleCompleted && animator.GetCurrentAnimatorStateInfo(0).IsName("Idle") &&
-            animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
+            animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.3f)
         {
             isIdleCompleted = true;
             isFlying = true;
@@ -122,8 +122,9 @@ public class birdActions : MonoBehaviour
                 /*spriteRenderer.flipX = false;*/
                 isFlying = false;
                 animator.SetBool("canFly", false);
-                if (!hasPlayedAudioClip2 && audioClip2 != null)
+                if (!hasPlayedAudioClip2 && audioClip2 != null && jojoController.jojoAudioPlayed)
                 {
+                    animator.SetTrigger("helper");
                     kikiAudiosource.clip = audioClip2;
                     kikiAudiosource.Play();
                     StartCoroutine(RevealTextWordByWord("Now show your toys under the water", 0.5f));

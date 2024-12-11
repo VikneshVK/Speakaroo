@@ -1,4 +1,5 @@
 using System.Collections;
+using TMPro;
 using UnityEngine;
 
 public class TapControl : MonoBehaviour
@@ -10,10 +11,11 @@ public class TapControl : MonoBehaviour
     public Transform targetPosition;
     public float resetDelay = 2f; // Delay before resetting position
     public float gravityModifierValue = 1f; // Gravity modifier to apply when conditions are met
-
+    public Animator boyAnimator;
+   
     public AudioClip SfxAudio1;
     public AudioSource SfxAudioSource;
-
+    
     private Collider2D hoseCollider;
     private Collider2D tapCollider;
     private DragScript dragScript;
@@ -41,9 +43,9 @@ public class TapControl : MonoBehaviour
             if (isFirstTime)
             {
                 tapCollider.enabled = false;
-                hoseCollider.enabled=true;
+                hoseCollider.enabled = true;
                 StartCoroutine(PlayWaterEffectForDuration());
-                
+
                 // Reset the helper hand after the tap is interacted with
                 Helper_PointerController helperController = FindObjectOfType<Helper_PointerController>();
                 if (helperController != null)
@@ -86,13 +88,13 @@ public class TapControl : MonoBehaviour
             yield return new WaitForSeconds(resetDelay);
 
             // Move the hose (tap_gun) to the target position
-            hose.transform.position = targetPosition.position;
-
+            hose.transform.position = targetPosition.position;            
             // Change the gravity modifier of the water particle system here
             var mainModule = waterParticleSystem.main;
             mainModule.gravityModifier = gravityModifierValue; // Set gravity modifier
         }
 
+        
         isFirstTime = false;
     }
 
@@ -105,12 +107,14 @@ public class TapControl : MonoBehaviour
         else
         {
             waterParticleSystem.Play();
-            if (SfxAudioSource != null )
-            {                
+            if (SfxAudioSource != null)
+            {
                 SfxAudioSource.clip = SfxAudio1;
                 SfxAudioSource.loop = true;
-                SfxAudioSource.Play();                
+                SfxAudioSource.Play();
             }
         }
     }
+
+   
 }

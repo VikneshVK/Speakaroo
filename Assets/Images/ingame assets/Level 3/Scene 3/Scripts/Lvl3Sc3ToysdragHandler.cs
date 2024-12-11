@@ -21,6 +21,9 @@ public class Lvl3Sc3ToysdragHandler : MonoBehaviour
     public bool isdropped;
     private Vector3 resetPosition;
 
+    public GameObject glowPrefab; // Assign your Glow prefab in the inspector
+    private GameObject currentGlow;
+
     private void Start()
     {
         myCollider = GetComponent<Collider2D>();
@@ -62,17 +65,50 @@ public class Lvl3Sc3ToysdragHandler : MonoBehaviour
 
     private void OnMouseDrag()
     {
-        IsDragging = true;         
+        IsDragging = true;
         Debug.Log($"{name} is being dragged.");
         Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
         transform.position = new Vector3(mousePosition.x, mousePosition.y, 0);
+
+        // Spawn glow at the correct destination
+        if (currentGlow == null)
+        {
+            if (isDry)
+            {
+                // Glow at toy basket
+                currentGlow = Instantiate(glowPrefab, toyBasketCollider.transform.position, Quaternion.identity);
+            }
+            else
+            {
+                // Glow at the first available hanger
+                Transform availableHanger = dragManager.GetAvailableHangers()[0]; // Assuming GetAvailableHangers() returns a list of hangers
+                if (availableHanger != null)
+                {
+                    currentGlow = Instantiate(glowPrefab, availableHanger.position, Quaternion.identity);
+                }
+            }
+
+            // Tween the glow's scale to 8
+            if (currentGlow != null)
+            {
+                currentGlow.transform.localScale = Vector3.zero;
+                LeanTween.scale(currentGlow, Vector3.one * 8, 0.5f).setEaseOutBounce();
+            }
+        }
     }
 
     private void OnMouseUp()
     {
         IsDragging = false;
         StartCoroutine(HandleDrop());
-        
+        if (currentGlow != null)
+        {
+            LeanTween.scale(currentGlow, Vector3.zero, 0.5f).setOnComplete(() =>
+            {
+                Destroy(currentGlow);
+            });
+        }
+
     }
 
     private IEnumerator HandleDrop()

@@ -11,7 +11,9 @@ public class boy_Actions1 : MonoBehaviour
     public GameObject pipe;
     public GameObject Hose;    
     public AudioSource tubeAudiosource;
+    public AudioSource sunAudioSource;
     public TextMeshProUGUI subtitleText;
+    public bool jojoAudioPlayed;
 
     private SpriteRenderer boysprite;
     private Animator boyAnimator;    
@@ -24,6 +26,7 @@ public class boy_Actions1 : MonoBehaviour
     private bool isIdleCompleted;
     private bool canTalk;
     private bool audioplayed;
+    private bool WaterAnimationPlayed;
     private bool isSubtitleDisplayed;
 
     // Start is called before the first frame update
@@ -44,6 +47,8 @@ public class boy_Actions1 : MonoBehaviour
         canTalk = false;
         audioplayed = false;
         isSubtitleDisplayed = false;
+        jojoAudioPlayed = false;
+        WaterAnimationPlayed = false;
     }
 
     // Update is called once per frame
@@ -59,7 +64,7 @@ public class boy_Actions1 : MonoBehaviour
     private void HandleIdleCompletion()
     {
         if (!isIdleCompleted && boyAnimator.GetCurrentAnimatorStateInfo(0).IsName("Idle") &&
-            boyAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
+            boyAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.1f)
         {
             isIdleCompleted = true;
             isWalking = true;
@@ -107,15 +112,10 @@ public class boy_Actions1 : MonoBehaviour
         if (other.CompareTag("spray")) // Make sure the particle system object has the tag "WaterParticles"
         {
             boysprite.flipX = false;
-            boyAnimator.SetBool("waterPlay", true);
-            if (!isSubtitleDisplayed)
-            {
-                StartCoroutine(RevealTextWordByWord("That was So Fun..!", 0.5f));
-                isSubtitleDisplayed = true;
-            }
+            boyAnimator.SetBool("waterPlay", true);           
             
             if (!audioplayed)
-            {
+            {                
                 tubeAudiosource.Play();
                 audioplayed = true;
             }
@@ -130,7 +130,22 @@ public class boy_Actions1 : MonoBehaviour
         {
             boysprite.flipX = true  ;
             boyAnimator.SetBool("waterPlay", false);
+            if (!WaterAnimationPlayed) 
+            {
+                WaterAnimationPlayed = true;
+                boyAnimator.SetTrigger("Play done");
+                sunAudioSource.Play();
+                StartCoroutine(audioPlayed());
+                StartCoroutine(RevealTextWordByWord("HaHa..! That was so Fun..!", 0.5f));
+            }
+            
         }
+    }
+
+    private IEnumerator audioPlayed()
+    {
+        yield return new WaitForSeconds(2f);
+        jojoAudioPlayed = true;
     }
     private IEnumerator RevealTextWordByWord(string fullText, float delayBetweenWords)
     {

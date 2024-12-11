@@ -34,6 +34,7 @@ public class boyController1 : MonoBehaviour
     private AudioSource audioSource;
     private bool isFinalWalk;
     private bool birdaudioplayed;
+   
     private AudioClip audioClipBigPillow;
     private HelperHandController helperHandController;
 
@@ -65,7 +66,7 @@ public class boyController1 : MonoBehaviour
         /*shouldContinueWalking = false;*/
         isFinalWalk = false;
         hasPlayedAudio = false;
-
+        
     }
 
     void Update()
@@ -116,12 +117,11 @@ public class boyController1 : MonoBehaviour
 
     private IEnumerator DelayedBigPillowTrigger()
     {
-        yield return new WaitForSeconds(2.5f); // Add 1-second delay
-
-        birdAnimator.SetTrigger("bigPillow");
-
+        yield return new WaitForSeconds(2.5f); // Add 1-second delay     
+       
         if (!pillowAudioPlayer)
         {
+            birdAnimator.SetTrigger("bigPillow");
             AudioSource audioSource = nextaudiosoucre.GetComponent<AudioSource>();
             audioSource.PlayOneShot(audioClipBigPillow);
             StartCoroutine(RevealTextWordByWord("Put the Big Pillow at the Back", 0.5f));
@@ -203,6 +203,8 @@ public class boyController1 : MonoBehaviour
                 helperHandController.ScheduleHelperHand(pillowLeftScript);
             }
         }
+
+        PillowDragAndDrop.canDrag = true;
     }
 
     private IEnumerator RevealTextWordByWord(string fullText, float delayBetweenWords)

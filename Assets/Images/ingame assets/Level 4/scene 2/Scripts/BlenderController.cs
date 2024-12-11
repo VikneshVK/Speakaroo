@@ -106,7 +106,7 @@ public class BlenderController : MonoBehaviour
         LeanTween.rotateZ(jarSpriteRenderer.gameObject, rotationAngle, 1f).setEase(LeanTweenType.easeInOutQuad);
         yield return new WaitForSeconds(1f);
 
-        UpdateGlassSprite(targetGlass);
+        UpdateGlassSprite();
 
         jarSpriteRenderer.sprite = spriteChangeController.GetDefaultBlenderSprite();
         
@@ -186,6 +186,7 @@ public class BlenderController : MonoBehaviour
                 if (!juiceController.juiceManager.isKikiJuice)
                 {
                     spriteChangeController.ResetBlender();
+                    spriteChangeController.ResetGlassSprites();
                     helperHand.ResetAndStartDelayTimer();
                 }
             }            
@@ -228,11 +229,11 @@ public class BlenderController : MonoBehaviour
         RectTransform parrotRectTransform = parrot.GetComponent<RectTransform>();
         if (parrotRectTransform == null) return;
 
-        parrotRectTransform.anchoredPosition = new Vector2(-1300, 320);
+        parrotRectTransform.anchoredPosition = new Vector2(-1300, 21f);
 
         LeanTween.value(-1300f, -790f, 1f).setEase(LeanTweenType.easeInOutQuad).setOnUpdate((float x) =>
         {
-            parrotRectTransform.anchoredPosition = new Vector2(x, 320f);
+            parrotRectTransform.anchoredPosition = new Vector2(x, 21f);
         }).setOnComplete(() =>
         {
             parrotAnimator.SetTrigger(animationTrigger);
@@ -240,17 +241,37 @@ public class BlenderController : MonoBehaviour
             StartCoroutine(RevealTextWordByWord(subtitleTextContent, 0.5f));
         });
     }
-    private void UpdateGlassSprite(Transform glassTransform)
+    private void UpdateGlassSprite()
     {
-        SpriteRenderer glassSpriteRenderer = glassTransform.GetComponent<SpriteRenderer>();
+        // Get the juice sprite name based on the fruits in the blender
         string juiceSpriteName = spriteChangeController.GetJuiceSpriteName();
         Sprite newGlassSprite = Resources.Load<Sprite>("Images/LVL 4 scene 2/" + juiceSpriteName);
 
-        if (glassSpriteRenderer != null && newGlassSprite != null)
+        // Update Glass 1
+        SpriteRenderer glass1SpriteRenderer = glass1Transform.GetComponent<SpriteRenderer>();
+        if (glass1SpriteRenderer != null && newGlassSprite != null)
         {
-            glassSpriteRenderer.sprite = newGlassSprite;
+            glass1SpriteRenderer.sprite = newGlassSprite;
         }
+        else
+        {
+            Debug.LogWarning("Glass 1 sprite or SpriteRenderer is missing.");
+        }
+
+        // Update Glass 2
+        SpriteRenderer glass2SpriteRenderer = glass2Transform.GetComponent<SpriteRenderer>();
+        if (glass2SpriteRenderer != null && newGlassSprite != null)
+        {
+            glass2SpriteRenderer.sprite = newGlassSprite;
+        }
+        else
+        {
+            Debug.LogWarning("Glass 2 sprite or SpriteRenderer is missing.");
+        }
+
+        Debug.Log($"Updated both glass sprites to {juiceSpriteName}");
     }
+
 
     private IEnumerator RevealTextWordByWord(string fullText, float delayBetweenWords)
     {

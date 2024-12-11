@@ -112,7 +112,7 @@ public class dragManager : MonoBehaviour
             boyAnimator.SetTrigger("rightDrop");
 
             feedbackAudioSource.Play();
-            yield return new WaitUntil(() => !feedbackAudioSource.isPlaying);
+            yield return new WaitForSeconds(3f);
 
             // After feedback, play the object-specific audio
             PlayObjectAudio(totalCorrectDrops);

@@ -15,6 +15,7 @@ public class DressDragDrop : MonoBehaviour
     public Animator birdAnimator;
     public TextMeshProUGUI subtitleText;
     public Lvl1Sc1AudioManager audiomanager;
+    public Lvl1Sc3HelperController helperController;
     public AudioClip audio1;
     public AudioClip audio2;
     public AudioClip audio3;
@@ -22,10 +23,13 @@ public class DressDragDrop : MonoBehaviour
     private AudioSource SfxAudioSource;
     public AudioClip sfxAudio1;
     public AudioClip sfxAudio2;
+    private bool isGlowSequenceComplete;
+    public static int incorrectDrops = 2;
     void Start()
     {
         initialPosition = transform.position;
         hasboyTalkStarted = false;
+        isGlowSequenceComplete = false;
         SfxAudioSource = GameObject.FindWithTag("SFXAudioSource").GetComponent<AudioSource>();
     }
 
@@ -47,10 +51,12 @@ public class DressDragDrop : MonoBehaviour
         }
 
         Collider2D collider = GetComponent<Collider2D>();
-        if (boyAnimator.GetCurrentAnimatorStateInfo(0).IsName("Idle 0") &&
-            boyAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
+        if (!isGlowSequenceComplete &&
+            boyAnimator.GetCurrentAnimatorStateInfo(0).IsName("Idle 0") &&
+            boyAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.1f)
         {
-            collider.enabled = true;
+            isGlowSequenceComplete = true; // Prevent repeated glow sequence
+            StartCoroutine(HandleGlowSequence());
         }
         if (boyAnimator.GetCurrentAnimatorStateInfo(0).IsName("Talk sample") &&
             boyAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.1f && !hasboyTalkStarted)
@@ -67,8 +73,13 @@ public class DressDragDrop : MonoBehaviour
 
         SetChildrenSortingOrder(10);
 
+        if (dressType == "School" && helperController != null)
+        {
+            helperController.DestroyHelperHand(); // Destroy helper hand when dragging the school dress
+        }
+
         if (SfxAudioSource != null)
-        {            
+        {
             SfxAudioSource.PlayOneShot(sfxAudio1);
         }
     }
@@ -125,7 +136,6 @@ public class DressDragDrop : MonoBehaviour
 
     private void HandleDressChange()
     {
-
         if (boyAnimator != null)
         {
             switch (dressType)
@@ -141,24 +151,70 @@ public class DressDragDrop : MonoBehaviour
                 case "Summer":
                     boyAnimator.Play("red dress Sad Face Hand Movements");
                     EnableDisableDresses(summerDress, schoolDress, winterDress);
-                    birdAnimator.SetTrigger("talk");
-                    audiomanager.PlayAudio(audio1);
-                    StartCoroutine(RevealTextWordByWord("That's not the School Outfit, Jojo", 0.5f));
+                    incorrectDrops--;
+                    StartCoroutine(HandleBirdInteraction("That's not the School Outfit, Jojo"));
                     break;
 
                 case "Winter":
                     boyAnimator.Play("Blue dress Sad Face Hand Movements");
                     EnableDisableDresses(winterDress, summerDress, schoolDress);
-                    birdAnimator.SetTrigger("talk");
-                    audiomanager.PlayAudio(audio1);
-                    StartCoroutine(RevealTextWordByWord("That's not the School Outfit, Jojo", 0.5f));
+                    incorrectDrops--;
+                    StartCoroutine(HandleBirdInteraction("That's not the School Outfit, Jojo"));
                     break;
             }
         }
         transform.position = initialPosition; // Reset position after handling the dress change
     }
 
-    private void EnableDisableDresses(GameObject activeDress, GameObject firstInactiveDress, GameObject secondInactiveDress)
+    private IEnumerator HandleBirdInteraction(string subtitleTextContent)
+    {
+        yield return new WaitForSeconds(1f); // Add 1-second delay
+
+        birdAnimator.SetTrigger("talk"); // Trigger bird animation
+        audiomanager.PlayAudio(audio1); // Play bird's audio
+        yield return StartCoroutine(RevealTextWordByWord(subtitleTextContent, 0.5f)); // Display subtitles
+
+        yield return new WaitForSeconds(0.5f); // Add 2-second delay before handling glow or helper hand
+
+        if (incorrectDrops > 0)
+        {
+            if (helperController != null)
+            {
+                // Logic for spawning glow based on dress type
+                if (dressType == "Summer")
+                {
+                    if (winterDress != null)
+                        yield return helperController.SpawnGlow(winterDress.transform.position);
+
+                    yield return new WaitForSeconds(0.5f);
+
+                    if (schoolDress != null)
+                        yield return helperController.SpawnGlow(schoolDress.transform.position);
+                }
+                else if (dressType == "Winter")
+                {
+                    if (summerDress != null)
+                        yield return helperController.SpawnGlow(summerDress.transform.position);
+
+                    yield return new WaitForSeconds(0.5f);
+
+                    if (schoolDress != null)
+                        yield return helperController.SpawnGlow(schoolDress.transform.position);
+                }
+            }
+        }
+        else
+        {
+            // Spawn helper hand if no incorrect drops remain
+            if (helperController != null && schoolDress != null)
+            {
+                helperController.SpawnHelperHand(schoolDress.transform.position);
+            }
+        }
+    }
+
+
+    public void EnableDisableDresses(GameObject activeDress, GameObject firstInactiveDress, GameObject secondInactiveDress)
     {
         SetChildSpriteRenderers(activeDress, false);
 
@@ -189,6 +245,38 @@ public class DressDragDrop : MonoBehaviour
             if (collider != null)
             {
                 collider.enabled = false; // Disable collider
+            }
+        }
+    }
+
+    private IEnumerator HandleGlowSequence()
+    {
+        // Glow on winter dress
+        if (helperController != null && winterDress != null)
+        {
+            yield return helperController.SpawnGlow(winterDress.transform.position);
+        }
+
+        // Glow on summer dress
+        if (helperController != null && summerDress != null)
+        {
+            yield return helperController.SpawnGlow(summerDress.transform.position);
+        }
+
+        // Glow on school dress
+        if (helperController != null && schoolDress != null)
+        {
+            yield return helperController.SpawnGlow(schoolDress.transform.position);
+        }
+
+        // Enable all colliders after glow sequence
+        DressDragDrop[] allDresses = FindObjectsOfType<DressDragDrop>();
+        foreach (var dress in allDresses)
+        {
+            Collider2D collider = dress.GetComponent<Collider2D>();
+            if (collider != null)
+            {
+                collider.enabled = true;
             }
         }
     }

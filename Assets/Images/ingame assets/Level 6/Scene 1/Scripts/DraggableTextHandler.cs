@@ -209,6 +209,16 @@ public class DraggableTextHandler : MonoBehaviour
 
         yield return StartCoroutine(StartRecording());
 
+        float[] recordedSamples = AnalyzeRecordedAudio(audioSource2.clip);
+        if (DetectVoicePresence(recordedSamples))
+        {
+            Debug.Log("Voice detected in recording.");
+        }
+        else
+        {
+            Debug.Log("No significant voice detected.");
+        }
+
         yield return StartCoroutine(PlayRecordedAudio());
 
         retryButton.interactable = true;
@@ -285,6 +295,61 @@ public class DraggableTextHandler : MonoBehaviour
         SetMusicVolume(0f);
     }
 
+    private float[] AnalyzeRecordedAudio(AudioClip recordedClip)
+    {
+        float[] samples = new float[recordedClip.samples];
+        recordedClip.GetData(samples, 0);
+
+        NormalizeAudio(samples);
+        ApplyNoiseReduction(samples);
+        ApplyBandpassFilter(samples, 80, 3000);
+
+        return samples;
+    }
+    private void NormalizeAudio(float[] samples)
+    {
+        float maxAmplitude = Mathf.Max(samples);
+        for (int i = 0; i < samples.Length; i++)
+        {
+            samples[i] /= maxAmplitude;
+        }
+    }
+
+    private void ApplyNoiseReduction(float[] samples)
+    {
+        float noiseThreshold = 0.02f;
+        for (int i = 0; i < samples.Length; i++)
+        {
+            if (Mathf.Abs(samples[i]) < noiseThreshold)
+            {
+                samples[i] = 0f;
+            }
+        }
+    }
+
+    private void ApplyBandpassFilter(float[] samples, float lowFreq, float highFreq)
+    {
+        float sampleRate = 44100f;
+        float low = lowFreq / sampleRate;
+        float high = highFreq / sampleRate;
+
+        for (int i = 0; i < samples.Length; i++)
+        {
+            samples[i] *= (high - low);
+        }
+    }
+
+    private bool DetectVoicePresence(float[] samples)
+    {
+        foreach (float sample in samples)
+        {
+            if (Mathf.Abs(sample) > 0.01f)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
 
     private void ScaleDownAndSpawnPrefab()
     {

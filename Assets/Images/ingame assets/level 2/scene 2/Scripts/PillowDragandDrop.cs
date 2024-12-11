@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using TMPro;
+using Unity.VisualScripting;
 
 public class PillowDragAndDrop : MonoBehaviour
 {
@@ -13,6 +14,7 @@ public class PillowDragAndDrop : MonoBehaviour
     public GameObject Boy;
     public GameObject Kiki;
     public TextMeshProUGUI subtitleText;
+    public static bool canDrag;
     public bool HasInteracted { get; private set; } = false;
 
     public HelperHandController helperHandController;
@@ -39,6 +41,7 @@ public class PillowDragAndDrop : MonoBehaviour
     {
         startPosition = transform.position;
         GetComponent<Collider2D>().enabled = false;
+        canDrag = false;
         droppedPillowsCount = 0;
         boyAnimator = Boy.GetComponent<Animator>();
         kikiAnimator = Kiki.GetComponent<Animator>();
@@ -101,7 +104,7 @@ public class PillowDragAndDrop : MonoBehaviour
 
     void Update()
     {
-        if (isDragging)
+        if (isDragging && canDrag)
         {
             Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             transform.position = mousePosition + offset;
@@ -132,7 +135,7 @@ public class PillowDragAndDrop : MonoBehaviour
 
     void OnMouseUp()
     {
-        if (isDragging)
+        if (isDragging && canDrag)
         {
             isDragging = false;
 
@@ -144,7 +147,13 @@ public class PillowDragAndDrop : MonoBehaviour
 
             if (Vector3.Distance(transform.position, targetPosition.position) < offsetValue)
             {
-                // Tween to the target position
+                canDrag = false;
+                PillowDragAndDrop[] allPillows = FindObjectsOfType<PillowDragAndDrop>();
+
+                foreach (PillowDragAndDrop pillow in allPillows)
+                {
+                   pillow.GetComponent<Collider2D>().enabled = false;                    
+                }
                 LeanTween.move(gameObject, targetPosition.position, 0.5f).setOnComplete(() =>
                 {
                     transform.rotation = Quaternion.identity;
@@ -239,6 +248,9 @@ public class PillowDragAndDrop : MonoBehaviour
                     helperHandController.ScheduleNextPillow(nextPillow);
                 }
             }
+
+            yield return new WaitForSeconds(4f);
+            canDrag = true;
         }
     }
 

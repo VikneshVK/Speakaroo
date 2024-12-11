@@ -12,7 +12,10 @@ public class DraggingController : MonoBehaviour
     public TweeningController tweeningController;
     public JuiceController juiceController;
     private bool helperTimerStarted = false;
+    private bool InitialPositionConfirimed;
     private LVL4Sc2HelperHand helperHandInstance;
+    private int originalSortingOrder;
+    private SpriteRenderer spriteRenderer;
 
     // References for UI images and sprites
     public Image Image1;
@@ -31,7 +34,15 @@ public class DraggingController : MonoBehaviour
         juiceManager = FindObjectOfType<JuiceManager>();
         helperHandInstance = LVL4Sc2HelperHand.Instance;
         SfxAudioSource = GameObject.FindWithTag("SFXAudioSource").GetComponent<AudioSource>();
+
+        // Get the SpriteRenderer and store its original sorting order
+        spriteRenderer = GetComponent<SpriteRenderer>();
+        if (spriteRenderer != null)
+        {
+            originalSortingOrder = spriteRenderer.sortingOrder;
+        }
     }
+
 
     void Update()
     {
@@ -50,24 +61,35 @@ public class DraggingController : MonoBehaviour
         {
             transform.localScale = originalScale;
         }
+
+        if (!InitialPositionConfirimed && tweeningController.JuiceTweenCompleted)
+        {
+            Debug.Log("initial position is set");
+            InitialPositionConfirimed = true;
+            startPosition = transform.position;
+        }
     }
 
     void OnMouseDown()
     {
         Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        offset = transform.position - mousePosition;
-        startPosition = transform.position;
+        offset = transform.position - mousePosition;       
         isDragging = true;
 
+        if (spriteRenderer != null)
+        {
+            spriteRenderer.sortingOrder = 10;
+        }
         // Destroy helper hand and reset timer for inactivity guidance
         helperHandInstance.DestroySpawnedHelperHand();
         helperHandInstance.ResetAndStartDelayTimer();
+
     }
 
     void OnMouseUp()
     {
         isDragging = false;
-
+        transform.position = startPosition;
         Collider2D fruitCollider = GetComponent<Collider2D>();
         if (spriteChangeController.IsOverlappingBlenderJar(fruitCollider) && gameObject.tag != "Blender_Jar")
         {
@@ -80,13 +102,17 @@ public class DraggingController : MonoBehaviour
             spriteChangeController.UpdateBlenderJarSprite(gameObject.tag, gameObject);
             transform.position = startPosition;
             transform.rotation = Quaternion.identity;
+            UpdateImageSpritesOnDrop(gameObject.tag); // Update the image sprites based on the dragged fruit
             helperHandInstance.DestroySpawnedHelperHand();
         }
 
         if (juiceManager.requiredFruits.Contains(gameObject.tag))
         {
-            helperHandInstance.OnFruitCollected(gameObject.tag); // Notify HelperHand of fruit collection
-            UpdateImageSpritesOnDrop(gameObject.tag); // Update the image sprites based on the dragged fruit
+            helperHandInstance.OnFruitCollected(gameObject.tag); // Notify HelperHand of fruit collection            
+        }
+        if (spriteRenderer != null)
+        {
+            spriteRenderer.sortingOrder = originalSortingOrder;
         }
     }
 

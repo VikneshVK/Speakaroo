@@ -153,6 +153,21 @@ public class JuiceManager : MonoBehaviour
                 return null;
         }
     }
+    public void ResetUIImages()
+    {
+        if (!isKikiJuice && requiredFruits.Count == 1)
+        {
+            Image1.sprite = GetSpriteForFruit(requiredFruits[0]);
+        }
+        else if (isKikiJuice && requiredFruits.Count == 2)
+        {
+            Image1.sprite = GetSpriteForFruit(requiredFruits[0]);
+            Image2.sprite = GetSpriteForFruit(requiredFruits[1]);
+        }
+
+        Debug.Log("UI images (Image1 and Image2) reset based on current fruit requirements.");
+    }
+
 
 
     void UpdateFruitRequirementsUI()
@@ -194,7 +209,7 @@ public class JuiceManager : MonoBehaviour
 
             LeanTween.value(-1300f, -790f, 1f).setEase(LeanTweenType.easeInOutQuad).setOnUpdate((float x) =>
             {
-                birdRectTransform.anchoredPosition = new Vector2(x, 320f);
+                birdRectTransform.anchoredPosition = new Vector2(x, 21f);
             }).setOnComplete(() =>
             {
                 PlayBirdAnimation(requiredFruits[0]);
@@ -208,7 +223,7 @@ public class JuiceManager : MonoBehaviour
 
             LeanTween.value(-1300f, -790f, 1f).setEase(LeanTweenType.easeInOutQuad).setOnUpdate((float x) =>
             {
-                birdRectTransform.anchoredPosition = new Vector2(x, 320f);
+                birdRectTransform.anchoredPosition = new Vector2(x, 21f);
             }).setOnComplete(() =>
             {
                 if (requiredFruits.Contains("Kiwi") && requiredFruits.Contains("SB"))
@@ -274,7 +289,7 @@ public class JuiceManager : MonoBehaviour
         // Move bird back to its initial position
         LeanTween.value(-790f, -1300f, 1f).setEase(LeanTweenType.easeInOutQuad).setOnUpdate((float x) =>
         {
-            birdRectTransform.anchoredPosition = new Vector2(x, 320f);
+            birdRectTransform.anchoredPosition = new Vector2(x, 21f);
         });
     }
     private IEnumerator RevealTextWordByWord(string fullText, float delayBetweenWords)

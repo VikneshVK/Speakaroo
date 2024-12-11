@@ -23,6 +23,10 @@ public class DishdragController : MonoBehaviour
     public Transform bowlDropTarget1; // Drop location for dirty-bowl1 and dirty-bowl2
     public Transform bowlDropTarget2;
 
+    private static HashSet<Transform> usedBowlTargets = new HashSet<Transform>();
+    private static HashSet<Transform> usedGlassTargets = new HashSet<Transform>();
+    private static HashSet<Transform> usedPlateTargets = new HashSet<Transform>();
+
     public static int dishesArranged = 0;
 
     private AudioSource SfxAudioSource;
@@ -92,18 +96,20 @@ public class DishdragController : MonoBehaviour
         // Reset the sorting order when dragging stops
         GetComponent<SpriteRenderer>().sortingOrder = 2;
 
+
         if (gameObject.name.Contains("Bowl"))
         {
-            // Check if dropped near any bowl drop location
-            if (Vector3.Distance(transform.position, bowlDropTarget1.position) < 1.0f ||
-                Vector3.Distance(transform.position, bowlDropTarget2.position) < 1.0f)
+            // Check if dropped near any available bowl drop location
+            Transform target = GetAvailableTarget(bowlDropTarget1, bowlDropTarget2, usedBowlTargets);
+            if (target != null)
             {
+                usedBowlTargets.Add(target); // Mark target as used
                 if (SfxAudioSource != null)
                 {
                     SfxAudioSource.loop = false;
                     SfxAudioSource.PlayOneShot(SfxAudio1);
                 }
-                OnDropped(true, isBowl: true);
+                OnDropped(true, isBowl: true, target: target);
             }
             else
             {
@@ -113,16 +119,17 @@ public class DishdragController : MonoBehaviour
         }
         else if (gameObject.name.Contains("glass"))
         {
-            // Check if dropped near any glass drop location
-            if (Vector3.Distance(transform.position, glassDropTarget1.position) < 1.0f ||
-                Vector3.Distance(transform.position, glassDropTarget2.position) < 1.0f)
+            // Check if dropped near any available glass drop location
+            Transform target = GetAvailableTarget(glassDropTarget1, glassDropTarget2, usedGlassTargets);
+            if (target != null)
             {
+                usedGlassTargets.Add(target); // Mark target as used
                 if (SfxAudioSource != null)
                 {
                     SfxAudioSource.loop = false;
                     SfxAudioSource.PlayOneShot(SfxAudio1);
                 }
-                OnDropped(true, isGlass: true);
+                OnDropped(true, isGlass: true, target: target);
             }
             else
             {
@@ -132,16 +139,16 @@ public class DishdragController : MonoBehaviour
         }
         else if (gameObject.name.Contains("plate"))
         {
-            // Check if dropped near any plate drop location
-            if (Vector3.Distance(transform.position, plateDropTarget1.position) < 1.0f ||
-                Vector3.Distance(transform.position, plateDropTarget2.position) < 1.0f)
+            Transform target = GetAvailableTarget(plateDropTarget1, plateDropTarget2, usedPlateTargets);
+            if (target != null)
             {
+                usedPlateTargets.Add(target); // Mark target as used
                 if (SfxAudioSource != null)
                 {
                     SfxAudioSource.loop = false;
                     SfxAudioSource.PlayOneShot(SfxAudio1);
                 }
-                OnDropped(true, isPlate: true);
+                OnDropped(true, isPlate: true, target: target);
             }
             else
             {
@@ -151,51 +158,23 @@ public class DishdragController : MonoBehaviour
         }
     }
 
-    private void OnDropped(bool correctDrop, bool isGlass = false, bool isPlate = false, bool isBowl = false)
+
+    private void OnDropped(bool correctDrop, bool isGlass = false, bool isPlate = false, bool isBowl = false, Transform target = null)
     {
         SpriteRenderer targetSpriteRenderer = null;
 
         if (correctDrop)
         {
-            if (isBowl)
+            if (target != null)
             {
-                // For bowls, change the sprite and destroy the object
-                targetSpriteRenderer = Vector3.Distance(transform.position, bowlDropTarget1.position) <
-                                       Vector3.Distance(transform.position, bowlDropTarget2.position)
-                    ? bowlDropTarget1.GetComponent<SpriteRenderer>()
-                    : bowlDropTarget2.GetComponent<SpriteRenderer>();
-
+                targetSpriteRenderer = target.GetComponent<SpriteRenderer>();
                 if (targetSpriteRenderer != null)
                 {
                     targetSpriteRenderer.sprite = newSprite;
-                }
-            }
-            else if (isGlass)
-            {
-                // For glasses, change the sprite and destroy the object
-                targetSpriteRenderer = Vector3.Distance(transform.position, glassDropTarget1.position) <
-                                       Vector3.Distance(transform.position, glassDropTarget2.position)
-                    ? glassDropTarget1.GetComponent<SpriteRenderer>()
-                    : glassDropTarget2.GetComponent<SpriteRenderer>();
-
-                if (targetSpriteRenderer != null)
-                {
-                    targetSpriteRenderer.sprite = newSprite;
-                    
-                }
-            }
-            else if (isPlate)
-            {
-                // For plates, change the sprite and destroy the object
-                targetSpriteRenderer = Vector3.Distance(transform.position, plateDropTarget1.position) <
-                                       Vector3.Distance(transform.position, plateDropTarget2.position)
-                    ? plateDropTarget1.GetComponent<SpriteRenderer>()
-                    : plateDropTarget2.GetComponent<SpriteRenderer>();
-
-                if (targetSpriteRenderer != null)
-                {
-                    targetSpriteRenderer.sprite = newSprite;
-                    targetSpriteRenderer.gameObject.transform.localScale = Vector3.one * 0.2f;
+                    if (isPlate)
+                    {
+                        targetSpriteRenderer.transform.localScale = Vector3.one * 0.2f;
+                    }
                 }
             }
 
@@ -215,6 +194,19 @@ public class DishdragController : MonoBehaviour
         {
             StartHelperHandTimer();
         }
+    }
+
+    private Transform GetAvailableTarget(Transform target1, Transform target2, HashSet<Transform> usedTargets)
+    {
+        if (!usedTargets.Contains(target1) && Vector3.Distance(transform.position, target1.position) < 1.0f)
+        {
+            return target1;
+        }
+        if (!usedTargets.Contains(target2) && Vector3.Distance(transform.position, target2.position) < 1.0f)
+        {
+            return target2;
+        }
+        return null;
     }
 
     private void CheckDishesArranged()

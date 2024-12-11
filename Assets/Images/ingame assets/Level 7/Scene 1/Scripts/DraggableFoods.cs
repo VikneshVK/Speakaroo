@@ -176,19 +176,27 @@ public class DraggableFoods : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
         yield return new WaitForSeconds(5); // Record for 5 seconds
         StopRecording();
 
+
+        float[] recordedSamples = AnalyzeRecordedAudio(audioSource.clip);
+        if (DetectVoicePresence(recordedSamples))
+        {
+            Debug.Log("Voice detected in recording.");
+        }
+        else
+        {
+            Debug.Log("No significant voice detected.");
+        }
+
         AudioSource playbackSource = Container.GetComponent<AudioSource>();
 
         playbackSource.clip = recordedAudio;
 
         Debug.Log("Playing recorded audio... Clip length: " + playbackSource.clip.length);
 
-        // Play back the recorded audio
         playbackSource.Play();
 
-        // Change Retry Button sprite to PlaybackSprite during audio playback
         retryButton.GetComponent<Image>().sprite = Resources.Load<Sprite>("Images/STMechanics/PlaybackSprite");
 
-        // Track the playback progress and update the ringImage's fill amount
         float playbackDuration = playbackSource.clip.length;
         float playbackTimeElapsed = 0f;
 
@@ -199,12 +207,10 @@ public class DraggableFoods : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
             yield return null; // Wait until the next frame
         }
 
-        ringImage.fillAmount = 1; // Ensure the ring is fully filled at the end of playback
+        ringImage.fillAmount = 1; 
 
-        // Wait for playback to complete
         yield return new WaitWhile(() => playbackSource.isPlaying);
 
-        // Now, wait for 3 seconds and visually represent the wait time in the ringImage
         retryButton.GetComponent<Image>().sprite = Resources.Load<Sprite>("Images/STMechanics/RetrySprite");
 
         float waitTime = 3f; // 3 seconds wait time
@@ -224,34 +230,89 @@ public class DraggableFoods : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
 
 
         ResetBooleans();
-        // Tween the panel's scale to zero
+       
         LeanTween.scale(panel.GetComponent<RectTransform>(), Vector3.zero, tweenDuration).setEaseInOutQuad();
 
-        // Disable the panel after tweening
         yield return new WaitForSeconds(tweenDuration);
         panel.SetActive(false);
 
-        // Spawn the prefab dynamically based on currentStopIndex
         int currentStopIndex = Lvl7Sc1JojoController.currentStopIndex;
         if (currentStopIndex >= 1 && currentStopIndex <= prefabsToSpawn.Length)
         {
-            GameObject prefabToSpawn = prefabsToSpawn[currentStopIndex - 1]; // Adjust index to match array (0-based index)
+            GameObject prefabToSpawn = prefabsToSpawn[currentStopIndex - 1]; 
             GameObject spawnedPrefab = Instantiate(prefabToSpawn, transform.position, Quaternion.identity);
 
             LeanTween.move(spawnedPrefab, foodDropPoint.position, tweenDuration)
          .setEaseInOutQuad()
          .setOnComplete(() =>
          {
-             // Destroy the prefab after the tweening finishes
+             
              Destroy(spawnedPrefab);
              jojoAnimator.SetTrigger("Chew");
 
          });
         }
-                foodContainerImage.enabled = true;
+        foodContainerImage.enabled = true;
         foodContainerController.ResetClickCount();
 
-    }   
+    }
+
+    private float[] AnalyzeRecordedAudio(AudioClip recordedClip)
+    {
+        float[] samples = new float[recordedClip.samples];
+        recordedClip.GetData(samples, 0);
+
+        NormalizeAudio(samples);
+        ApplyNoiseReduction(samples);
+        ApplyBandpassFilter(samples, 80, 3000);
+
+        return samples;
+    }
+
+    private void NormalizeAudio(float[] samples)
+    {
+        float maxAmplitude = Mathf.Max(samples);
+        for (int i = 0; i < samples.Length; i++)
+        {
+            samples[i] /= maxAmplitude;
+        }
+    }
+
+    private void ApplyNoiseReduction(float[] samples)
+    {
+        float noiseThreshold = 0.02f;
+        for (int i = 0; i < samples.Length; i++)
+        {
+            if (Mathf.Abs(samples[i]) < noiseThreshold)
+            {
+                samples[i] = 0f;
+            }
+        }
+    }
+
+    private void ApplyBandpassFilter(float[] samples, float lowFreq, float highFreq)
+    {
+        float sampleRate = 44100f;
+        float low = lowFreq / sampleRate;
+        float high = highFreq / sampleRate;
+
+        for (int i = 0; i < samples.Length; i++)
+        {
+            samples[i] *= (high - low);
+        }
+    }
+
+    private bool DetectVoicePresence(float[] samples)
+    {
+        foreach (float sample in samples)
+        {
+            if (Mathf.Abs(sample) > 0.01f)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
 
     private void ResetBooleans()
     {
@@ -303,14 +364,13 @@ public class DraggableFoods : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
     {
         SetMusicVolume(0f);
         int recordingLength = Microphone.GetPosition(null);
-        Microphone.End(null); // End the default microphone
+        Microphone.End(null); 
 
         if (recordingLength > 0)
         {
-            // Assign the recorded audio clip
             recordedAudio = AudioClip.Create("RecordedAudio", recordingLength, 1, 44100, false);
             float[] data = new float[recordingLength];
-            audioSource.clip.GetData(data, 0); // Copy the microphone data to the audio clip
+            audioSource.clip.GetData(data, 0); 
             recordedAudio.SetData(data, 0);
             Debug.Log("Recorded audio captured. Length: " + recordedAudio.length);
         }

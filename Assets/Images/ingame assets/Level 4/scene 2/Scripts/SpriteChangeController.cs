@@ -86,6 +86,39 @@ public class SpriteChangeController : MonoBehaviour
         Debug.Log("Blender reset. Fruits in blender cleared.");
         EnableAllFruitColliders();
     }
+    public void ResetGlassSprites()
+    {
+        Sprite defaultGlassSprite = Resources.Load<Sprite>("Images/LVL 4 scene 2/glass");
+        if (defaultGlassSprite == null)
+        {
+            Debug.LogWarning("Default glass sprite not found!");
+            return;
+        }
+
+        // Reset Glass 1
+        SpriteRenderer glass1SpriteRenderer = GameObject.FindGameObjectWithTag("Glass1").GetComponent<SpriteRenderer>();
+        if (glass1SpriteRenderer != null)
+        {
+            glass1SpriteRenderer.sprite = defaultGlassSprite;
+        }
+        else
+        {
+            Debug.LogWarning("Glass1 SpriteRenderer is missing.");
+        }
+
+        // Reset Glass 2
+        SpriteRenderer glass2SpriteRenderer = GameObject.FindGameObjectWithTag("Glass2").GetComponent<SpriteRenderer>();
+        if (glass2SpriteRenderer != null)
+        {
+            glass2SpriteRenderer.sprite = defaultGlassSprite;
+        }
+        else
+        {
+            Debug.LogWarning("Glass2 SpriteRenderer is missing.");
+        }
+
+        Debug.Log("Glass sprites reset to default.");
+    }
 
     void EnableAllFruitColliders()
     {
@@ -104,6 +137,25 @@ public class SpriteChangeController : MonoBehaviour
         }
 
         Debug.Log("All fruit colliders enabled.");
+    }
+
+    private void DisableAllFruitColliders()
+    {
+        GameObject[] fruits = GameObject.FindGameObjectsWithTag("Kiwi")
+            .Concat(GameObject.FindGameObjectsWithTag("SB"))
+            .Concat(GameObject.FindGameObjectsWithTag("BB"))
+            .ToArray();
+
+        foreach (GameObject fruit in fruits)
+        {
+            Collider2D fruitCollider = fruit.GetComponent<Collider2D>();
+            if (fruitCollider != null)
+            {
+                fruitCollider.enabled = false;
+            }
+        }
+
+        Debug.Log("All fruit colliders disabled.");
     }
 
     public void ResetBlenderJarSprite()
@@ -180,6 +232,7 @@ public class SpriteChangeController : MonoBehaviour
         // Corrected condition for Kiki's juice and Jojo's juice
         if (juiceManager.isKikiJuice && fruitsInBlender.Count == 2)
         {
+            DisableAllFruitColliders();
             animationProcess = false;
             Debug.Log("Kiki's juice mode: Two fruits in blender. Validating fruits...");
             if (juiceController.ValidateFruit(fruitsInBlender) && !animationProcess)
@@ -197,6 +250,7 @@ public class SpriteChangeController : MonoBehaviour
         }
         else if (!juiceManager.isKikiJuice && fruitsInBlender.Count == 1)
         {
+            DisableAllFruitColliders();
             animationProcess = false;
             Debug.Log("Jojo's juice mode: One fruit in blender. Validating fruit...");
             if (juiceController.ValidateFruit(fruitsInBlender) && !animationProcess)
@@ -350,12 +404,12 @@ public class SpriteChangeController : MonoBehaviour
         }
 
         // Set initial position (off-screen, anchored position)
-        birdRectTransform.anchoredPosition = new Vector2(-1300, 320);
+        birdRectTransform.anchoredPosition = new Vector2(-1300, 21f);
 
         // Tween bird to the end position
         LeanTween.value(-1300f, -790f, 1f).setEase(LeanTweenType.easeInOutQuad).setOnUpdate((float x) =>
         {
-            birdRectTransform.anchoredPosition = new Vector2(x, 320f);
+            birdRectTransform.anchoredPosition = new Vector2(x, 21f);
         }).setOnComplete(() =>
         {
             Debug.Log("Tween to end position complete!");
@@ -377,7 +431,7 @@ public class SpriteChangeController : MonoBehaviour
         // Tween bird back to its initial position
         LeanTween.value(-790f, -1300f, 1f).setEase(LeanTweenType.easeInOutQuad).setOnUpdate((float x) =>
         {
-            birdRectTransform.anchoredPosition = new Vector2(x, 320f);
+            birdRectTransform.anchoredPosition = new Vector2(x, 21f);
             birdInitialPosition = birdRectTransform.anchoredPosition;
         }).setOnComplete(() =>
         {
@@ -389,6 +443,7 @@ public class SpriteChangeController : MonoBehaviour
             else
             {
                 ResetBlender();
+                juiceManager.ResetUIImages();
             }
 
             animationProcess = true;

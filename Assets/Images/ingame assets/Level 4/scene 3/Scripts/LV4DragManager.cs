@@ -143,7 +143,7 @@ public class LV4DragManager : MonoBehaviour
                 GameObject spawnedObject = Instantiate(yourPrefab, spawnPosition, Quaternion.identity);
 
                 dishWashingManager = spawnedObject.GetComponent<DishWashingManager>();
-
+                
                 SpawnPrefab(spawnedObject);
 
                 helperHandManager.StopHelperHand();
@@ -167,14 +167,21 @@ public class LV4DragManager : MonoBehaviour
 
     void SpawnPrefab(GameObject spawnedObject)
     {
+        DebugHierarchy(spawnedObject.transform);
         Transform floor = spawnedObject.transform.Find("floor");
         Transform sink = spawnedObject.transform.Find("sink");
-
+        Transform canvasGameObject = spawnedObject.transform.Find("PrefabCanvas");
+        if (canvasGameObject == null)
+        {
+            Debug.LogError("PrefabCanvas not found in the spawned object hierarchy!");
+            return;
+        }
         Vector3 floorOriginalScale = floor.localScale;
         Vector3 sinkOriginalScale = sink.localScale;
-
+        
         floor.localScale = Vector3.zero;
         sink.localScale = Vector3.zero;
+       
 
         Dictionary<Transform, Vector3> dishOriginalScales = new Dictionary<Transform, Vector3>();
 
@@ -219,6 +226,29 @@ public class LV4DragManager : MonoBehaviour
             });
         });
 
+        Canvas canvas = canvasGameObject.GetComponent<Canvas>();       
+        if (canvas == null)
+        {
+            Debug.LogError("Canvas component not found on PrefabCanvas!");
+            return;
+        }
+        if (canvas.renderMode != RenderMode.ScreenSpaceCamera)
+        {
+            Debug.LogWarning("Canvas Render Mode is not Screen Space - Camera. Forcing it now.");
+            canvas.renderMode = RenderMode.ScreenSpaceCamera;
+        }
+
+        // Assign Main Camera
+        if (Camera.main != null)
+        {
+            canvas.worldCamera = Camera.main;
+            Debug.Log("Main Camera assigned to PrefabCanvas.");
+        }
+        else
+        {
+            Debug.LogError("Main Camera not found. Ensure it is tagged as 'MainCamera'.");
+        }
+
         PrefabSpawned = true;
     }
 
@@ -228,7 +258,14 @@ public class LV4DragManager : MonoBehaviour
         yield return new WaitForSeconds(3f);
         LeanTween.move(birdRectTransform, new Vector2(-250, -140), 0.5f);
     }
-
+    void DebugHierarchy(Transform parent)
+    {
+        foreach (Transform child in parent)
+        {
+            Debug.Log($"Child of {parent.name}: {child.name}");
+            DebugHierarchy(child); // Recursively print the hierarchy
+        }
+    }
 
     void TweenDirtyDishesBack()
     {

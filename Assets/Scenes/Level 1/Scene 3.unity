@@ -450,6 +450,7 @@ MonoBehaviour:
   birdAnimator: {fileID: 1431912427}
   subtitleText: {fileID: 1699669940}
   audiomanager: {fileID: 324970981}
+  helperController: {fileID: 924758985}
   audio1: {fileID: 8300000, guid: 39de4af8281006842889f0d030f41651, type: 3}
   audio2: {fileID: 8300000, guid: 08ecdd4fbc827294482e71a506c9db49, type: 3}
   audio3: {fileID: 8300000, guid: f7e3effa0e09fd0478db754816c4f074, type: 3}
@@ -889,7 +890,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1644845444, guid: fa8112416b9288943bd251711cfab331, type: 3}
       propertyPath: bottomRightPos.x
-      value: 17.047342
+      value: 17.447342
       objectReference: {fileID: 0}
     - target: {fileID: 1644845444, guid: fa8112416b9288943bd251711cfab331, type: 3}
       propertyPath: bottomRightPos.y
@@ -905,7 +906,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1644845445, guid: fa8112416b9288943bd251711cfab331, type: 3}
       propertyPath: bottomRightPos.x
-      value: 11.319182
+      value: 12.155718
       objectReference: {fileID: 0}
     - target: {fileID: 1644845445, guid: fa8112416b9288943bd251711cfab331, type: 3}
       propertyPath: bottomRightPos.y
@@ -1421,6 +1422,53 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 90}
+--- !u!1 &924758984
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 924758986}
+  - component: {fileID: 924758985}
+  m_Layer: 0
+  m_Name: HelperHand
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &924758985
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 924758984}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 39a6a403a0f5422418d87e77d3e6e7ab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  glowPrefab: {fileID: 6008917645427281803, guid: 495b16f205789494ba3006429ea07f95, type: 3}
+  helperHandPrefab: {fileID: 668317662352755921, guid: 3646b4a9ed18b9a448da137c97492a23, type: 3}
+  jojo: {fileID: 1097872431}
+--- !u!4 &924758986
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 924758984}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &946095941
 GameObject:
   m_ObjectHideFlags: 0
@@ -1657,6 +1705,7 @@ MonoBehaviour:
   birdAnimator: {fileID: 1431912427}
   subtitleText: {fileID: 1699669940}
   audiomanager: {fileID: 324970981}
+  helperController: {fileID: 924758985}
   audio1: {fileID: 8300000, guid: 39de4af8281006842889f0d030f41651, type: 3}
   audio2: {fileID: 8300000, guid: 08ecdd4fbc827294482e71a506c9db49, type: 3}
   audio3: {fileID: 8300000, guid: f7e3effa0e09fd0478db754816c4f074, type: 3}
@@ -1937,6 +1986,37 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1 &1097872431
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1097872432}
+  m_Layer: 0
+  m_Name: Tween position
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1097872432
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1097872431}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 9.22, y: -1.34, z: -0.07440626}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1102011281
 GameObject:
   m_ObjectHideFlags: 0
@@ -1976,6 +2056,7 @@ MonoBehaviour:
   birdAnimator: {fileID: 1431912427}
   subtitleText: {fileID: 1699669940}
   audiomanager: {fileID: 324970981}
+  helperController: {fileID: 924758985}
   audio1: {fileID: 8300000, guid: 39de4af8281006842889f0d030f41651, type: 3}
   audio2: {fileID: 8300000, guid: 08ecdd4fbc827294482e71a506c9db49, type: 3}
   audio3: {fileID: 8300000, guid: f7e3effa0e09fd0478db754816c4f074, type: 3}
@@ -3110,3 +3191,5 @@ SceneRoots:
   - {fileID: 324970982}
   - {fileID: 1180143030}
   - {fileID: 964575536}
+  - {fileID: 924758986}
+  - {fileID: 1097872432}

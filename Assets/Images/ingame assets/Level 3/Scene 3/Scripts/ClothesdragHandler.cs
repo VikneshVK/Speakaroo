@@ -15,6 +15,8 @@ public class ClothesdragHandler : MonoBehaviour
     public Lvl3Sc3DragManager dragManager;
     public AudioSource fedbackAudio1;
     public AudioSource fedbackAudio2;
+    public GameObject glowPrefab;
+    private GameObject currentGlow;
     public bool IsDragging { get; private set; }
 
     private Vector3 resetPosition;
@@ -70,9 +72,18 @@ public class ClothesdragHandler : MonoBehaviour
     {
         if (isDry)
         {
-            IsDragging = true;            
             Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             transform.position = new Vector3(mousePosition.x, mousePosition.y, 0);
+
+            // Spawn glow at basket position if it doesn't already exist
+            if (currentGlow == null)
+            {
+                currentGlow = Instantiate(glowPrefab, clothesBasketRenderer.transform.position, Quaternion.identity);
+                currentGlow.transform.localScale = Vector3.zero;
+
+                // Tween the glow's scale to 8
+                LeanTween.scale(currentGlow, Vector3.one * 10, 0.5f).setEaseOutBounce();
+            }
         }
     }
 
@@ -80,6 +91,14 @@ public class ClothesdragHandler : MonoBehaviour
     {
         IsDragging = false;
         StartCoroutine(HandleDrop());
+        if (currentGlow != null)
+        {
+            // Scale down the glow to zero and destroy it
+            LeanTween.scale(currentGlow, Vector3.zero, 0.5f).setOnComplete(() =>
+            {
+                Destroy(currentGlow);
+            });
+        }
     }
 
     private IEnumerator HandleDrop()

@@ -242,6 +242,7 @@ public class DraggingController1 : MonoBehaviour
                 bowlSpriteRenderer.sprite = cerealSprite;
 
             transform.position = cerealInitialPosition.position;
+            cerealCollider.enabled = false;
             Debug.Log("Cereal Position Reset and Sprite Changed");
         }
         else if (tag == "Milk")
@@ -251,6 +252,7 @@ public class DraggingController1 : MonoBehaviour
                 bowlSpriteRenderer.sprite = milkAndCerealSprite;
 
             transform.position = milkInitialPosition.position;
+            milkCollider.enabled = false;
             Debug.Log("Milk Position Reset and Sprite Changed");
         }
         else if (tag == "Cherry")
@@ -264,6 +266,7 @@ public class DraggingController1 : MonoBehaviour
             }
 
             transform.position = cherryInitialPosition.position;
+            cherryCollider.enabled = false;
             Debug.Log("Cherry Position Reset and Sprite Changed");
         }
 
@@ -375,12 +378,12 @@ public class DraggingController1 : MonoBehaviour
         if (birdRectTransform == null || birdEndPosition == null) return;
 
         // Set initial position (off-screen, anchored position)
-        birdRectTransform.anchoredPosition = new Vector2(-1300, 320);
+        birdRectTransform.anchoredPosition = new Vector2(-1300, 21);
 
         // Tween bird to the end position
         LeanTween.value(-1300f, -790f, 1f).setEase(LeanTweenType.easeInOutQuad).setOnUpdate((float x) =>
         {
-            birdRectTransform.anchoredPosition = new Vector2(x, 320f);
+            birdRectTransform.anchoredPosition = new Vector2(x, 21f);
         }).setOnComplete(() =>
         {
             birdAnimator.SetTrigger(animationTrigger);
@@ -400,7 +403,7 @@ public class DraggingController1 : MonoBehaviour
         // Tween bird back to the initial position (off-screen)
         LeanTween.value(-790f, -1300f, 1f).setEase(LeanTweenType.easeInOutQuad).setOnUpdate((float x) =>
         {
-            birdRectTransform.anchoredPosition = new Vector2(x, 320f);
+            birdRectTransform.anchoredPosition = new Vector2(x, 21f);
         }).setOnComplete(() =>
         {
             // Enable colliders and handle state transitions
@@ -412,10 +415,12 @@ public class DraggingController1 : MonoBehaviour
             if (!isMilkDropped && milkCollider != null && isCerealDropped)
             {
                 milkCollider.enabled = true;
+               
             }
             else if (!isCherryDropped && cherryCollider != null && isMilkDropped)
             {
                 cherryCollider.enabled = true;
+                
             }
 
             if (startSecondTime && tweeningController != null)
