@@ -13,15 +13,8 @@ public class LVL6Sc2KikiController : MonoBehaviour
     public TextMeshProUGUI subtitleText;
     private Animator animator;
 
-    private Vector2 outsideViewportPosition = new Vector2(180, -275); // Position outside viewport
-    private Vector2 insideViewportPosition = new Vector2(180, 175);   // Position inside viewport
-
     private void Start()
     {
-        RectTransform rectTransform = GetComponent<RectTransform>();
-
-        rectTransform.anchoredPosition = outsideViewportPosition;
-
         animator = GetComponent<Animator>();
         audioSource = GetComponent<AudioSource>();
 
@@ -29,8 +22,8 @@ public class LVL6Sc2KikiController : MonoBehaviour
     }
 
     private IEnumerator HandleTweens()
-    {  
-        TweenBirdandback("FirstTalk");
+    {
+        TriggerAnimation("FirstTalk");
         yield return new WaitForSeconds(0.5f);
         audioSource.clip = audioClip1;
         audioSource.Play();
@@ -43,26 +36,16 @@ public class LVL6Sc2KikiController : MonoBehaviour
         Lvl6QuestManager.SpawnItems();
     }
 
-    public void TweenBirdandback(string parameter)
+    public void TriggerAnimation(string parameter)
     {
-        RectTransform rectTransform = GetComponent<RectTransform>();
-
-        LeanTween.value(gameObject, rectTransform.anchoredPosition.y, insideViewportPosition.y, tweenDuration).setOnUpdate((float val) =>
-        {
-            rectTransform.anchoredPosition = new Vector2(outsideViewportPosition.x, val);
-        }).setOnComplete(() =>
-        {
-            animator.SetTrigger(parameter);
-            StartCoroutine(WaitForAnimationComplete(parameter));
-        });
-
+        animator.SetTrigger(parameter);
+        StartCoroutine(WaitForAnimationComplete(parameter));
         helperHandController.OnTweenBirdAndBackCalled();
     }
 
     private IEnumerator WaitForAnimationComplete(string parameter)
     {
-        
-        float timeout = 3f; // maximum time to wait for the animation
+        float timeout = 3f; // Maximum time to wait for the animation
         float elapsed = 0f;
 
         while (elapsed < timeout && !(animator.GetCurrentAnimatorStateInfo(0).IsName(parameter) &&
@@ -71,12 +54,6 @@ public class LVL6Sc2KikiController : MonoBehaviour
             elapsed += Time.deltaTime;
             yield return null;
         }
-
-        RectTransform rectTransform = GetComponent<RectTransform>();
-        LeanTween.value(gameObject, rectTransform.anchoredPosition.y, outsideViewportPosition.y, tweenDuration).setOnUpdate((float val) =>
-        {
-            rectTransform.anchoredPosition = new Vector2(outsideViewportPosition.x, val);
-        });
     }
 
     public void PlayQuestAudio(AudioClip questAudio)
@@ -90,6 +67,7 @@ public class LVL6Sc2KikiController : MonoBehaviour
         audioSource.clip = questAudio;
         audioSource.Play();
     }
+
     private IEnumerator RevealTextWordByWord(string fullText, float delayBetweenWords)
     {
         subtitleText.text = "";

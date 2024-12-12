@@ -27,7 +27,9 @@ public class LVL5Sc1_3JojoController1 : MonoBehaviour
 
     public Transform position1;
     public Transform position2;
-
+    private AudioSource SfxAudioSource;
+    public AudioClip SfxAudio1;
+    private bool walkingSfxPlayed = false;
 
     private Animator animator;
     private Animator kikiAnimator;
@@ -51,11 +53,20 @@ public class LVL5Sc1_3JojoController1 : MonoBehaviour
         finalDialogueTriggered = false;
         animator.SetBool("canWalk", true);
         subtitleText.text = "";
+        SfxAudioSource = GameObject.FindWithTag("SFXAudioSource").GetComponent<AudioSource>();
     }
     void Update()
     {
         if (canWalk)
         {
+            if (!walkingSfxPlayed)
+            {
+                SfxAudioSource.loop = true;
+                walkingSfxPlayed = true;
+                SfxAudioSource.clip = SfxAudio1;
+                SfxAudioSource.Play();
+            }
+
             WalkToPosition();
         }
 
@@ -87,6 +98,8 @@ public class LVL5Sc1_3JojoController1 : MonoBehaviour
 
         if (Mathf.Abs(transform.position.x - stopPosition.position.x) <= 0.5f)
         {
+            SfxAudioSource.Stop();
+            walkingSfxPlayed = false;
             animator.SetBool("canWalk", false);
             canWalk = false;
             TweenBird();

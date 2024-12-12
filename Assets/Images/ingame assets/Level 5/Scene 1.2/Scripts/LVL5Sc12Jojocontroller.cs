@@ -20,6 +20,8 @@ public class LVL5Sc12Jojocontroller : MonoBehaviour
 
     private AudioSource SfxAudioSource;
     public AudioClip SfxAudio1;
+    public AudioClip SfxAudio2;
+    private bool walkingSfxPlayed = false;
 
     private Animator animator;               // Animator for the character
     private AudioSource boyAudioSource;
@@ -69,6 +71,13 @@ public class LVL5Sc12Jojocontroller : MonoBehaviour
         }
         else if (canWalk && isWalking)
         {
+            if (!walkingSfxPlayed)
+            {
+                SfxAudioSource.loop = true;
+                walkingSfxPlayed = true;
+                SfxAudioSource.clip = SfxAudio2;
+                SfxAudioSource.Play();
+            }
             if (!isWalkingToPosition2)
             {
                 WalkToPosition(targetXPosition); // Move to stop position 1
@@ -114,14 +123,15 @@ public class LVL5Sc12Jojocontroller : MonoBehaviour
 
         if (Mathf.Abs(currentPosition.x - targetXPosition) <= 0.1f)
         {
-            // Reached the target x position
+            SfxAudioSource.Stop();
+            walkingSfxPlayed = false;
             isWalking = false;
             canWalk = false;
             animator.SetBool("canWalk", false); // Stop walk animation
 
             if (!isWalkingToPosition2)
             {
-                // If it's the first walk phase (to stopPosition1), transition to talking
+                
                 canTalk = true;               
                 animator.SetBool("canTalk", true); // Trigger talk animation
                 boyAudioSource.clip = Audio1;

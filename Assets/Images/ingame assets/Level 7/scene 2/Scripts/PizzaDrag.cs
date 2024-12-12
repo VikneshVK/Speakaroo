@@ -30,6 +30,8 @@ public class PizzaDrag : MonoBehaviour
     private AudioSource SfxAudioSource;
     public AudioClip SfxAudio1;
     public AudioClip SfxAudio2;
+    public AudioClip SfxAudio3;
+    public AudioClip PizzaEndingAudio;
 
     public bool pizzaDropped = false;
     private bool canTapPizzaBox = false;
@@ -41,11 +43,17 @@ public class PizzaDrag : MonoBehaviour
     [Header("Pizza Piece Sprites")]
     public Sprite Piece1;
     public Sprite Piece5;
-    public Sprite Piece9;   
+    public Sprite Piece9;
+
+    public RectTransform jojoFinalImage;
+    public RectTransform kikiFinalImage;
+    private Animator jojoAnimator;
+    private Animator kikiFinalAnimator;
 
     public AudioClip OvenAudio;
     public TextMeshProUGUI subtitleText;
     public Lvl7Sc2AudioManager audioManager;
+    public LVL7Sc2HelperFunction helperFunction;
 
     void Start()
     {
@@ -53,7 +61,8 @@ public class PizzaDrag : MonoBehaviour
         pizzaBoxCollider = pizzaBox.GetComponent<Collider2D>();
         startPosition = transform.position;
         pizzasprite = GetComponent<SpriteRenderer>();
-
+        jojoAnimator = jojoFinalImage.GetComponent<Animator>();
+        kikiFinalAnimator = kikiFinalImage.GetComponent<Animator>();
         if (pizzaBoxCollider != null)
         {
             pizzaBoxCollider.enabled = false;
@@ -102,6 +111,7 @@ public class PizzaDrag : MonoBehaviour
         if (!pizzaDropped)
         {
             isDragging = true;
+            helperFunction.ResetTimer();
         }
     }
 
@@ -110,6 +120,7 @@ public class PizzaDrag : MonoBehaviour
         isDragging = false;
         if (IsDroppedOnTarget())
         {
+            LeanTween.move(gameObject, pizzaDropLocation.transform.position, 0.5f);
             pizzaDropped = true;
             pizzacollider.enabled = false;
             PanCameraAndMovePizza();
@@ -145,11 +156,17 @@ public class PizzaDrag : MonoBehaviour
             LeanTween.delayedCall(0.3f, () =>
             {
                 heat.GetComponent<SpriteRenderer>().enabled = true;
+                if (SfxAudioSource != null)
+                {
+                    SfxAudioSource.loop = false;
+                    SfxAudioSource.clip = SfxAudio3;
+                    SfxAudioSource.Play();
+                }
 
-                LeanTween.delayedCall(1.0f, () =>
+                LeanTween.delayedCall(3.0f, () =>
                 {
                     heat.GetComponent<SpriteRenderer>().enabled = false;
-
+                    SfxAudioSource.Stop();
                     UpdatePizzaSprite();
 
                     LeanTween.delayedCall(0.3f, () =>
@@ -174,63 +191,68 @@ public class PizzaDrag : MonoBehaviour
     {
         canTapPizzaBox = false;
 
-        // Tween the pizzaEatingPanel to scale 1
+        
         LeanTween.scale(pizzaEatingPanel, Vector3.one, 0.4f).setEase(LeanTweenType.easeOutBounce).setOnComplete(() =>
         {
-            if (questManager == null)
+            LeanTween.scale(kikiFinalImage, Vector3.one * 1.5f, 0.4f);
+            LeanTween.scale(jojoFinalImage, Vector3.one * 2.5f, 0.4f).setEase(LeanTweenType.easeInOutQuad).setOnComplete(() =>
             {
-                Debug.LogError("QuestManager is not assigned.");
-                return;
-            }
-
-            int pizzaIndex = questManager.PizzaMade;
-            if (pizzaIndex < 0 || pizzaIndex > 2)
-            {
-                Debug.LogError($"Invalid PizzaMade value ({pizzaIndex}).");
-                return;
-            }
-
-            // Deactivate only the children of pizzaEatingPanel with "Image" in their name
-            for (int i = 0; i < pizzaEatingPanel.transform.childCount; i++)
-            {
-                Transform child = pizzaEatingPanel.transform.GetChild(i);
-                if (child.name.Contains("Image"))
+                if (questManager == null)
                 {
-                    child.gameObject.SetActive(false);
+                    Debug.LogError("QuestManager is not assigned.");
+                    return;
                 }
-            }
 
-            // Enable the correct child based on PizzaMade by name
-            string targetChildName = $"Image {pizzaIndex + 1}";
-            Transform targetChild = pizzaEatingPanel.transform.Find(targetChildName);
-            if (targetChild == null)
-            {
-                Debug.LogError($"Target child with name '{targetChildName}' not found.");
-                return;
-            }
-            targetChild.gameObject.SetActive(true);
+                int pizzaIndex = questManager.PizzaMade;
+                if (pizzaIndex < 0 || pizzaIndex > 2)
+                {
+                    Debug.LogError($"Invalid PizzaMade value ({pizzaIndex}).");
+                    return;
+                }
 
-            // Assign the correct sprite to the enabled child
-            Image childImage = targetChild.GetComponent<Image>();
-            if (childImage == null)
-            {
-                Debug.LogError("Target child is missing an Image component.");
-                return;
-            }
+                // Deactivate only the children of pizzaEatingPanel with "Image" in their name
+                for (int i = 0; i < pizzaEatingPanel.transform.childCount; i++)
+                {
+                    Transform child = pizzaEatingPanel.transform.GetChild(i);
+                    if (child.name.Contains("Image"))
+                    {
+                        child.gameObject.SetActive(false);
+                    }
+                }
 
-            switch (pizzaIndex)
-            {
-                case 0: childImage.sprite = Piece1; break;
-                case 1: childImage.sprite = Piece5; break;
-                case 2: childImage.sprite = Piece9; break;
-                default: Debug.LogError("Invalid PizzaMade value."); return;
-            }
+                // Enable the correct child based on PizzaMade by name
+                string targetChildName = $"Image {pizzaIndex + 1}";
+                Transform targetChild = pizzaEatingPanel.transform.Find(targetChildName);
+                if (targetChild == null)
+                {
+                    Debug.LogError($"Target child with name '{targetChildName}' not found.");
+                    return;
+                }
+                targetChild.gameObject.SetActive(true);
 
-            // Tween the active child's scale to 1
-            LeanTween.scale(targetChild.gameObject, Vector3.one * 2.5f, 0.4f).setEase(LeanTweenType.easeInOutQuad).setOnComplete(() =>
-            {
-                StartTapSequence(targetChild);
+                // Assign the correct sprite to the enabled child
+                Image childImage = targetChild.GetComponent<Image>();
+                if (childImage == null)
+                {
+                    Debug.LogError("Target child is missing an Image component.");
+                    return;
+                }
+
+                switch (pizzaIndex)
+                {
+                    case 0: childImage.sprite = Piece1; break;
+                    case 1: childImage.sprite = Piece5; break;
+                    case 2: childImage.sprite = Piece9; break;
+                    default: Debug.LogError("Invalid PizzaMade value."); return;
+                }
+
+                // Tween the active child's scale to 1
+                LeanTween.scale(targetChild.gameObject, Vector3.one * 2.5f, 0.4f).setEase(LeanTweenType.easeInOutQuad).setOnComplete(() =>
+                {
+                    StartTapSequence(targetChild);
+                });
             });
+            
         });
     }
 
@@ -338,9 +360,42 @@ public class PizzaDrag : MonoBehaviour
     {
         mainCamera.transform.position = new Vector3(0, 0, mainCamera.transform.position.z);
         transform.position = startPosition;
-        pizzasprite.sprite = defaultSprite;
+        pizzasprite.sprite = defaultSprite;        
         questManager.MakePizza();
+
     }
+   /* private void PizzaEndSequence()
+    {
+        // Tween the final images into the viewport
+        LeanTween.move(kikiFinalImage, new Vector2(132, 130), 1.0f).setEase(LeanTweenType.easeOutQuad);
+        LeanTween.move(jojoFinalImage, new Vector2(-256, 56), 1.0f).setEase(LeanTweenType.easeOutQuad).setOnComplete(() =>
+        {
+            // Trigger the level end animations
+            if (kikiFinalAnimator != null)
+                kikiFinalAnimator.SetTrigger("LevelEnd");
+
+            if (jojoAnimator != null)
+                jojoAnimator.SetTrigger("LevelEnd");
+
+            audioManager.PlayAudio(PizzaEndingAudio);
+
+            // Wait for the animations to complete before tweening them back out
+            StartCoroutine(WaitForLevelEndAnimationAndReset());
+        });
+    }
+
+    private IEnumerator WaitForLevelEndAnimationAndReset()
+    {
+        // Wait for the longest animation length (example: assuming 2 seconds here)
+        yield return new WaitForSeconds(2.0f);
+
+        // Tween the final images back to their original positions
+        LeanTween.move(kikiFinalImage, new Vector2(132, -130), 1.0f).setEase(LeanTweenType.easeInQuad);
+        LeanTween.move(jojoFinalImage, new Vector2(-256, -400), 1.0f).setEase(LeanTweenType.easeInQuad).setOnComplete(() =>
+        {
+           
+        });
+    }*/
 
     public void EnablePizzaCollider()
     {
@@ -351,48 +406,33 @@ public class PizzaDrag : MonoBehaviour
             audioManager.PlayAudio(OvenAudio);
             StartCoroutine(RevealTextWordByWord("Let's put it in the Oven", 0.5f));
             // Start a coroutine to wait until the "intoOven" animation state is complete
-            StartCoroutine(WaitForAnimationAndEnableCollider("intoOven"));
+            StartCoroutine(WaitForAnimationAndEnableCollider());
         }
         else
         {
-            Debug.LogError("Kiki Animator is not assigned.");
-            if (pizzacollider != null)
-            {
-                pizzacollider.enabled = true; // Fallback if Animator is missing
-            }
+            Debug.LogError("Kiki Animator is not assigned.");            
         }
     }
 
-    private IEnumerator WaitForAnimationAndEnableCollider(string stateName)
+    private IEnumerator WaitForAnimationAndEnableCollider()
     {
         if (kikiAnimator == null)
         {
             Debug.LogError("Kiki Animator is null.");
             yield break;
         }
-
-        // Wait for the Animator to enter the desired state
-        while (!kikiAnimator.GetCurrentAnimatorStateInfo(0).IsName(stateName))
-        {
-            yield return null; // Wait for the next frame
-        }
-
-        // Get the animation length from the current state
-        float animationLength = kikiAnimator.GetCurrentAnimatorStateInfo(0).length;
-
-        // Wait for the animation to complete
-        yield return new WaitForSeconds(animationLength);
+       
+        yield return new WaitForSeconds(2f);
 
         // Enable the pizza collider
         if (pizzacollider != null)
         {
             pizzacollider.enabled = true;
             Debug.Log("Pizza collider enabled after Kiki animation.");
+            helperFunction.ResetTimer();
+            helperFunction.StartTimer(gameObject.transform.position, pizzaDropLocation.transform.position);
         }
-        else
-        {
-            Debug.LogError("Pizza collider is not assigned.");
-        }
+       
     }
 
 

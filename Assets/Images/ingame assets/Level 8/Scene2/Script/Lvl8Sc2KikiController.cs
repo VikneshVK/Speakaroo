@@ -13,17 +13,19 @@ public class Lvl8Sc2KikiController : MonoBehaviour
     public AudioSource audioSource;
     public GameObject beaker; // Beaker GameObject
     public TextMeshProUGUI subtitleText;
+    public Lvl8SSc2HelperController helperController;
 
     private Animator kikiAnimator;
     private SpriteRenderer spriteRenderer;
     private bool isFlying = false;
     private bool isIdleCompleted = false;
+    
 
     void Start()
     {
         kikiAnimator = GetComponent<Animator>();
         spriteRenderer = GetComponent<SpriteRenderer>();
-        audioSource = GetComponent<AudioSource>();
+        audioSource = GetComponent<AudioSource>();        
     }
 
     void Update()
@@ -82,35 +84,12 @@ public class Lvl8Sc2KikiController : MonoBehaviour
             yield return null;
         }
 
-        kikiAnimator.SetTrigger("Dialouge1");
-
-        StartCoroutine(WatchKikiDialogue());
-    }
-
-    private IEnumerator WatchKikiDialogue()
-    {
-        while (!kikiAnimator.GetCurrentAnimatorStateInfo(0).IsName("Dialouge1"))
-        {
-            yield return null;
-        }
-
-        if (kikiDialogueAudio != null && audioSource != null)
-        {
-            audioSource.clip = kikiDialogueAudio;
-            audioSource.Play();
-            StartCoroutine(RevealTextWordByWord("Let's mix some Colors, Jojo..!", 0.5f));
-        }
-
-        while (kikiAnimator.GetCurrentAnimatorStateInfo(0).IsName("Dialouge1") &&
-               kikiAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime < 1f)
-        {
-            yield return null;
-        }
-
         kikiAnimator.SetTrigger("Beaker");
 
         StartCoroutine(WatchBeakerAnimation());
     }
+
+   
 
     private IEnumerator WatchBeakerAnimation()
     {
@@ -134,11 +113,8 @@ public class Lvl8Sc2KikiController : MonoBehaviour
 
         if (beaker != null)
         {
-            Collider2D beakerCollider = beaker.GetComponent<Collider2D>();
-            if (beakerCollider != null)
-            {
-                beakerCollider.enabled = true;
-            }
+            helperController.EnableTestTubeCollider(beaker);
+            helperController.SpawnGlow(beaker);
         }
     }
     private IEnumerator RevealTextWordByWord(string fullText, float delayBetweenWords)

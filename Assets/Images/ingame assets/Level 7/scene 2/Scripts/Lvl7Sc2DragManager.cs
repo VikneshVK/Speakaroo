@@ -31,6 +31,8 @@ public class Lvl7Sc2DragManager : MonoBehaviour
     public Lvl7Sc2AudioManager audioManager;
 
     public TextMeshProUGUI subtitleText;
+    public LVL7Sc2HelperFunction helperFunction;
+    public Transform pizzaLocation;
 
     void Start()
     {
@@ -141,33 +143,38 @@ public class Lvl7Sc2DragManager : MonoBehaviour
             yield break;
         }
 
-        // Wait for the Animator to enter the desired state
-        while (!kikiAnimator.GetCurrentAnimatorStateInfo(0).IsName(stateName))
-        {
-            yield return null; // Wait for the next frame
-        }
+        yield return new WaitForSeconds(1.5f);
 
-        // Get the length of the current state
-        float animationLength = kikiAnimator.GetCurrentAnimatorStateInfo(0).length;
-
-        // Wait for the animation to complete
-        yield return new WaitForSeconds(animationLength);
-
-        // Enable the collider for the topping
         if (topping != null && topping.GetComponent<Collider2D>() != null)
         {
             topping.GetComponent<Collider2D>().enabled = true;
             Debug.Log($"{topping.name} collider enabled after Kiki animation.");
+            helperFunction.ResetTimer(); // Reset any existing timer
+            helperFunction.StartTimer(topping.transform.position, pizzaLocation.position);
+
         }
         else
         {
             Debug.LogError("Topping or Collider2D is null.");
         }
 
-        // Update the opacity of the ingredient icon
         UpdateIconOpacityForTopping(topping);
     }
+   /* public void OnHelperTimerEnded()
+    {
+        if (currentToppingIndex < totalToppings && helperFunction != null)
+        {
+            GameObject topping = currentToppings[currentToppingIndex];
+            if (topping != null && pizzaLocation != null)
+            {
+                Vector3 toppingPosition = topping.transform.position;
+                Vector3 pizzaPosition = pizzaLocation.position;
 
+                // Spawn and tween the helper hand
+                helperFunction.SpawnAndTweenHelperHand(toppingPosition, pizzaPosition);
+            }
+        }
+    }*/
 
 
     private void EnableToppingCollider()
@@ -209,6 +216,12 @@ public class Lvl7Sc2DragManager : MonoBehaviour
                 EnableNextTopping();
             }
             UpdateIconOpacityForTopping(droppedTopping);
+
+            // Reset the helper timer since the topping has been dropped
+            if (helperFunction != null)
+            {
+                helperFunction.ResetTimer();
+            }
         }
     }
 
@@ -257,41 +270,7 @@ public class Lvl7Sc2DragManager : MonoBehaviour
         }
 
         Debug.Log($"Updated opacity for {topping.name}, Collider Active: {isColliderActive}");
-    }
-
-
-
-    private IEnumerator WaitForStateAndEnableCollider(string stateName, GameObject topping)
-    {
-        if (kikiAnimator == null)
-        {
-            Debug.LogError("Kiki Animator is null.");
-            yield break;
-        }
-
-        // Wait for the Animator to enter the state
-        while (!kikiAnimator.GetCurrentAnimatorStateInfo(0).IsName(stateName))
-        {
-            yield return null; // Wait for the next frame
-        }
-
-        // Get the length of the state
-        float animationLength = kikiAnimator.GetCurrentAnimatorStateInfo(0).length;
-
-        // Wait for the animation to complete
-        yield return new WaitForSeconds(animationLength);
-
-        // Enable the collider for the topping
-        if (topping != null && topping.GetComponent<Collider2D>() != null)
-        {
-            topping.GetComponent<Collider2D>().enabled = true;
-            Debug.Log($"{topping.name} collider enabled after Kiki animation.");
-        }
-        else
-        {
-            Debug.LogError("Topping or Collider2D is null.");
-        }
-    }
+    }   
 
     private IEnumerator RevealTextWordByWord(string fullText, float delayBetweenWords)
     {

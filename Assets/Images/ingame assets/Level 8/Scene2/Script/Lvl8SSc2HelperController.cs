@@ -8,6 +8,7 @@ public class Lvl8SSc2HelperController : MonoBehaviour
     public float glowScale = 10f; // Final scale for the glow effect
     public float glowDuration = 2f; // Duration to wait before destroying the glow
     private Collider2D[] testTubeColliders;
+    private GameObject SpawnedGlow;
 
     public void DisableAllTestTubeColliders(GameObject leftStand, GameObject rightStand)
     {
@@ -36,12 +37,19 @@ public class Lvl8SSc2HelperController : MonoBehaviour
 
     public void SpawnGlow(GameObject target)
     {
-        GameObject glow = Instantiate(glowPrefab, target.transform.position, Quaternion.identity);
-        LeanTween.scale(glow, Vector3.one * glowScale, 0.5f).setEase(LeanTweenType.easeOutQuad)
+        SpawnedGlow = Instantiate(glowPrefab, target.transform.position, Quaternion.identity);
+        LeanTween.scale(SpawnedGlow, Vector3.one * glowScale, 0.5f).setEase(LeanTweenType.easeOutQuad)
             .setOnComplete(() =>
             {
-                LeanTween.scale(glow, Vector3.zero, 0.5f).setDelay(glowDuration)
-                    .setOnComplete(() => Destroy(glow));
+                LeanTween.scale(SpawnedGlow, Vector3.zero, 0.5f).setDelay(glowDuration);                    
             });
+    }
+
+    public void ResetGlow()
+    {
+        if(SpawnedGlow != null)
+        {
+            Destroy(SpawnedGlow);
+        }
     }
 }

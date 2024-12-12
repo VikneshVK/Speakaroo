@@ -16,6 +16,11 @@ public class BoyController1 : MonoBehaviour
     public AudioClip[] audioClips; // Array to hold the audio clips
     public TextMeshProUGUI subtitleText;
 
+    [Header("SFX")]
+    private AudioSource SfxAudioSource;
+    public AudioClip SfxAudio1;
+    private bool walkingSfxPlayed = false;
+
     private Animator boyAnimator;
     private SpriteRenderer boyspriteRenderer;
     private Animator birdAnimator;
@@ -37,8 +42,7 @@ public class BoyController1 : MonoBehaviour
         boyspriteRenderer = GetComponent<SpriteRenderer>();
         birdAnimator = Bird.GetComponent<Animator>();
         jojoAudio = GetComponent<AudioSource>();
-
-
+        SfxAudioSource = GameObject.FindWithTag("SFXAudioSource").GetComponent<AudioSource>();
 
         if (stopPosition == null)
         {
@@ -86,10 +90,17 @@ public class BoyController1 : MonoBehaviour
         {
             Vector3 targetPosition = new Vector3(stopPosition.position.x, transform.position.y, transform.position.z);
             transform.position = Vector3.MoveTowards(transform.position, targetPosition, walkSpeed * Time.deltaTime);
-
+            if (!walkingSfxPlayed)
+            {
+                SfxAudioSource.loop = true;
+                walkingSfxPlayed = true;
+                SfxAudioSource.clip = SfxAudio1;
+                SfxAudioSource.Play();
+            }
             // Check if the boy has reached the stop position
             if (Mathf.Abs(transform.position.x - stopPosition.position.x) < 0.1f)
             {
+                SfxAudioSource.Stop();
                 isWalking = false;
                 isWalkCompleted = true;
                 boyspriteRenderer.flipX = false;
@@ -114,8 +125,6 @@ public class BoyController1 : MonoBehaviour
 
     private void HandleTalking()
     {
-
-
         if (isWalkCompleted && !isTalking && boyAnimator.GetCurrentAnimatorStateInfo(0).IsName("Dialouge1") &&
             boyAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.9f)
         {

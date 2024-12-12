@@ -6,7 +6,7 @@ public class SuncreamDragHandler : MonoBehaviour
     private Vector3 initialPosition;
     private bool isDragging;
     private Collider2D suncreamCollider;
-    public Animator suncreamAnimator;
+    
     private Animator LotionAnimator;
     private LVL5Sc1_3JojoController1 jojoController;
 
@@ -136,24 +136,24 @@ public class SuncreamDragHandler : MonoBehaviour
             if (hitCollider.transform == position2)
             {
                 transform.position = position2.position;
-                LotionAnimator.SetTrigger("Lotion");
-                suncreamAnimator.SetTrigger("LeftHand");
+                LotionAnimator.SetTrigger("LeftHand");
+               
                 SetPositionState(position2, false);
                 StartCoroutine(ChangeSpriteAfterAnimation(sunburnLeftArm, sprite1, position2.position, position3));
             }
             else if (hitCollider.transform == position3)
             {
                 transform.position = position3.position;
-                LotionAnimator.SetTrigger("Lotion");
-                suncreamAnimator.SetTrigger("Head");
+                LotionAnimator.SetTrigger("Head");
+                
                 SetPositionState(position3, false);
                 StartCoroutine(ChangeSpriteAfterAnimation(sunburnFace, sprite2, position3.position, position4));
             }
             else if (hitCollider.transform == position4)
             {
                 transform.position = position4.position;
-                LotionAnimator.SetTrigger("Lotion");
-                suncreamAnimator.SetTrigger("Righthand");
+                LotionAnimator.SetTrigger("RightHand");
+                
                 SetPositionState(position4, false);
                 StartCoroutine(ChangeSpriteAfterAnimation(sunburnRightArm, sprite3, position4.position, null));
                 
@@ -180,7 +180,7 @@ public class SuncreamDragHandler : MonoBehaviour
 
     private IEnumerator ChangeSpriteAfterAnimation(GameObject sunburnObject, Sprite newSprite, Vector3 resetPosition, Transform nextPosition = null)
     {
-        yield return new WaitForSeconds(suncreamAnimator.GetCurrentAnimatorStateInfo(0).length);
+        yield return new WaitForSeconds(LotionAnimator.GetCurrentAnimatorStateInfo(0).length);
 
         SpriteRenderer sunburnSpriteRenderer = sunburnObject.GetComponent<SpriteRenderer>();
         if (sunburnSpriteRenderer != null)

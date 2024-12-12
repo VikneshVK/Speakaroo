@@ -19,6 +19,10 @@ public class Lvl4Sc1JojoController : MonoBehaviour
     public AudioClip AudioClip3;
     public TextMeshProUGUI subtitleText;
 
+    [Header("SFX")]
+    private AudioSource SfxAudioSource;
+    public AudioClip SfxAudio1;
+    private bool walkingSfxPlayed = false;
 
     private Lvl4Sc1Audiomanger lvl4Sc1Audiomanger;
     private Animator animator;
@@ -45,7 +49,7 @@ public class Lvl4Sc1JojoController : MonoBehaviour
         prefabSpawned = false;
         fridgeColliderEnabled = false;
         spriteChanged = false;
-       
+        SfxAudioSource = GameObject.FindWithTag("SFXAudioSource").GetComponent<AudioSource>();
         if (fridge != null)
         {
             fridgeCollider = fridge.GetComponent<Collider2D>();
@@ -97,9 +101,16 @@ public class Lvl4Sc1JojoController : MonoBehaviour
         {
             Vector3 targetPosition = new Vector3(stopPosition.position.x, transform.position.y, transform.position.z);
             transform.position = Vector3.MoveTowards(transform.position, targetPosition, walkSpeed * Time.deltaTime);
-
+            if (!walkingSfxPlayed)
+            {
+                SfxAudioSource.loop = true;
+                walkingSfxPlayed = true;
+                SfxAudioSource.clip = SfxAudio1;
+                SfxAudioSource.Play();
+            }
             if (Mathf.Abs(transform.position.x - stopPosition.position.x) <= 0.1f)
             {
+                SfxAudioSource.Stop();
                 isWalking = false;
                 /*spriteRenderer.flipX = false;*/
                 animator.SetBool("canWalk", false);

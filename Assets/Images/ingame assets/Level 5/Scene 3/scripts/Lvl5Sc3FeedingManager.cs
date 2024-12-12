@@ -171,6 +171,14 @@ public class Lvl5Sc3FeedingManager : MonoBehaviour
         float startAlpha = color.a;
         float time = 0;
 
+        // Locate the "Glow 2" child explicitly
+        Transform glowChild = spriteRenderer.transform.Find("Glow 2");
+        if (glowChild != null)
+        {
+            // Scale the "Glow 2" child to 6
+            LeanTween.scale(glowChild.gameObject, Vector3.one * 6, duration).setEaseOutBack();
+        }
+
         while (time < duration)
         {
             time += Time.deltaTime;
@@ -188,6 +196,14 @@ public class Lvl5Sc3FeedingManager : MonoBehaviour
         float startAlpha = color.a;
         float time = 0;
 
+        // Locate the "Glow 2" child explicitly
+        Transform glowChild = spriteRenderer.transform.Find("Glow 2");
+        if (glowChild != null)
+        {
+            // Scale the "Glow 2" child to 0
+            LeanTween.scale(glowChild.gameObject, Vector3.zero, duration).setEaseInBack();
+        }
+
         while (time < duration)
         {
             time += Time.deltaTime;
@@ -198,6 +214,9 @@ public class Lvl5Sc3FeedingManager : MonoBehaviour
 
         spriteRenderer.color = new Color(color.r, color.g, color.b, targetAlpha);
     }
+
+
+
 
     public void OnFoodDropped(Transform food, bool isRightFood)
     {
@@ -215,12 +234,7 @@ public class Lvl5Sc3FeedingManager : MonoBehaviour
         if (rightFood != null)
             rightFood.GetComponent<Collider2D>().enabled = false;
         if (wrongFood != null)
-            wrongFood.GetComponent<Collider2D>().enabled = false;
-
-        if (birdAnimator != null)
-            birdAnimator.SetTrigger("rightFood");
-        PlayAudioClip(audio8);
-        StartCoroutine(RevealTextWordByWord("Yumm..!", 0.5f));
+            wrongFood.GetComponent<Collider2D>().enabled = false;      
 
         Animator animator = animals[currentAnimalIndex].GetComponent<Animator>();
         animator.SetTrigger("eat");
@@ -229,6 +243,14 @@ public class Lvl5Sc3FeedingManager : MonoBehaviour
             SfxAudioSource.loop = false;
             SfxAudioSource.PlayOneShot(SfxAudio1);
         }
+
+        yield return new WaitForSeconds(1f);
+
+        if (birdAnimator != null)
+            birdAnimator.SetTrigger("rightFood");
+        PlayAudioClip(audio8);
+        StartCoroutine(RevealTextWordByWord("Yumm..!", 0.5f));
+
         LeanTween.scale(food.gameObject, Vector3.zero, 0.5f);
 
         yield return new WaitForSeconds(animator.GetCurrentAnimatorStateInfo(0).length);
@@ -284,7 +306,7 @@ public class Lvl5Sc3FeedingManager : MonoBehaviour
         if (wrongFood != null && wrongFood.gameObject != null)
             wrongFood.GetComponent<Collider2D>().enabled = true;
 
-        StartCoroutine(HideBoard());
+        
     }
 
     private void PlayAudioClip(AudioClip clip)

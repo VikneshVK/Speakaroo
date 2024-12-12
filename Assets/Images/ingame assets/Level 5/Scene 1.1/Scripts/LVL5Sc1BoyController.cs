@@ -18,6 +18,11 @@ public class LVL5Sc1BoyController : MonoBehaviour
     private bool ticketBooth;
     private AudioSource Audio1;
 
+    [Header("SFX")]
+    private AudioSource SfxAudioSource;
+    public AudioClip SfxAudio1;
+    private bool walkingSfxPlayed = false;
+
     private Animator boyAnimator;
     private Animator kikiAnimator;
 
@@ -28,7 +33,7 @@ public class LVL5Sc1BoyController : MonoBehaviour
         hasReachedStopPosition2 = false;
         talkComplete = false;
         ticketBooth = false;
-
+        SfxAudioSource = GameObject.FindWithTag("SFXAudioSource").GetComponent<AudioSource>();
         boyAnimator = GetComponent<Animator>();
         kikiAnimator = Kiki.GetComponent<Animator>();
         Audio1 = GetComponent<AudioSource>();
@@ -46,6 +51,13 @@ public class LVL5Sc1BoyController : MonoBehaviour
 
         if (isWalking && !hasReachedStopPosition)
         {
+            if (!walkingSfxPlayed)
+            {
+                SfxAudioSource.loop = true;
+                walkingSfxPlayed = true;
+                SfxAudioSource.clip = SfxAudio1;
+                SfxAudioSource.Play();
+            }
             MoveToStopPosition();
         }
 
@@ -71,10 +83,12 @@ public class LVL5Sc1BoyController : MonoBehaviour
 
         if (Mathf.Abs(transform.position.x - stopPosition.position.x) < 0.1f)
         {
+            SfxAudioSource.Stop();
             Debug.Log("positionReached");
             boyAnimator.SetBool("canWalk", false);
             hasReachedStopPosition = true;
             isWalking = false;
+            walkingSfxPlayed= false;
             boyAnimator.SetTrigger("canTalk");
             Audio1.Play();
             StartCoroutine(RevealTextWordByWord("YAY, We are at the Zoo. Let's go get the entry tickets", 0.5f));

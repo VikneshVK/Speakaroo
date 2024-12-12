@@ -332,6 +332,8 @@ public class PhotoQuestManager : MonoBehaviour
         }
     }
 
+
+
     private IEnumerator RevealTextWordByWord(string fullText, float delayBetweenWords)
     {
         subtitleText.text = "";

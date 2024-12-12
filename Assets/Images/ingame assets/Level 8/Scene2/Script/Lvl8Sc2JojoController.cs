@@ -11,11 +11,16 @@ public class Lvl8Sc2JojoController : MonoBehaviour
     public AudioSource audioSource;
     public TextMeshProUGUI subtitleText;
 
+    [Header("SFX")]
+    private AudioSource SfxAudioSource;
+    public AudioClip SfxAudio1;
+
     private Animator jojoAnimator;
     private Animator birdAnimator;
     private SpriteRenderer spriteRenderer;
     private bool isWalking = false;
     private bool isIdleCompleted = false;
+    private bool walkingaudioPlayed;
 
     void Start()
     {
@@ -23,6 +28,8 @@ public class Lvl8Sc2JojoController : MonoBehaviour
         spriteRenderer = GetComponent<SpriteRenderer>();
         birdAnimator = Bird.GetComponent<Animator>();
         audioSource = GetComponent<AudioSource>();
+        SfxAudioSource = GameObject.FindWithTag("SFXAudioSource").GetComponent<AudioSource>();
+        walkingaudioPlayed = false;
     }
 
     void Update()
@@ -57,11 +64,20 @@ public class Lvl8Sc2JojoController : MonoBehaviour
             spriteRenderer.flipX = true; // Adjust direction if needed
             Vector3 targetPosition = new Vector3(stopPosition.position.x, transform.position.y, transform.position.z);
             transform.position = Vector3.MoveTowards(transform.position, targetPosition, walkSpeed * Time.deltaTime);
-
+            if (SfxAudioSource != null && !walkingaudioPlayed) 
+            {
+                walkingaudioPlayed = true;
+                SfxAudioSource.loop = true;
+                SfxAudioSource.clip = SfxAudio1;
+                SfxAudioSource.Play();
+                Debug.Log("Audio is playing");
+            }
+            
             if (Mathf.Abs(transform.position.x - stopPosition.position.x) <= 0.1f)
             {
-                isWalking = false;
+                isWalking = false;                
                 jojoAnimator.SetBool("CanWalk", false);
+                SfxAudioSource.Stop();
                 StartCoroutine(flipCharacter());
             }
         }

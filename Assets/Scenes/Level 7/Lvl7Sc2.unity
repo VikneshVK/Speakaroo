@@ -779,7 +779,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 132, y: -130}
+  m_AnchoredPosition: {x: 225, y: -130}
   m_SizeDelta: {x: 450, y: 450}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!95 &302875449
@@ -1177,7 +1177,8 @@ MonoBehaviour:
   sprite2: {fileID: 21300000, guid: 0d9b0980c17c17647b9c333ce3752b73, type: 3}
   sprite3: {fileID: 21300000, guid: 8a53ded872b559146bb9b8e914fac6de, type: 3}
   sprite4: {fileID: 21300000, guid: aebbae5c42629104f88782d5244f8a21, type: 3}
-  SfxAudio1: {fileID: 8300000, guid: f53eed53b0cda544cb442dbc1b27e14a, type: 3}
+  SfxAudio1: {fileID: 8300000, guid: e6ba86ffaccbfe3428f13ecb56ea7f58, type: 3}
+  helperFunction: {fileID: 701340268}
 --- !u!1 &449445827
 GameObject:
   m_ObjectHideFlags: 0
@@ -1421,7 +1422,8 @@ MonoBehaviour:
   sprite2: {fileID: 21300000, guid: 0d9b0980c17c17647b9c333ce3752b73, type: 3}
   sprite3: {fileID: 21300000, guid: 8a53ded872b559146bb9b8e914fac6de, type: 3}
   sprite4: {fileID: 21300000, guid: aebbae5c42629104f88782d5244f8a21, type: 3}
-  SfxAudio1: {fileID: 8300000, guid: f53eed53b0cda544cb442dbc1b27e14a, type: 3}
+  SfxAudio1: {fileID: 8300000, guid: e6ba86ffaccbfe3428f13ecb56ea7f58, type: 3}
+  helperFunction: {fileID: 701340268}
 --- !u!1001 &550984203
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1731,7 +1733,8 @@ MonoBehaviour:
   sprite2: {fileID: 21300000, guid: 0d9b0980c17c17647b9c333ce3752b73, type: 3}
   sprite3: {fileID: 21300000, guid: 8a53ded872b559146bb9b8e914fac6de, type: 3}
   sprite4: {fileID: 21300000, guid: aebbae5c42629104f88782d5244f8a21, type: 3}
-  SfxAudio1: {fileID: 8300000, guid: f53eed53b0cda544cb442dbc1b27e14a, type: 3}
+  SfxAudio1: {fileID: 8300000, guid: e6ba86ffaccbfe3428f13ecb56ea7f58, type: 3}
+  helperFunction: {fileID: 701340268}
 --- !u!1 &596381824
 GameObject:
   m_ObjectHideFlags: 0
@@ -1924,6 +1927,52 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 629102421}
   m_CullTransparentMesh: 1
+--- !u!1 &701340267
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 701340269}
+  - component: {fileID: 701340268}
+  m_Layer: 0
+  m_Name: helperhand
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &701340268
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 701340267}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c757708f26681e34db7c259add06b0d8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  helpTimer: 5
+  helperHandPrefab: {fileID: 668317662352755921, guid: c81899e09cd96214b90a71003cb79695, type: 3}
+--- !u!4 &701340269
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 701340267}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -1.4851496, y: -1.044127, z: 146.93637}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &730141004
 GameObject:
   m_ObjectHideFlags: 0
@@ -2060,7 +2109,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
-  m_AnchoredPosition: {x: 0, y: 63.640015}
+  m_AnchoredPosition: {x: 0, y: 63.640137}
   m_SizeDelta: {x: 1411.08, y: 71.04}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &768427413
@@ -3758,6 +3807,8 @@ MonoBehaviour:
   pepperoniAudio: {fileID: 8300000, guid: 744c51568d2d1c14d8c8ed319a527ea6, type: 3}
   audioManager: {fileID: 1445845225}
   subtitleText: {fileID: 768427413}
+  helperFunction: {fileID: 701340268}
+  pizzaLocation: {fileID: 1689829924}
 --- !u!4 &1406925497
 Transform:
   m_ObjectHideFlags: 0
@@ -4226,7 +4277,7 @@ RectTransform:
   m_GameObject: {fileID: 1545694640}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 2.5, y: 2.5, z: 2.5}
+  m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 596381825}
@@ -4644,14 +4695,19 @@ MonoBehaviour:
   kikiImage: {fileID: 1333003460}
   SfxAudio1: {fileID: 8300000, guid: 2a95bca32bc2b54459bc63f1db86b33b, type: 3}
   SfxAudio2: {fileID: 8300000, guid: dedcf07821357df4ea6a89d1c1df21ea, type: 3}
+  SfxAudio3: {fileID: 8300000, guid: 5a570287adb3c414482ddeb08fe7f7cf, type: 3}
+  PizzaEndingAudio: {fileID: 8300000, guid: dd67c48155496f54e800d2c1fa41fee8, type: 3}
   pizzaDropped: 0
   canTapPizzaImage: 0
   Piece1: {fileID: 21300000, guid: b1dce705b6be4e448836a14496a60903, type: 3}
   Piece5: {fileID: 21300000, guid: 960bf934095ca954e863b87817d76d93, type: 3}
   Piece9: {fileID: 21300000, guid: 68d531365cce5ea469193010776f9d90, type: 3}
+  jojoFinalImage: {fileID: 1450013224}
+  kikiFinalImage: {fileID: 302875448}
   OvenAudio: {fileID: 8300000, guid: d2fd10c681c8a7f479fbb01d47f5be6b, type: 3}
   subtitleText: {fileID: 768427413}
   audioManager: {fileID: 1445845225}
+  helperFunction: {fileID: 701340268}
 --- !u!1 &1835769653
 GameObject:
   m_ObjectHideFlags: 0
@@ -5066,7 +5122,8 @@ MonoBehaviour:
   sprite2: {fileID: 21300000, guid: 0d9b0980c17c17647b9c333ce3752b73, type: 3}
   sprite3: {fileID: 21300000, guid: 8a53ded872b559146bb9b8e914fac6de, type: 3}
   sprite4: {fileID: 21300000, guid: aebbae5c42629104f88782d5244f8a21, type: 3}
-  SfxAudio1: {fileID: 8300000, guid: f53eed53b0cda544cb442dbc1b27e14a, type: 3}
+  SfxAudio1: {fileID: 8300000, guid: e6ba86ffaccbfe3428f13ecb56ea7f58, type: 3}
+  helperFunction: {fileID: 701340268}
 --- !u!1 &1954477375
 GameObject:
   m_ObjectHideFlags: 0
@@ -5408,3 +5465,4 @@ SceneRoots:
   - {fileID: 1406925497}
   - {fileID: 372686425}
   - {fileID: 1445845226}
+  - {fileID: 701340269}

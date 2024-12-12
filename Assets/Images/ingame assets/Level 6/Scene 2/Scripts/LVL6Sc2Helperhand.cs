@@ -41,7 +41,7 @@ public class LVL6Sc2Helperhand : MonoBehaviour
         
         spawnedHelperHand = Instantiate(helperHandPrefab, transform.position, Quaternion.identity);
         
-        LeanTween.move(spawnedHelperHand, currentQuestObject.transform.position, 1.0f)
+        LeanTween.move(spawnedHelperHand, currentQuestObject.transform.position, 2f)
             .setLoopClamp()
             .setEase(LeanTweenType.linear);
     }

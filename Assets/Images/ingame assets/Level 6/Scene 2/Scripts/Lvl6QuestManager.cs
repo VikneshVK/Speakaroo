@@ -73,7 +73,7 @@ public class Lvl6QuestManager : MonoBehaviour
     {
         ClearSpawnedObjects();
 
-        kikiController.TweenBirdandback("Pointing");
+        kikiController.TriggerAnimation("Pointing");
 
         // Create lists for items and positions
         List<GameObject> shells = new List<GameObject> { whiteShell, redShell, yellowShell };
@@ -239,7 +239,7 @@ public class Lvl6QuestManager : MonoBehaviour
             }
             DisableAllColliders();
             EnableDescriptionCanvas();
-            kikiController.TweenBirdandback("RightTalk");
+            kikiController.TriggerAnimation("RightTalk");
             kikiController.PlayQuestAudio(rightDropAudio);
 
 
@@ -252,7 +252,7 @@ public class Lvl6QuestManager : MonoBehaviour
         else
         {
 
-            kikiController.TweenBirdandback("WrongTalk");
+            kikiController.TriggerAnimation("WrongTalk");
             kikiController.PlayQuestAudio(wrongDropAudio);
 
             BoxCollider2D collider = clickedObject.GetComponentInParent<BoxCollider2D>();
@@ -287,7 +287,7 @@ public class Lvl6QuestManager : MonoBehaviour
 
         if (itemsFound >= 6)
         {
-            kikiController.TweenBirdandback("FinalTalk");
+            kikiController.TriggerAnimation("FinalTalk");
             kikiController.PlayQuestAudio(finalAudio);
             StartCoroutine(RevealTextWordByWord("Playing in the Sand was Super Fun ", 0.5f));
         }
@@ -307,14 +307,24 @@ public class Lvl6QuestManager : MonoBehaviour
         DisableParticleEffects();
 
         DisableDescriptionCanvas();
-
-       /* EnableOtherColliders(clickedObject.transform);*/
+        
+        kikiController.TriggerAnimation("Pointing");
+        AudioClip currentQuestAudio = GetQuestAudio();
+        kikiController.PlayQuestAudio(currentQuestAudio);
 
         EnablePositionChildren();
 
         yield return StartCoroutine(ResetItemPositionAndScale());
 
         EnableAllCollidersExcept(clickedObject);
+
+        string questItemName = QuestGiver();
+
+        GameObject currentQuestItem = spawnedObjects.Find(item => item.name.Contains(questItemName));
+        if (currentQuestItem != null)
+        {
+            helperhand.StartDelayTimer(currentQuestItem);
+        }
     }
 
     private void EnableOtherColliders(Transform clickedPosition)
@@ -354,9 +364,6 @@ public class Lvl6QuestManager : MonoBehaviour
             }
         }
     }
-
-
-
 
     private void EnablePositionChildren()
     {

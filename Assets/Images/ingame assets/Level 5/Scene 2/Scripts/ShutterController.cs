@@ -5,6 +5,7 @@ using System.Collections;
 public class ShutterController : MonoBehaviour
 {
     public AudioClip shutterSound;
+    public AudioClip foundit;
     private AudioSource audioSource;
 
     public Image flashImage;
@@ -60,7 +61,6 @@ public class ShutterController : MonoBehaviour
 
     void HandleTouchInput()
     {
-        // For mobile touch input
         if (Input.touchCount > 0)
         {
             Touch touch = Input.GetTouch(0);
@@ -75,15 +75,11 @@ public class ShutterController : MonoBehaviour
                 if (hit.collider != null && hit.collider.gameObject == gameObject && !photoQuestManager.isClicked)
                 {
                     photoQuestManager.isClicked = true;
-                    StartCoroutine(TakePhoto());
-                    helperController.DestroyHelperHand();
-                    helperController.ResetDelayTimer();
+                    HandlePhotoCapture();
                 }
             }
         }
-
-        // For mouse input (useful for testing in the editor)
-        else if (Input.GetMouseButtonDown(0)) // Left mouse button
+        else if (Input.GetMouseButtonDown(0))
         {
             Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             mousePosition.z = 0f;
@@ -93,12 +89,44 @@ public class ShutterController : MonoBehaviour
             if (hit.collider != null && hit.collider.gameObject == gameObject && !photoQuestManager.isClicked)
             {
                 photoQuestManager.isClicked = true;
-                StartCoroutine(TakePhoto());
-                helperController.DestroyHelperHand();
-                helperController.ResetDelayTimer();
+                HandlePhotoCapture();
             }
         }
     }
+
+    void HandlePhotoCapture()
+    {
+        // Get the tapped game object's name
+        string tappedObjectName = gameObject.name;
+
+        // Get the quest animal's name from PhotoQuestManager
+        string questAnimalName = photoQuestManager.GetCurrentRequiredAnimalName();
+
+        // Check if the tapped game object's name matches the quest animal's name
+        if (tappedObjectName == questAnimalName)
+        {
+            // Play the "found it" audio
+            if (foundit != null)
+            {
+                audioSource.PlayOneShot(foundit);
+            }
+        }
+        else
+        {
+            Debug.LogWarning($"Incorrect animal tapped. Expected: {questAnimalName}, but tapped: {tappedObjectName}");
+        }
+
+        // Start the photo capture coroutine regardless of whether the names match
+        StartCoroutine(TakePhoto());
+
+        if (helperController != null)
+        {
+            helperController.DestroyHelperHand();
+            helperController.ResetDelayTimer();
+        }
+    }
+
+
 
     IEnumerator TakePhoto()
     {
@@ -112,7 +140,7 @@ public class ShutterController : MonoBehaviour
         float panDuration = 1f;
         float elapsedTime = 0f;
         Vector3 initialCameraPosition = photoCameraController.transform.position;
-
+        
         while (elapsedTime < panDuration)
         {
             elapsedTime += Time.deltaTime;

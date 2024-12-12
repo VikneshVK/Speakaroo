@@ -26,6 +26,7 @@ public class BlenderController : MonoBehaviour
 
     private AudioSource SfxAudioSource;
     public AudioClip SfxAudio1;
+    public AudioClip SfxAudio2;
 
 
 
@@ -128,6 +129,8 @@ public class BlenderController : MonoBehaviour
 
         if (glassAnimator != null)
         {
+            SfxAudioSource.PlayOneShot(SfxAudio2);
+
             switch (juiceSpriteName)
             {
                 case "kiwiSBJuice_glass":

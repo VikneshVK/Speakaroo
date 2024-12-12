@@ -25,6 +25,11 @@ public class JojoController1 : MonoBehaviour
     public AudioSource kikiAudiosource;
     private Bird_Controller birdcontroller;
 
+    [Header("SFX")]
+    private AudioSource SfxAudioSource;
+    public AudioClip SfxAudio1;
+    private bool walkingSfxPlayed = false;
+
     void Start()
     {
         isWalking = false;
@@ -36,6 +41,7 @@ public class JojoController1 : MonoBehaviour
         birdAnimator = bird.GetComponent<Animator>();
         audioSource = GetComponent<AudioSource>();
         birdcontroller = bird.GetComponent<Bird_Controller>();
+        SfxAudioSource = GameObject.FindWithTag("SFXAudioSource").GetComponent<AudioSource>();
     }
     void Update()
     {
@@ -70,10 +76,16 @@ public class JojoController1 : MonoBehaviour
 
             Vector3 targetPosition = new Vector3(stopPosition.position.x, transform.position.y, transform.position.z);
             transform.position = Vector3.MoveTowards(transform.position, targetPosition, walkSpeed * Time.deltaTime);
-
+            if (!walkingSfxPlayed)
+            {
+                SfxAudioSource.loop = true;
+                walkingSfxPlayed = true;
+                SfxAudioSource.clip = SfxAudio1;
+                SfxAudioSource.Play();
+            }
             if (Mathf.Abs(transform.position.x - stopPosition.position.x) <= 0.1f)
             {
-
+                SfxAudioSource.Stop();
                 isWalking = false;
                 boyAnimator.SetBool("canWalk", false);
                 

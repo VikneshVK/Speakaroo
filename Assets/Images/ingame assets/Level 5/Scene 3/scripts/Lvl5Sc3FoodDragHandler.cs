@@ -8,7 +8,8 @@ public class Lvl5Sc3FoodDragHandler : MonoBehaviour
     private Transform dropTarget;
     private Collider2D dropTargetCollider;
     private Lvl5Sc3FeedingManager feedingManager;
-    private Vector3 offset; 
+    private Vector3 offset;
+    private Transform glowObject;
 
     private void Start()
     {
@@ -19,6 +20,7 @@ public class Lvl5Sc3FoodDragHandler : MonoBehaviour
 
         dropTarget = transform.parent.Find("DropTarget");
         dropTargetCollider = dropTarget.GetComponent<Collider2D>();
+        glowObject = transform.Find("Glow 2");
     }
 
     private void Update()
@@ -33,7 +35,12 @@ public class Lvl5Sc3FoodDragHandler : MonoBehaviour
                 isDragging = true;
 
                 offset = transform.position - (Vector3)mousePos;
+                if (glowObject != null)
+                {
+                    LeanTween.scale(glowObject.gameObject, Vector3.zero, 0.3f).setEaseInOutQuad();
+                }
             }
+
         }
 
         if (isDragging)
@@ -51,8 +58,12 @@ public class Lvl5Sc3FoodDragHandler : MonoBehaviour
                 feedingManager.OnFoodDropped(transform, isRightFood);
             }
             else
-            {                
+            {
                 transform.position = startPosition;
+                if (glowObject != null)
+                {
+                    LeanTween.scale(glowObject.gameObject, Vector3.one * 6, 0.3f).setEaseInOutQuad();
+                }
             }
         }
     }

@@ -464,6 +464,7 @@ MonoBehaviour:
   dragComplete: 0
   testTubeAnimator: {fileID: 0}
   spriteRenderer: {fileID: 0}
+  helperController: {fileID: 1552164989}
   pouringPosition1: {fileID: 2072859117}
   pouringPosition2: {fileID: 213484283}
 --- !u!61 &236169194
@@ -1011,6 +1012,7 @@ MonoBehaviour:
   dialogueAudio: {fileID: 8300000, guid: 6f58c47e2b2fd7b49975fa262272123f, type: 3}
   audioSource: {fileID: 415403644}
   subtitleText: {fileID: 347146850}
+  SfxAudio1: {fileID: 8300000, guid: 2ea17f27f1570964bb6b124044d8d74c, type: 3}
 --- !u!212 &415403642
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -1328,6 +1330,8 @@ MonoBehaviour:
   originalLeftStand1Position: {fileID: 1818962002}
   rightStandPosition: {fileID: 1418205523}
   leftStandPosition: {fileID: 1030594514}
+  helperController: {fileID: 1552164989}
+  SfxAudio1: {fileID: 8300000, guid: 6450072011cb31b4e81d851e8438e188, type: 3}
   kikiAnimator: {fileID: 874844707}
   kikiAudioSource: {fileID: 874844711}
   color1Audio: {fileID: 8300000, guid: 5bebc0a60c14cbc42b3a02e68d99d467, type: 3}
@@ -1482,6 +1486,7 @@ MonoBehaviour:
   dragComplete: 0
   testTubeAnimator: {fileID: 0}
   spriteRenderer: {fileID: 0}
+  helperController: {fileID: 1552164989}
   pouringPosition1: {fileID: 2072859117}
   pouringPosition2: {fileID: 213484283}
 --- !u!61 &449146733
@@ -1961,6 +1966,7 @@ MonoBehaviour:
   dragComplete: 0
   testTubeAnimator: {fileID: 0}
   spriteRenderer: {fileID: 0}
+  helperController: {fileID: 1552164989}
   pouringPosition1: {fileID: 2072859117}
   pouringPosition2: {fileID: 213484283}
 --- !u!61 &636148779
@@ -2136,6 +2142,7 @@ MonoBehaviour:
   dragComplete: 0
   testTubeAnimator: {fileID: 0}
   spriteRenderer: {fileID: 0}
+  helperController: {fileID: 1552164989}
   pouringPosition1: {fileID: 2072859117}
   pouringPosition2: {fileID: 213484283}
 --- !u!61 &649601911
@@ -2268,6 +2275,8 @@ MonoBehaviour:
   tt4: {fileID: 1267200721}
   tt5: {fileID: 1869275129}
   tt8: {fileID: 1568834364}
+  SfxAudio1: {fileID: 8300000, guid: c2714feac43779f4ea1002e3a5e2d37b, type: 3}
+  SfxAudio2: {fileID: 8300000, guid: 578e83046a3e57e44be8a395d3cba7cd, type: 3}
   defaultBeakerSprite: {fileID: 67444026, guid: 01897fb73e17e9e42bae6c17271998dc, type: 3}
 --- !u!95 &757116860 stripped
 Animator:
@@ -2569,6 +2578,7 @@ MonoBehaviour:
   audioSource: {fileID: 874844711}
   beaker: {fileID: 430444625}
   subtitleText: {fileID: 347146850}
+  helperController: {fileID: 1552164989}
 --- !u!212 &874844709
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -2902,6 +2912,71 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1001 &1026716256
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 931781705018570846, guid: ca6fb5d26ec489b4d9ada36edf9c1d1b, type: 3}
+      propertyPath: m_Volume
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 931781705018570846, guid: ca6fb5d26ec489b4d9ada36edf9c1d1b, type: 3}
+      propertyPath: m_PlayOnAwake
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6855002319895802494, guid: ca6fb5d26ec489b4d9ada36edf9c1d1b, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -4.2459407
+      objectReference: {fileID: 0}
+    - target: {fileID: 6855002319895802494, guid: ca6fb5d26ec489b4d9ada36edf9c1d1b, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: -5.553461
+      objectReference: {fileID: 0}
+    - target: {fileID: 6855002319895802494, guid: ca6fb5d26ec489b4d9ada36edf9c1d1b, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.07436826
+      objectReference: {fileID: 0}
+    - target: {fileID: 6855002319895802494, guid: ca6fb5d26ec489b4d9ada36edf9c1d1b, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6855002319895802494, guid: ca6fb5d26ec489b4d9ada36edf9c1d1b, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6855002319895802494, guid: ca6fb5d26ec489b4d9ada36edf9c1d1b, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6855002319895802494, guid: ca6fb5d26ec489b4d9ada36edf9c1d1b, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6855002319895802494, guid: ca6fb5d26ec489b4d9ada36edf9c1d1b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6855002319895802494, guid: ca6fb5d26ec489b4d9ada36edf9c1d1b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6855002319895802494, guid: ca6fb5d26ec489b4d9ada36edf9c1d1b, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8683779801299673293, guid: ca6fb5d26ec489b4d9ada36edf9c1d1b, type: 3}
+      propertyPath: m_Name
+      value: SfxAudio
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: ca6fb5d26ec489b4d9ada36edf9c1d1b, type: 3}
 --- !u!1 &1030594513
 GameObject:
   m_ObjectHideFlags: 0
@@ -3312,6 +3387,7 @@ MonoBehaviour:
   dragComplete: 0
   testTubeAnimator: {fileID: 0}
   spriteRenderer: {fileID: 0}
+  helperController: {fileID: 1552164989}
   pouringPosition1: {fileID: 2072859117}
   pouringPosition2: {fileID: 213484283}
 --- !u!61 &1267200727
@@ -3768,6 +3844,7 @@ MonoBehaviour:
   dragComplete: 0
   testTubeAnimator: {fileID: 0}
   spriteRenderer: {fileID: 0}
+  helperController: {fileID: 1552164989}
   pouringPosition1: {fileID: 2072859117}
   pouringPosition2: {fileID: 213484283}
 --- !u!61 &1568834370
@@ -3943,6 +4020,7 @@ MonoBehaviour:
   dragComplete: 0
   testTubeAnimator: {fileID: 0}
   spriteRenderer: {fileID: 0}
+  helperController: {fileID: 1552164989}
   pouringPosition1: {fileID: 2072859117}
   pouringPosition2: {fileID: 213484283}
 --- !u!61 &1612921614
@@ -4340,6 +4418,7 @@ MonoBehaviour:
   dragComplete: 0
   testTubeAnimator: {fileID: 0}
   spriteRenderer: {fileID: 0}
+  helperController: {fileID: 1552164989}
   pouringPosition1: {fileID: 2072859117}
   pouringPosition2: {fileID: 213484283}
 --- !u!61 &1869275135
@@ -4729,7 +4808,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.04150939, g: 0.007440358, b: 0.007440358, a: 0.5529412}
+  m_Color: {r: 0.6150943, g: 0.6150943, b: 0.6150943, a: 0.9607843}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -4764,6 +4843,7 @@ SceneRoots:
   - {fileID: 1198183103}
   - {fileID: 1337502969}
   - {fileID: 498253483}
+  - {fileID: 1026716256}
   - {fileID: 705850319}
   - {fileID: 332732200}
   - {fileID: 200670927}

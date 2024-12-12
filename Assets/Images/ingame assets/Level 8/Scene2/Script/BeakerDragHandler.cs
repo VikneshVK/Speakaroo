@@ -14,7 +14,12 @@ public class BeakerDragHandler : MonoBehaviour
     public GameObject originalLeftStand1Position;
     public Transform rightStandPosition;
     public Transform leftStandPosition;
+    public Lvl8SSc2HelperController helperController;    
 
+    [Header("SFX")]
+    private AudioSource SfxAudioSource;
+    public AudioClip SfxAudio1;
+    private bool beakerSfxPlayed = false;
 
     public Animator kikiAnimator;
     public AudioSource kikiAudioSource;
@@ -29,6 +34,7 @@ public class BeakerDragHandler : MonoBehaviour
     void Start()
     {
         initialPosition = transform.position;
+        SfxAudioSource = GameObject.FindWithTag("SFXAudioSource").GetComponent<AudioSource>();
     }
 
     void Update()
@@ -44,6 +50,7 @@ public class BeakerDragHandler : MonoBehaviour
     private void OnMouseDown()
     {
         isDragging = true;
+        helperController.ResetGlow();
     }
 
     private void OnMouseUp()
@@ -56,7 +63,12 @@ public class BeakerDragHandler : MonoBehaviour
 
         if (dropPointCollider != null && beakerCollider != null && dropPointCollider.bounds.Intersects(beakerCollider.bounds))
         {
-            // Tween to the center of the drop point's collider
+            if (SfxAudioSource != null && !beakerSfxPlayed)
+            {
+                beakerSfxPlayed = true;
+                SfxAudioSource.PlayOneShot(SfxAudio1);
+                Debug.Log("Audio is playing");
+            }
             Vector3 targetPosition = dropPointCollider.bounds.center;
             LeanTween.move(gameObject, targetPosition, tweenSpeed)
                 .setEase(LeanTweenType.easeInOutQuad)
@@ -71,6 +83,7 @@ public class BeakerDragHandler : MonoBehaviour
         {
             // Reset position if not overlapping
             transform.position = initialPosition;
+            helperController.SpawnGlow(gameObject);
         }
     }
 

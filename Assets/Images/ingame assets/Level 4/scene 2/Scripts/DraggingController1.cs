@@ -38,6 +38,8 @@ public class DraggingController1 : MonoBehaviour
 
     private AudioSource SfxAudioSource;
     public AudioClip SfxAudio1;
+    public AudioClip SfxAudio2;
+    public AudioClip SfxAudio3;
 
     public LVL4Sc2AudioManager audioManager;
     public AudioClip Audio1;
@@ -175,18 +177,14 @@ public class DraggingController1 : MonoBehaviour
         transform.rotation = Quaternion.identity;
 
         if (bowlCollider != null && bowlCollider.bounds.Contains(transform.position))
-        {
-            if (SfxAudioSource != null)
-            {
-                SfxAudioSource.loop = false;
-                SfxAudioSource.PlayOneShot(SfxAudio1);
-            }
+        {            
 
             if (gameObject.CompareTag("Cereal"))
             {
                 transform.position = pouringPosition1.position; // Move to Cereal pouring position
                 if (objectAnimator != null)
                 {
+                    SfxAudioSource.PlayOneShot(SfxAudio2);
                     objectAnimator.SetTrigger("isPouring");
                 }
             }
@@ -195,6 +193,7 @@ public class DraggingController1 : MonoBehaviour
                 transform.position = pouringPosition2.position; // Move to Milk pouring position
                 if (objectAnimator != null)
                 {
+                    SfxAudioSource.PlayOneShot(SfxAudio3);
                     objectAnimator.SetTrigger("isPouring");
                 }
             }
@@ -203,6 +202,7 @@ public class DraggingController1 : MonoBehaviour
                 transform.position = pouringPosition3.position; // Move to Cherry pouring position
                 if (objectAnimator != null)
                 {
+                    SfxAudioSource.PlayOneShot(SfxAudio1);
                     objectAnimator.SetTrigger("isPouring");
                 }
             }

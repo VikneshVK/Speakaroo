@@ -14,6 +14,7 @@ public class Lvl8Sc1Manager : MonoBehaviour
     // References for audio
     public AudioSource audioSource;
     public AudioSource kikiAudioSource;
+    public AudioSource WritingAudioSource;
     public AudioClip npcTalkAudio;
     public AudioClip jojoAudio1;
     public AudioClip jojoAudio2;
@@ -51,6 +52,7 @@ public class Lvl8Sc1Manager : MonoBehaviour
     private bool npcTurnTriggered;
     private bool npcTurnCompleted;
     private bool pencilAnimationCompleted;
+    private bool writingAudioPlay;
 
     void Start()
     {
@@ -128,6 +130,11 @@ public class Lvl8Sc1Manager : MonoBehaviour
         if (jojoDontHavePencilTriggered && !jojoDontHavePencilCompleted && IsAnimationComplete(jojoAnimator, "DontHavePencil"))
         {
             jojoDontHavePencilCompleted = true;
+            if (!writingAudioPlay)
+            {
+                writingAudioPlay = true;
+                WritingAudioSource.Play();
+            }           
             TriggerKikiDialogue3();
         }
 
@@ -203,6 +210,7 @@ public class Lvl8Sc1Manager : MonoBehaviour
 
     private void TriggerTeacherLearn()
     {
+        
         teacherAnimator.SetTrigger("Learn");
         PlayAudio(teacherAudio2);
         StartCoroutine(RevealTextWordByWord("Let's learn Alpabets", 0.5f));
@@ -314,6 +322,7 @@ public class Lvl8Sc1Manager : MonoBehaviour
         npcTurnTriggered = false;
         npcTurnCompleted = false;
         pencilAnimationCompleted = false;
+        writingAudioPlay = false;
     }
 
     private IEnumerator RevealTextWordByWord(string fullText, float delayBetweenWords)

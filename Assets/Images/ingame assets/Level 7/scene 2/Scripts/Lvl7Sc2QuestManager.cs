@@ -168,18 +168,56 @@ public class Lvl7Sc2QuestManager : MonoBehaviour
 
         if (PizzaMade < 2) // Assuming you want a maximum of 3 pizzas
         {
-            LeanTween.scale(pizzaEatingPanel, Vector3.zero, 0.4f).setEase(LeanTweenType.easeInOutQuad).setOnComplete(() =>
-            {
-                PizzaMade++;
-                ResetToppingsAndIcons();
-                dragManager.ResetDragManager();
-                UpdateQuestDisplay();
-            });
+            PizzaEndSequence();
+
         }
         else if (PizzaMade >= 2)
         {
             TriggerLevelEndSequence();
         }
+    }
+
+    private void PizzaEndSequence()
+    {
+        // Tween the final images into the viewport
+        LeanTween.move(kikiFinalImage, new Vector2(225, 130), 1.0f).setEase(LeanTweenType.easeOutQuad);
+        LeanTween.move(jojoFinalImage, new Vector2(-256, 56), 1.0f).setEase(LeanTweenType.easeOutQuad).setOnComplete(() =>
+        {
+            // Trigger the level end animations
+            if (kikiFinalAnimator != null)
+                kikiFinalAnimator.SetTrigger("PizzaEnd");
+
+            if (jojoAnimator != null)
+                jojoAnimator.SetTrigger("PizzaEnd");
+
+            audioManager.PlayAudio(FinalAudio);
+
+            // Wait for the animations to complete before tweening them back out
+            StartCoroutine(WaitForPizzaEndAnimationAndReset());
+        });
+    }
+
+    private IEnumerator WaitForPizzaEndAnimationAndReset()
+    {
+        // Wait for the longest animation length (example: assuming 2 seconds here)
+        yield return new WaitForSeconds(2.0f);
+
+        // Tween the final images back to their original positions
+        LeanTween.move(kikiFinalImage, new Vector2(225, -130), 1.0f).setEase(LeanTweenType.easeInQuad);
+        LeanTween.move(jojoFinalImage, new Vector2(-256, -400), 1.0f).setEase(LeanTweenType.easeInQuad).setOnComplete(() =>
+        {
+            LeanTween.scale(kikiFinalImage, Vector3.zero, 0.4f);
+            LeanTween.scale(jojoFinalImage, Vector3.zero, 0.4f).setEase(LeanTweenType.easeInOutQuad).setOnComplete(() =>
+            {
+                LeanTween.scale(pizzaEatingPanel, Vector3.zero, 0.4f).setEase(LeanTweenType.easeInOutQuad).setOnComplete(() =>
+                {
+                    PizzaMade++;
+                    ResetToppingsAndIcons();
+                    dragManager.ResetDragManager();
+                    UpdateQuestDisplay();
+                });
+            });
+        });
     }
     private void TriggerLevelEndSequence()
     {

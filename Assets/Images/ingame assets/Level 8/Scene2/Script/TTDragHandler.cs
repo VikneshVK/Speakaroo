@@ -12,6 +12,7 @@ public class TTDragHandler : MonoBehaviour
 
     public Animator testTubeAnimator;
     public SpriteRenderer spriteRenderer;
+    public Lvl8SSc2HelperController helperController;
 
     public GameObject pouringPosition1; // Reference to pouring position 1
     public GameObject pouringPosition2; // Reference to pouring position 2
@@ -49,6 +50,8 @@ public class TTDragHandler : MonoBehaviour
         {
             isDragging = true;
         }
+
+        helperController.ResetGlow();
     }
 
     private void OnMouseUp()
@@ -85,6 +88,7 @@ public class TTDragHandler : MonoBehaviour
             else
             {
                 ResetPosition();
+                helperController.SpawnGlow(gameObject);
             }
         }
     }

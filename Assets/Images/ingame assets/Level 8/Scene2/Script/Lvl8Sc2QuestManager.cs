@@ -45,6 +45,11 @@ public class Lvl8Sc2QuestManager : MonoBehaviour
     public GameObject tt5; // Reference to TT4 test tube
     public GameObject tt8;
 
+    [Header("SFX")]
+    private AudioSource SfxAudioSource;
+    public AudioClip SfxAudio1;
+    public AudioClip SfxAudio2;
+
     public Sprite defaultBeakerSprite;
     private bool isFirstAttemptFailed = false;
 
@@ -60,6 +65,10 @@ public class Lvl8Sc2QuestManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+    }
+   void Start()
+    {
+        SfxAudioSource = GameObject.FindWithTag("SFXAudioSource").GetComponent<AudioSource>();
     }
 
     public void TestTubeDropped(string testTubeName)
@@ -286,6 +295,10 @@ public class Lvl8Sc2QuestManager : MonoBehaviour
     private IEnumerator PlayCorrectAnimation(string trigger)
     {
         beakerImageAnimator.SetTrigger(trigger);
+        if(SfxAudioSource != null)
+        {
+            SfxAudioSource.PlayOneShot(SfxAudio1);
+        }
 
         yield return new WaitForSeconds(1.8f);
 
@@ -418,6 +431,11 @@ public class Lvl8Sc2QuestManager : MonoBehaviour
         /*beakerImageAnimator.enabled = true;*/
 
         beakerImageAnimator.SetTrigger(trigger);
+
+        if (SfxAudioSource != null)
+        {
+            SfxAudioSource.PlayOneShot(SfxAudio2);
+        }
 
         StartCoroutine(HandleBeakerAnimation());
     }

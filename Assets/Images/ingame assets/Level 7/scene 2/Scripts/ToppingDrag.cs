@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class ToppingDrag : MonoBehaviour
 {
@@ -16,6 +17,7 @@ public class ToppingDrag : MonoBehaviour
 
     private AudioSource SfxAudioSource;
     public AudioClip SfxAudio1;
+    public LVL7Sc2HelperFunction helperFunction;
 
     private SpriteRenderer dropTargetRenderer;
     private SpriteRenderer toppingRenderer;
@@ -50,6 +52,7 @@ public class ToppingDrag : MonoBehaviour
             isDragging = true;
             toppingRenderer.sortingOrder = 50;  // Bring the dragged object to the front
         }
+        helperFunction.ResetTimer();
     }
 
     void OnMouseUp()
@@ -70,14 +73,9 @@ public class ToppingDrag : MonoBehaviour
 
             ChangeDropTargetSprite();
 
-            // Reset the dragged object back to its starting position
             transform.position = startPosition;
-
-            // Notify the DragManager that this topping has been dropped correctly
-            dragManager.OnToppingDropped();
-
-            // Disable the collider of this topping, so it can no longer be dragged
-            toppingCollider.enabled = false;
+            StartCoroutine(delayedCall());
+           
         }
         else
         {
@@ -86,6 +84,13 @@ public class ToppingDrag : MonoBehaviour
         }
     }
 
+    private IEnumerator delayedCall()
+    {
+        yield return new WaitForSeconds(1.5f);
+        dragManager.OnToppingDropped();
+
+        toppingCollider.enabled = false;
+    }
     // Check if the topping is dropped on the pizza (drop target)
     private bool IsDroppedOnTarget()
     {
