@@ -290,7 +290,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 57, y: -67.70703}
+  m_AnchoredPosition: {x: 60, y: -60}
   m_SizeDelta: {x: 368, y: 368}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &319161254
@@ -418,7 +418,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1261242162691769517, guid: 5cc33678a45eebd4eb94af593e86f318, type: 3}
       propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1432593040345510653, guid: 5cc33678a45eebd4eb94af593e86f318, type: 3}
+      propertyPath: m_UiScaleMode
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1432593040345510653, guid: 5cc33678a45eebd4eb94af593e86f318, type: 3}
+      propertyPath: m_MatchWidthOrHeight
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3220799799381724627, guid: 5cc33678a45eebd4eb94af593e86f318, type: 3}
       propertyPath: m_Pivot.x
@@ -498,6 +506,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3220799799381724627, guid: 5cc33678a45eebd4eb94af593e86f318, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5292709569205229216, guid: 5cc33678a45eebd4eb94af593e86f318, type: 3}
+      propertyPath: m_Camera
+      value: 
+      objectReference: {fileID: 1090102247}
+    - target: {fileID: 5292709569205229216, guid: 5cc33678a45eebd4eb94af593e86f318, type: 3}
+      propertyPath: m_PixelPerfect
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5292709569205229216, guid: 5cc33678a45eebd4eb94af593e86f318, type: 3}
+      propertyPath: m_SortingOrder
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -1041,6 +1061,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: fe0b4d77d80192346acb104dcbef4628, type: 3}
   - {fileID: 8300000, guid: dfc2155a55be0a24f928dfa27499d01e, type: 3}
   - {fileID: 8300000, guid: a4aa66c506cea144898d1751c7d58796, type: 3}
+  AmbientSounds: {fileID: 8300000, guid: 386963d557fcc844db29e434e9bdc2cc, type: 3}
   wordButtons:
   - {fileID: 1907535199}
   - {fileID: 1435533450}
@@ -1878,7 +1899,7 @@ Canvas:
   m_RenderMode: 1
   m_Camera: {fileID: 1090102247}
   m_PlaneDistance: 100
-  m_PixelPerfect: 0
+  m_PixelPerfect: 1
   m_ReceivesEvents: 1
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0

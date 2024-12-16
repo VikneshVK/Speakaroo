@@ -7,6 +7,7 @@ public class SentenceManager : MonoBehaviour
 {
     public Animator objectAnimator; // Animator for the object
     public AudioClip[] wordAudioClips; // Audio clips for each word
+    public AudioClip AmbientSounds; // Crocodile or specific animal sound
     public Button[] wordButtons; // Buttons for the words
     public AudioSource audioSource; // AudioSource to play audio
     public float buttonCooldown; // Cooldown time in seconds
@@ -48,10 +49,7 @@ public class SentenceManager : MonoBehaviour
     // This method will be called when the object is clicked
     public void OnPointerClick(PointerEventData eventData)
     {
-        if (isIdle) // Ensure it's in idle state before restarting the action
-        {
-            StartCoroutine(PlayActionAndWords());
-        }
+        OnCharacterClick();
     }
 
     // Coroutine to play word audio with a cooldown for the button
@@ -61,7 +59,7 @@ public class SentenceManager : MonoBehaviour
 
         if (index == 2)
         {
-            // Button 3: play entire sentence and enable buttons afterward
+            // Button 3: play animal sound and then full sentence
             yield return PlayActionAndWords();
         }
         else
@@ -123,12 +121,20 @@ public class SentenceManager : MonoBehaviour
         }
     }
 
-    // Method to play the action animation and the individual word audio clips in succession
+    // Method to play the action animation, animal sound, and the individual word audio clips in succession
     public IEnumerator PlayActionAndWords()
     {
         isIdle = false; // Set idle to false while playing action
 
         objectAnimator.SetTrigger("Action");
+
+        // Play the animal sound first
+        if (AmbientSounds != null)
+        {
+            audioSource.clip = AmbientSounds;
+            audioSource.Play();
+            yield return new WaitForSeconds(AmbientSounds.length);
+        }
 
         // Play the words in sequence
         yield return StartCoroutine(PlayMultipleAudioClips(new AudioClip[] { wordAudioClips[0], wordAudioClips[1], wordAudioClips[2] }));
