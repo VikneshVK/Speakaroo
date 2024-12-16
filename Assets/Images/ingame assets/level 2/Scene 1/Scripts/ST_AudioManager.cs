@@ -15,12 +15,16 @@ public class ST_AudioManager : MonoBehaviour
     public string revealAudioClipPath = "Audio/RevealAudio";
     public float recordLength = 5f;
     public float highPitchFactor = 1f;
-    public GameObject ST_Canvas;
+    private GameObject ST_Canvas;
     private TextMeshProUGUI displayText;
     private Button retryButton;
     public string currentCardTag;
     private RetryButton retryButtonScript;  // Reference to the RetryButton script.
-   
+    
+    private Image Jojo;
+    private Image Kiki;
+    private Animator JojoAnimator;
+    private Animator KikiAnimator; 
 
 
     public event Action OnRecordingStart;
@@ -61,9 +65,15 @@ public class ST_AudioManager : MonoBehaviour
 
     private void Start()
     {
-        
-        displayText = ST_Canvas.transform.Find("DisplayText").GetComponent<TextMeshProUGUI>();
-        retryButton = ST_Canvas.transform.Find("RetryButton").GetComponent<Button>();
+        ST_Canvas = GameObject.FindGameObjectWithTag("STCanvas");
+        displayText = ST_Canvas.transform.Find("UI_Fitter/DisplayText").gameObject.GetComponent<TextMeshProUGUI>();
+        retryButton = ST_Canvas.transform.Find("UI_Fitter/RetryButton").gameObject.GetComponent<Button>();
+        Jojo = ST_Canvas.transform.Find("UI_Fitter/char holder/Jojo").gameObject.GetComponent<Image>();
+        Kiki = ST_Canvas.transform.Find("UI_Fitter/char holder/Kiki").gameObject.GetComponent<Image>();
+
+        JojoAnimator = Jojo.GetComponent<Animator>();
+        KikiAnimator = Kiki.GetComponent<Animator>();
+
         retryButton.onClick.AddListener(OnRetryButtonClick);
 
         // Set initial feedback text
@@ -96,6 +106,7 @@ public class ST_AudioManager : MonoBehaviour
 
     public void PlayRecordedClipWithFunnyVoice(AudioClip recordedClip)
     {
+        KikiAnimator.SetTrigger("StartHearing");
         recordedAudioSource.clip = recordedClip; // Already set, but this ensures consistency
         recordedAudioSource.pitch = highPitchFactor;
         recordedAudioSource.Play();
@@ -108,6 +119,7 @@ public class ST_AudioManager : MonoBehaviour
         int chosenFreq = (maxFreq == 0 || maxFreq < 44100) ? Mathf.Clamp(44100, minFreq, maxFreq) : 44100;
 
         // Start recording
+        JojoAnimator.SetBool("StartRecording",true);
         AudioClip recordedClip = Microphone.Start(null, false, Mathf.CeilToInt(recordLength), chosenFreq);
         yield return StartCoroutine(WaitForSecondsRealtime(recordLength));
         Microphone.End(null);
@@ -131,6 +143,7 @@ public class ST_AudioManager : MonoBehaviour
         {
             displayText.text = "Did You Say..?";
             OnRecordingPlaybackStart?.Invoke();
+            JojoAnimator.SetBool("StartRecording", false);
             PlayRecordedClipWithFunnyVoice(processedClip); // Play processed clip
             yield return StartCoroutine(WaitForSecondsRealtime(processedClip.length));
             OnRecordingPlaybackEnd?.Invoke(cardNumber);

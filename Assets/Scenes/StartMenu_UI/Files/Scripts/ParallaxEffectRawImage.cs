@@ -7,13 +7,15 @@ public class ParallaxEffectRawImage : MonoBehaviour
     public float parallaxFactor = 0.5f; // Adjust for parallax intensity (0 = no movement, 1 = same as content)
 
     private RawImage rawImage; // Reference to the RawImage component
+    private Image Image;
     private Vector2 initialUVOffset; // Initial UV offset
 
     void Start()
     {
         // Get the RawImage component
         rawImage = GetComponent<RawImage>();
-        if (rawImage == null)
+        Image = GetComponent<Image>();
+        if (rawImage == null && Image == null)
         {
             Debug.LogError("ParallaxEffectRawImage: No RawImage component found!");
             enabled = false;

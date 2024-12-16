@@ -12,6 +12,7 @@ public class RetryButton : MonoBehaviour
 
     private Sprite playbackSprite;
     private Sprite retrySprite;
+    private Sprite retrySprite2;
     private Sprite defaultSprite;
 
     private AudioSource audioSource; // AudioSource attached to the STMechanics GameObject
@@ -20,16 +21,41 @@ public class RetryButton : MonoBehaviour
 
     private int retryCountCard1 = 0;
     private int retryCountCard2 = 0;
-    private const int maxRetries = 2;
+    private const int maxRetries = 1;
 
     private void Start()
     {
         // Load sprites
-        playbackSprite = Resources.Load<Sprite>("Images/STMechanics/PlaybackSprite");
-        retrySprite = Resources.Load<Sprite>("Images/STMechanics/RetrySprite");
-        defaultSprite = Resources.Load<Sprite>("Images/STMechanics/DefaultSprite");
+        playbackSprite = Resources.Load<Sprite>("Images/STMechanics/Listening");
+        retrySprite = Resources.Load<Sprite>("Images/STMechanics/mic-on");
+        defaultSprite = Resources.Load<Sprite>("Images/STMechanics/mic-off");
+        retrySprite2 = Resources.Load<Sprite>("Images/STMechanics/RetrySprite");
         scratchAudioClip = Resources.Load<AudioClip>("Audio/ScratchAudio");
         revealAudioClip = Resources.Load<AudioClip>("Audio/RevealAudio");
+        GameObject stCanvas = GameObject.FindGameObjectWithTag("STCanvas");
+
+        if (stCanvas != null)
+        {
+            Button[] allButtons = stCanvas.GetComponentsInChildren<Button>(true);
+
+            foreach (Button button in allButtons)
+            {
+                if (button.name == "RetryButton")
+                {
+                    retryButton = button;
+                    break;
+                }
+            }
+
+            if (retryButton != null)
+            {
+                Debug.Log("Retry Button found: " + retryButton.name);
+            }
+            else
+            {
+                Debug.LogError("RetryButton not found under STCanvas.");
+            }
+        }
 
         buttonImage = retryButton.GetComponent<Image>();
         ringImage = retryButton.transform.Find("Ring").GetComponent<Image>();
@@ -43,8 +69,8 @@ public class RetryButton : MonoBehaviour
 
         // Set initial sprite to default with alpha 20
         buttonImage.sprite = defaultSprite;
-        SetAlpha(buttonImage, 20);
-        SetAlpha(ringImage, 20);
+       /* SetAlpha(buttonImage, 20);
+        SetAlpha(ringImage, 20);*/
 
         retryButton.interactable = false;
 
@@ -135,8 +161,8 @@ public class RetryButton : MonoBehaviour
     {
         // Change the button image to the retry sprite with full opacity
         buttonImage.sprite = retrySprite;
-        SetAlpha(buttonImage, 255);
-        SetAlpha(ringImage, 255);
+        /*SetAlpha(buttonImage, 255);
+        SetAlpha(ringImage, 255);*/
         retryButton.interactable = false;
 
         // Start filling the ring during recording
@@ -204,8 +230,8 @@ public class RetryButton : MonoBehaviour
             retryButton.interactable = false; // Disable interaction
             retryButton.GetComponent<Image>().raycastTarget = false; // Disable raycasts.
             
-            SetAlpha(buttonImage, 20);
-            SetAlpha(ringImage, 20);
+           /* SetAlpha(buttonImage, 20);
+            SetAlpha(ringImage, 20);*/
 
             Debug.Log("Max retries reached for Card 1. Retry button is now disabled.");
 
@@ -215,7 +241,7 @@ public class RetryButton : MonoBehaviour
 
         if (retryCountCard1 < maxRetries)
         {
-            buttonImage.sprite = defaultSprite;
+            buttonImage.sprite = retrySprite2;
             retryButton.interactable = true;
             retryButton.GetComponent<Image>().raycastTarget = true;
             yield return new WaitForSeconds(4f);
@@ -239,7 +265,7 @@ public class RetryButton : MonoBehaviour
 
         if (retryCountCard2 < maxRetries)
         {
-            buttonImage.sprite = defaultSprite;
+            buttonImage.sprite = retrySprite2;
             retryButton.interactable = true;
             retryButton.GetComponent<Image>().raycastTarget = true;
             yield return new WaitForSeconds(4f);
@@ -266,8 +292,8 @@ public class RetryButton : MonoBehaviour
 
         // Reset button appearance for Card 2
         buttonImage.sprite = defaultSprite;
-        SetAlpha(buttonImage, 20);
-        SetAlpha(ringImage, 20);
+       /* SetAlpha(buttonImage, 20);
+        SetAlpha(ringImage, 20);*/
 
         Debug.Log("Card 2 enabled. Ready for interaction.");
     }
@@ -277,8 +303,8 @@ public class RetryButton : MonoBehaviour
     {
 
         buttonImage.sprite = defaultSprite;
-        SetAlpha(buttonImage, 20);
-        SetAlpha(ringImage, 20);
+       /* SetAlpha(buttonImage, 20);
+        SetAlpha(ringImage, 20);*/
         retryButton.interactable = false;
     }
 
@@ -352,10 +378,10 @@ public class RetryButton : MonoBehaviour
     }
 
 
-    private void SetAlpha(Image image, float alphaValue)
+   /* private void SetAlpha(Image image, float alphaValue)
     {
         Color color = image.color;
         color.a = alphaValue / 255f;
         image.color = color;
-    }
+    }*/
 }

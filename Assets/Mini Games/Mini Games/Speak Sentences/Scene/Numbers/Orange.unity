@@ -134,6 +134,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: LVLTransistion Canvas
       objectReference: {fileID: 0}
+    - target: {fileID: 1261242162691769517, guid: 5cc33678a45eebd4eb94af593e86f318, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3220799799381724627, guid: 5cc33678a45eebd4eb94af593e86f318, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -538,7 +542,7 @@ GameObject:
   - component: {fileID: 264155437}
   - component: {fileID: 264155436}
   m_Layer: 5
-  m_Name: Prev Button
+  m_Name: Close
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -633,7 +637,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: Learn Sentences
+          m_StringArgument: Numbers_SentenceSafari
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &264155438

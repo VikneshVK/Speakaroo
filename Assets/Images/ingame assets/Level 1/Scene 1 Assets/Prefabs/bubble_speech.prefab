@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 2752934136967514722}
   - component: {fileID: 2415521729880175096}
   - component: {fileID: 2672854043516699021}
-  - component: {fileID: 6093192872904561850}
+  - component: {fileID: -6109354823090161069}
   m_Layer: 0
   m_Name: bubble_speech
   m_TagString: Untagged
@@ -131,7 +131,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 7.8, y: 7.11}
   m_EdgeRadius: 0
---- !u!114 &6093192872904561850
+--- !u!114 &-6109354823090161069
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -140,8 +140,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 2720721835439482840}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c31fea624b6b9ec418b28451c7a72173, type: 3}
+  m_Script: {fileID: 11500000, guid: ba9d103121cff3a4185373a932fc9416, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  prefab: {fileID: 681227826393822397, guid: e0b6fbdb30426cc4691160fe5b10c437, type: 3}
+  STPrefab: {fileID: 681227826393822397, guid: e0b6fbdb30426cc4691160fe5b10c437, type: 3}
   audioMixer: {fileID: 24100000, guid: 83279ef8d1c8a0649a8e6d4d2ff5f0c4, type: 2}

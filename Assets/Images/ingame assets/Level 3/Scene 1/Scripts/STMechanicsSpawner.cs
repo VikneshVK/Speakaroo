@@ -9,6 +9,7 @@ public class STMechanicsSpawner : MonoBehaviour
     private Dictionary<Transform, Vector3> originalScales = new Dictionary<Transform, Vector3>();
     public AudioMixer audioMixer;
     private const string musicVolumeParam = "MusicVolume";
+    private const string AmbientVolumeParam = "AmbientVolume";
 
 
     void OnMouseDown()

@@ -10,7 +10,7 @@ public class Scratch_Card : MonoBehaviour
     private float positionTolerance = 0.1f;
     private bool isSpawning = false;
     private bool timerStarted = false;
-    public GameObject retryButton;
+    private Button retryButton;
     private AudioSource audioSource;
     private Image buttonImage;
     private Image ringImage;
@@ -21,6 +21,30 @@ public class Scratch_Card : MonoBehaviour
 
     private void Start()
     {
+        GameObject stCanvas = GameObject.FindGameObjectWithTag("STCanvas");
+
+        if (stCanvas != null)
+        {
+            Button[] allButtons = stCanvas.GetComponentsInChildren<Button>(true);
+
+            foreach (Button button in allButtons)
+            {
+                if (button.name == "RetryButton")
+                {
+                    retryButton = button;
+                    break;
+                }
+            }
+
+            if (retryButton != null)
+            {
+                Debug.Log("Retry Button found: " + retryButton.name);
+            }
+            else
+            {
+                Debug.LogError("RetryButton not found under STCanvas.");
+            }
+        }
         buttonImage = retryButton.GetComponent<Image>();
         ringImage = retryButton.transform.Find("Ring").GetComponent<Image>();
     }
@@ -57,8 +81,8 @@ public class Scratch_Card : MonoBehaviour
         isSpawning = true;
         retryButton.GetComponent<Button>().interactable = false; // Disable interaction
         
-        SetAlpha(buttonImage, 20);
-        SetAlpha(ringImage, 20);
+        /*SetAlpha(buttonImage, 20);
+        SetAlpha(ringImage, 20);*/
         
         ST_AudioManager.Instance.PlayScratchAudio();
 
@@ -108,10 +132,10 @@ public class Scratch_Card : MonoBehaviour
         }
     }
 
-    private void SetAlpha(Image image, float alphaValue)
+   /* private void SetAlpha(Image image, float alphaValue)
     {
         Color color = image.color;
         color.a = alphaValue / 255f;
         image.color = color;
-    }
+    }*/
 }

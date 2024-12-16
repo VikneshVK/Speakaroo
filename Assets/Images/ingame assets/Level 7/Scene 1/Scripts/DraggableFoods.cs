@@ -42,6 +42,7 @@ public class DraggableFoods : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
     private bool isInitialPositionStored = false;    
     private bool recordingCompleteFlag = false;
     private const string musicVolumeParam = "MusicVolume";
+    private const string AmbientVolumeParam = "AmbientVolume";
     /*private bool revealText = false;*/
 
 
@@ -154,6 +155,21 @@ public class DraggableFoods : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
             Debug.LogError("AudioMixer is not assigned in the Inspector.");
         }
     }
+    private void SetAmbientVolume(float volume)
+    {
+        if (audioMixer != null)
+        {
+            bool result = audioMixer.SetFloat(AmbientVolumeParam, volume); // "MusicVolume" should match the exposed parameter name
+            if (!result)
+            {
+                Debug.LogError($"Failed to set MusicVolume to {volume}. Is the parameter exposed?");
+            }
+        }
+        else
+        {
+            Debug.LogError("AudioMixer is not assigned in the Inspector.");
+        }
+    }
 
     private IEnumerator HandleSuccessfulDrop()
     {
@@ -246,7 +262,8 @@ public class DraggableFoods : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
          .setEaseInOutQuad()
          .setOnComplete(() =>
          {
-             
+             SetMusicVolume(0f);
+             SetAmbientVolume(0f);
              Destroy(spawnedPrefab);
              jojoAnimator.SetTrigger("Chew");
 
@@ -332,7 +349,7 @@ public class DraggableFoods : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
 
     private IEnumerator StartRecording()
     {
-        SetMusicVolume(-80f);
+       
 
         retryButton.GetComponent<Image>().sprite = Resources.Load<Sprite>("Images/STMechanics/RetrySprite");
 
@@ -362,7 +379,7 @@ public class DraggableFoods : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
 
     private void StopRecording()
     {
-        SetMusicVolume(0f);
+        
         int recordingLength = Microphone.GetPosition(null);
         Microphone.End(null); 
 

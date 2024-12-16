@@ -136,7 +136,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1261242162691769517, guid: 5cc33678a45eebd4eb94af593e86f318, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3220799799381724627, guid: 5cc33678a45eebd4eb94af593e86f318, type: 3}
       propertyPath: m_Pivot.x
@@ -498,13 +498,13 @@ PrefabInstance:
   m_SourcePrefab: {fileID: 100100000, guid: a232b446d9762d848ad2c29abb38ffd2, type: 3}
 --- !u!114 &646613258 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 1671538399259911464, guid: a232b446d9762d848ad2c29abb38ffd2, type: 3}
+  m_CorrespondingSourceObject: {fileID: 6592354494236497805, guid: a232b446d9762d848ad2c29abb38ffd2, type: 3}
   m_PrefabInstance: {fileID: 646613257}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e7afa5bdda8775445af8a9c54ca3c38a, type: 3}
+  m_Script: {fileID: 11500000, guid: 9e657bfaf44aabc43b89f245c4dc6001, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1064579384
@@ -1408,7 +1408,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 646613258}
-        m_TargetAssemblyTypeName: Scene_Manager, Assembly-CSharp
+        m_TargetAssemblyTypeName: Scene_Manager_Final, Assembly-CSharp
         m_MethodName: LoadLevel
         m_Mode: 5
         m_Arguments:
@@ -1416,7 +1416,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: 
+          m_StringArgument: HouseHold_SentenceSafari
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &1855552498
@@ -1690,7 +1690,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 646613258}
-        m_TargetAssemblyTypeName: Scene_Manager, Assembly-CSharp
+        m_TargetAssemblyTypeName: Scene_Manager_Final, Assembly-CSharp
         m_MethodName: LoadLevel
         m_Mode: 5
         m_Arguments:
@@ -1698,7 +1698,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: StartMenu
+          m_StringArgument: HouseHold_SentenceSafari
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &2054688227

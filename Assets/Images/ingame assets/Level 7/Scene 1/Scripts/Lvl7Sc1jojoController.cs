@@ -4,6 +4,7 @@ using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
 using TMPro;
+using UnityEngine.Audio;
 
 public class Lvl7Sc1JojoController : MonoBehaviour
 {
@@ -45,6 +46,9 @@ public class Lvl7Sc1JojoController : MonoBehaviour
     public TextMeshProUGUI subtitleText;
     public Transform cameraFollowPoint; // New reference to child object of Jojo for camera to follow
 
+    public AudioMixer audioMixer;
+    private const string musicVolumeParam = "MusicVolume";
+    private const string AmbientVolumeParam = "AmbientVolume";
     void Start()
     {
         kikiAnimator = birdGameObject.GetComponent<Animator>();
@@ -284,11 +288,43 @@ public class Lvl7Sc1JojoController : MonoBehaviour
         // Handle what happens when the speech bubble is tapped, like activating the ST Canvas
         if (panelToScale != null)
         {
+            SetMusicVolume(-80f);
+            SetAmbientVolume(-80f);
             ChangePanelSprite();
             panelToScale.SetActive(true);
         }
     }
 
+    private void SetAmbientVolume(float volume)
+    {
+        if (audioMixer != null)
+        {
+            bool result = audioMixer.SetFloat(AmbientVolumeParam, volume); // "MusicVolume" should match the exposed parameter name
+            if (!result)
+            {
+                Debug.LogError($"Failed to set MusicVolume to {volume}. Is the parameter exposed?");
+            }
+        }
+        else
+        {
+            Debug.LogError("AudioMixer is not assigned in the Inspector.");
+        }
+    }
+    private void SetMusicVolume(float volume)
+    {
+        if (audioMixer != null)
+        {
+            bool result = audioMixer.SetFloat(musicVolumeParam, volume); // "MusicVolume" should match the exposed parameter name
+            if (!result)
+            {
+                Debug.LogError($"Failed to set MusicVolume to {volume}. Is the parameter exposed?");
+            }
+        }
+        else
+        {
+            Debug.LogError("AudioMixer is not assigned in the Inspector.");
+        }
+    }
     private void ChangePanelSprite()
     {
         // Change the sprite based on the stop index
