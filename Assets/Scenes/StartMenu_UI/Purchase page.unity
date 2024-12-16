@@ -404,8 +404,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1461957829}
-        m_TargetAssemblyTypeName: IAP_Manager, Assembly-CSharp
+      - m_Target: {fileID: 2499922816406910008}
+        m_TargetAssemblyTypeName: IAPController, Assembly-CSharp
         m_MethodName: BuyProductID
         m_Mode: 5
         m_Arguments:
@@ -537,7 +537,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1461957829}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: IAP_Manager, Assembly-CSharp
         m_MethodName: ClearLogs
         m_Mode: 1
@@ -669,8 +669,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1461957829}
-        m_TargetAssemblyTypeName: IAP_Manager, Assembly-CSharp
+      - m_Target: {fileID: 2499922816406910008}
+        m_TargetAssemblyTypeName: IAPController, Assembly-CSharp
         m_MethodName: BuyProductID
         m_Mode: 5
         m_Arguments:
@@ -868,17 +868,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1461957829 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5258238439174358860, guid: e47caa392aff349429f10a1da79eaf3a, type: 3}
-  m_PrefabInstance: {fileID: 2499922816406910007}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 379ea322e602648ff9e222d601296186, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!1 &1472978745
 GameObject:
   m_ObjectHideFlags: 0
@@ -1936,29 +1925,13 @@ PrefabInstance:
       propertyPath: m_Name
       value: IAP
       objectReference: {fileID: 0}
-    - target: {fileID: 5258238439174358860, guid: e47caa392aff349429f10a1da79eaf3a, type: 3}
-      propertyPath: debugText
-      value: 
-      objectReference: {fileID: 1961697781}
-    - target: {fileID: 5258238439174358860, guid: e47caa392aff349429f10a1da79eaf3a, type: 3}
-      propertyPath: clearLogsButton
-      value: 
-      objectReference: {fileID: 656439425}
-    - target: {fileID: 5258238439174358860, guid: e47caa392aff349429f10a1da79eaf3a, type: 3}
-      propertyPath: renewalCountText
-      value: 
-      objectReference: {fileID: 2106920454}
-    - target: {fileID: 5258238439174358860, guid: e47caa392aff349429f10a1da79eaf3a, type: 3}
-      propertyPath: subscriptionStatusText
-      value: 
-      objectReference: {fileID: 1870239027}
     - target: {fileID: 7728741424929321587, guid: e47caa392aff349429f10a1da79eaf3a, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 134.40436
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7728741424929321587, guid: e47caa392aff349429f10a1da79eaf3a, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 974.22754
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7728741424929321587, guid: e47caa392aff349429f10a1da79eaf3a, type: 3}
       propertyPath: m_LocalPosition.z
@@ -1992,11 +1965,38 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8836046583807312052, guid: e47caa392aff349429f10a1da79eaf3a, type: 3}
+      propertyPath: debugText
+      value: 
+      objectReference: {fileID: 1961697781}
+    - target: {fileID: 8836046583807312052, guid: e47caa392aff349429f10a1da79eaf3a, type: 3}
+      propertyPath: clearLogsButton
+      value: 
+      objectReference: {fileID: 656439425}
+    - target: {fileID: 8836046583807312052, guid: e47caa392aff349429f10a1da79eaf3a, type: 3}
+      propertyPath: renewalCountText
+      value: 
+      objectReference: {fileID: 2106920454}
+    - target: {fileID: 8836046583807312052, guid: e47caa392aff349429f10a1da79eaf3a, type: 3}
+      propertyPath: subscriptionStatusText
+      value: 
+      objectReference: {fileID: 1870239027}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e47caa392aff349429f10a1da79eaf3a, type: 3}
+--- !u!114 &2499922816406910008 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8836046583807312052, guid: e47caa392aff349429f10a1da79eaf3a, type: 3}
+  m_PrefabInstance: {fileID: 2499922816406910007}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c70d798bfa7b644c94b8d86d9ffa4ef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

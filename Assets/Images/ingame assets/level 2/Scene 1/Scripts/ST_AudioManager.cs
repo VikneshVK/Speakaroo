@@ -25,7 +25,8 @@ public class ST_AudioManager : MonoBehaviour
     private Image Jojo;
     private Image Kiki;
     private Animator JojoAnimator;
-    private Animator KikiAnimator; 
+    private Animator KikiAnimator;
+    private const string musicVolumeParam = "MusicVolume";
 
 
     public event Action OnRecordingStart;

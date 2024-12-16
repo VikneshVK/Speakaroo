@@ -4,12 +4,12 @@ using UnityEngine.UI;
 public class ButtonManager : MonoBehaviour
 {
     public Button[] buttons; // Array of buttons in your scene
-    private IAP_Manager iapManager; // Reference to the IAP_Manager
+    private IAPController iapManager; // Reference to the IAP_Manager
     private string YearlySub = "com.littlelearninglab.speakaroo.yearly_subscription"; // Make sure this matches your IAP_Manager
 
     void Start()
     {
-        iapManager = FindObjectOfType<IAP_Manager>(); // Get a reference to the IAP_Manager in your scene
+        iapManager = FindObjectOfType<IAPController>(); // Get a reference to the IAP_Manager in your scene
 
         // Initially lock buttons if purchase is not completed
         if (!IsSubscriptionActive())

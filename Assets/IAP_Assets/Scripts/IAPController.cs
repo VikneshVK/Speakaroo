@@ -1,13 +1,15 @@
 using System;
+using System.Collections;
+using System.Collections.Generic;
+using TMPro;
 using Unity.Services.Core;
 using UnityEngine;
-using UnityEngine.Purchasing;
 using UnityEngine.Purchasing.Security;
-using TMPro;
+using UnityEngine.Purchasing;
 
-public class IAP_Manager : MonoBehaviour, IStoreListener
+public class IAPController : MonoBehaviour, IStoreListener
 {
-    private static IAP_Manager instance;
+    private static IAPController instance;
     private static IStoreController storeController;
     private static IExtensionProvider storeExtensionProvider;
 
@@ -25,7 +27,7 @@ public class IAP_Manager : MonoBehaviour, IStoreListener
 
     private string logMessages = ""; // Stores log messages
 
-    public static IAP_Manager Instance => instance;
+    public static IAPController Instance => instance;
 
     void Awake()
     {
