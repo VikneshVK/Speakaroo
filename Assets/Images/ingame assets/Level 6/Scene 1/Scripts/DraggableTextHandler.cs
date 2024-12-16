@@ -351,6 +351,7 @@ public class DraggableTextHandler : MonoBehaviour
         return false;
     }
 
+
     private void ScaleDownAndSpawnPrefab()
     {
         if (panel == null || prefabToSpawn == null)

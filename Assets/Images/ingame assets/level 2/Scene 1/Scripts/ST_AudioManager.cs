@@ -8,6 +8,7 @@ using UnityEngine.Audio;
 public class ST_AudioManager : MonoBehaviour
 {
     public static ST_AudioManager Instance;
+    public AudioMixer audioMixer;
     public AudioSource audioSourceCard1;
     public AudioSource audioSourceCard2;
     public AudioSource recordedAudioSource;
@@ -80,6 +81,33 @@ public class ST_AudioManager : MonoBehaviour
         displayText.text = "Scratch the Cards to Reveal the Word";
     }
 
+    public void TriggerRecordingStart()
+    {
+        // Reduce the volume of the "Music" group when recording starts
+        SetMusicVolume(-80f); // Set to minimum volume (mute)
+        OnRecordingStart?.Invoke();
+    }
+
+    public void TriggerRecordingStop()
+    {
+        // Restore the volume of the "Music" group when recording stops
+        SetMusicVolume(0f); // Set back to the default volume
+    }
+
+    private void SetMusicVolume(float volume)
+    {
+        if (audioMixer != null)
+        {
+            bool result = audioMixer.SetFloat(musicVolumeParam, volume); // Use "Volume"
+            Debug.Log($"SetFloat executed: {result}, Volume: {volume}");
+        }
+        else
+        {
+            Debug.LogError("AudioMixer is not assigned in the Inspector.");
+        }
+    }
+
+   
     public void PlayScratchAudio()
     {
         if (retryButtonScript != null)
@@ -123,6 +151,7 @@ public class ST_AudioManager : MonoBehaviour
         AudioClip recordedClip = Microphone.Start(null, false, Mathf.CeilToInt(recordLength), chosenFreq);
         yield return StartCoroutine(WaitForSecondsRealtime(recordLength));
         Microphone.End(null);
+        TriggerRecordingStop();
 
         // Process the recorded audio
         float[] samples = new float[Mathf.CeilToInt(chosenFreq * recordLength)];
