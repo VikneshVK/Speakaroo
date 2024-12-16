@@ -618,6 +618,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: LVLTransistion Canvas
       objectReference: {fileID: 0}
+    - target: {fileID: 1261242162691769517, guid: 5cc33678a45eebd4eb94af593e86f318, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 3220799799381724627, guid: 5cc33678a45eebd4eb94af593e86f318, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -1193,9 +1197,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   objectAnimator: {fileID: 498886769}
   wordAudioClips:
-  - {fileID: 8300000, guid: fe0b4d77d80192346acb104dcbef4628, type: 3}
-  - {fileID: 8300000, guid: dfc2155a55be0a24f928dfa27499d01e, type: 3}
-  - {fileID: 8300000, guid: a4aa66c506cea144898d1751c7d58796, type: 3}
+  - {fileID: 8300000, guid: 5f535ce6d2bcf144bbaa59c9aa4b33ec, type: 3}
+  - {fileID: 8300000, guid: e84400000e559426c96fb599e14d1f88, type: 3}
+  - {fileID: 8300000, guid: c6d6063348bd4824eb634edbd1f2f56f, type: 3}
+  AmbientSounds: {fileID: 8300000, guid: 6f1004c82fa185347a66c4c0ec651fb0, type: 3}
   wordButtons:
   - {fileID: 1907535199}
   - {fileID: 1435533450}

@@ -290,7 +290,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 42.619995, y: -43.899994}
+  m_AnchoredPosition: {x: 42.619995, y: -43.900024}
   m_SizeDelta: {x: 200, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &319161254
@@ -1034,9 +1034,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   objectAnimator: {fileID: 498886769}
   wordAudioClips:
-  - {fileID: 8300000, guid: fe0b4d77d80192346acb104dcbef4628, type: 3}
-  - {fileID: 8300000, guid: dfc2155a55be0a24f928dfa27499d01e, type: 3}
-  - {fileID: 8300000, guid: a4aa66c506cea144898d1751c7d58796, type: 3}
+  - {fileID: 8300000, guid: d5d0956ce9e5ad84c856c33487aab2a3, type: 3}
+  - {fileID: 8300000, guid: 440820eac74c0364687e14886309371e, type: 3}
+  - {fileID: 8300000, guid: f6e65a600eb35974d837a0cca45c852f, type: 3}
+  AmbientSounds: {fileID: 8300000, guid: 797afcbaa39369a4a9b1e19acf6a1dd2, type: 3}
   wordButtons:
   - {fileID: 1907535199}
   - {fileID: 1435533450}

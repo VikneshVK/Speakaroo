@@ -132,10 +132,10 @@ public class Scene_Manager_Final : MonoBehaviour
 
     
 
-        private bool HasPremiumAccess()
-    {
-        return IAPController.Instance.IsSubscribed() || PlayerPrefs.GetInt("IsPremiumUser", 0) == 1;
-    }
+    //private bool HasPremiumAccess()
+    //{
+    //    return IAPController.Instance.IsSubscribed() || PlayerPrefs.GetInt("IsPremiumUser", 0) == 1;
+    //}
 
     public void UnlockPremiumAccess()
     {

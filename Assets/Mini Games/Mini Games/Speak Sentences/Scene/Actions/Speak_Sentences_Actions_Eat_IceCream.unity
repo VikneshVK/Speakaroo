@@ -363,7 +363,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: Learn Sentences
+          m_StringArgument: Animals_SentenceSafari
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &319161256
@@ -620,7 +620,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1261242162691769517, guid: 5cc33678a45eebd4eb94af593e86f318, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3220799799381724627, guid: 5cc33678a45eebd4eb94af593e86f318, type: 3}
       propertyPath: m_Pivot.x
@@ -1104,10 +1104,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   objectAnimator: {fileID: 498886769}
   wordAudioClips:
-  - {fileID: 8300000, guid: fe0b4d77d80192346acb104dcbef4628, type: 3}
-  - {fileID: 8300000, guid: dfc2155a55be0a24f928dfa27499d01e, type: 3}
-  - {fileID: 8300000, guid: a4aa66c506cea144898d1751c7d58796, type: 3}
-  AmbientSounds: {fileID: 0}
+  - {fileID: 8300000, guid: 473c9e38672f0b54b8ba5a5f24f31d88, type: 3}
+  - {fileID: 8300000, guid: 48ab4c31e5459174b8f182d3c9f4fade, type: 3}
+  - {fileID: 8300000, guid: 6fac8de48f096094390bcfb5a27947d3, type: 3}
+  AmbientSounds: {fileID: 8300000, guid: 6f1004c82fa185347a66c4c0ec651fb0, type: 3}
   wordButtons:
   - {fileID: 1907535199}
   - {fileID: 1435533450}
@@ -1206,7 +1206,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: Speak_Sentences_Places_School
+          m_StringArgument: Speak_Sentences_Actions_Jump
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &1262992399

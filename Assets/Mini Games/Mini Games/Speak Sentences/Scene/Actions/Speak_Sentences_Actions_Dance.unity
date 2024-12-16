@@ -157,7 +157,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 350, y: -85.462}
+  m_AnchoredPosition: {x: 470, y: -85.462}
   m_SizeDelta: {x: 850, y: 850}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &203364471
@@ -363,7 +363,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: Learn Sentences
+          m_StringArgument: Animals_SentenceSafari
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &319161256
@@ -418,7 +418,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1261242162691769517, guid: 5cc33678a45eebd4eb94af593e86f318, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3220799799381724627, guid: 5cc33678a45eebd4eb94af593e86f318, type: 3}
       propertyPath: m_Pivot.x
@@ -499,6 +499,14 @@ PrefabInstance:
     - target: {fileID: 3220799799381724627, guid: 5cc33678a45eebd4eb94af593e86f318, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5292709569205229216, guid: 5cc33678a45eebd4eb94af593e86f318, type: 3}
+      propertyPath: m_Camera
+      value: 
+      objectReference: {fileID: 1090102247}
+    - target: {fileID: 5292709569205229216, guid: 5cc33678a45eebd4eb94af593e86f318, type: 3}
+      propertyPath: m_PixelPerfect
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -977,10 +985,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   objectAnimator: {fileID: 1221033881}
   wordAudioClips:
-  - {fileID: 8300000, guid: fe0b4d77d80192346acb104dcbef4628, type: 3}
-  - {fileID: 8300000, guid: dfc2155a55be0a24f928dfa27499d01e, type: 3}
-  - {fileID: 8300000, guid: a4aa66c506cea144898d1751c7d58796, type: 3}
-  AmbientSounds: {fileID: 0}
+  - {fileID: 8300000, guid: 84d42a0574b266a46aa86ea7d8236e29, type: 3}
+  - {fileID: 8300000, guid: 412cfb560d8c6d54bae40c06c56647c9, type: 3}
+  - {fileID: 8300000, guid: b2b40e0fe942d264c854bbe8449b3f2d, type: 3}
+  AmbientSounds: {fileID: 8300000, guid: ab65fe8f7851253429dfdb2341892bf5, type: 3}
   wordButtons:
   - {fileID: 1907535199}
   - {fileID: 1435533450}
@@ -1206,7 +1214,7 @@ MonoBehaviour:
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: Speak_Sentences_Places_School
+          m_StringArgument: Speak_Sentences_Actions_Eat_IceCream
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &1262992399
@@ -1367,7 +1375,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 360, y: 106}
+  m_AnchoredPosition: {x: 470, y: 110.57}
   m_SizeDelta: {x: 850, y: 850}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1435533450
@@ -1627,7 +1635,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 350, y: 282.54}
+  m_AnchoredPosition: {x: 470, y: 285.57}
   m_SizeDelta: {x: 850, y: 850}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1907535199

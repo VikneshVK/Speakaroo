@@ -617,7 +617,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
-  m_Volume: 1
+  m_Volume: 0.65
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -917,9 +917,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   objectAnimator: {fileID: 498886769}
   wordAudioClips:
-  - {fileID: 8300000, guid: 3f89af54429634531b73f49ede1551ac, type: 3}
-  - {fileID: 8300000, guid: 2e903fbb49e3140558ff0953c3309b53, type: 3}
-  - {fileID: 8300000, guid: e0ea315c718fb4a92adc214cb9fd80fd, type: 3}
+  - {fileID: 8300000, guid: 14eca96bc4c92db4c85d4d99c28b2a2d, type: 3}
+  - {fileID: 8300000, guid: 346bf2e1b16f79c48ac037d80e740f2c, type: 3}
+  - {fileID: 8300000, guid: 355a599f9489fbd478088f4d7fa09eb6, type: 3}
+  AmbientSounds: {fileID: 8300000, guid: 730d7ee9fd4b0b54580bc55b5bf3bb6f, type: 3}
   wordButtons:
   - {fileID: 1907535199}
   - {fileID: 1435533450}

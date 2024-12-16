@@ -486,7 +486,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1261242162691769517, guid: 5cc33678a45eebd4eb94af593e86f318, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3220799799381724627, guid: 5cc33678a45eebd4eb94af593e86f318, type: 3}
       propertyPath: m_Pivot.x
@@ -1032,6 +1032,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: fc525441cff150a45a4ca30b9d75d918, type: 3}
   - {fileID: 8300000, guid: e9146766a12d7694da23139460779fcc, type: 3}
   - {fileID: 8300000, guid: 7825c8b93e3320945871c058f88441b7, type: 3}
+  AmbientSounds: {fileID: 8300000, guid: e4edd44743a340842a3ce047b60b866b, type: 3}
   wordButtons:
   - {fileID: 1907535199}
   - {fileID: 1435533450}
