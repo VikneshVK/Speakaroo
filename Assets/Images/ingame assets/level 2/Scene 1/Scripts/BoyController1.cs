@@ -11,7 +11,7 @@ public class BoyController1 : MonoBehaviour
     public GameObject Bus;
     public GameObject Whale;
     public GameObject Building;
-    public AudioSource jojoAudio;
+    private AudioSource jojoAudio;
    /* public AudioSource kikiAudio; //temp addition,please change later*/
     public AudioClip[] audioClips; // Array to hold the audio clips
     public TextMeshProUGUI subtitleText;

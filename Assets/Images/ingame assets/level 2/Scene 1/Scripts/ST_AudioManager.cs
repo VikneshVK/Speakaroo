@@ -3,10 +3,12 @@ using System;
 using System.Collections;
 using TMPro;
 using UnityEngine.UI;
+using UnityEngine.Audio;
 
 public class ST_AudioManager : MonoBehaviour
 {
     public static ST_AudioManager Instance;
+    public AudioMixer audioMixer;
     public AudioSource audioSourceCard1;
     public AudioSource audioSourceCard2;
     public AudioSource recordedAudioSource;
@@ -18,7 +20,8 @@ public class ST_AudioManager : MonoBehaviour
     private TextMeshProUGUI displayText;
     private Button retryButton;
     public string currentCardTag;
-    private RetryButton retryButtonScript;  // Reference to the RetryButton script
+    private RetryButton retryButtonScript;  // Reference to the RetryButton script.
+    private const string musicVolumeParam = "MusicVolume";
 
     public event Action OnRecordingStart;
     public event Action<int> OnRecordingComplete;
@@ -64,6 +67,33 @@ public class ST_AudioManager : MonoBehaviour
         displayText.text = "Scratch the Cards to Reveal the Word";
     }
 
+    public void TriggerRecordingStart()
+    {
+        // Reduce the volume of the "Music" group when recording starts
+        SetMusicVolume(-80f); // Set to minimum volume (mute)
+        OnRecordingStart?.Invoke();
+    }
+
+    public void TriggerRecordingStop()
+    {
+        // Restore the volume of the "Music" group when recording stops
+        SetMusicVolume(0f); // Set back to the default volume
+    }
+
+    private void SetMusicVolume(float volume)
+    {
+        if (audioMixer != null)
+        {
+            bool result = audioMixer.SetFloat(musicVolumeParam, volume); // Use "Volume"
+            Debug.Log($"SetFloat executed: {result}, Volume: {volume}");
+        }
+        else
+        {
+            Debug.LogError("AudioMixer is not assigned in the Inspector.");
+        }
+    }
+
+   
     public void PlayScratchAudio()
     {
         if (retryButtonScript != null)
@@ -98,9 +128,11 @@ public class ST_AudioManager : MonoBehaviour
     private IEnumerator RecordAndAnalyzeAudio(int cardNumber)
     {
         // Start recording
+        TriggerRecordingStart();
         AudioClip recordedClip = Microphone.Start(null, false, Mathf.CeilToInt(recordLength), 44100);
         yield return StartCoroutine(WaitForSecondsRealtime(recordLength));
         Microphone.End(null);
+        TriggerRecordingStop();
 
         // Assign the recorded clip to the recordedAudioSource
         recordedAudioSource.clip = recordedClip;
@@ -116,7 +148,7 @@ public class ST_AudioManager : MonoBehaviour
 
             // Trigger OnRecordingPlaybackStart event
             OnRecordingPlaybackStart?.Invoke();
-                        
+
             PlayRecordedClipWithFunnyVoice(recordedClip);
             yield return StartCoroutine(WaitForSecondsRealtime(recordedClip.length));
 
@@ -173,10 +205,10 @@ public class ST_AudioManager : MonoBehaviour
         PlayAudioAfterDestroy(currentCardTag);
     }
 
-    public void TriggerRecordingStart()
+    /*public void TriggerRecordingStart()
     {
         OnRecordingStart?.Invoke();
-    }
+    }*/
 
     // Method to trigger the OnPlaybackComplete event
     public void TriggerOnPlaybackComplete()

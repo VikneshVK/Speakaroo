@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Audio;
 
 public class SunscreenLvl5Sc1_3TweenManager : MonoBehaviour
 {
@@ -9,7 +10,8 @@ public class SunscreenLvl5Sc1_3TweenManager : MonoBehaviour
     private bool isRetryClicked = false;
     private GameObject buttonToActivate;
     private LVL5Sc1_3JojoController1 jojoController;
-
+    public AudioMixer audioMixer;
+    private const string musicVolumeParam = "MusicVolume";
 
     private void Start()
     {
@@ -38,6 +40,22 @@ public class SunscreenLvl5Sc1_3TweenManager : MonoBehaviour
 
     }
 
+    private void SetMusicVolume(float volume)
+    {
+        if (audioMixer != null)
+        {
+            bool result = audioMixer.SetFloat(musicVolumeParam, volume); // "MusicVolume" should match the exposed parameter name
+            if (!result)
+            {
+                Debug.LogError($"Failed to set MusicVolume to {volume}. Is the parameter exposed?");
+            }
+        }
+        else
+        {
+            Debug.LogError("AudioMixer is not assigned in the Inspector.");
+        }
+    }
+
     private void OnDestroy()
     {
         ST_AudioManager.Instance.OnPlaybackComplete -= HandlePlaybackComplete;
@@ -57,6 +75,7 @@ public class SunscreenLvl5Sc1_3TweenManager : MonoBehaviour
 
     private IEnumerator Timer(float time)
     {
+        SetMusicVolume(0f);
         float counter = 0;
         isRetryClicked = false;
 

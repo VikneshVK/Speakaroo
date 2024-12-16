@@ -15,8 +15,8 @@ public class RetryButton : MonoBehaviour
     private Sprite defaultSprite;
 
     private AudioSource audioSource; // AudioSource attached to the STMechanics GameObject
-    public AudioClip scratchAudioClip;
-    public AudioClip revealAudioClip;
+    private AudioClip scratchAudioClip;
+    private AudioClip revealAudioClip;
 
     private int retryCountCard1 = 0;
     private int retryCountCard2 = 0;

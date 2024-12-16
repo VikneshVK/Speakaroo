@@ -3,15 +3,31 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class Scene_Manager_Final : MonoBehaviour
 {
     public Animator TransitionAnim;
-
+    
     /*private string[] freeScenes = { "StartMenu", "Purchase page", "Learn Words", "Learn to Speak", "Learn Sentences", "Follow Direction", "Downloads", "Scene 1" };*/
+    public List<string> scenesWithLoadingScreen;
+    /*private static Scene_Manager_Final instance;
 
+    void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject); // Make this persistent
+        }
+        else
+        {
+            Destroy(gameObject); // Destroy duplicate instances
+        }
+    }*/
     void Start()
     {
+        
         SetNativeRefreshRate();
         if (SceneManager.GetActiveScene().name == "StartMenu")
         {
@@ -29,21 +45,52 @@ public class Scene_Manager_Final : MonoBehaviour
         Debug.Log($"Screen Refresh Rate: {refreshRate} Hz. Target Frame Rate set to: {Application.targetFrameRate}");
     }
 
-    public void LoadLevel(string LvlName)
+    /* public void LoadLevel(string LvlName)
+     {
+         StartCoroutine(LoadScene(LvlName));
+         *//* if (IsSceneAccessible(LvlName))
+          {
+              StartCoroutine(LoadScene(LvlName));
+          }
+          else
+          {
+              Debug.Log("Access Denied: This scene is locked.");
+              ShowLockedSceneMessage();
+          }*//*
+     }*/
+
+    public void LoadLevel(string sceneName)
     {
-        StartCoroutine(LoadScene(LvlName));
-        /* if (IsSceneAccessible(LvlName))
-         {
-             StartCoroutine(LoadScene(LvlName));
-         }
-         else
-         {
-             Debug.Log("Access Denied: This scene is locked.");
-             ShowLockedSceneMessage();
-         }*/
+        if (scenesWithLoadingScreen.Contains(sceneName))
+        {
+            StartCoroutine(LoadSceneWithLoadingScreen(sceneName));
+        }
+        else
+        {
+            StartCoroutine(LoadSceneDirectly(sceneName));
+        }
     }
 
-    IEnumerator LoadScene(string LvlName)
+    private IEnumerator LoadSceneWithLoadingScreen(string targetScene)
+    {
+        Debug.Log($"Loading scene with loading screen: {targetScene}");
+
+        if (TransitionAnim != null)
+        {
+            TransitionAnim.SetTrigger("end");
+        }
+
+        yield return new WaitForSeconds(1.5f);
+
+        // Save the target scene name
+        PlayerPrefs.SetString("TargetScene", targetScene);
+
+        // Load the Loading Page scene
+        SceneManager.LoadScene("Loading Page");
+    }
+
+
+    IEnumerator LoadSceneDirectly(string LvlName)
     {
         Debug.Log("Attempting to load scene: " + LvlName);
 
@@ -83,7 +130,9 @@ public class Scene_Manager_Final : MonoBehaviour
         return HasPremiumAccess() || System.Array.Exists(freeScenes, scene => scene == sceneName);
     }*/
 
-    private bool HasPremiumAccess()
+    
+
+        private bool HasPremiumAccess()
     {
         return IAP_Manager.Instance.IsSubscribed() || PlayerPrefs.GetInt("IsPremiumUser", 0) == 1;
     }

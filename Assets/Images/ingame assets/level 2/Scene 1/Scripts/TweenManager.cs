@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEngine.Audio;
 
 public class TweenManager : MonoBehaviour
 {
@@ -12,6 +13,8 @@ public class TweenManager : MonoBehaviour
     private List<GameObject> spriteMasks = new List<GameObject>();
     private AudioSource feedbackAudiosource;
     private AudioClip dialouge3;
+    public AudioMixer audioMixer;
+    private const string musicVolumeParam = "MusicVolume";
     private void Start()
     {
         ST_AudioManager.Instance.OnPlaybackComplete += HandlePlaybackComplete;
@@ -41,6 +44,21 @@ public class TweenManager : MonoBehaviour
         Debug.Log("Number of sprite masks found: " + spriteMasks.Count);
     }
 
+    private void SetMusicVolume(float volume)
+    {
+        if (audioMixer != null)
+        {
+            bool result = audioMixer.SetFloat(musicVolumeParam, volume); // "MusicVolume" should match the exposed parameter name
+            if (!result)
+            {
+                Debug.LogError($"Failed to set MusicVolume to {volume}. Is the parameter exposed?");
+            }
+        }
+        else
+        {
+            Debug.LogError("AudioMixer is not assigned in the Inspector.");
+        }
+    }
     private void OnDestroy()
     {
         ST_AudioManager.Instance.OnPlaybackComplete -= HandlePlaybackComplete;
@@ -60,6 +78,7 @@ public class TweenManager : MonoBehaviour
 
     private IEnumerator Timer(float time)
     {
+        SetMusicVolume(0f);
         float counter = 0;
         isRetryClicked = false;
 
