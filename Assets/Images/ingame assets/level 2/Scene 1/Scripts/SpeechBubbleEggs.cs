@@ -10,17 +10,24 @@ public class SpeechBubbleEggs : MonoBehaviour
     public int eggCount = 10; // Number of eggs to spawn
     public float eggSpeed = 2f; // Speed at which eggs move
     private Dictionary<Transform, Vector3> originalScales = new Dictionary<Transform, Vector3>();
+    private GameObject stCanvas;
 
     private Collider2D objectCollider;
     private SpriteRenderer objectSpriteRenderer;
 
+    private int childrenScaled = 0;
+    private int totalChildren = 2;
+
     public AudioMixer audioMixer;
     private const string musicVolumeParam = "MusicVolume";
+    private const string AmbientVolumeParam = "AmbientVolume";
 
     void Start()
     {
         objectCollider = GetComponent<Collider2D>();
         objectSpriteRenderer = GetComponent<SpriteRenderer>();
+        stCanvas = GameObject.FindGameObjectWithTag("STCanvas");
+
     }
 
     void OnMouseDown()
@@ -51,17 +58,50 @@ public class SpeechBubbleEggs : MonoBehaviour
             Debug.LogError("AudioMixer is not assigned in the Inspector.");
         }
     }
+    private void SetAmbientVolume(float volume)
+    {
+        if (audioMixer != null)
+        {
+            bool result = audioMixer.SetFloat(AmbientVolumeParam, volume); // "MusicVolume" should match the exposed parameter name
+            if (!result)
+            {
+                Debug.LogError($"Failed to set MusicVolume to {volume}. Is the parameter exposed?");
+            }
+        }
+        else
+        {
+            Debug.LogError("AudioMixer is not assigned in the Inspector.");
+        }
+    }
     void SpawnAndAnimatePrefab()
     {
-        SetMusicVolume(-80f);
-        GameObject instantiatedPrefab = Instantiate(prefabToSpawn, Vector3.zero, Quaternion.identity);
-        SaveAndResetScales(instantiatedPrefab);
+        foreach (Transform child in stCanvas.transform)
+        {
+            LeanTween.scale(child.gameObject, Vector3.one, 0.5f).setOnComplete(OnChildScaled);
+        }
+        
+        
+    }
 
-        LeanTween.scale(instantiatedPrefab, originalScales[instantiatedPrefab.transform], 0.5f)
-                 .setEase(LeanTweenType.easeOutBack)
-                 .setOnComplete(() => {
-                     StartCoroutine(SpawnEggs(() => AnimateChildren(instantiatedPrefab.transform)));
-                 });
+    private void OnChildScaled()
+    {
+        childrenScaled++;
+
+        if (childrenScaled >= totalChildren)
+        {
+            SetMusicVolume(-80f);
+            SetAmbientVolume(-80f);
+            GameObject instantiatedPrefab = Instantiate(prefabToSpawn, Vector3.zero, Quaternion.identity);
+            SaveAndResetScales(instantiatedPrefab);
+
+            LeanTween.scale(instantiatedPrefab, originalScales[instantiatedPrefab.transform], 0.5f)
+                     .setEase(LeanTweenType.easeOutBack)
+                     .setOnComplete(() =>
+                     {
+                         StartCoroutine(SpawnEggs(() => AnimateChildren(instantiatedPrefab.transform)));
+                     });
+            
+        }
     }
 
     void SaveAndResetScales(GameObject root)
@@ -82,7 +122,10 @@ public class SpeechBubbleEggs : MonoBehaviour
         {
             if (originalScales.ContainsKey(child))
             {
-                LeanTween.scale(child.gameObject, originalScales[child], 0.5f).setEase(LeanTweenType.easeOutBack);
+                LeanTween.scale(child.gameObject, originalScales[child], 0.5f).setEase(LeanTweenType.easeOutBack).setOnComplete(() =>
+                Destroy(gameObject)
+                
+                );
             }
         }
     }

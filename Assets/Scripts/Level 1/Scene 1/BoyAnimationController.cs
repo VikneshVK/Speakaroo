@@ -117,7 +117,8 @@ public class BoyAnimationController : MonoBehaviour
         transform.position = targetPosition;
         boySprite.flipX = false;
         animator.SetBool("isWalking", false);
-
+        BirdAnimator.SetTrigger("GoodMorning");
+        audiomanager.PlayAudio(audio5);
         OnTalkAnimationEnd();
     }
 
@@ -129,7 +130,7 @@ public class BoyAnimationController : MonoBehaviour
 
     private IEnumerator HandlePostTalk()
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(6f);
         StartCoroutine(ZoomIn());
     }
 
@@ -147,8 +148,7 @@ public class BoyAnimationController : MonoBehaviour
         }
 
         mainCamera.orthographicSize = zoomSize;
-        animator.SetBool("showTeeth", true);
-        audiomanager.PlayAudio(audio5);
+        animator.SetBool("showTeeth", true);        
         yield return new WaitForSeconds(3.5f);
         StartCoroutine(ZoomOut());
     }

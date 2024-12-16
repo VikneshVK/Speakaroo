@@ -15,11 +15,13 @@ public class TweenManager : MonoBehaviour
     private AudioClip dialouge3;
     public AudioMixer audioMixer;
     private const string musicVolumeParam = "MusicVolume";
+    private GameObject stCanvas;
     private void Start()
     {
         ST_AudioManager.Instance.OnPlaybackComplete += HandlePlaybackComplete;
         ST_AudioManager.Instance.OnRetryClicked += ResetTimer;
         feedbackAudiosource = GameObject.FindGameObjectWithTag("FeedbackAudio").GetComponent<AudioSource>();
+        stCanvas = GameObject.FindGameObjectWithTag("STCanvas");
         dialouge3 = Resources.Load<AudioClip>("Audio/FeedbackAudio/Dialouge3");
         // Get the reference to the Animator component of the Bird game object
         GameObject bird = GameObject.FindGameObjectWithTag("Bird");
@@ -108,26 +110,35 @@ public class TweenManager : MonoBehaviour
         // Wait for the children to finish tweening
         LeanTween.delayedCall(0.5f, () =>
         {
-            Debug.Log("Tween completed, activating masks...");
-            SpriteMaskManager.Instance.ActivateMasks();
-            speechTherapyCompleted = true;
-            // Set the animator parameters for the bird
-            if (birdAnimator != null)
+            foreach (Transform child in stCanvas.transform)
             {
-                birdAnimator.SetBool("startWalking", true);
-                birdAnimator.SetBool("resetPosition", false);
-                feedbackAudiosource.clip = dialouge3;
-                feedbackAudiosource.Play();
+                LeanTween.scale(child.gameObject, Vector3.zero, 0.5f);
             }
 
-            // Tween the parent to scale 0
-            LeanTween.scale(gameObject, Vector3.zero, 0.5f).setEase(LeanTweenType.easeInOutBack).setOnComplete(() =>
-            {
-                Destroy(gameObject);
-            });
+            LeanTween.scale(gameObject, Vector3.zero, 0.5f).setEase(LeanTweenType.easeInOutBack).setOnComplete(OnChildScaled);
+                       
         });
     }
 
+    private void OnChildScaled()
+    {
+       
+        speechTherapyCompleted = true;
+        // Set the animator parameters for the bird
+        if (birdAnimator != null)
+        {
+            birdAnimator.SetBool("startWalking", true);
+            birdAnimator.SetBool("resetPosition", false);
+            feedbackAudiosource.clip = dialouge3;
+            feedbackAudiosource.Play();
+        }
+
+        // Tween the parent to scale 0
+        LeanTween.scale(gameObject, Vector3.zero, 0.5f).setEase(LeanTweenType.easeInOutBack).setOnComplete(() =>
+        {
+            Destroy(gameObject);
+        });
+    }
     public void SkipButton()
     {
         StartCoroutine(Timer(0f));

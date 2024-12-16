@@ -152,7 +152,7 @@ public class ST_AudioManager : MonoBehaviour
         AudioClip recordedClip = Microphone.Start(null, false, Mathf.CeilToInt(recordLength), chosenFreq);
         yield return StartCoroutine(WaitForSecondsRealtime(recordLength));
         Microphone.End(null);
-        TriggerRecordingStop();
+       /* TriggerRecordingStop();*/
 
         // Process the recorded audio
         float[] samples = new float[Mathf.CeilToInt(chosenFreq * recordLength)];

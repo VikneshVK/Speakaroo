@@ -9,12 +9,14 @@ public class Tween_Manager1 : MonoBehaviour
     private Animator birdAnimator;
     private bool isRetryClicked = false;
     public AudioMixer audioMixer;
+    private GameObject stCanvas;
     private const string musicVolumeParam = "MusicVolume";
+    private const string AmbientVolumeParam = "AmbientVolume";
     private void Start()
     {
         ST_AudioManager.Instance.OnPlaybackComplete += HandlePlaybackComplete;
         ST_AudioManager.Instance.OnRetryClicked += ResetTimer;
-
+        stCanvas = GameObject.FindGameObjectWithTag("STCanvas");
         // Get the reference to the Animator component of the Bird game object
         GameObject bird = GameObject.FindGameObjectWithTag("Bird");
         if (bird != null)
@@ -38,7 +40,21 @@ public class Tween_Manager1 : MonoBehaviour
             Debug.LogError("AudioMixer is not assigned in the Inspector.");
         }
     }
-
+    private void SetAmbientVolume(float volume)
+    {
+        if (audioMixer != null)
+        {
+            bool result = audioMixer.SetFloat(AmbientVolumeParam, volume);
+            if (!result)
+            {
+                Debug.LogError($"Failed to set MusicVolume to {volume}. Is the parameter exposed?");
+            }
+        }
+        else
+        {
+            Debug.LogError("AudioMixer is not assigned in the Inspector.");
+        }
+    }
     private void OnDestroy()
     {
         ST_AudioManager.Instance.OnPlaybackComplete -= HandlePlaybackComplete;
@@ -60,6 +76,7 @@ public class Tween_Manager1 : MonoBehaviour
     private IEnumerator Timer(float time)
     {
         SetMusicVolume(0f);
+        SetAmbientVolume(0f);
         float counter = 0;
         isRetryClicked = false;
 
@@ -83,20 +100,29 @@ public class Tween_Manager1 : MonoBehaviour
         // Wait for the children to finish tweening
         LeanTween.delayedCall(0.5f, () =>
         {
-            speechTherapyCompleted = true;
-            // Set the animator parameters for the bird
-            if (birdAnimator != null)
+            foreach (Transform child in stCanvas.transform)
             {
-                KikiController1.startFlying = true;
-
-                /*birdAnimator.SetTrigger("GoToFood");*/               
+                LeanTween.scale(child.gameObject, Vector3.zero, 0.5f);
             }
 
-            // Tween the parent to scale 0
-            LeanTween.scale(gameObject, Vector3.zero, 0.5f).setEase(LeanTweenType.easeInOutBack).setOnComplete(() =>
-            {
-                Destroy(gameObject);
-            });
+            LeanTween.scale(gameObject, Vector3.zero, 0.5f).setEase(LeanTweenType.easeInOutBack).setOnComplete(OnChildScaled);
+            
+        });
+    }
+
+    private void OnChildScaled()
+    {
+        speechTherapyCompleted = true;
+        
+        if (birdAnimator != null)
+        {
+            KikiController1.startFlying = true;
+
+        }
+
+        LeanTween.scale(gameObject, Vector3.zero, 0.5f).setEase(LeanTweenType.easeInOutBack).setOnComplete(() =>
+        {
+            Destroy(gameObject);
         });
     }
 

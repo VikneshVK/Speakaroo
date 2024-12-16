@@ -12,14 +12,16 @@ public class Lvl8Sc1TweenManager2 : MonoBehaviour
     private GameObject buttonToActivate;
     private LVL5Sc12Jojocontroller jojoController;
     /*private List<GameObject> spriteMasks = new List<GameObject>();*/
+    private GameObject stCanvas;
     public AudioMixer audioMixer;
     private const string musicVolumeParam = "MusicVolume";
+    private const string AmbientVolumeParam = "AmbientVolume";
 
     private void Start()
     {
         ST_AudioManager.Instance.OnPlaybackComplete += HandlePlaybackComplete;
         ST_AudioManager.Instance.OnRetryClicked += ResetTimer;
-
+        stCanvas = GameObject.FindGameObjectWithTag("STCanvas");
         GameObject Boy = GameObject.FindGameObjectWithTag("Player");
         if (Boy != null)
         {
@@ -59,6 +61,21 @@ public class Lvl8Sc1TweenManager2 : MonoBehaviour
             Debug.LogError("AudioMixer is not assigned in the Inspector.");
         }
     }
+    private void SetAmbientVolume(float volume)
+    {
+        if (audioMixer != null)
+        {
+            bool result = audioMixer.SetFloat(AmbientVolumeParam, volume);
+            if (!result)
+            {
+                Debug.LogError($"Failed to set MusicVolume to {volume}. Is the parameter exposed?");
+            }
+        }
+        else
+        {
+            Debug.LogError("AudioMixer is not assigned in the Inspector.");
+        }
+    }
 
     private void OnDestroy()
     {
@@ -80,6 +97,7 @@ public class Lvl8Sc1TweenManager2 : MonoBehaviour
     private IEnumerator Timer(float time)
     {
         SetMusicVolume(0f);
+        SetAmbientVolume(0f);
         float counter = 0;
         isRetryClicked = false;
 
@@ -109,16 +127,24 @@ public class Lvl8Sc1TweenManager2 : MonoBehaviour
         // Wait for the children to finish tweening
         LeanTween.delayedCall(0.5f, () =>
         {
-            speechTherapyCompleted = true;
-            managerScript.jojoCanAsk = true;
-           
-            LeanTween.scale(gameObject, Vector3.zero, 0.5f).setEase(LeanTweenType.easeInOutBack).setOnComplete(() =>
+            foreach (Transform child in stCanvas.transform)
             {
-                Destroy(gameObject);
-            });
+                LeanTween.scale(child.gameObject, Vector3.zero, 0.5f);
+            }
+
+            LeanTween.scale(gameObject, Vector3.zero, 0.5f).setEase(LeanTweenType.easeInOutBack).setOnComplete(OnChildScaled);           
         });
     }
+    private void OnChildScaled()
+    {
+        speechTherapyCompleted = true;
+        managerScript.jojoCanAsk = true;
 
+        LeanTween.scale(gameObject, Vector3.zero, 0.5f).setEase(LeanTweenType.easeInOutBack).setOnComplete(() =>
+        {
+            Destroy(gameObject);
+        });
+    }
     public void SkipButton()
     {
         StartCoroutine(Timer(0f));

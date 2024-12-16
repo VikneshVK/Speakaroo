@@ -12,6 +12,7 @@ public class KikiController1 : MonoBehaviour
     public GameObject boy;
     public GameObject itemHolder;
     public GameObject prefabToSpawn;
+    public GameObject prefabToSpawn2;
     public Transform spawnLocation;
     public Transform dropTarget;
     public float flySpeed = 2f;
@@ -319,7 +320,7 @@ public class KikiController1 : MonoBehaviour
                 StartCoroutine(RevealTextWordByWord("Next, I want to eat Apple", 0.5f));
 
                 yield return new WaitForSeconds(4f);
-                SpawnSpeechBubble();
+                SpawnSpeechBubble2();
                 break;
             case 3:
                 boyAnimator.SetBool("allDone", true);
@@ -341,6 +342,13 @@ public class KikiController1 : MonoBehaviour
         if (prefabToSpawn != null)
         {
             Instantiate(prefabToSpawn, spawnLocation.position, spawnLocation.rotation);
+        }
+    }
+    private void SpawnSpeechBubble2()
+    {
+        if (prefabToSpawn != null)
+        {
+            Instantiate(prefabToSpawn2, spawnLocation.position, spawnLocation.rotation);
         }
     }
 

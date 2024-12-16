@@ -122,7 +122,7 @@ public class CardManagerWithBalloonController : MonoBehaviour
             {
                 yield return new WaitForSeconds(2f);
 
-                if (card.transform.localScale != Vector3.zero)
+                if (card!= null && card.transform.localScale != Vector3.zero)
                 {
                     if (card == card1 && !isCard1Shaking)
                     {
