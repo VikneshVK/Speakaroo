@@ -36,6 +36,7 @@ public class DraggableTextHandler : MonoBehaviour
     public BeachBoxHandler beachBoxHandler;
 
      private const string musicVolumeParam = "MusicVolume";
+    private const string AmbientVolumeParam = "AmbientVolume";
 
     private void Awake()
     {
@@ -169,7 +170,21 @@ public class DraggableTextHandler : MonoBehaviour
             Debug.LogError("AudioMixer is not assigned in the Inspector.");
         }
     }
-
+    private void SetAmbientVolume(float volume)
+    {
+        if (audioMixer != null)
+        {
+            bool result = audioMixer.SetFloat(AmbientVolumeParam, volume);
+            if (!result)
+            {
+                Debug.LogError($"Failed to set MusicVolume to {volume}. Is the parameter exposed?");
+            }
+        }
+        else
+        {
+            Debug.LogError("AudioMixer is not assigned in the Inspector.");
+        }
+    }
 
     private void DisableOtherButtonsEventTriggers()
     {
@@ -234,6 +249,7 @@ public class DraggableTextHandler : MonoBehaviour
     {
         // Mute the music before recording
         SetMusicVolume(-80f);
+        SetAmbientVolume(-80f);
 
         retryButton.GetComponent<Image>().sprite = Resources.Load<Sprite>("Images/STMechanics/RetrySprite");
 
@@ -260,15 +276,13 @@ public class DraggableTextHandler : MonoBehaviour
         Debug.Log("Recording completed.");
 
         // Restore the music volume after recording
-        SetMusicVolume(0f);
+        
     }
 
 
     private IEnumerator PlayRecordedAudio()
     {
-        // Mute the music before playback
-        SetMusicVolume(-80f);
-
+       
         retryButton.GetComponent<Image>().sprite = Resources.Load<Sprite>("Images/STMechanics/PlaybackSprite");
 
         audioSource2.Play();
@@ -292,7 +306,8 @@ public class DraggableTextHandler : MonoBehaviour
         retryButton.GetComponent<Image>().sprite = Resources.Load<Sprite>("Images/STMechanics/RetrySprite");
 
         // Restore the music volume after playback
-        SetMusicVolume(0f);
+        SetMusicVolume(-35f);
+        SetAmbientVolume(-10f);
     }
 
     private float[] AnalyzeRecordedAudio(AudioClip recordedClip)

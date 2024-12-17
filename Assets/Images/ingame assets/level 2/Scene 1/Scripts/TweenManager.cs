@@ -15,6 +15,7 @@ public class TweenManager : MonoBehaviour
     private AudioClip dialouge3;
     public AudioMixer audioMixer;
     private const string musicVolumeParam = "MusicVolume";
+    private const string AmbientVolumeParam = "AmbientVolume";
     private GameObject stCanvas;
     private void Start()
     {
@@ -61,6 +62,22 @@ public class TweenManager : MonoBehaviour
             Debug.LogError("AudioMixer is not assigned in the Inspector.");
         }
     }
+
+    private void SetAmbientVolume(float volume)
+    {
+        if (audioMixer != null)
+        {
+            bool result = audioMixer.SetFloat(AmbientVolumeParam, volume);
+            if (!result)
+            {
+                Debug.LogError($"Failed to set MusicVolume to {volume}. Is the parameter exposed?");
+            }
+        }
+        else
+        {
+            Debug.LogError("AudioMixer is not assigned in the Inspector.");
+        }
+    }
     private void OnDestroy()
     {
         ST_AudioManager.Instance.OnPlaybackComplete -= HandlePlaybackComplete;
@@ -80,7 +97,8 @@ public class TweenManager : MonoBehaviour
 
     private IEnumerator Timer(float time)
     {
-        SetMusicVolume(0f);
+        SetMusicVolume(-35f);
+        SetAmbientVolume(-10f);
         float counter = 0;
         isRetryClicked = false;
 

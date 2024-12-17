@@ -1,24 +1,41 @@
-
-
 using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
 using TMPro;
 using UnityEngine.Audio;
+using Unity.VisualScripting;
+
 
 public class Lvl7Sc1JojoController : MonoBehaviour
 {
     public Transform[] stopPositions; // Array of stop positions
     public Transform[] birdStopPositions;
     public Transform[] speechBubbleSpawnPositions; // Array of speech bubble spawn positions for each stop
+    public GameObject[] foodPrefabs;
     public GameObject speechBubblePrefab;
     public Animator jojoAnimator;
     public GameObject birdGameObject;
     public Camera mainCamera; // Reference to the main camera
     public FoodContainerController foodController; // Reference to FoodContainerController script
-    public GameObject panelToScale; // Reference to ST Canvas prefab for PrefabTouchHandler
+    public int PrefabToSpawn;
+    public GameObject panelToScale1; // Reference to panel 1 (assigned in inspector)
+    public bool panel1Complete;
+    public GameObject panelToScale2; // Reference to panel 2 (assigned in inspector)
+    public bool panel2Complete;
+    public GameObject panelToScale3;  // Reference to ST Canvas prefab for PrefabTouchHandler
+    public bool panel3Complete;
+    private bool isPanelActive = false;
     public float moveSpeed = 2f;
     public float cameraFollowSpeed = 2f; // Speed at which the camera follows Jojo
+
+   
+    public Transform foodDropLocation;
+    public Transform foodSpawnLocation1;
+    public Transform foodSpawnLocation2;
+    public Transform foodSpawnLocation3;
+    private bool isFood1Spawned;
+    private bool isFood2Spawned;
+    private bool isFood3Spawned;
 
     public AudioClip Audio1;
     public AudioClip audio1;
@@ -51,9 +68,11 @@ public class Lvl7Sc1JojoController : MonoBehaviour
     private const string AmbientVolumeParam = "AmbientVolume";
     void Start()
     {
+        PrefabToSpawn = 0;
         kikiAnimator = birdGameObject.GetComponent<Animator>();
         boyAudioSource = GetComponent<AudioSource>();
         MoveToNextStopPosition();
+        panel1Complete = false;
     }
 
     void Update()
@@ -108,6 +127,21 @@ public class Lvl7Sc1JojoController : MonoBehaviour
         {
             MoveJojoRightAndEndScene();
         }
+        if (panel1Complete)
+        {
+            panel1Complete = false; // Reset the flag
+            HandlePanel1Completion();
+        }
+        if (panel2Complete)
+        {
+            panel2Complete = false; // Reset the flag
+            HandlePanel2Completion();
+        }
+        if (panel3Complete)
+        {
+            panel3Complete = false; // Reset the flag
+            HandlePanel3Completion();
+        }
 
         AnimatorStateInfo chewStateInfo = jojoAnimator.GetCurrentAnimatorStateInfo(0);
         if (chewStateInfo.IsName("Chew") && chewStateInfo.normalizedTime >= 0.9f && !audioPlaying) // Animation is complete
@@ -139,6 +173,89 @@ public class Lvl7Sc1JojoController : MonoBehaviour
         }
     }
 
+    private void HandlePanel1Completion()
+    {
+        Transform contentHolderTransform = panelToScale1.transform.Find("Content Holder");
+        GameObject contentHolderGameObject = contentHolderTransform.gameObject; // <--- Add this line
+
+        LeanTween.scale(contentHolderGameObject, Vector3.zero, 0.5f)
+            .setEase(LeanTweenType.easeOutBack)
+            .setOnComplete(() =>
+            {
+                SetMusicVolume(-35f);
+                SetAmbientVolume(-10f);
+                panelToScale1.SetActive(false);
+                int prefabIndex = Mathf.Clamp(PrefabToSpawn - 1, 0, foodPrefabs.Length - 1);
+                if (!isFood1Spawned)
+                {
+                    isFood1Spawned = true;
+                    SpawnAndTweenPrefab(prefabIndex, foodSpawnLocation1);
+                }
+
+            });
+    }
+
+    private void HandlePanel2Completion()
+    {
+        Transform contentHolderTransform = panelToScale2.transform.Find("Content Holder");
+        GameObject contentHolderGameObject = contentHolderTransform.gameObject; // <--- Add this line
+
+        LeanTween.scale(contentHolderGameObject, Vector3.zero, 0.5f)
+            .setEase(LeanTweenType.easeOutBack)
+            .setOnComplete(() =>
+            {
+                SetMusicVolume(-35f);
+                SetAmbientVolume(-10f);
+                panelToScale2.SetActive(false);
+                int prefabIndex = Mathf.Clamp(PrefabToSpawn - 1, 0, foodPrefabs.Length - 1);
+                if (!isFood2Spawned)
+                {
+                    isFood2Spawned = true;
+                    SpawnAndTweenPrefab(prefabIndex, foodSpawnLocation2);
+                }
+
+            });
+    }
+    private void HandlePanel3Completion()
+    {
+        Transform contentHolderTransform = panelToScale3.transform.Find("Content Holder");
+        GameObject contentHolderGameObject = contentHolderTransform.gameObject; // <--- Add this line
+
+        LeanTween.scale(contentHolderGameObject, Vector3.zero, 0.5f)
+            .setEase(LeanTweenType.easeOutBack)
+            .setOnComplete(() =>
+            {
+                panelToScale3.SetActive(false);
+                int prefabIndex = Mathf.Clamp(PrefabToSpawn - 1, 0, foodPrefabs.Length - 1);
+                if (!isFood3Spawned)
+                {
+                    SetMusicVolume(-35f);
+                    SetAmbientVolume(-10f);
+                    isFood3Spawned = true;
+                    SpawnAndTweenPrefab(prefabIndex, foodSpawnLocation3);
+                }
+
+            });
+    }
+
+
+    private void SpawnAndTweenPrefab(int prefabIndex, Transform position)
+    {
+        if (prefabIndex < 0 || prefabIndex >= foodPrefabs.Length)
+        {
+            Debug.LogError("Invalid prefabIndex value.");
+            return;
+        }
+
+        spawnedPrefab = Instantiate(foodPrefabs[prefabIndex], position.position, Quaternion.identity);
+        LeanTween.move(spawnedPrefab, foodDropLocation.position, 1f)
+            .setEase(LeanTweenType.easeInOutSine)
+            .setOnComplete(() =>
+            {
+                Destroy(spawnedPrefab);
+                jojoAnimator.SetTrigger("Chew");
+            });
+    }
 
 
 
@@ -243,28 +360,19 @@ public class Lvl7Sc1JojoController : MonoBehaviour
 
     private void OnTalkAnimationComplete()
     {
-        /*Debug.Log("OnTalkAnimationComplete called"); // Log to confirm the method is called
-        isTalking = false;*/
 
         if (currentStopIndex < 3)
         {
             SpawnSpeechBubble(currentStopIndex);
         }
 
-        // Advance to the next stop position if there are more stops
         if (currentStopIndex < stopPositions.Length - 1)
         {
             currentStopIndex++;
             hasCompletedTalk = true; // Reset flag for the next stop
             Debug.Log($"Current Stop Index updated to: {currentStopIndex}");
         }
-        /*else if (currentStopIndex == stopPositions.Length - 1)
-        { 
-            Debug.Log("Reached the final stop position. Ending the scene.");
-            jojoAnimator.SetBool("LevelEnd", true);
-            boyAudioSource.clip = Audio4;
-            boyAudioSource.Play();
-        }*/
+        
     }
 
     private void SpawnSpeechBubble(int stopIndex)
@@ -273,27 +381,160 @@ public class Lvl7Sc1JojoController : MonoBehaviour
         {
             GameObject spawnedBubble = Instantiate(speechBubblePrefab, speechBubbleSpawnPositions[stopIndex].position, Quaternion.identity);
 
-            // Add PrefabTouchHandler and initialize it with the ST Canvas
             var prefabHandler = spawnedBubble.AddComponent<PrefabTouchHandler2>();
-            RectTransform panelRectTransform = panelToScale.GetComponent<RectTransform>();
-            prefabHandler.Initialize(panelRectTransform);
+           /* RectTransform panelRectTransform = panelToScale.GetComponent<RectTransform>();
+            prefabHandler.Initialize(panelRectTransform);*/
 
-            // Set up the callback for when the prefab is tapped
             prefabHandler.OnPrefabTapped = () => OnPrefabTapped();
         }
     }
 
     private void OnPrefabTapped()
     {
-        // Handle what happens when the speech bubble is tapped, like activating the ST Canvas
-        if (panelToScale != null)
+        // Handle music and ambient volume
+        SetMusicVolume(-80f);
+        SetAmbientVolume(-80f);
+
+        // Activate the correct panel based on the current stop index
+        switch (currentStopIndex)
         {
-            SetMusicVolume(-80f);
-            SetAmbientVolume(-80f);
-            ChangePanelSprite();
-            panelToScale.SetActive(true);
+            case 1:
+                EnablePanelAndScaleChildren(panelToScale1, "Open", 2f);
+                Debug.Log("Panel 1 Enabled.");
+                break;
+            case 2:
+                EnablePanelAndScaleChildren(panelToScale2, "Open", 2f);
+                Debug.Log("Panel 2 Enabled.");
+                break;
+            case 3:
+                EnablePanelAndScaleChildren(panelToScale3, "Open", 2f);
+                Debug.Log("Panel 3 Enabled.");
+                break;
+            default:
+                Debug.LogWarning("Invalid stop index. No panel activated.");
+                break;
         }
+
+        // Change the panel sprite if applicable
+        ChangePanelSprite();
     }
+
+    private void EnablePanelAndScaleChildren(GameObject panelToScale, string animatorTrigger, float delay)
+    {
+        StartCoroutine(HandlePanelAnimationAndScaling(panelToScale, animatorTrigger, delay));
+    }
+
+    private IEnumerator HandlePanelAnimationAndScaling(GameObject panelToScale, string animatorTrigger, float delay)
+    {
+        if (panelToScale == null)
+        {
+            Debug.LogWarning("Panel to scale is null. Cannot proceed.");
+            yield break;
+        }
+
+        panelToScale.SetActive(true);
+
+        Transform contentHolder = panelToScale.transform.Find("Content Holder");
+        Animator menuAnimator = null;
+        Transform uiElementsHolder = null;
+
+        if (contentHolder != null)
+        {
+            Transform menuPanel = contentHolder.Find("Menu Panel");
+            if (menuPanel != null)
+            {
+                menuAnimator = menuPanel.GetComponent<Animator>();
+                menuAnimator?.SetTrigger(animatorTrigger);
+                Debug.Log($"Triggered {animatorTrigger} animation on {menuPanel.name}");
+            }
+
+            uiElementsHolder = contentHolder.Find("UIElemtens Holder");
+        }
+
+        yield return new WaitForSeconds(delay);
+
+        if (uiElementsHolder == null)
+        {
+            Debug.LogWarning("UIElements Holder not found.");
+            yield break;
+        }
+
+        Debug.Log($"Scaling children of {uiElementsHolder.name}, Count: {uiElementsHolder.childCount}");
+
+        // First, tween all the buttons
+        float buttonTweenDelay = 0f;
+        for (int i = 0; i < uiElementsHolder.childCount; i++)
+        {
+            Transform child = uiElementsHolder.GetChild(i);
+            GameObject childGameObject = child.gameObject;
+            Button button = childGameObject.GetComponent<Button>();
+            if (button != null && button.name != "RetryButton")
+            {
+                Debug.Log($"Scaling button {child.name}, Initial Scale: {child.localScale}");
+                child.localScale = Vector3.zero;
+                button.interactable = false; // Make button non-interactable before tweening
+
+                LeanTween.scale(childGameObject, Vector3.one, 0.5f)
+                    .setEase(LeanTweenType.easeOutBack)
+                    .setDelay(buttonTweenDelay)
+                    .setOnComplete(() =>
+                    {
+                        AudioSource audio = childGameObject.GetComponent<AudioSource>();
+                        if (audio != null)
+                        {
+                            audio.Play();
+                            Debug.Log($"Playing audio on {childGameObject.name}");
+                        }
+                    });
+                buttonTweenDelay += 1.5f; // Increase delay for the next button
+            }
+        }
+
+        // Then, tween the rest (non-button) game objects
+        float nonButtonTweenDelay = buttonTweenDelay; // Start non-button tweens after all button tweens
+        for (int i = 0; i < uiElementsHolder.childCount; i++)
+        {
+            Transform child = uiElementsHolder.GetChild(i);
+            GameObject childGameObject = child.gameObject;
+            Button button = childGameObject.GetComponent<Button>();
+            if (button == null || button.name == "RetryButton")
+            {
+                Debug.Log($"Scaling non-button {child.name}, Initial Scale: {child.localScale}");
+                child.localScale = Vector3.zero;
+
+                LeanTween.scale(childGameObject, Vector3.one, 0.5f)
+                    .setEase(LeanTweenType.easeOutBack)
+                    .setDelay(nonButtonTweenDelay)
+                    .setOnComplete(() =>
+                    {
+                        AudioSource audio = childGameObject.GetComponent<AudioSource>();
+                        if (audio != null)
+                        {
+                            audio.Play();
+                            Debug.Log($"Playing audio on {childGameObject.name}");
+                        }
+                    });
+                nonButtonTweenDelay += 1.5f; // Increase delay for the next non-button
+            }
+        }
+
+        // Wait for all tweens to complete before making buttons interactable
+        yield return new WaitForSeconds(Mathf.Max(buttonTweenDelay, nonButtonTweenDelay));
+
+        // Finally, make all buttons interactable after all tweens are complete
+        foreach (Transform child in uiElementsHolder)
+        {
+            Button button = child.GetComponent<Button>();
+            if (button != null && button.name != "RetryButton")
+            {
+                button.interactable = true;
+                Debug.Log($"Setting button on {child.name} as interactable.");
+            }
+        }
+
+        Debug.Log("All children scaled successfully.");
+    }
+
 
     private void SetAmbientVolume(float volume)
     {

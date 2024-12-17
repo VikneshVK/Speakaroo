@@ -152,6 +152,123 @@ public class PhotoQuestManager : MonoBehaviour
     }
 
 
+    /*IEnumerator HandleCorrectPhotoSequence(GameObject tappedAnimal)
+    {
+        yield return new WaitForSeconds(1f);
+
+        GameObject photoChild = tappedAnimal.transform.Find(tappedAnimal.name + " - Photo")?.gameObject;
+
+        if (photoChild != null)
+        {
+            photoChild.SetActive(false); // Deactivate the photoChild after animation
+        }
+
+        LeanTween.scale(photoAlbumPanel, new Vector3(1f, 1f, 1f), 1.5f).setEaseOutBack();
+        yield return new WaitForSeconds(2f);
+
+        // New code starts here
+        Transform animationPanel = photoAlbumPanel.transform.Find("Animation Panel");
+        if (animationPanel != null)
+        {
+            Animator animationPanelAnimator = animationPanel.GetComponent<Animator>();
+            if (animationPanelAnimator != null)
+            {
+                animationPanelAnimator.SetBool("album open", true); // Turn "album open" parameter to true
+            }
+        }
+
+        yield return new WaitForSeconds(1f); // Wait for 1 second
+
+        // Tween the scale of all previous index children to 0.6
+        for (int i = 0; i <= currentAnimalIndex; i++)
+        {
+            Transform child = animationPanel.GetChild(i);
+            if (child != null)
+            {
+                LeanTween.scale(child.gameObject, new Vector3(0.6f, 0.6f, 0.6f), 1f).setEaseInOutSine();
+            }
+        }
+
+        // Update album slot with correct photo and text
+        GameObject currentAnimal = animals[currentAnimalIndex];
+        Sprite photoSprite = photoSprites[currentAnimal];
+        string animalName = currentAnimal.name;
+
+        Image albumImage = albumSlots[currentAnimalIndex].GetComponentInChildren<Image>();
+        TextMeshProUGUI albumText = albumSlots[currentAnimalIndex].GetComponentInChildren<TextMeshProUGUI>();
+
+        albumImage.sprite = photoSprite;
+        albumText.text = animalName;
+
+        yield return new WaitForSeconds(3f); // Wait for 2 seconds to show updated album slot
+
+        // Tween scales of all previous index children to zero
+        for (int i = 0; i < currentAnimalIndex; i++)
+        {
+            Transform child = animationPanel.GetChild(i);
+            if (child != null)
+            {
+                LeanTween.scale(child.gameObject, Vector3.zero, 1f).setEaseInOutSine();
+            }
+        }
+
+        // Scale current index child to zero (if needed)
+        Transform currentIndexChild = animationPanel.GetChild(currentAnimalIndex);
+        if (currentIndexChild != null)
+        {
+            LeanTween.scale(currentIndexChild.gameObject, Vector3.zero, 1f).setEaseInOutSine();
+        }
+        yield return new WaitForSeconds(1f);
+        if (animationPanel != null)
+        {
+            Animator animationPanelAnimator = animationPanel.GetComponent<Animator>();
+            if (animationPanelAnimator != null)
+            {
+                animationPanelAnimator.SetBool("album open", false); // Turn "album open" parameter to true
+            }
+        }
+        yield return new WaitForSeconds(1f);
+        // Scale photoAlbumPanel down to zero size
+        LeanTween.scale(photoAlbumPanel, Vector3.zero, 1.5f).setEaseInBack();
+
+        DestroyTappedAnimalAcrossGrounds(tappedAnimal.name);
+
+        foreach (GameObject animal in animals)
+        {
+            if (animal != null && animal != tappedAnimal)
+            {
+                Collider2D collider = animal.GetComponent<Collider2D>();
+                if (collider != null) collider.enabled = true;
+            }
+        }
+
+        questImage.SetActive(true);
+        photoCameraController.canMove = true;
+        photoCameraController.SetPanningEnabled(true);
+
+        currentAnimalIndex++;
+
+        yield return new WaitForSeconds(1.5f);
+
+        if (currentAnimalIndex >= animals.Count)
+        {
+            birdAnimator.SetTrigger("FinalDialouge");
+            GetComponent<AudioSource>().PlayOneShot(FinalAudio);
+            StartCoroutine(RevealTextWordByWord("You are a good photographer", 0.5f));
+        }
+        else
+        {
+            SetNextAnimalQuest();
+        }
+
+        isClicked = false;
+
+        if (helperController != null)
+        {
+            helperController.OnValidationSuccess();
+        }
+    }*/
+
     IEnumerator HandleCorrectPhotoSequence(GameObject tappedAnimal)
     {
         yield return new WaitForSeconds(1f);
@@ -163,9 +280,29 @@ public class PhotoQuestManager : MonoBehaviour
             photoChild.SetActive(false); // Deactivate the photoChild after animation
         }
 
-        LeanTween.scale(photoAlbumPanel, new Vector3(0.9f, 0.9f, 0.9f), 1.5f).setEaseOutBack();
+        LeanTween.scale(photoAlbumPanel, new Vector3(1f, 1f, 1f), 1.5f).setEaseOutBack();
         yield return new WaitForSeconds(2f);
 
+        // New code starts here
+        Transform animationPanel = photoAlbumPanel.transform.Find("Animation Panel");
+        if (animationPanel != null)
+        {
+            Animator animationPanelAnimator = animationPanel.GetComponent<Animator>();
+            if (animationPanelAnimator != null)
+            {
+                animationPanelAnimator.SetBool("album open", true); // Turn "album open" parameter to true
+            }
+        }
+
+        yield return new WaitForSeconds(1f); // Wait for 1 second
+
+        // Lean tween the scale of Animation Panel children to 0.6
+        foreach (Transform child in animationPanel)
+        {
+            LeanTween.scale(child.gameObject, new Vector3(0.6f, 0.6f, 0.6f), 1f).setEaseInOutSine();
+        }
+
+        // Update album slot with correct photo and text
         GameObject currentAnimal = animals[currentAnimalIndex];
         Sprite photoSprite = photoSprites[currentAnimal];
         string animalName = currentAnimal.name;
@@ -176,8 +313,25 @@ public class PhotoQuestManager : MonoBehaviour
         albumImage.sprite = photoSprite;
         albumText.text = animalName;
 
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(3f); // Wait for 2 seconds to show updated album slot
 
+        // Tween scales of Animation Panel children to zero
+        foreach (Transform child in animationPanel)
+        {
+            LeanTween.scale(child.gameObject, Vector3.zero, 1f).setEaseInOutSine();
+        }
+        yield return new WaitForSeconds(1f);
+        // Turn "album open" parameter to false
+        if (animationPanel != null)
+        {
+            Animator animationPanelAnimator = animationPanel.GetComponent<Animator>();
+            if (animationPanelAnimator != null)
+            {
+                animationPanelAnimator.SetBool("album open", false); // Turn "album open" parameter to true
+            }
+        }
+
+        // Scale photoAlbumPanel down to zero size
         LeanTween.scale(photoAlbumPanel, Vector3.zero, 1.5f).setEaseInBack();
 
         DestroyTappedAnimalAcrossGrounds(tappedAnimal.name);
