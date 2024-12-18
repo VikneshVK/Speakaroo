@@ -15,6 +15,7 @@ public class PizzaDrag : MonoBehaviour
     public Camera mainCamera;             // Reference to the main camera
     public GameObject pizzaBox;           // Pizza box to tap
     public GameObject pizzaEatingPanel;   // UI panel for pizza eating
+   
 
     public Lvl7Sc2QuestManager questManager;  // Reference to quest manager
 
@@ -51,6 +52,7 @@ public class PizzaDrag : MonoBehaviour
     private Animator kikiFinalAnimator;
 
     public AudioClip OvenAudio;
+    public AudioClip EatAudio;
     public TextMeshProUGUI subtitleText;
     public Lvl7Sc2AudioManager audioManager;
     public LVL7Sc2HelperFunction helperFunction;
@@ -180,6 +182,9 @@ public class PizzaDrag : MonoBehaviour
                         LeanTween.move(gameObject, pizzaPoint2.position, 0.7f).setOnComplete(() =>
                         {
                             canTapPizzaBox = true;
+                            kikiAnimator.SetTrigger("canEat");
+                            audioManager.PlayAudio(EatAudio);
+                            StartCoroutine(RevealTextWordByWord("Pizza is ready..! Let's Eat...!", 0.5f));
                         });
                     });
                 });

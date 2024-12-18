@@ -171,13 +171,13 @@ public class Lvl5Sc3FeedingManager : MonoBehaviour
         float startAlpha = color.a;
         float time = 0;
 
-        // Locate the "Glow 2" child explicitly
+       /* // Locate the "Glow 2" child explicitly
         Transform glowChild = spriteRenderer.transform.Find("Glow 2");
         if (glowChild != null)
         {
             // Scale the "Glow 2" child to 6
             LeanTween.scale(glowChild.gameObject, Vector3.one * 6, duration).setEaseOutBack();
-        }
+        }*/
 
         while (time < duration)
         {
@@ -196,13 +196,13 @@ public class Lvl5Sc3FeedingManager : MonoBehaviour
         float startAlpha = color.a;
         float time = 0;
 
-        // Locate the "Glow 2" child explicitly
+       /* // Locate the "Glow 2" child explicitly
         Transform glowChild = spriteRenderer.transform.Find("Glow 2");
         if (glowChild != null)
         {
             // Scale the "Glow 2" child to 0
             LeanTween.scale(glowChild.gameObject, Vector3.zero, duration).setEaseInBack();
-        }
+        }*/
 
         while (time < duration)
         {

@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using TMPro;
+using static UnityEngine.Rendering.DebugUI;
 
 public class Lvl6Sc1JojoController : MonoBehaviour
 {
@@ -9,6 +10,8 @@ public class Lvl6Sc1JojoController : MonoBehaviour
     public GameObject speechBubblePrefab;
     public Transform prefabSpawnPosition;
     public GameObject stCanvasPrefab;
+    public GameObject panel;
+   
 
     private Animator animator;
     private SpriteRenderer spriteRenderer;
@@ -181,6 +184,8 @@ public class Lvl6Sc1JojoController : MonoBehaviour
     {
         // Activate the ST canvas
         stCanvasPrefab.SetActive(true);
+        LeanTween.scale(panel, Vector3.one, 0.5f)
+            .setEase(LeanTweenType.easeInBack);
     }
 
     // Check if a specific animation state is complete

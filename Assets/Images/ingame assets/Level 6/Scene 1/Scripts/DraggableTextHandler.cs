@@ -22,7 +22,7 @@ public class DraggableTextHandler : MonoBehaviour
     public Canvas canvas; // Reference to the canvas
     public TextMeshProUGUI tmpText; // Reference to the TMP component
     public TextMeshProUGUI textComponent;
-    public TextMeshProUGUI textComponent2;
+    
     public Image imageComponent; // Reference to the Image component to change sprite
     public string spriteName;
 
@@ -32,7 +32,7 @@ public class DraggableTextHandler : MonoBehaviour
     private static List<DraggableTextHandler> allDraggableTextHandlers = new List<DraggableTextHandler>(); // Static list of all instances
 
     /*private string recordedClipName = "RecordedAudio";*/
-
+     private bool isButtonClicked = false;
     public BeachBoxHandler beachBoxHandler;
 
      private const string musicVolumeParam = "MusicVolume";
@@ -72,88 +72,38 @@ public class DraggableTextHandler : MonoBehaviour
     }
 
 
-    private void Update()
+    public void OnButtonClicked()
     {
-        if (!isDropped && isBeingDragged)
+        if (isButtonClicked)
+            return;
+
+        isButtonClicked = true;
+
+       
+
+        /*// Disable the sprite image and set text based on the object name
+        imageComponent.enabled = false;*/
+
+        switch (gameObject.name)
         {
-            RectTransformUtility.ScreenPointToWorldPointInRectangle(
-                canvas.transform as RectTransform,
-                Input.mousePosition,
-                canvas.worldCamera,
-                out Vector3 worldPoint
-            );
-            transform.position = worldPoint;
+            case "Beach Ball":
+                textComponent.text = "I want to play Ball";
+                break;
+            case "Bubbles":
+                textComponent.text = "I want to play Bubbles";
+                break;
+            case "Frisbee":
+                textComponent.text = "I want to play Frisbee";
+                break;
+            default:
+                textComponent.text = "What do you want to Play?";
+                break;
         }
+
+        audioSource.Play();
+        StartCoroutine(HandleAudioAndRecording());
     }
 
-    public void OnMouseDown()
-    {
-        if (!isDropped)
-        {
-            buttonAudioSource.Play();
-            isBeingDragged = true;
-            tmpText.enabled = false;
-
-            // Disable EventTrigger on other buttons to prevent dragging
-            DisableOtherButtonsEventTriggers();
-        }
-    }
-
-    public void OnMouseUp()
-    {
-        isBeingDragged = false;
-
-        Vector2 screenDropPosition = RectTransformUtility.WorldToScreenPoint(canvas.worldCamera, dropPosition.position);
-        Vector2 screenObjectPosition = RectTransformUtility.WorldToScreenPoint(canvas.worldCamera, transform.position);
-
-        float distance = Vector2.Distance(screenObjectPosition, screenDropPosition);
-
-        if (distance < 250f) // Adjust threshold as needed
-        {
-            // Dropped correctly
-            isDropped = true;
-
-            RectTransformUtility.ScreenPointToWorldPointInRectangle(
-                canvas.transform as RectTransform,
-                screenDropPosition,
-                canvas.worldCamera,
-                out Vector3 worldPoint
-            );
-
-            transform.position = worldPoint;
-            textComponent2.enabled = false;
-
-            // Disable the sprite image and set text based on the object name
-            imageComponent.enabled = false;
-
-            switch (gameObject.name)
-            {
-                case "Beach Ball":
-                    textComponent.text = "I want to play Ball";
-                    break;
-                case "Bubbles":
-                    textComponent.text = "I want to play Bubbles";
-                    break;
-                case "Frisbee":
-                    textComponent.text = "I want to play Frisbee";
-                    break;
-                default:
-                    textComponent.text = "What do you want to Play?";
-                    break;
-            }
-
-            audioSource.Play();
-            StartCoroutine(HandleAudioAndRecording());
-        }
-        else
-        {
-            // Dropped incorrectly: Reset to initial position
-            transform.position = initialPosition; // Reset position
-            tmpText.enabled = true;
-            EnableAllButtonsEventTriggers(); // Re-enable dragging for all buttons
-            Debug.Log($"Reset position to {initialPosition} for {gameObject.name}");
-        }
-    }
 
     private void SetMusicVolume(float volume)
     {
@@ -218,7 +168,7 @@ public class DraggableTextHandler : MonoBehaviour
         retryButton.gameObject.SetActive(true);
         retryButton.interactable = false;
 
-        retryButton.GetComponent<Image>().sprite = Resources.Load<Sprite>("Images/STMechanics/DefaultSprite");
+        retryButton.GetComponent<Image>().sprite = Resources.Load<Sprite>("Images/STMechanics/speak-2");
 
         yield return new WaitForSeconds(audioSource.clip.length);
 
@@ -238,7 +188,7 @@ public class DraggableTextHandler : MonoBehaviour
 
         retryButton.interactable = true;
 
-        retryButton.GetComponent<Image>().sprite = Resources.Load<Sprite>("Images/STMechanics/RetrySprite");
+        retryButton.GetComponent<Image>().sprite = Resources.Load<Sprite>("Images/STMechanics/speak-1");
 
         yield return new WaitForSeconds(3f);
 
@@ -251,7 +201,7 @@ public class DraggableTextHandler : MonoBehaviour
         SetMusicVolume(-80f);
         SetAmbientVolume(-80f);
 
-        retryButton.GetComponent<Image>().sprite = Resources.Load<Sprite>("Images/STMechanics/RetrySprite");
+        retryButton.GetComponent<Image>().sprite = Resources.Load<Sprite>("Images/STMechanics/speak");
 
         int recordingDuration = 5;
         int frequency = 44100;
@@ -283,7 +233,7 @@ public class DraggableTextHandler : MonoBehaviour
     private IEnumerator PlayRecordedAudio()
     {
        
-        retryButton.GetComponent<Image>().sprite = Resources.Load<Sprite>("Images/STMechanics/PlaybackSprite");
+        retryButton.GetComponent<Image>().sprite = Resources.Load<Sprite>("Images/STMechanics/speak-2");
 
         audioSource2.Play();
         Debug.Log("Playing back recorded audio...");
@@ -379,10 +329,39 @@ public class DraggableTextHandler : MonoBehaviour
             .setEase(LeanTweenType.easeInBack)
             .setOnComplete(() =>
             {
-                GameObject spawnedPrefab = Instantiate(prefabToSpawn, Vector3.zero, Quaternion.identity);
-                spawnedPrefab.transform.localScale = Vector3.zero;
-                LeanTween.scale(spawnedPrefab, Vector3.one, 0.5f).setEase(LeanTweenType.easeOutBack);
-                Debug.Log("Prefab Instantiated and tweened to scale (1, 1, 1)");
+                // Check the game object name
+                if (gameObject.name == "Beach Ball" || gameObject.name == "Frisbee")
+                {
+                    // Find the ST_Canvas in the scene
+                    GameObject stCanvas = GameObject.Find("ST_Canvas");
+
+                    if (stCanvas != null)
+                    {
+                        // Instantiate the prefab as a child of ST_Canvas
+                        GameObject spawnedPrefab = Instantiate(prefabToSpawn, stCanvas.transform);
+
+                        // Reset position and scale of the spawned prefab
+                        spawnedPrefab.transform.localScale = Vector3.zero;
+                        spawnedPrefab.transform.localPosition = Vector3.zero;
+
+                        // Tween the scale to (1,1,1)
+                        LeanTween.scale(spawnedPrefab, Vector3.one, 0.5f).setEase(LeanTweenType.easeOutBack);
+                        Debug.Log("Prefab spawned inside ST_Canvas and tweened to scale (1,1,1)");
+                    }
+                    else
+                    {
+                        Debug.LogWarning("ST_Canvas not found in the scene. Prefab cannot be parented to it.");
+                    }
+                }
+                else
+                {
+                    // Default behavior for other objects
+                    GameObject spawnedPrefab = Instantiate(prefabToSpawn, Vector3.zero, Quaternion.identity);
+                    spawnedPrefab.transform.localScale = Vector3.zero;
+
+                    LeanTween.scale(spawnedPrefab, Vector3.one, 0.5f).setEase(LeanTweenType.easeOutBack);
+                    Debug.Log("Prefab instantiated and tweened to scale (1,1,1)");
+                }
             });
 
         textComponent.text = "What do we play Next?";
@@ -391,6 +370,7 @@ public class DraggableTextHandler : MonoBehaviour
         // Re-enable dragging for all buttons for the next playthrough
         EnableAllButtonsEventTriggers();
     }
+
 
     public void UpdateInitialPositionFromHandler()
     {

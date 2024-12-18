@@ -7989,18 +7989,6 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1175194919}
-    - target: {fileID: 5474107085700211709, guid: 13afa213e4054e24d9e1b7a1563f8e0d, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: LoadLevel
-      objectReference: {fileID: 0}
-    - target: {fileID: 7171499225943069949, guid: 13afa213e4054e24d9e1b7a1563f8e0d, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 74.260254
-      objectReference: {fileID: 0}
-    - target: {fileID: 7171499225943069949, guid: 13afa213e4054e24d9e1b7a1563f8e0d, type: 3}
-      propertyPath: m_AnchoredPosition.y
-      value: -69.19995
-      objectReference: {fileID: 0}
     - target: {fileID: 7697493178504873060, guid: 13afa213e4054e24d9e1b7a1563f8e0d, type: 3}
       propertyPath: m_Name
       value: close button Canvs
@@ -10831,6 +10819,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1498049922}
+        m_TargetAssemblyTypeName: ButtonScaleEffect, Assembly-CSharp
+        m_MethodName: ScaleButtonOnClick
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 1380308078}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &1384497807
 GameObject:
   m_ObjectHideFlags: 0
@@ -11446,6 +11446,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1498049919}
   - component: {fileID: 1498049920}
+  - component: {fileID: 1498049922}
   - component: {fileID: 1498049921}
   m_Layer: 5
   m_Name: ' SpeechTherapyController'
@@ -11596,6 +11597,20 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &1498049922
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1498049918}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67e34ab1ec3526b4e98dc456cda85050, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scaleMultiplier: 1.2
+  animationDuration: 0.2
 --- !u!1 &1511272715
 GameObject:
   m_ObjectHideFlags: 0
@@ -12091,6 +12106,18 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1498049922}
+        m_TargetAssemblyTypeName: ButtonScaleEffect, Assembly-CSharp
+        m_MethodName: ScaleButtonOnClick
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 1587953277}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
@@ -14535,6 +14562,18 @@ MonoBehaviour:
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1498049922}
+        m_TargetAssemblyTypeName: ButtonScaleEffect, Assembly-CSharp
+        m_MethodName: ScaleButtonOnClick
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 1952995147}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.GameObject, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
