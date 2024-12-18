@@ -720,6 +720,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e47caa392aff349429f10a1da79eaf3a, type: 3}
+--- !u!114 &256919499 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8836046583807312052, guid: e47caa392aff349429f10a1da79eaf3a, type: 3}
+  m_PrefabInstance: {fileID: 256919498}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c70d798bfa7b644c94b8d86d9ffa4ef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &270807274
 GameObject:
   m_ObjectHideFlags: 0
@@ -3332,6 +3343,70 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1669807687}
   m_CullTransparentMesh: 1
+--- !u!1 &1676298041
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1676298043}
+  - component: {fileID: 1676298042}
+  m_Layer: 0
+  m_Name: ButtonManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1676298042
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1676298041}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 22e98b6fbf6ef644db718d55f1b1adb4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  buttonDataArray:
+  - button: {fileID: 250522103}
+    buttonType: 1
+  - button: {fileID: 276838169}
+    buttonType: 0
+  - button: {fileID: 929081304}
+    buttonType: 0
+  - button: {fileID: 2026260185}
+    buttonType: 0
+  - button: {fileID: 188618023}
+    buttonType: 0
+  - button: {fileID: 270807276}
+    buttonType: 0
+  - button: {fileID: 1401726771}
+    buttonType: 0
+  - button: {fileID: 1249841108}
+    buttonType: 0
+  - button: {fileID: 915922878}
+    buttonType: 0
+  mController: {fileID: 256919499}
+--- !u!4 &1676298043
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1676298041}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 4.2803626, y: -3.819058, z: 2047.5504}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1688963173
 GameObject:
   m_ObjectHideFlags: 0
@@ -3880,3 +3955,4 @@ SceneRoots:
   - {fileID: 1466341302}
   - {fileID: 1018705962}
   - {fileID: 256919498}
+  - {fileID: 1676298043}

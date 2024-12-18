@@ -154,7 +154,7 @@ public class ParentalControlScript : MonoBehaviour
                 FindObjectOfType<Scene_Manager_Final>().LoadLevel("Purchase page");
                 break;
             case ButtonContext.Downloads:
-                FindObjectOfType<Scene_Manager_Final>().LoadLevel("Downloads");
+                FindObjectOfType<Scene_Manager_Final>().LoadLevel("Worksheets");
                 break;
         }
         currentContext = ButtonContext.None; // Reset context
@@ -213,7 +213,7 @@ public class ParentalControlScript : MonoBehaviour
         if (isParentalControlPassed)
         {
             isParentalControlPassed = false;
-            FindObjectOfType<Scene_Manager_Final>().LoadLevel("Downloads");
+            FindObjectOfType<Scene_Manager_Final>().LoadLevel("Worksheets");
         }
         else
         {

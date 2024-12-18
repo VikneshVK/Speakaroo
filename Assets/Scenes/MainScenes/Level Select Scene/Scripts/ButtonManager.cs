@@ -1,101 +1,137 @@
 using UnityEngine;
 using UnityEngine.UI;
 
+public enum ButtonType
+{
+    Premium,
+    Free
+}
+
+[System.Serializable]
+public class ButtonData
+{
+    public Button button;         // Reference to the Button component
+    public ButtonType buttonType; // Type of the button (Premium or Free)
+}
+
 public class ButtonManager : MonoBehaviour
 {
-    public Button[] buttons; // Array of buttons in your scene
-    private IAPController iapManager; // Reference to the IAP_Manager
-    private string YearlySub = "com.littlelearninglab.speakaroo.yearly_subscription"; // Make sure this matches your IAP_Manager
+    public ButtonData[] buttonDataArray; // Array of ButtonData to hold buttons and their types
+    [SerializeField]
+    private SpeakarooManager gameManager; // Reference to the SpeakarooGameManager
+    public IAPController mController;
 
     void Start()
     {
-        iapManager = FindObjectOfType<IAPController>(); // Get a reference to the IAP_Manager in your scene
+        // Get reference to the SpeakarooGameManager
+        gameManager = FindObjectOfType<SpeakarooManager>();
 
-        // Initially lock buttons if purchase is not completed
-        if (!IsSubscriptionActive())
+        if (gameManager == null)
         {
-            LockAllButtons();
+            Debug.LogError("SpeakarooGameManager not found in the scene.");
+            return;
+        }
+
+        // Check the subscription status at the start
+        CheckSubscriptionAndUpdateButtons();
+
+        // Update the button interactability based on the subscription status
+        UpdateButtonInteractability();
+
+    }
+
+    private void OnEnable()
+    {
+        if (mController == null)
+        {
+            Debug.LogError("mController is not assigned!");
+            return; // Avoid calling methods if mController is not assigned
+            
+        }
+
+        if(gameManager == null)
+        {
+            gameManager = FindObjectOfType<SpeakarooManager>();
+        }
+        gameManager.ValidateReceiptOnStartup();
+        Debug.Log("Reciept validated on Button");
+        mController.CheckSubscriptionStatus();
+        Debug.Log("Sub validated in Button");
+        CheckSubscriptionAndUpdateButtons();
+        UpdateButtonInteractability();
+        Debug.Log("Checked button");
+        Debug.Log("Checked button on enable");
+    }
+
+    private void CheckSubscriptionAndUpdateButtons()
+    {
+        bool isSubscribed = PlayerPrefs.GetInt("SubscriptionActive") == 1;
+        bool isLifetime = PlayerPrefs.GetInt("HasLifetimeAccess") == 1;
+        bool hasReceipt = PlayerPrefs.GetInt("Has Bill") == 1;
+
+        if (isSubscribed || hasReceipt || isLifetime)
+        {
+            Debug.Log("Subscription or lifetime access detected. Updating buttons.");
+
+            foreach (ButtonData buttonData in buttonDataArray)
+            {
+                if (buttonData.buttonType == ButtonType.Premium)
+                {
+                    buttonData.buttonType = ButtonType.Free; // Set to Free if user has access
+                }
+            }
         }
         else
         {
-            UnlockAllButtons();
+            Debug.Log("No active subscription or lifetime access. Keeping buttons as Premium.");
         }
     }
 
-    // Lock all buttons by enabling lock image and setting the alpha to 50
-    public void LockAllButtons()
+
+    // This method will lock or unlock buttons based on their type and the subscription status
+    private void UpdateButtonInteractability()
     {
-        foreach (Button button in buttons)
+        foreach (ButtonData buttonData in buttonDataArray)
         {
-            Image lockImage = button.transform.Find("Lock_Image").GetComponent<Image>();
-            if (lockImage != null)
+            if (buttonData.buttonType == ButtonType.Premium)
             {
-                lockImage.gameObject.SetActive(true);
-                Debug.Log("Lock image enabled for button: " + button.name);
-            }
-            else
-            {
-                Debug.LogError("LockImage not found for button: " + button.name);
-            }
-
-            // Make the button uninteractable
-            button.interactable = false;
-
-            SetButtonAlpha(button, 50); // Set button alpha to 50
-        }
-    }
-
-    public void UnlockAllButtons()
-    {
-        foreach (Button button in buttons)
-        {
-            Transform lockImageTransform = button.transform.Find("Lock_Image");
-
-            if (lockImageTransform != null)
-            {
-                Image lockImage = lockImageTransform.GetComponent<Image>();
-                if (lockImage != null)
+                if (gameManager.GetSubscriptionStatus() || gameManager.GetLifetimeStatus())
                 {
-                    lockImage.gameObject.SetActive(false); // Disable the lock image
-                    Debug.Log("Lock image disabled for button: " + button.name);
+                    UnlockButton(buttonData.button); // Unlock premium buttons if subscribed
                 }
                 else
                 {
-                    Debug.LogError("No Image component found on Lock_Image for button: " + button.name);
+                    LockButton(buttonData.button); // Lock premium buttons if not subscribed
                 }
             }
-            else
+            else if (buttonData.buttonType == ButtonType.Free)
             {
-                Debug.LogError("Lock_Image not found for button: " + button.name);
+                UnlockButton(buttonData.button); // Free buttons are always unlocked
             }
-            button.interactable = true;
-            SetButtonAlpha(button, 255); // Set button alpha to 255
         }
     }
 
-    // Helper function to set the button alpha value
+    // Lock a button (make it non-interactable and adjust its alpha)
+    private void LockButton(Button button)
+    {
+        button.interactable = false; // Disable the button interaction
+        SetButtonAlpha(button, 50);   // Lower the opacity to indicate it's locked
+    }
+
+    // Unlock a button (make it interactable and reset its alpha)
+    private void UnlockButton(Button button)
+    {
+        button.interactable = true;  // Enable the button interaction
+        SetButtonAlpha(button, 255); // Reset opacity to full
+    }
+
+    // Helper function to set the button alpha (opacity)
     private void SetButtonAlpha(Button button, float alpha)
     {
         ColorBlock cb = button.colors;
         Color normalColor = cb.normalColor;
-        normalColor.a = alpha / 255f; 
+        normalColor.a = alpha / 255f; // Normalize alpha to 0-1 range
         cb.normalColor = normalColor;
-        button.colors = cb; 
-    }
-
-    
-    private bool IsSubscriptionActive()
-    {
-        // Implement your logic to check if the user has purchased the subscription
-        // This is just a placeholder check
-        return PlayerPrefs.GetInt(YearlySub, 0) == 1; // 1 if purchased, 0 if not
-    }
-
-    // Call this method from IAP_Manager when purchase is completed
-    public void OnPurchaseCompleted()
-    {
-        PlayerPrefs.SetInt(YearlySub, 1); // Store the subscription status
-        UnlockAllButtons(); // Unlock buttons once the purchase is complete
-        Debug.Log("ButtonManager OnPurchaseCompleted() called");
+        button.colors = cb;
     }
 }
