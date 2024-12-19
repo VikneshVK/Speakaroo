@@ -68,8 +68,11 @@ public class ButtonManager : MonoBehaviour
         bool isSubscribed = PlayerPrefs.GetInt("SubscriptionActive") == 1;
         bool isLifetime = PlayerPrefs.GetInt("HasLifetimeAccess") == 1;
         bool hasReceipt = PlayerPrefs.GetInt("Has Bill") == 1;
+        bool hasLifetimeReciept = PlayerPrefs.GetInt("Has LifeBill") == 1;
 
-        if (isSubscribed || hasReceipt || isLifetime)
+        bool hasAccess = (isSubscribed && hasReceipt) || (isLifetime && hasLifetimeReciept);
+
+        if (hasAccess)
         {
             Debug.Log("Subscription or lifetime access detected. Updating buttons.");
 

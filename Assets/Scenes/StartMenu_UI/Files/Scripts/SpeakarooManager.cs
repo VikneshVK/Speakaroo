@@ -152,50 +152,98 @@ public class SpeakarooManager : MonoBehaviour
         isSubscribed = false;
     }
 
-    // This is the method that will validate the receipt on app startup
+    // This is the method that will validate the receipt on app startup - backup
+    //public void ValidateReceiptOnStartup()
+    //{
+    //    // Check if the receipt exists in PlayerPrefs
+    //    if (PlayerPrefs.HasKey("Has Bill"))
+    //    {
+    //        Debug.Log("Receipt found, validating...");
+    //        string receipt = PlayerPrefs.GetString("Has Bill"); // Get receipt from PlayerPrefs
+
+    //        bool isValid = iapController.ValidateReceipt(receipt); // Call your IAPController's ValidateReceipt method
+
+    //        if (isValid)
+    //        {
+    //            // If the receipt is valid, update subscription status
+    //            SetSubscriptionStatus(true);
+    //            iapController.RefreshButtonStates();
+    //            //hideUnlockButton();
+
+    //            Debug.Log("Receipt validated successfully.");
+    //        }
+
+    //        else if(isValid && PlayerPrefs.GetInt("Has LifeBill") == 1)
+    //        {
+    //            SetLifetimeStatus(true);
+    //            iapController.RefreshButtonStates();
+    //        }
+    //        else
+    //        {
+    //            // If the receipt is invalid, set subscription status to false
+    //            SetSubscriptionStatus(false);
+    //            SetLifetimeStatus(false);
+    //            Debug.Log("Receipt validation failed.");
+    //            iapController.RefreshButtonStates();
+    //        }
+    //    }
+    //    else
+    //    {
+    //        // No receipt found, treat as not subscribed
+    //        SetSubscriptionStatus(false);
+    //        SetLifetimeStatus(false);
+    //        //showUnlockButton();
+    //        Debug.Log("No receipt found.");
+    //    }
+    //}
+
     public void ValidateReceiptOnStartup()
     {
-        // Check if the receipt exists in PlayerPrefs
-        if (PlayerPrefs.HasKey("Has Bill"))
+        if (PlayerPrefs.HasKey("Has Bill") || PlayerPrefs.HasKey("Has LifeBill"))
         {
-            Debug.Log("Receipt found, validating...");
-            string receipt = PlayerPrefs.GetString("Has Bill"); // Get receipt from PlayerPrefs
+            Debug.Log("Receipt(s) found, validating...");
 
-            bool isValid = iapController.ValidateReceipt(receipt); // Call your IAPController's ValidateReceipt method
+            bool isSubscriptionValid = PlayerPrefs.HasKey("Has Bill") && iapController.ValidateReceipt(PlayerPrefs.GetString("Has Bill"));
+            bool isLifetimeValid = PlayerPrefs.HasKey("Has LifeBill") && iapController.ValidateReceipt(PlayerPrefs.GetString("Has LifeBill"));
 
-            if (isValid)
+            if (isSubscriptionValid)
             {
-                // If the receipt is valid, update subscription status
                 SetSubscriptionStatus(true);
                 iapController.RefreshButtonStates();
-                //hideUnlockButton();
-               
-                Debug.Log("Receipt validated successfully.");
-            }
-
-            else if(isValid && PlayerPrefs.GetInt("Has LifeBill") == 1)
-            {
-                SetLifetimeStatus(true);
-                iapController.RefreshButtonStates();
+                Debug.Log("Subscription receipt validated successfully.");
             }
             else
             {
-                // If the receipt is invalid, set subscription status to false
                 SetSubscriptionStatus(false);
-                SetLifetimeStatus(false);
-                Debug.Log("Receipt validation failed.");
-                iapController.RefreshButtonStates();
+                iapController.RefreshButtonStates(); 
+                Debug.Log("Subscription receipt validation failed.");
             }
+
+            if (isLifetimeValid)
+            {
+                SetLifetimeStatus(true);
+                iapController.RefreshButtonStates();
+                Debug.Log("Lifetime receipt validated successfully.");
+            }
+            else
+            {
+                SetLifetimeStatus(false);
+                iapController.RefreshButtonStates();
+                Debug.Log("Lifetime receipt validation failed.");
+            }
+
+            iapController.RefreshButtonStates();
         }
         else
         {
-            // No receipt found, treat as not subscribed
+            // No receipts found, treat as not subscribed
             SetSubscriptionStatus(false);
             SetLifetimeStatus(false);
-            //showUnlockButton();
-            Debug.Log("No receipt found.");
+            Debug.Log("No receipts found, defaulting to non-subscriber status.");
         }
     }
+
+
 
 }
 

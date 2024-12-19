@@ -144,24 +144,24 @@ public class Scene_Manager_Final : MonoBehaviour
     //    return IAPController.Instance.IsSubscribed() || PlayerPrefs.GetInt("IsPremiumUser", 0) == 1;
     //}
 
-    public void UnlockPremiumAccess()
-    {
-        PlayerPrefs.SetInt("IsPremiumUser", 1); 
-        PlayerPrefs.Save();
-        Debug.Log("Premium access granted.");
-    }
+    //public void UnlockPremiumAccess()
+    //{
+    //    PlayerPrefs.SetInt("IsPremiumUser", 1); 
+    //    PlayerPrefs.Save();
+    //    Debug.Log("Premium access granted.");
+    //}
 
-    public void RevokePremiumAccess()
-    {
-        PlayerPrefs.SetInt("IsPremiumUser", 0); 
-        PlayerPrefs.Save();
-        Debug.Log("Premium access revoked.");
-    }
+    //public void RevokePremiumAccess()
+    //{
+    //    PlayerPrefs.SetInt("IsPremiumUser", 0); 
+    //    PlayerPrefs.Save();
+    //    Debug.Log("Premium access revoked.");
+    //}
 
-    private void ShowLockedSceneMessage()
-    {
-        Debug.Log("This scene is locked. Unlock premium to access it.");        
-    }
+    //private void ShowLockedSceneMessage()
+    //{
+    //    Debug.Log("This scene is locked. Unlock premium to access it.");        
+    //}
 
     public int GetLastCompletedLevel()
     {
