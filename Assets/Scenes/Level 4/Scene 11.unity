@@ -312,7 +312,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:
@@ -320,7 +320,7 @@ MonoBehaviour:
       m_Calls: []
   m_Sprite: {fileID: 21300000, guid: ec244a0f5bfb9144583df256631d83b3, type: 3}
   m_Type: 0
-  m_PreserveAspect: 0
+  m_PreserveAspect: 1
   m_FillCenter: 1
   m_FillMethod: 4
   m_FillAmount: 1
@@ -888,6 +888,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tweeningController: {fileID: 399465458}
   juiceController: {fileID: 665024639}
+  helperHandInstance: {fileID: 1605762246}
   Image1: {fileID: 366648239}
   Image2: {fileID: 293104776}
   Sprite1: {fileID: 21300000, guid: 7cd03dfe1926fa848a6924593d1cc3d3, type: 3}
@@ -2217,6 +2218,7 @@ MonoBehaviour:
   requiredFruits: []
   juiceManager: {fileID: 665024638}
   blenderController: {fileID: 2088277174}
+  helperhand: {fileID: 1605762246}
 --- !u!1 &688040183
 GameObject:
   m_ObjectHideFlags: 0
@@ -3019,6 +3021,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tweeningController: {fileID: 399465458}
   juiceController: {fileID: 665024639}
+  helperHandInstance: {fileID: 1605762246}
   Image1: {fileID: 366648239}
   Image2: {fileID: 293104776}
   Sprite1: {fileID: 21300000, guid: 7cd03dfe1926fa848a6924593d1cc3d3, type: 3}
@@ -3863,6 +3866,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tweeningController: {fileID: 399465458}
   juiceController: {fileID: 665024639}
+  helperHandInstance: {fileID: 1605762246}
   Image1: {fileID: 366648239}
   Image2: {fileID: 293104776}
   Sprite1: {fileID: 21300000, guid: 7cd03dfe1926fa848a6924593d1cc3d3, type: 3}
@@ -3902,7 +3906,7 @@ MonoBehaviour:
   glowPrefab: {fileID: 6008917645427281803, guid: f1fd7e526f4839d4386c3f42f4272982, type: 3}
   tweeningController: {fileID: 399465458}
   helperHandDelay: 15
-  bird: {fileID: 0}
+  bird: {fileID: 26596682}
   birdEndPosition: {fileID: 287426172}
   cerealAudio: {fileID: 8300000, guid: 04eb051606f6fbf478c3fd17053e66a2, type: 3}
   milkAudio: {fileID: 8300000, guid: 6f72605f2398ea14698938eb27f969d2, type: 3}

@@ -23,13 +23,16 @@ public class DressDragDrop : MonoBehaviour
     private AudioSource SfxAudioSource;
     public AudioClip sfxAudio1;
     public AudioClip sfxAudio2;
+    public AudioClip sfxAudio3;
     private bool isGlowSequenceComplete;
+    
     public static int incorrectDrops = 2;
     void Start()
     {
         initialPosition = transform.position;
         hasboyTalkStarted = false;
         isGlowSequenceComplete = false;
+        
         SfxAudioSource = GameObject.FindWithTag("SFXAudioSource").GetComponent<AudioSource>();
     }
 
@@ -50,14 +53,15 @@ public class DressDragDrop : MonoBehaviour
             SetChildrenSortingOrder(6);
         }
 
-        Collider2D collider = GetComponent<Collider2D>();
+
         if (!isGlowSequenceComplete &&
-            boyAnimator.GetCurrentAnimatorStateInfo(0).IsName("Idle 0") &&
-            boyAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.1f)
+        boyAnimator.GetCurrentAnimatorStateInfo(0).IsName("Idle 0") &&
+        boyAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.1f)
         {
             isGlowSequenceComplete = true; // Prevent repeated glow sequence
             StartCoroutine(HandleGlowSequence());
         }
+
         if (boyAnimator.GetCurrentAnimatorStateInfo(0).IsName("Talk sample") &&
             boyAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.1f && !hasboyTalkStarted)
         {
@@ -122,11 +126,7 @@ public class DressDragDrop : MonoBehaviour
             Debug.Log("Hit object: " + hit.collider.gameObject.name);
             if (hit.collider.gameObject == boyCharacter)
             {
-                Debug.Log("Collider check is good");
-                if (SfxAudioSource != null)
-                {
-                    SfxAudioSource.PlayOneShot(sfxAudio2);
-                }
+                Debug.Log("Collider check is good");                
                 return true;
             }
         }
@@ -141,22 +141,26 @@ public class DressDragDrop : MonoBehaviour
             switch (dressType)
             {
                 case "School":
+                    DisableAllDresses(); // Disable dragging and colliders on all dresses
                     boyAnimator.Play("SchoolDress");
                     EnableDisableDresses(schoolDress, summerDress, winterDress);
-                    audiomanager.PlayAudio(audio2);
-                    StartCoroutine(RevealTextWordByWord("Woo Hoo..! Let's go to School Now", 0.5f));
-                    DisableAllDresses(); // Disable dragging and colliders on all dresses
+                    SfxAudioSource.PlayOneShot(sfxAudio2);
+                    StartCoroutine(JojoDialoge());
                     break;
 
                 case "Summer":
+                    DisableAllDresses(); // Disable dragging and colliders on all dresses
                     boyAnimator.Play("red dress Sad Face Hand Movements");
+                    SfxAudioSource.PlayOneShot(sfxAudio3);                                       
                     EnableDisableDresses(summerDress, schoolDress, winterDress);
                     incorrectDrops--;
                     StartCoroutine(HandleBirdInteraction("That's not the School Outfit, Jojo"));
                     break;
 
                 case "Winter":
+                    DisableAllDresses(); // Disable dragging and colliders on all dresses
                     boyAnimator.Play("Blue dress Sad Face Hand Movements");
+                    SfxAudioSource.PlayOneShot(sfxAudio3);
                     EnableDisableDresses(winterDress, summerDress, schoolDress);
                     incorrectDrops--;
                     StartCoroutine(HandleBirdInteraction("That's not the School Outfit, Jojo"));
@@ -164,6 +168,13 @@ public class DressDragDrop : MonoBehaviour
             }
         }
         transform.position = initialPosition; // Reset position after handling the dress change
+    }
+
+    private IEnumerator JojoDialoge()
+    {
+        yield return new WaitForSeconds(1f);
+        audiomanager.PlayAudio(audio2);
+        StartCoroutine(RevealTextWordByWord("Woo Hoo..! Let's go to School Now", 0.5f));        
     }
 
     private IEnumerator HandleBirdInteraction(string subtitleTextContent)
@@ -190,6 +201,8 @@ public class DressDragDrop : MonoBehaviour
 
                     if (schoolDress != null)
                         yield return helperController.SpawnGlow(schoolDress.transform.position);
+
+                    EnableAllDressColliders();
                 }
                 else if (dressType == "Winter")
                 {
@@ -200,11 +213,14 @@ public class DressDragDrop : MonoBehaviour
 
                     if (schoolDress != null)
                         yield return helperController.SpawnGlow(schoolDress.transform.position);
+
+                    EnableAllDressColliders();
                 }
             }
         }
         else
         {
+            EnableAllDressColliders();
             // Spawn helper hand if no incorrect drops remain
             if (helperController != null && schoolDress != null)
             {
@@ -240,7 +256,6 @@ public class DressDragDrop : MonoBehaviour
         DressDragDrop[] allDresses = FindObjectsOfType<DressDragDrop>();
         foreach (var dress in allDresses)
         {
-            dress.enabled = false; // Disable dragging
             Collider2D collider = dress.GetComponent<Collider2D>();
             if (collider != null)
             {
@@ -251,35 +266,40 @@ public class DressDragDrop : MonoBehaviour
 
     private IEnumerator HandleGlowSequence()
     {
-        // Glow on winter dress
         if (helperController != null && winterDress != null)
         {
             yield return helperController.SpawnGlow(winterDress.transform.position);
         }
 
-        // Glow on summer dress
         if (helperController != null && summerDress != null)
         {
             yield return helperController.SpawnGlow(summerDress.transform.position);
         }
 
-        // Glow on school dress
         if (helperController != null && schoolDress != null)
         {
             yield return helperController.SpawnGlow(schoolDress.transform.position);
         }
 
-        // Enable all colliders after glow sequence
-        DressDragDrop[] allDresses = FindObjectsOfType<DressDragDrop>();
-        foreach (var dress in allDresses)
-        {
-            Collider2D collider = dress.GetComponent<Collider2D>();
-            if (collider != null)
-            {
-                collider.enabled = true;
-            }
-        }
+        EnableAllDressColliders();
     }
+
+    private void EnableAllDressColliders()
+    {
+       
+            DressDragDrop[] allDresses = FindObjectsOfType<DressDragDrop>();
+            foreach (var dress in allDresses)
+            {
+                Collider2D collider = dress.GetComponent<Collider2D>();
+                if (collider != null)
+                {
+                    collider.enabled = true;
+                }
+            }
+        
+        
+    }
+
 
     private IEnumerator RevealTextWordByWord(string fullText, float delayBetweenWords)
     {

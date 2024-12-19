@@ -9,7 +9,7 @@ public class JuiceController : MonoBehaviour
     private SpriteChangeController spriteChangeController;
     public JuiceManager juiceManager;
     public BlenderController blenderController;
-    private Coroutine helperHandTimerCoroutine;
+    public LVL4Sc2HelperHand helperhand;   
     private float delay;
     
     private bool blenderInteractable = false;
@@ -19,7 +19,7 @@ public class JuiceController : MonoBehaviour
         spriteChangeController = FindObjectOfType<SpriteChangeController>();
         juiceManager = FindObjectOfType<JuiceManager>();
         DisableJarCollider();
-        delay = 10;
+        delay = 15;
     }
 
     public bool ValidateFruit(List<string> fruitsInBlender)
@@ -35,9 +35,23 @@ public class JuiceController : MonoBehaviour
     // Called when the player clicks the blender
     public void OnBlenderClick()
     {
+        if (blenderController == null)
+        {
+            Debug.LogError("BlenderController is not assigned in JuiceController.");
+            return;
+        }
         blenderController.isBlenderClicked = true;
+
+        if (helperhand != null)
+        {
+            helperhand.DestroySpawnedHelperHand();
+        }
+        else
+        {
+            Debug.LogWarning("HelperHand is not assigned in JuiceController.");
+        }
+
         delay = 0;
-        LVL4Sc2HelperHand.Instance.DestroySpawnedHelperHand();
         Debug.Log("Blender clicked, helper hand destroyed if active.");
     }
 
@@ -46,11 +60,7 @@ public class JuiceController : MonoBehaviour
     {
         if (blenderInteractable) 
         {
-            if (helperHandTimerCoroutine != null)
-            {
-                StopCoroutine(helperHandTimerCoroutine);
-            }
-            helperHandTimerCoroutine = StartCoroutine(HelperHandInteractionTimer());
+            StartCoroutine(HelperHandInteractionTimer());
         }
         
     }
@@ -65,7 +75,7 @@ public class JuiceController : MonoBehaviour
             Vector3 outsideViewportPosition = new Vector3(-10, -10, 0); 
             Transform blenderPosition = GameObject.FindGameObjectWithTag("Blender").transform;
            
-            LVL4Sc2HelperHand.Instance.SpawnAndTweenHelperHand(outsideViewportPosition, blenderPosition);
+            helperhand.SpawnAndTweenHelperHand(outsideViewportPosition, blenderPosition);
             Debug.Log("Helper hand spawned to guide the player to click the blender.");
         }
     }

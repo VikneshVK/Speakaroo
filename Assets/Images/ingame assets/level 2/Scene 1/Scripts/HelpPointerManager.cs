@@ -95,7 +95,7 @@ public class HelpPointerManager : MonoBehaviour
             Vector3 dropPosition = interactable.GetDropLocation();
 
             // Tween the helper hand to the drop position
-            LeanTween.move(pointer, dropPosition, 1f)
+            LeanTween.move(pointer, dropPosition, 2f)
                 .setEase(LeanTweenType.easeInOutSine)
                 .setOnComplete(() =>
                 {

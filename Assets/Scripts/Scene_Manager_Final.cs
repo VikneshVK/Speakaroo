@@ -87,6 +87,10 @@ public class Scene_Manager_Final : MonoBehaviour
 
         // Load the Loading Page scene
         SceneManager.LoadScene("Loading Page");
+        yield return new WaitUntil(() => SceneManager.GetActiveScene().name == targetScene);
+
+        ResetAllAnimators();
+
     }
 
 
@@ -106,6 +110,9 @@ public class Scene_Manager_Final : MonoBehaviour
 
         Debug.Log("Now loading scene.");
         SceneManager.LoadScene(LvlName);
+        yield return new WaitForEndOfFrame();
+
+        ResetAllAnimators();
     }
 
     private void ResetGameState()

@@ -16,7 +16,10 @@ public class PillowDragAndDrop : MonoBehaviour
     public TextMeshProUGUI subtitleText;
     public static bool canDrag;
     public bool HasInteracted { get; private set; } = false;
-
+    private AudioSource SfxAudioSource;
+    
+    public AudioClip sfxAudio2;
+    public AudioClip sfxAudio3;
     public HelperHandController helperHandController;
     private bool isDragging = false;
     private Animator boyAnimator;
@@ -68,11 +71,11 @@ public class PillowDragAndDrop : MonoBehaviour
         // Load audio clips from Resources
         positiveAudio1 = Resources.Load<AudioClip>("Audio/FeedbackAudio/GOOD JOB");
         positiveAudio2 = Resources.Load<AudioClip>("Audio/FeedbackAudio/KEEP GOING");
-        negativeAudio = Resources.Load<AudioClip>("Audio/FeedbackAudio/THAT_S NOT RIGHT ");
+        negativeAudio = Resources.Load<AudioClip>("Audio/FeedbackAudio/THAT_S NOT RIGHT");
 
         audioClipBigPillow = Resources.Load<AudioClip>("Audio/Helper Audio/bigpillow");
         audioClipSmallPillow = Resources.Load<AudioClip>("Audio/Helper Audio/smallpillow");
-
+        SfxAudioSource = GameObject.FindWithTag("SFXAudioSource").GetComponent<AudioSource>();
         if (audioClipBigPillow == null || audioClipSmallPillow == null)
         {
             Debug.LogError("Big or small pillow audio clips not found in Resources.");
@@ -108,7 +111,7 @@ public class PillowDragAndDrop : MonoBehaviour
         {
             Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             transform.position = mousePosition + offset;
-
+           
             /*// If the player is interacting, stop the helper hand
             helperHandController.StopHelperHand();*/
         }
@@ -127,7 +130,7 @@ public class PillowDragAndDrop : MonoBehaviour
             {
                 spriteRenderer.sortingOrder = 10;
             }
-
+            
             // Stop the helper hand
             helperHandController.StopHelperHand();
         }
@@ -385,24 +388,39 @@ public class PillowDragAndDrop : MonoBehaviour
             }
         }
     }
-
-    private void PlayPositiveFeedbackAudio()
+    private IEnumerator PlayPositiveSound()
     {
+
+        yield return new WaitForSeconds(1f);
         if (feedbackAudioSource != null)
         {
             AudioClip[] positiveAudios = new AudioClip[] { positiveAudio1, positiveAudio2 };
             feedbackAudioSource.clip = positiveAudios[Random.Range(0, positiveAudios.Length)];
             feedbackAudioSource.Play();
-        }
+        } 
     }
 
-    private void PlayNegativeFeedbackAudio()
+    private IEnumerator PlayNegativeSound()
     {
+        yield return new WaitForSeconds(1f);
         if (feedbackAudioSource != null)
         {
             feedbackAudioSource.clip = negativeAudio;
             feedbackAudioSource.Play();
         }
+    }
+
+    private void PlayPositiveFeedbackAudio()
+    {
+        SfxAudioSource.PlayOneShot(sfxAudio2);
+        StartCoroutine(PlayPositiveSound());
+    }
+
+    private void PlayNegativeFeedbackAudio()
+    {
+        SfxAudioSource.PlayOneShot(sfxAudio3);
+        StartCoroutine(PlayNegativeSound());
+    
     }
     private IEnumerator RevealTextWordByWord(string fullText, float delayBetweenWords)
     {

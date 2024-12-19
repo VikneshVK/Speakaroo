@@ -5,15 +5,15 @@ using TMPro;
 public class DraggingController1 : MonoBehaviour
 {
     private Vector3 offset;
-    private bool isDragging = false;
+    private bool isDragging;
     private SpriteRenderer spriteRenderer;
     private Vector3 initialPosition;
     private Quaternion initialRotation;
     private float initialZ;
 
-    public static bool isMilkDropped = false;
-    public static bool isCerealDropped = false;
-    public static bool isCherryDropped = false;
+    public static bool isMilkDropped;
+    public static bool isCerealDropped;
+    public static bool isCherryDropped;
 
     private Sprite newSprite;
     private Sprite milkSprite;
@@ -60,8 +60,8 @@ public class DraggingController1 : MonoBehaviour
 
     public GameObject tweenManager;
     private TweeningController tweeningController;
-    private bool startSecondTime = false;
-    private bool finalBowlDisabled = false;
+    private bool startSecondTime;
+    private bool finalBowlDisabled;
 
     public GameObject maskPrefab;
     public GameObject finalBowlSpriteObject;
@@ -70,9 +70,9 @@ public class DraggingController1 : MonoBehaviour
     public LVL4Sc2HelperController helperHandController;
 
     private Animator objectAnimator;
-    private bool isCerealSequenceStarted = false;
-    private bool isMilkSequenceStarted = false;
-    private bool isCherrySequenceStarted = false;
+    private bool isCerealSequenceStarted;
+    private bool isMilkSequenceStarted;
+    private bool isCherrySequenceStarted;
     /*private bool isTweenBackInProgress = false;*/
 
 
@@ -80,6 +80,17 @@ public class DraggingController1 : MonoBehaviour
 
     private void Start()
     {
+        isDragging = false;
+        isMilkDropped = false;
+        isCerealDropped = false;
+        isCherryDropped = false;
+        isCerealSequenceStarted = false;
+        isMilkSequenceStarted = false;
+        isCherrySequenceStarted = false;
+        startSecondTime = false;
+        finalBowlDisabled = false;
+
+
         spriteRenderer = GetComponent<SpriteRenderer>();
         initialPosition = transform.position;
         initialRotation = transform.rotation;
@@ -414,13 +425,14 @@ public class DraggingController1 : MonoBehaviour
 
             if (!isMilkDropped && milkCollider != null && isCerealDropped)
             {
-                milkCollider.enabled = true;
-               
+                StartCoroutine(EnableMilkWithDelay());
+
+
             }
             else if (!isCherryDropped && cherryCollider != null && isMilkDropped)
             {
-                cherryCollider.enabled = true;
-                
+                StartCoroutine(EnableCherryWithDelay());
+
             }
 
             if (startSecondTime && tweeningController != null)
@@ -445,12 +457,14 @@ public class DraggingController1 : MonoBehaviour
     private IEnumerator EnableMilkWithDelay()
     {
         yield return new WaitForSeconds(0.5f);
+        helperHandController.StartDelayTimer();
         milkCollider.enabled = true;
     }
 
     private IEnumerator EnableCherryWithDelay()
     {
         yield return new WaitForSeconds(0.5f);
+        helperHandController.StartDelayTimer();
         cherryCollider.enabled = true;
     }
 

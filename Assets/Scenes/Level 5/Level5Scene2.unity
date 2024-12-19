@@ -1901,11 +1901,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7171499225943069949, guid: 13afa213e4054e24d9e1b7a1563f8e0d, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -0.000022888
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 7171499225943069949, guid: 13afa213e4054e24d9e1b7a1563f8e0d, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0.000015259
+      value: -97
       objectReference: {fileID: 0}
     - target: {fileID: 7697493178504873060, guid: 13afa213e4054e24d9e1b7a1563f8e0d, type: 3}
       propertyPath: m_Name
@@ -2068,7 +2068,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1261242162691769517, guid: 5cc33678a45eebd4eb94af593e86f318, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3220799799381724627, guid: 5cc33678a45eebd4eb94af593e86f318, type: 3}
       propertyPath: m_Pivot.x
@@ -3337,7 +3337,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 0}
-  m_RaycastTarget: 1
+  m_RaycastTarget: 0
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
   m_OnCullStateChanged:

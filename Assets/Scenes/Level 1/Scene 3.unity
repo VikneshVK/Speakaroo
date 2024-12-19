@@ -456,6 +456,7 @@ MonoBehaviour:
   audio3: {fileID: 8300000, guid: f7e3effa0e09fd0478db754816c4f074, type: 3}
   sfxAudio1: {fileID: 8300000, guid: 0119c61077f4a1d44a557af5ca2096b0, type: 3}
   sfxAudio2: {fileID: 8300000, guid: 68ee517703c2adc43acbb40401c3d4d0, type: 3}
+  sfxAudio3: {fileID: 8300000, guid: b4074a0ab8f58c54ba3deb59aae14c25, type: 3}
 --- !u!4 &177478326
 Transform:
   m_ObjectHideFlags: 0
@@ -1824,6 +1825,7 @@ MonoBehaviour:
   audio3: {fileID: 8300000, guid: f7e3effa0e09fd0478db754816c4f074, type: 3}
   sfxAudio1: {fileID: 8300000, guid: 0119c61077f4a1d44a557af5ca2096b0, type: 3}
   sfxAudio2: {fileID: 8300000, guid: 68ee517703c2adc43acbb40401c3d4d0, type: 3}
+  sfxAudio3: {fileID: 8300000, guid: b4074a0ab8f58c54ba3deb59aae14c25, type: 3}
 --- !u!4 &1048676453
 Transform:
   m_ObjectHideFlags: 0
@@ -2175,6 +2177,7 @@ MonoBehaviour:
   audio3: {fileID: 8300000, guid: f7e3effa0e09fd0478db754816c4f074, type: 3}
   sfxAudio1: {fileID: 8300000, guid: 0119c61077f4a1d44a557af5ca2096b0, type: 3}
   sfxAudio2: {fileID: 8300000, guid: 68ee517703c2adc43acbb40401c3d4d0, type: 3}
+  sfxAudio3: {fileID: 8300000, guid: b4074a0ab8f58c54ba3deb59aae14c25, type: 3}
 --- !u!61 &1102011283
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -2423,7 +2426,7 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
-  m_VertexColorAlwaysGammaSpace: 0
+  m_VertexColorAlwaysGammaSpace: 1
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0

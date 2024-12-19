@@ -5,15 +5,15 @@ public class DraggingController : MonoBehaviour
 {
     private Vector3 offset;
     private Vector3 startPosition;
-    private bool isDragging = false;
+    private bool isDragging;
     private Vector3 originalScale;
     private SpriteChangeController spriteChangeController;
     private JuiceManager juiceManager;
     public TweeningController tweeningController;
     public JuiceController juiceController;
-    private bool helperTimerStarted = false;
+    private bool helperTimerStarted;
     private bool InitialPositionConfirimed;
-    private LVL4Sc2HelperHand helperHandInstance;
+    public LVL4Sc2HelperHand helperHandInstance;
     private int originalSortingOrder;
     private SpriteRenderer spriteRenderer;
 
@@ -32,9 +32,11 @@ public class DraggingController : MonoBehaviour
         originalScale = transform.localScale;
         spriteChangeController = FindObjectOfType<SpriteChangeController>();
         juiceManager = FindObjectOfType<JuiceManager>();
-        helperHandInstance = LVL4Sc2HelperHand.Instance;
+        
         SfxAudioSource = GameObject.FindWithTag("SFXAudioSource").GetComponent<AudioSource>();
-
+        helperTimerStarted = false;
+        isDragging = false;
+        InitialPositionConfirimed = false;
         // Get the SpriteRenderer and store its original sorting order
         spriteRenderer = GetComponent<SpriteRenderer>();
         if (spriteRenderer != null)

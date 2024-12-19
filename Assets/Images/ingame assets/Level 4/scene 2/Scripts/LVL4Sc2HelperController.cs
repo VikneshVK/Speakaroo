@@ -13,7 +13,7 @@ public class LVL4Sc2HelperController : MonoBehaviour
     private GameObject spawnedHelperHand;
     private GameObject spawnedGlow;
     private Coroutine delayTimerCoroutine;
-    public float helperHandDelay = 10f;
+    public float helperHandDelay;
 
     public GameObject bird; // Reference to the bird GameObject
     public Transform birdEndPosition; // Target position for bird animation
@@ -26,20 +26,7 @@ public class LVL4Sc2HelperController : MonoBehaviour
     private Animator birdAnimator;
     private Vector3 birdInitialPosition;
 
-    private void Awake()
-    {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-            return;
-        }
-
-        DontDestroyOnLoad(gameObject);
-    }
+   
 
     private void Start()
     {
@@ -133,7 +120,7 @@ public class LVL4Sc2HelperController : MonoBehaviour
             DestroySpawnedHelperHand();  // Stop any active helper hand
             DestroySpawnedGlow();  // Destroy any active glow
         }
-        StartDelayTimer();  // Restart the timer
+        
     }
 
     private void SpawnGlowOnNextItem()

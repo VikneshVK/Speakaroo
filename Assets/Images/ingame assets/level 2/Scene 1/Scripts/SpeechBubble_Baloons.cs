@@ -88,6 +88,7 @@ public class SpeechBubble_Balloons : MonoBehaviour
         if (childrenScaled >= totalChildren)
         {
             SetMusicVolume(-80f);
+            SetAmbientVolume(-80f);
             GameObject instantiatedPrefab = Instantiate(prefabToSpawn, Vector3.zero, Quaternion.identity);
             SaveAndResetScales(instantiatedPrefab);
 

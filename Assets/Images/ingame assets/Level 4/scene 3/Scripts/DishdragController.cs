@@ -5,8 +5,7 @@ using UnityEngine;
 
 public class DishdragController : MonoBehaviour
 {
-    public static List<DishdragController> allDishControllers = new List<DishdragController>();
-    public Transform dropTarget;
+    public static List<DishdragController> allDishControllers = new List<DishdragController>();    
     public LVL4Sc3HelperHand helperHandManager;
     public float helperHandDelay = 5f;
     public bool isDroppedCorrectly = false;
@@ -31,6 +30,7 @@ public class DishdragController : MonoBehaviour
 
     private AudioSource SfxAudioSource;
     public AudioClip SfxAudio1;
+    public AudioClip SfxAudio2;
 
     private Vector3 startPosition;
     private bool isDragging = false;
@@ -222,6 +222,7 @@ public class DishdragController : MonoBehaviour
 
     private void ResetPosition()
     {
+        SfxAudioSource.PlayOneShot(SfxAudio2);
         transform.position = startPosition;
     }
 
@@ -241,9 +242,30 @@ public class DishdragController : MonoBehaviour
 
         if (!isDroppedCorrectly)
         {
-            helperHandManager.SpawnHelperHand(transform.position, dropTarget.position);
+            // Determine the appropriate drop target dynamically
+            Transform target = null;
+
+            if (gameObject.name.Contains("Bowl"))
+            {
+                target = GetAvailableTarget(bowlDropTarget1, bowlDropTarget2, usedBowlTargets);
+            }
+            else if (gameObject.name.Contains("glass"))
+            {
+                target = GetAvailableTarget(glassDropTarget1, glassDropTarget2, usedGlassTargets);
+            }
+            else if (gameObject.name.Contains("plate"))
+            {
+                target = GetAvailableTarget(plateDropTarget1, plateDropTarget2, usedPlateTargets);
+            }
+
+            // If a valid target exists, spawn the helper hand
+            if (target != null)
+            {
+                helperHandManager.SpawnHelperHand(transform.position, target.position);
+            }
         }
     }
+
 
     public static void StartHelperHandCheckForAll()
     {

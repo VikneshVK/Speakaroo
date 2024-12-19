@@ -9,7 +9,7 @@ public class LVL4Sc2HelperHand : MonoBehaviour
 
     public GameObject helperHandPrefab;
     public GameObject glowPrefab;
-    public float delayTime = 10f; // Total delay time
+    public float delayTime; // Total delay time
     public TweeningController tweeningController;
 
     private GameObject spawnedHelperHand;
@@ -20,19 +20,7 @@ public class LVL4Sc2HelperHand : MonoBehaviour
     // Track collected status of required fruits
     private Dictionary<string, bool> requiredFruitStatus = new Dictionary<string, bool>();
 
-    private void Awake()
-    {
-        if (Instance == null)
-        {
-            Instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-            return;
-        }
-        DontDestroyOnLoad(gameObject);
-    }
+    
 
     private void Start()
     {
