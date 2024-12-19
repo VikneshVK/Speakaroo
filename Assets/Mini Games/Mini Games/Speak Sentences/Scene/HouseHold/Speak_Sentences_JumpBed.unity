@@ -274,7 +274,7 @@ MonoBehaviour:
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
+  m_Transition: 0
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
@@ -707,7 +707,7 @@ MonoBehaviour:
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
+  m_Transition: 0
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
@@ -756,7 +756,6 @@ GameObject:
   - component: {fileID: 1218333243}
   - component: {fileID: 1218333242}
   - component: {fileID: 1218333241}
-  - component: {fileID: 1218333245}
   - component: {fileID: 1218333246}
   m_Layer: 5
   m_Name: JumpBed
@@ -809,9 +808,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1754149005}
-        m_TargetAssemblyTypeName: SentenceManager_Numbers, Assembly-CSharp
-        m_MethodName: 
+      - m_Target: {fileID: 1754149008}
+        m_TargetAssemblyTypeName: SentenceManager, Assembly-CSharp
+        m_MethodName: OnCharacterClick
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -879,27 +878,6 @@ RectTransform:
   m_AnchoredPosition: {x: -437, y: -336.46}
   m_SizeDelta: {x: 1920, y: 1920}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!95 &1218333245
-Animator:
-  serializedVersion: 5
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1218333239}
-  m_Enabled: 1
-  m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 353a0cc3ab1cba5409887b03096c5c67, type: 2}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 0
-  m_LinearVelocityBlending: 0
-  m_StabilizeFeet: 0
-  m_WarningMessage: 
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorStateOnDisable: 0
-  m_WriteDefaultValuesOnDisable: 0
 --- !u!114 &1218333246
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1265,7 +1243,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76adbe1df411441168c8bcb405800f51, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  objectAnimator: {fileID: 1218333245}
+  objectAnimator: {fileID: 664067657}
   wordAudioClips:
   - {fileID: 8300000, guid: b256520f22faf244a943ff10d69ba881, type: 3}
   - {fileID: 8300000, guid: 86144fc370d09a44c9e72026e30ec849, type: 3}
@@ -1450,8 +1428,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -90, y: -100}
-  m_SizeDelta: {x: 368, y: 368}
+  m_AnchoredPosition: {x: -100, y: -100}
+  m_SizeDelta: {x: 200, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1855552496
 MonoBehaviour:
@@ -1546,7 +1524,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 1455bc98e40a67e4cb68cc1b487b8ca3, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 9d29f06ffd6b29a46b4c8ca5cc063b96, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1659,7 +1637,7 @@ MonoBehaviour:
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
     m_SelectOnRight: {fileID: 0}
-  m_Transition: 1
+  m_Transition: 0
   m_Colors:
     m_NormalColor: {r: 1, g: 1, b: 1, a: 1}
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
@@ -1732,8 +1710,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 1}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 87, y: -85.29779}
-  m_SizeDelta: {x: 500, y: 500}
+  m_AnchoredPosition: {x: 100, y: -100}
+  m_SizeDelta: {x: 200, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2054688225
 MonoBehaviour:
@@ -1828,7 +1806,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: a075f39a37cd4914e9d0e9f7c6212c79, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 71a84922c6b295f4981e214ae24e78e4, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1

@@ -23,7 +23,7 @@ public class Downloads_Manager : MonoBehaviour
             // Check resolution and adjust positions
             if (Screen.width == 2732 && Screen.height == 2048) // iPad Pro 2018 resolution
             {
-                buttonRect.anchoredPosition = new Vector2(-422, 135); // Example position
+                buttonRect.anchoredPosition = new Vector2(-422, 280); // Example position
             }
             else if (Screen.width == 960 && Screen.height == 540) // Phone resolution
             {

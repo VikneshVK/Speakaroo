@@ -36,13 +36,26 @@ public class SpeakarooManager : MonoBehaviour
     private void Start()
     {
         int subscriptionStatus = PlayerPrefs.GetInt("SubscriptionActive"); // Default is 0 (not subscribed)
+        int lifetimeStatus = PlayerPrefs.GetInt("LifetimeAccess");
         bool isSubscribed = subscriptionStatus == 1;
+        bool isLifetimeAccess = lifetimeStatus == 1;
 
         // Print the result to the console
         if (isSubscribed)
         {
             Debug.Log("User is subscribed.");
         }
+
+        else if(isLifetimeAccess)
+        {
+            Debug.Log("user have lifetime access");
+        }
+
+        if(!hasLifetimeAccess)
+        {
+            Debug.Log("user is not lifetime user");
+        }
+
         else
         {
             Debug.Log("User is not subscribed.");
@@ -154,6 +167,7 @@ public class SpeakarooManager : MonoBehaviour
             {
                 // If the receipt is valid, update subscription status
                 SetSubscriptionStatus(true);
+                iapController.RefreshButtonStates();
                 //hideUnlockButton();
                
                 Debug.Log("Receipt validated successfully.");
@@ -162,6 +176,7 @@ public class SpeakarooManager : MonoBehaviour
             else if(isValid && PlayerPrefs.GetInt("Has LifeBill") == 1)
             {
                 SetLifetimeStatus(true);
+                iapController.RefreshButtonStates();
             }
             else
             {
@@ -169,6 +184,7 @@ public class SpeakarooManager : MonoBehaviour
                 SetSubscriptionStatus(false);
                 SetLifetimeStatus(false);
                 Debug.Log("Receipt validation failed.");
+                iapController.RefreshButtonStates();
             }
         }
         else
