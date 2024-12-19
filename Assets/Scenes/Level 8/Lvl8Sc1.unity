@@ -1689,13 +1689,21 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 1845963356}
-    - target: {fileID: 5474107085700211709, guid: 13afa213e4054e24d9e1b7a1563f8e0d, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+    - target: {fileID: 4505276508103832329, guid: 13afa213e4054e24d9e1b7a1563f8e0d, type: 3}
+      propertyPath: sceneName
+      value: Learn to Speak
+      objectReference: {fileID: 0}
+    - target: {fileID: 4505276508103832329, guid: 13afa213e4054e24d9e1b7a1563f8e0d, type: 3}
+      propertyPath: sceneManager
       value: 
       objectReference: {fileID: 1813679206}
     - target: {fileID: 5474107085700211709, guid: 13afa213e4054e24d9e1b7a1563f8e0d, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1370320239}
+    - target: {fileID: 5474107085700211709, guid: 13afa213e4054e24d9e1b7a1563f8e0d, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: LoadLevel
+      value: OnButtonClick
       objectReference: {fileID: 0}
     - target: {fileID: 7171499225943069949, guid: 13afa213e4054e24d9e1b7a1563f8e0d, type: 3}
       propertyPath: m_AnchoredPosition.x
@@ -1714,6 +1722,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 13afa213e4054e24d9e1b7a1563f8e0d, type: 3}
+--- !u!114 &1370320239 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4505276508103832329, guid: 13afa213e4054e24d9e1b7a1563f8e0d, type: 3}
+  m_PrefabInstance: {fileID: 1370320238}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f87a6b112ab62f468da6fa2dfbd49ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1422578004
 GameObject:
   m_ObjectHideFlags: 0

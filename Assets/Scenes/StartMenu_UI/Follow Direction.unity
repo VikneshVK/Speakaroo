@@ -237,6 +237,7 @@ GameObject:
   - component: {fileID: 43761315}
   - component: {fileID: 43761314}
   - component: {fileID: 43761313}
+  - component: {fileID: 43761316}
   m_Layer: 5
   m_Name: Button (7)
   m_TagString: Untagged
@@ -258,9 +259,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1254605349}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 2675, y: -217.29}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 280, y: 400}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &43761313
@@ -307,16 +308,16 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1466341303}
-        m_TargetAssemblyTypeName: Scene_Manager_Final, Assembly-CSharp
-        m_MethodName: LoadLevel
-        m_Mode: 5
+      - m_Target: {fileID: 43761316}
+        m_TargetAssemblyTypeName: ButtonClickListener, Assembly-CSharp
+        m_MethodName: OnButtonClick
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: Level5Scene2
+          m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &43761314
@@ -357,6 +358,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 43761311}
   m_CullTransparentMesh: 1
+--- !u!114 &43761316
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 43761311}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f87a6b112ab62f468da6fa2dfbd49ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneManager: {fileID: 1466341303}
+  sceneName: Level5Scene2
+  sceneCategory: 2
 --- !u!1 &132752332
 GameObject:
   m_ObjectHideFlags: 0
@@ -549,6 +565,7 @@ GameObject:
   - component: {fileID: 152244863}
   - component: {fileID: 152244862}
   - component: {fileID: 152244861}
+  - component: {fileID: 152244864}
   m_Layer: 5
   m_Name: Button (6)
   m_TagString: Untagged
@@ -570,9 +587,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1254605349}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 2320, y: -217.29}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 280, y: 400}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &152244861
@@ -619,16 +636,16 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1466341303}
-        m_TargetAssemblyTypeName: Scene_Manager_Final, Assembly-CSharp
-        m_MethodName: LoadLevel
-        m_Mode: 5
+      - m_Target: {fileID: 152244864}
+        m_TargetAssemblyTypeName: ButtonClickListener, Assembly-CSharp
+        m_MethodName: OnButtonClick
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: Scene 12
+          m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &152244862
@@ -669,6 +686,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 152244859}
   m_CullTransparentMesh: 1
+--- !u!114 &152244864
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 152244859}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f87a6b112ab62f468da6fa2dfbd49ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneManager: {fileID: 1466341303}
+  sceneName: Scene 12
+  sceneCategory: 2
 --- !u!1 &156528694
 GameObject:
   m_ObjectHideFlags: 0
@@ -788,6 +820,7 @@ GameObject:
   - component: {fileID: 251356828}
   - component: {fileID: 251356827}
   - component: {fileID: 251356826}
+  - component: {fileID: 251356829}
   m_Layer: 5
   m_Name: Dressing
   m_TagString: Untagged
@@ -809,9 +842,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1254605349}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 190, y: -217.29}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 280, y: 400}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &251356826
@@ -858,16 +891,16 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1466341303}
-        m_TargetAssemblyTypeName: Scene_Manager_Final, Assembly-CSharp
-        m_MethodName: LoadLevel
-        m_Mode: 5
+      - m_Target: {fileID: 251356829}
+        m_TargetAssemblyTypeName: ButtonClickListener, Assembly-CSharp
+        m_MethodName: OnButtonClick
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: Scene 3
+          m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &251356827
@@ -908,6 +941,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 251356824}
   m_CullTransparentMesh: 1
+--- !u!114 &251356829
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 251356824}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f87a6b112ab62f468da6fa2dfbd49ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneManager: {fileID: 1466341303}
+  sceneName: Scene 3
+  sceneCategory: 2
 --- !u!1 &259134742
 GameObject:
   m_ObjectHideFlags: 0
@@ -920,6 +968,7 @@ GameObject:
   - component: {fileID: 259134746}
   - component: {fileID: 259134745}
   - component: {fileID: 259134744}
+  - component: {fileID: 259134747}
   m_Layer: 5
   m_Name: Button (11)
   m_TagString: Untagged
@@ -941,9 +990,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1254605349}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 4095, y: -217.29}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 280, y: 400}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &259134744
@@ -990,16 +1039,16 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1466341303}
-        m_TargetAssemblyTypeName: Scene_Manager_Final, Assembly-CSharp
-        m_MethodName: LoadLevel
-        m_Mode: 5
+      - m_Target: {fileID: 259134747}
+        m_TargetAssemblyTypeName: ButtonClickListener, Assembly-CSharp
+        m_MethodName: OnButtonClick
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: Lvl8Sc2
+          m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &259134745
@@ -1040,6 +1089,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 259134742}
   m_CullTransparentMesh: 1
+--- !u!114 &259134747
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 259134742}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f87a6b112ab62f468da6fa2dfbd49ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneManager: {fileID: 1466341303}
+  sceneName: Lvl8Sc2
+  sceneCategory: 2
 --- !u!1 &404920978
 GameObject:
   m_ObjectHideFlags: 0
@@ -1076,7 +1140,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 2038, y: -73.630005}
+  m_AnchoredPosition: {x: 2037.9999, y: -73.630005}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &404920980
@@ -1164,6 +1228,7 @@ GameObject:
   - component: {fileID: 645241572}
   - component: {fileID: 645241571}
   - component: {fileID: 645241570}
+  - component: {fileID: 645241573}
   m_Layer: 5
   m_Name: Button (3)
   m_TagString: Untagged
@@ -1185,9 +1250,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1254605349}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 1255, y: -217.29}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 280, y: 400}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &645241570
@@ -1234,16 +1299,16 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1466341303}
-        m_TargetAssemblyTypeName: Scene_Manager_Final, Assembly-CSharp
-        m_MethodName: LoadLevel
-        m_Mode: 5
+      - m_Target: {fileID: 645241573}
+        m_TargetAssemblyTypeName: ButtonClickListener, Assembly-CSharp
+        m_MethodName: OnButtonClick
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: Scene 8
+          m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &645241571
@@ -1284,6 +1349,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 645241568}
   m_CullTransparentMesh: 1
+--- !u!114 &645241573
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 645241568}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f87a6b112ab62f468da6fa2dfbd49ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneManager: {fileID: 1466341303}
+  sceneName: scene 8
+  sceneCategory: 2
 --- !u!1 &753056520
 GameObject:
   m_ObjectHideFlags: 0
@@ -1367,6 +1447,7 @@ GameObject:
   - component: {fileID: 909608363}
   - component: {fileID: 909608362}
   - component: {fileID: 909608361}
+  - component: {fileID: 909608364}
   m_Layer: 5
   m_Name: Button (8)
   m_TagString: Untagged
@@ -1388,9 +1469,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1254605349}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 3030, y: -217.29}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 280, y: 400}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &909608361
@@ -1437,16 +1518,16 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1466341303}
-        m_TargetAssemblyTypeName: Scene_Manager_Final, Assembly-CSharp
-        m_MethodName: LoadLevel
-        m_Mode: 5
+      - m_Target: {fileID: 909608364}
+        m_TargetAssemblyTypeName: ButtonClickListener, Assembly-CSharp
+        m_MethodName: OnButtonClick
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: Level5Scene3
+          m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &909608362
@@ -1487,6 +1568,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 909608359}
   m_CullTransparentMesh: 1
+--- !u!114 &909608364
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 909608359}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f87a6b112ab62f468da6fa2dfbd49ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneManager: {fileID: 1466341303}
+  sceneName: Level5Scene3
+  sceneCategory: 2
 --- !u!1 &939233487
 GameObject:
   m_ObjectHideFlags: 0
@@ -1639,7 +1735,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 925.99976, y: 44.640015}
+  m_AnchoredPosition: {x: 925.9999, y: 44.640015}
   m_SizeDelta: {x: 4343.33, y: 1221.56}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1011208365
@@ -1808,6 +1904,7 @@ GameObject:
   - component: {fileID: 1027805568}
   - component: {fileID: 1027805567}
   - component: {fileID: 1027805566}
+  - component: {fileID: 1027805569}
   m_Layer: 5
   m_Name: Button (2)
   m_TagString: Untagged
@@ -1829,9 +1926,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1254605349}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 900, y: -217.29}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 280, y: 400}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1027805566
@@ -1878,16 +1975,16 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1466341303}
-        m_TargetAssemblyTypeName: Scene_Manager_Final, Assembly-CSharp
-        m_MethodName: LoadLevel
-        m_Mode: 5
+      - m_Target: {fileID: 1027805569}
+        m_TargetAssemblyTypeName: ButtonClickListener, Assembly-CSharp
+        m_MethodName: OnButtonClick
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: scene 6
+          m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &1027805567
@@ -1928,6 +2025,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1027805564}
   m_CullTransparentMesh: 1
+--- !u!114 &1027805569
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1027805564}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f87a6b112ab62f468da6fa2dfbd49ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneManager: {fileID: 1466341303}
+  sceneName: Scene 6
+  sceneCategory: 2
 --- !u!1 &1049445622
 GameObject:
   m_ObjectHideFlags: 0
@@ -1964,7 +2076,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 1925, y: -73.630005}
+  m_AnchoredPosition: {x: 1924.9999, y: -73.630005}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1049445624
@@ -2120,6 +2232,7 @@ GameObject:
   - component: {fileID: 1066484667}
   - component: {fileID: 1066484666}
   - component: {fileID: 1066484665}
+  - component: {fileID: 1066484668}
   m_Layer: 5
   m_Name: Button (9)
   m_TagString: Untagged
@@ -2141,9 +2254,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1254605349}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 3385, y: -217.29}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 280, y: 400}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1066484665
@@ -2190,16 +2303,16 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1466341303}
-        m_TargetAssemblyTypeName: Scene_Manager_Final, Assembly-CSharp
-        m_MethodName: LoadLevel
-        m_Mode: 5
+      - m_Target: {fileID: 1066484668}
+        m_TargetAssemblyTypeName: ButtonClickListener, Assembly-CSharp
+        m_MethodName: OnButtonClick
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: Lvl6Sc2
+          m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &1066484666
@@ -2240,6 +2353,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1066484663}
   m_CullTransparentMesh: 1
+--- !u!114 &1066484668
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1066484663}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f87a6b112ab62f468da6fa2dfbd49ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneManager: {fileID: 1466341303}
+  sceneName: Lvl6Sc2
+  sceneCategory: 2
 --- !u!1 &1136237686
 GameObject:
   m_ObjectHideFlags: 0
@@ -2252,6 +2380,7 @@ GameObject:
   - component: {fileID: 1136237690}
   - component: {fileID: 1136237689}
   - component: {fileID: 1136237688}
+  - component: {fileID: 1136237691}
   m_Layer: 5
   m_Name: Button (1)
   m_TagString: Untagged
@@ -2273,9 +2402,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1254605349}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 545, y: -217.29}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 280, y: 400}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1136237688
@@ -2322,16 +2451,16 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1466341303}
-        m_TargetAssemblyTypeName: Scene_Manager_Final, Assembly-CSharp
-        m_MethodName: LoadLevel
-        m_Mode: 5
+      - m_Target: {fileID: 1136237691}
+        m_TargetAssemblyTypeName: ButtonClickListener, Assembly-CSharp
+        m_MethodName: OnButtonClick
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: Scene 5
+          m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &1136237689
@@ -2372,6 +2501,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1136237686}
   m_CullTransparentMesh: 1
+--- !u!114 &1136237691
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1136237686}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f87a6b112ab62f468da6fa2dfbd49ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneManager: {fileID: 1466341303}
+  sceneName: scene 5
+  sceneCategory: 2
 --- !u!1 &1167240486
 GameObject:
   m_ObjectHideFlags: 0
@@ -2407,7 +2551,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 1057, y: 162.5}
+  m_AnchoredPosition: {x: 1056.9999, y: 162.5}
   m_SizeDelta: {x: 4116.05, y: 1157.64}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1167240488
@@ -2805,6 +2949,10 @@ PrefabInstance:
       propertyPath: TransitionAnim
       value: 
       objectReference: {fileID: 1010286270}
+    - target: {fileID: 6592354494236497805, guid: a232b446d9762d848ad2c29abb38ffd2, type: 3}
+      propertyPath: currentSceneCategory
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 8141857874875573486, guid: a232b446d9762d848ad2c29abb38ffd2, type: 3}
       propertyPath: m_LocalPosition.x
       value: 960
@@ -2873,6 +3021,7 @@ GameObject:
   - component: {fileID: 1473477881}
   - component: {fileID: 1473477880}
   - component: {fileID: 1473477879}
+  - component: {fileID: 1473477882}
   m_Layer: 5
   m_Name: Button (10)
   m_TagString: Untagged
@@ -2894,9 +3043,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1254605349}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 3740, y: -217.29}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 280, y: 400}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1473477879
@@ -2943,16 +3092,16 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1466341303}
-        m_TargetAssemblyTypeName: Scene_Manager_Final, Assembly-CSharp
-        m_MethodName: LoadLevel
-        m_Mode: 5
+      - m_Target: {fileID: 1473477882}
+        m_TargetAssemblyTypeName: ButtonClickListener, Assembly-CSharp
+        m_MethodName: OnButtonClick
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: Lvl7Sc2
+          m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &1473477880
@@ -2993,6 +3142,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1473477877}
   m_CullTransparentMesh: 1
+--- !u!114 &1473477882
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1473477877}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f87a6b112ab62f468da6fa2dfbd49ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneManager: {fileID: 1466341303}
+  sceneName: Lvl7Sc2
+  sceneCategory: 2
 --- !u!1 &1499230544
 GameObject:
   m_ObjectHideFlags: 0
@@ -3377,7 +3541,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 930, y: -71.73999}
+  m_AnchoredPosition: {x: 929.9999, y: -71.73999}
   m_SizeDelta: {x: 4292.83, y: 1207.36}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1980919490
@@ -3441,6 +3605,7 @@ GameObject:
   - component: {fileID: 2010715089}
   - component: {fileID: 2010715088}
   - component: {fileID: 2010715087}
+  - component: {fileID: 2010715090}
   m_Layer: 5
   m_Name: Button (5)
   m_TagString: Untagged
@@ -3462,9 +3627,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1254605349}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 1965, y: -217.29}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 280, y: 400}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2010715087
@@ -3511,16 +3676,16 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1466341303}
-        m_TargetAssemblyTypeName: Scene_Manager_Final, Assembly-CSharp
-        m_MethodName: LoadLevel
-        m_Mode: 5
+      - m_Target: {fileID: 2010715090}
+        m_TargetAssemblyTypeName: ButtonClickListener, Assembly-CSharp
+        m_MethodName: OnButtonClick
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: Scene 11
+          m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &2010715088
@@ -3561,6 +3726,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2010715085}
   m_CullTransparentMesh: 1
+--- !u!114 &2010715090
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2010715085}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f87a6b112ab62f468da6fa2dfbd49ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneManager: {fileID: 1466341303}
+  sceneName: scene 11
+  sceneCategory: 2
 --- !u!1 &2021139247
 GameObject:
   m_ObjectHideFlags: 0
@@ -3685,6 +3865,7 @@ GameObject:
   - component: {fileID: 2021477530}
   - component: {fileID: 2021477529}
   - component: {fileID: 2021477528}
+  - component: {fileID: 2021477531}
   m_Layer: 5
   m_Name: Button (4)
   m_TagString: Untagged
@@ -3706,9 +3887,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 1254605349}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 1}
-  m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 1610, y: -217.29}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 280, y: 400}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &2021477528
@@ -3755,16 +3936,16 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1466341303}
-        m_TargetAssemblyTypeName: Scene_Manager_Final, Assembly-CSharp
-        m_MethodName: LoadLevel
-        m_Mode: 5
+      - m_Target: {fileID: 2021477531}
+        m_TargetAssemblyTypeName: ButtonClickListener, Assembly-CSharp
+        m_MethodName: OnButtonClick
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: scene 9
+          m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &2021477529
@@ -3805,6 +3986,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2021477526}
   m_CullTransparentMesh: 1
+--- !u!114 &2021477531
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2021477526}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f87a6b112ab62f468da6fa2dfbd49ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneManager: {fileID: 1466341303}
+  sceneName: scene 9
+  sceneCategory: 2
 --- !u!1 &2104903130
 GameObject:
   m_ObjectHideFlags: 0

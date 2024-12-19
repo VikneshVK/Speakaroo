@@ -8,9 +8,10 @@ using UnityEngine.UI;
 public class Scene_Manager_Final : MonoBehaviour
 {
     public Animator TransitionAnim;
-    
+    public int currentSceneCategory;
     /*private string[] freeScenes = { "StartMenu", "Purchase page", "Learn Words", "Learn to Speak", "Learn Sentences", "Follow Direction", "Downloads", "Scene 1" };*/
     public List<string> scenesWithLoadingScreen;
+    private BGAudioManager_Final bgAudioManager;
     /*private static Scene_Manager_Final instance;
 
     void Awake()
@@ -27,7 +28,7 @@ public class Scene_Manager_Final : MonoBehaviour
     }*/
     void Start()
     {
-        
+        bgAudioManager = FindObjectOfType<BGAudioManager_Final>();
         SetNativeRefreshRate();
         if (SceneManager.GetActiveScene().name == "StartMenu")
         {
@@ -59,25 +60,75 @@ public class Scene_Manager_Final : MonoBehaviour
           }*//*
      }*/
 
-    public void LoadLevel(string sceneName)
+    public void LoadLevel(string sceneName, int sceneCategory)
     {
         if (scenesWithLoadingScreen.Contains(sceneName))
         {
-            StartCoroutine(LoadSceneWithLoadingScreen(sceneName));
+            StartCoroutine(LoadSceneWithLoadingScreen(sceneName, sceneCategory));
         }
         else
         {
-            StartCoroutine(LoadSceneDirectly(sceneName));
+            StartCoroutine(LoadSceneDirectly(sceneName, sceneCategory));
         }
     }
 
-    private IEnumerator LoadSceneWithLoadingScreen(string targetScene)
+    public void LoadLevelWithParams(string sceneName, int sceneCategory)
+    {
+        LoadLevel(sceneName, sceneCategory);
+    }
+
+    private IEnumerator LoadSceneDirectly(string sceneName, int targetSceneCategory)
+    {
+        Debug.Log("Attempting to load scene: " + sceneName);
+
+        if (TransitionAnim != null)
+        {
+            TransitionAnim.SetTrigger("end");
+        }
+
+        // Change audio if categories differ
+        if (bgAudioManager != null && currentSceneCategory != targetSceneCategory)
+        {
+            bgAudioManager.PlayAudioForCategory(targetSceneCategory);
+        }
+
+        yield return new WaitForSeconds(1.5f);
+
+        Resources.UnloadUnusedAssets();
+        System.GC.Collect();
+
+        Debug.Log("Now loading scene.");
+        SceneManager.LoadScene(sceneName);
+        yield return new WaitForEndOfFrame();
+
+        ResetAllAnimators();
+    }
+    public void LoadLevelWrapper()
+    {
+        // Here, you specify the scene name and category
+        string sceneName = "LearnWords";  // Replace with the desired scene name
+        int sceneCategory = 3;  // Replace with the desired scene category
+
+        // Call LoadLevel with the parameters
+        LoadLevel(sceneName, sceneCategory);
+    }
+
+
+
+
+    private IEnumerator LoadSceneWithLoadingScreen(string targetScene, int targetSceneCategory)
     {
         Debug.Log($"Loading scene with loading screen: {targetScene}");
 
         if (TransitionAnim != null)
         {
             TransitionAnim.SetTrigger("end");
+        }
+
+        // Change audio if categories differ
+        if (bgAudioManager != null && currentSceneCategory != targetSceneCategory)
+        {
+            bgAudioManager.PlayAudioForCategory(targetSceneCategory);
         }
 
         yield return new WaitForSeconds(1.5f);
@@ -88,29 +139,6 @@ public class Scene_Manager_Final : MonoBehaviour
         // Load the Loading Page scene
         SceneManager.LoadScene("Loading Page");
         yield return new WaitUntil(() => SceneManager.GetActiveScene().name == targetScene);
-
-        ResetAllAnimators();
-
-    }
-
-
-    IEnumerator LoadSceneDirectly(string LvlName)
-    {
-        Debug.Log("Attempting to load scene: " + LvlName);
-
-        if (TransitionAnim != null)
-        {
-            TransitionAnim.SetTrigger("end");
-        }
-
-        yield return new WaitForSeconds(1.5f);
-
-        Resources.UnloadUnusedAssets();
-        System.GC.Collect();
-
-        Debug.Log("Now loading scene.");
-        SceneManager.LoadScene(LvlName);
-        yield return new WaitForEndOfFrame();
 
         ResetAllAnimators();
     }

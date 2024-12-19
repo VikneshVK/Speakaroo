@@ -390,6 +390,7 @@ GameObject:
   - component: {fileID: 188618025}
   - component: {fileID: 188618024}
   - component: {fileID: 188618023}
+  - component: {fileID: 188618026}
   m_Layer: 5
   m_Name: HouseHoldObjects
   m_TagString: Untagged
@@ -460,10 +461,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1466341303}
-        m_TargetAssemblyTypeName: Scene_Manager_Final, Assembly-CSharp
-        m_MethodName: LoadLevel
-        m_Mode: 5
+      - m_Target: {fileID: 188618026}
+        m_TargetAssemblyTypeName: ButtonClickListener, Assembly-CSharp
+        m_MethodName: OnButtonClick
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -510,6 +511,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 188618021}
   m_CullTransparentMesh: 1
+--- !u!114 &188618026
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 188618021}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f87a6b112ab62f468da6fa2dfbd49ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneManager: {fileID: 1466341303}
+  sceneName: HouseHold_SentenceSafari
+  sceneCategory: 4
 --- !u!1 &240423886
 GameObject:
   m_ObjectHideFlags: 0
@@ -654,6 +670,7 @@ GameObject:
   - component: {fileID: 250522105}
   - component: {fileID: 250522104}
   - component: {fileID: 250522103}
+  - component: {fileID: 250522106}
   m_Layer: 5
   m_Name: Animals
   m_TagString: Untagged
@@ -724,10 +741,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1466341303}
-        m_TargetAssemblyTypeName: Scene_Manager_Final, Assembly-CSharp
-        m_MethodName: LoadLevel
-        m_Mode: 5
+      - m_Target: {fileID: 250522106}
+        m_TargetAssemblyTypeName: ButtonClickListener, Assembly-CSharp
+        m_MethodName: OnButtonClick
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -774,6 +791,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 250522101}
   m_CullTransparentMesh: 1
+--- !u!114 &250522106
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 250522101}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f87a6b112ab62f468da6fa2dfbd49ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneManager: {fileID: 1466341303}
+  sceneName: Animals_SentenceSafari
+  sceneCategory: 4
 --- !u!1 &270807274
 GameObject:
   m_ObjectHideFlags: 0
@@ -786,6 +818,7 @@ GameObject:
   - component: {fileID: 270807278}
   - component: {fileID: 270807277}
   - component: {fileID: 270807276}
+  - component: {fileID: 270807279}
   m_Layer: 5
   m_Name: Places
   m_TagString: Untagged
@@ -856,10 +889,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1466341303}
-        m_TargetAssemblyTypeName: Scene_Manager_Final, Assembly-CSharp
-        m_MethodName: LoadLevel
-        m_Mode: 5
+      - m_Target: {fileID: 270807279}
+        m_TargetAssemblyTypeName: ButtonClickListener, Assembly-CSharp
+        m_MethodName: OnButtonClick
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -906,6 +939,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 270807274}
   m_CullTransparentMesh: 1
+--- !u!114 &270807279
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 270807274}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f87a6b112ab62f468da6fa2dfbd49ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneManager: {fileID: 1466341303}
+  sceneName: Places_SentenceSafari
+  sceneCategory: 4
 --- !u!1 &276838167
 GameObject:
   m_ObjectHideFlags: 0
@@ -918,6 +966,7 @@ GameObject:
   - component: {fileID: 276838171}
   - component: {fileID: 276838170}
   - component: {fileID: 276838169}
+  - component: {fileID: 276838172}
   m_Layer: 5
   m_Name: Actions
   m_TagString: Untagged
@@ -988,10 +1037,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1466341303}
-        m_TargetAssemblyTypeName: Scene_Manager_Final, Assembly-CSharp
-        m_MethodName: LoadLevel
-        m_Mode: 5
+      - m_Target: {fileID: 276838172}
+        m_TargetAssemblyTypeName: ButtonClickListener, Assembly-CSharp
+        m_MethodName: OnButtonClick
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -1038,6 +1087,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 276838167}
   m_CullTransparentMesh: 1
+--- !u!114 &276838172
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 276838167}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f87a6b112ab62f468da6fa2dfbd49ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneManager: {fileID: 1466341303}
+  sceneName: Actions_SentenceSafari
+  sceneCategory: 4
 --- !u!1 &342219802
 GameObject:
   m_ObjectHideFlags: 0
@@ -1306,6 +1370,7 @@ GameObject:
   - component: {fileID: 929081306}
   - component: {fileID: 929081305}
   - component: {fileID: 929081304}
+  - component: {fileID: 929081307}
   m_Layer: 5
   m_Name: Emotions
   m_TagString: Untagged
@@ -1376,10 +1441,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1466341303}
-        m_TargetAssemblyTypeName: Scene_Manager_Final, Assembly-CSharp
-        m_MethodName: LoadLevel
-        m_Mode: 5
+      - m_Target: {fileID: 929081307}
+        m_TargetAssemblyTypeName: ButtonClickListener, Assembly-CSharp
+        m_MethodName: OnButtonClick
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -1426,6 +1491,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 929081302}
   m_CullTransparentMesh: 1
+--- !u!114 &929081307
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 929081302}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f87a6b112ab62f468da6fa2dfbd49ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneManager: {fileID: 1466341303}
+  sceneName: Emotions_SentenceSafari
+  sceneCategory: 4
 --- !u!1 &935786875
 GameObject:
   m_ObjectHideFlags: 0
@@ -1550,7 +1630,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1261242162691769517, guid: 5cc33678a45eebd4eb94af593e86f318, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3220799799381724627, guid: 5cc33678a45eebd4eb94af593e86f318, type: 3}
       propertyPath: m_Pivot.x
@@ -1847,6 +1927,10 @@ PrefabInstance:
       propertyPath: TransitionAnim
       value: 
       objectReference: {fileID: 1010286270}
+    - target: {fileID: 6592354494236497805, guid: a232b446d9762d848ad2c29abb38ffd2, type: 3}
+      propertyPath: currentSceneCategory
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 8141857874875573486, guid: a232b446d9762d848ad2c29abb38ffd2, type: 3}
       propertyPath: m_LocalPosition.x
       value: 960
@@ -2214,6 +2298,7 @@ GameObject:
   - component: {fileID: 2026260187}
   - component: {fileID: 2026260186}
   - component: {fileID: 2026260185}
+  - component: {fileID: 2026260188}
   m_Layer: 5
   m_Name: Numbers
   m_TagString: Untagged
@@ -2284,10 +2369,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1466341303}
-        m_TargetAssemblyTypeName: Scene_Manager_Final, Assembly-CSharp
-        m_MethodName: LoadLevel
-        m_Mode: 5
+      - m_Target: {fileID: 2026260188}
+        m_TargetAssemblyTypeName: ButtonClickListener, Assembly-CSharp
+        m_MethodName: OnButtonClick
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -2334,6 +2419,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2026260183}
   m_CullTransparentMesh: 1
+--- !u!114 &2026260188
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2026260183}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f87a6b112ab62f468da6fa2dfbd49ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneManager: {fileID: 1466341303}
+  sceneName: Numbers_SentenceSafari
+  sceneCategory: 4
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

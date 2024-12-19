@@ -151,10 +151,10 @@ public class ParentalControlScript : MonoBehaviour
                 SettingsPanel.SetActive(true);
                 break;
             case ButtonContext.Purchase:
-                FindObjectOfType<Scene_Manager_Final>().LoadLevel("Purchase page");
+                FindObjectOfType<Scene_Manager_Final>().LoadLevel("Purchase page", 1);
                 break;
             case ButtonContext.Downloads:
-                FindObjectOfType<Scene_Manager_Final>().LoadLevel("Worksheets");
+                FindObjectOfType<Scene_Manager_Final>().LoadLevel("Worksheets", 1);
                 break;
         }
         currentContext = ButtonContext.None; // Reset context
@@ -190,7 +190,7 @@ public class ParentalControlScript : MonoBehaviour
         if (isParentalControlPassed)
         {
             isParentalControlPassed = false;
-            FindObjectOfType<Scene_Manager_Final>().LoadLevel("Purchase");
+            FindObjectOfType<Scene_Manager_Final>().LoadLevel("Purchase", 1);
         }
         else
         {
@@ -213,7 +213,7 @@ public class ParentalControlScript : MonoBehaviour
         if (isParentalControlPassed)
         {
             isParentalControlPassed = false;
-            FindObjectOfType<Scene_Manager_Final>().LoadLevel("Worksheets");
+            FindObjectOfType<Scene_Manager_Final>().LoadLevel("Worksheets", 1);
         }
         else
         {

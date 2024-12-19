@@ -618,6 +618,7 @@ GameObject:
   - component: {fileID: 302523839}
   - component: {fileID: 302523838}
   - component: {fileID: 302523837}
+  - component: {fileID: 302523840}
   m_Layer: 5
   m_Name: Follow Direction
   m_TagString: Untagged
@@ -688,10 +689,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 994443270}
-        m_TargetAssemblyTypeName: Scene_Manager_Final, Assembly-CSharp
-        m_MethodName: LoadLevel
-        m_Mode: 5
+      - m_Target: {fileID: 302523840}
+        m_TargetAssemblyTypeName: ButtonClickListener, Assembly-CSharp
+        m_MethodName: OnButtonClick
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -738,6 +739,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 302523835}
   m_CullTransparentMesh: 1
+--- !u!114 &302523840
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 302523835}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f87a6b112ab62f468da6fa2dfbd49ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneManager: {fileID: 994443270}
+  sceneName: Follow Direction
+  sceneCategory: 2
 --- !u!1 &308972943
 GameObject:
   m_ObjectHideFlags: 0
@@ -1820,6 +1836,7 @@ GameObject:
   - component: {fileID: 808232059}
   - component: {fileID: 808232058}
   - component: {fileID: 808232057}
+  - component: {fileID: 808232060}
   m_Layer: 5
   m_Name: Learn Sentences
   m_TagString: Untagged
@@ -1890,10 +1907,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 994443270}
-        m_TargetAssemblyTypeName: Scene_Manager_Final, Assembly-CSharp
-        m_MethodName: LoadLevel
-        m_Mode: 5
+      - m_Target: {fileID: 808232060}
+        m_TargetAssemblyTypeName: ButtonClickListener, Assembly-CSharp
+        m_MethodName: OnButtonClick
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -1940,6 +1957,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 808232055}
   m_CullTransparentMesh: 1
+--- !u!114 &808232060
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 808232055}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f87a6b112ab62f468da6fa2dfbd49ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneManager: {fileID: 994443270}
+  sceneName: SentenceSafari
+  sceneCategory: 4
 --- !u!1 &814729537
 GameObject:
   m_ObjectHideFlags: 0
@@ -2269,7 +2301,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1261242162691769517, guid: 5cc33678a45eebd4eb94af593e86f318, type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3220799799381724627, guid: 5cc33678a45eebd4eb94af593e86f318, type: 3}
       propertyPath: m_Pivot.x
@@ -2638,7 +2670,7 @@ Canvas:
   m_OverrideSorting: 0
   m_OverridePixelPerfect: 0
   m_SortingBucketNormalizedSize: 0
-  m_VertexColorAlwaysGammaSpace: 0
+  m_VertexColorAlwaysGammaSpace: 1
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
@@ -3133,6 +3165,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c70d798bfa7b644c94b8d86d9ffa4ef, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  yearlySubscriptionButton: {fileID: 0}
+  lifetimeSubscriptionButton: {fileID: 0}
   subscriptionStatusText: {fileID: 0}
   debugText: {fileID: 0}
   renewalCountText: {fileID: 0}
@@ -3164,6 +3198,7 @@ GameObject:
   - component: {fileID: 1283594840}
   - component: {fileID: 1283594839}
   - component: {fileID: 1283594838}
+  - component: {fileID: 1283594841}
   m_Layer: 5
   m_Name: Learn Words
   m_TagString: Untagged
@@ -3234,10 +3269,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 994443270}
-        m_TargetAssemblyTypeName: Scene_Manager_Final, Assembly-CSharp
-        m_MethodName: LoadLevel
-        m_Mode: 5
+      - m_Target: {fileID: 1283594841}
+        m_TargetAssemblyTypeName: ButtonClickListener, Assembly-CSharp
+        m_MethodName: OnButtonClick
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -3284,6 +3319,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1283594836}
   m_CullTransparentMesh: 1
+--- !u!114 &1283594841
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1283594836}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f87a6b112ab62f468da6fa2dfbd49ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneManager: {fileID: 994443270}
+  sceneName: Learn Words
+  sceneCategory: 3
 --- !u!1 &1383832728
 GameObject:
   m_ObjectHideFlags: 0
@@ -3878,6 +3928,7 @@ GameObject:
   - component: {fileID: 1763335853}
   - component: {fileID: 1763335852}
   - component: {fileID: 1763335851}
+  - component: {fileID: 1763335854}
   m_Layer: 5
   m_Name: Purchase
   m_TagString: Untagged
@@ -3998,6 +4049,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1763335849}
   m_CullTransparentMesh: 1
+--- !u!114 &1763335854
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1763335849}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f87a6b112ab62f468da6fa2dfbd49ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneManager: {fileID: 994443270}
+  sceneName: 
+  sceneCategory: 0
 --- !u!1 &1764444642
 GameObject:
   m_ObjectHideFlags: 0
@@ -4010,6 +4076,7 @@ GameObject:
   - component: {fileID: 1764444646}
   - component: {fileID: 1764444645}
   - component: {fileID: 1764444644}
+  - component: {fileID: 1764444647}
   m_Layer: 5
   m_Name: Downloads
   m_TagString: Untagged
@@ -4130,6 +4197,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1764444642}
   m_CullTransparentMesh: 1
+--- !u!114 &1764444647
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1764444642}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f87a6b112ab62f468da6fa2dfbd49ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneManager: {fileID: 994443270}
+  sceneName: 
+  sceneCategory: 0
 --- !u!1 &1814611646
 GameObject:
   m_ObjectHideFlags: 0
@@ -4142,6 +4224,7 @@ GameObject:
   - component: {fileID: 1814611650}
   - component: {fileID: 1814611649}
   - component: {fileID: 1814611648}
+  - component: {fileID: 1814611651}
   m_Layer: 5
   m_Name: Learn to Speak
   m_TagString: Untagged
@@ -4212,10 +4295,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 994443270}
-        m_TargetAssemblyTypeName: Scene_Manager_Final, Assembly-CSharp
-        m_MethodName: LoadLevel
-        m_Mode: 5
+      - m_Target: {fileID: 1814611651}
+        m_TargetAssemblyTypeName: ButtonClickListener, Assembly-CSharp
+        m_MethodName: OnButtonClick
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -4262,6 +4345,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1814611646}
   m_CullTransparentMesh: 1
+--- !u!114 &1814611651
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1814611646}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f87a6b112ab62f468da6fa2dfbd49ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneManager: {fileID: 994443270}
+  sceneName: Learn to Speak
+  sceneCategory: 1
 --- !u!1 &1834881990
 GameObject:
   m_ObjectHideFlags: 0
@@ -5183,6 +5281,10 @@ PrefabInstance:
     - target: {fileID: 6592354494236497805, guid: a232b446d9762d848ad2c29abb38ffd2, type: 3}
       propertyPath: purchasePageScene
       value: Purchase page
+      objectReference: {fileID: 0}
+    - target: {fileID: 6592354494236497805, guid: a232b446d9762d848ad2c29abb38ffd2, type: 3}
+      propertyPath: currentSceneCategory
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 6592354494236497805, guid: a232b446d9762d848ad2c29abb38ffd2, type: 3}
       propertyPath: freeScenes.Array.size

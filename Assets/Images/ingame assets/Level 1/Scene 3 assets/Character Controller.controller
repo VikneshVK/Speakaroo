@@ -161,6 +161,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sceneToLoad: Follow Direction
+  Category: 2
   booleanToReset: 
 --- !u!1107 &-4616255063240588164
 AnimatorStateMachine:
@@ -522,8 +523,7 @@ AnimatorState:
   m_CycleOffset: 0
   m_Transitions:
   - {fileID: -8489256209835571860}
-  m_StateMachineBehaviours:
-  - {fileID: -1769403893150489840}
+  m_StateMachineBehaviours: []
   m_Position: {x: 50, y: 50, z: 0}
   m_IKOnFeet: 0
   m_WriteDefaultValues: 1

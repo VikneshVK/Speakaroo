@@ -838,6 +838,10 @@ PrefabInstance:
       propertyPath: TransitionAnim
       value: 
       objectReference: {fileID: 1206895792}
+    - target: {fileID: 6592354494236497805, guid: a232b446d9762d848ad2c29abb38ffd2, type: 3}
+      propertyPath: currentSceneCategory
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8141857874875573486, guid: a232b446d9762d848ad2c29abb38ffd2, type: 3}
       propertyPath: m_LocalPosition.x
       value: 960
@@ -1864,6 +1868,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5368371823349792342, guid: 38c3ba35d14005043834dd07df69c366, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5368371823349792342, guid: 38c3ba35d14005043834dd07df69c366, type: 3}
       propertyPath: m_SizeDelta.y
       value: 0
       objectReference: {fileID: 0}
@@ -2703,13 +2711,17 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 1726763865}
-    - target: {fileID: 5474107085700211709, guid: 13afa213e4054e24d9e1b7a1563f8e0d, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+    - target: {fileID: 4505276508103832329, guid: 13afa213e4054e24d9e1b7a1563f8e0d, type: 3}
+      propertyPath: sceneManager
       value: 
       objectReference: {fileID: 466394002}
     - target: {fileID: 5474107085700211709, guid: 13afa213e4054e24d9e1b7a1563f8e0d, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 1615615031}
+    - target: {fileID: 5474107085700211709, guid: 13afa213e4054e24d9e1b7a1563f8e0d, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: LoadLevel
+      value: OnButtonClick
       objectReference: {fileID: 0}
     - target: {fileID: 7697493178504873060, guid: 13afa213e4054e24d9e1b7a1563f8e0d, type: 3}
       propertyPath: m_Name
@@ -2720,6 +2732,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 13afa213e4054e24d9e1b7a1563f8e0d, type: 3}
+--- !u!114 &1615615031 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4505276508103832329, guid: 13afa213e4054e24d9e1b7a1563f8e0d, type: 3}
+  m_PrefabInstance: {fileID: 1615615030}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f87a6b112ab62f468da6fa2dfbd49ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1636734301
 GameObject:
   m_ObjectHideFlags: 0

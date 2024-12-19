@@ -3,6 +3,7 @@ using UnityEngine;
 public class AnimationStateLoader : StateMachineBehaviour
 {
     public string sceneToLoad;
+    public int Category;
     public string booleanToReset; // The name of the boolean to reset
 
     // This method is called when the state machine starts to evaluate this state
@@ -30,7 +31,7 @@ public class AnimationStateLoader : StateMachineBehaviour
         if (sceneManager != null && !string.IsNullOrEmpty(sceneToLoad))
         {
             Debug.Log("Loading level: " + sceneToLoad);
-            sceneManager.LoadLevel(sceneToLoad);
+            sceneManager.LoadLevel(sceneToLoad, Category);
         }
         else
         {
