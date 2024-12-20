@@ -72,10 +72,7 @@ public class Scene_Manager_Final : MonoBehaviour
         }
     }
 
-    public void LoadLevelWithParams(string sceneName, int sceneCategory)
-    {
-        LoadLevel(sceneName, sceneCategory);
-    }
+   
 
     private IEnumerator LoadSceneDirectly(string sceneName, int targetSceneCategory)
     {
@@ -102,16 +99,9 @@ public class Scene_Manager_Final : MonoBehaviour
         yield return new WaitForEndOfFrame();
 
         ResetAllAnimators();
+        
     }
-    public void LoadLevelWrapper()
-    {
-        // Here, you specify the scene name and category
-        string sceneName = "LearnWords";  // Replace with the desired scene name
-        int sceneCategory = 3;  // Replace with the desired scene category
-
-        // Call LoadLevel with the parameters
-        LoadLevel(sceneName, sceneCategory);
-    }
+   
 
 
 

@@ -72,7 +72,7 @@ public class boyController1 : MonoBehaviour
     void Update()
     {
         if (!isWalking && BoyAnimator.GetCurrentAnimatorStateInfo(0).IsName("Idle") &&
-            BoyAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f && !hasReachedStopPosition)
+            BoyAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.1f && !hasReachedStopPosition)
         {
             /*normalRig.SetActive(false);
             walkingRig.SetActive(true);*/

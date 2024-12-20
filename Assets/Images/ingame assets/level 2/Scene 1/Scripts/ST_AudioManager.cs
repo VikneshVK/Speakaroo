@@ -45,6 +45,10 @@ public class ST_AudioManager : MonoBehaviour
 
     public bool isCard1PlaybackComplete = false; // Tracks playback completion for Card 1
     public bool isCard2PlaybackComplete = false; // Tracks playback completion for Card 2
+
+    private AudioSource SfxAudioSource;
+    private AudioClip SfxAudio1;
+    private AudioClip SfxAudio2;
     private void Awake()
     {
         if (Instance == null)
@@ -67,12 +71,14 @@ public class ST_AudioManager : MonoBehaviour
 
     private void Start()
     {
+        SfxAudioSource = GameObject.FindWithTag("SFXAudioSource").GetComponent<AudioSource>();
         ST_Canvas = GameObject.FindGameObjectWithTag("STCanvas");
         displayText = ST_Canvas.transform.Find("UI_Fitter/DisplayText").gameObject.GetComponent<TextMeshProUGUI>();
         retryButton = ST_Canvas.transform.Find("UI_Fitter/RetryButton").gameObject.GetComponent<Button>();
         Jojo = ST_Canvas.transform.Find("UI_Fitter/char holder/Jojo").gameObject.GetComponent<Image>();
         Kiki = ST_Canvas.transform.Find("UI_Fitter/char holder/Kiki").gameObject.GetComponent<Image>();
-
+        SfxAudio1 = Resources.Load<AudioClip>("Audio/sfx/Start Record");
+        SfxAudio2 = Resources.Load<AudioClip>("Audio/sfx/Start Playback");
         JojoAnimator = Jojo.GetComponent<Animator>();
         KikiAnimator = Kiki.GetComponent<Animator>();
 
@@ -135,7 +141,7 @@ public class ST_AudioManager : MonoBehaviour
 
     public void PlayRecordedClipWithFunnyVoice(AudioClip recordedClip)
     {
-        KikiAnimator.SetTrigger("StartHearing");
+        KikiAnimator.SetBool("StartHearing", true);
         recordedAudioSource.clip = recordedClip; // Already set, but this ensures consistency
         recordedAudioSource.pitch = highPitchFactor;
         recordedAudioSource.Play();
@@ -149,6 +155,7 @@ public class ST_AudioManager : MonoBehaviour
 
         // Start recording
         JojoAnimator.SetBool("StartRecording",true);
+        SfxAudioSource.PlayOneShot(SfxAudio1);
         AudioClip recordedClip = Microphone.Start(null, false, Mathf.CeilToInt(recordLength), chosenFreq);
         yield return StartCoroutine(WaitForSecondsRealtime(recordLength));
         Microphone.End(null);
@@ -174,8 +181,10 @@ public class ST_AudioManager : MonoBehaviour
             displayText.text = "Did You Say..?";
             OnRecordingPlaybackStart?.Invoke();
             JojoAnimator.SetBool("StartRecording", false);
+            SfxAudioSource.PlayOneShot(SfxAudio2);
             PlayRecordedClipWithFunnyVoice(processedClip); // Play processed clip
             yield return StartCoroutine(WaitForSecondsRealtime(processedClip.length));
+            KikiAnimator.SetBool("StartHearing", false);
             OnRecordingPlaybackEnd?.Invoke(cardNumber);
         }
         else

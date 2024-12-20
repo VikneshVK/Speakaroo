@@ -107,7 +107,7 @@ public class BoyWalk1 : MonoBehaviour
             boyAnimator.SetBool("canTalk", true);  // Start the "Dialogue 1" animation
             reachedStopPosition = true;  // Mark that the boy reached the stop position
             audioSource.Play();
-            StartCoroutine(RevealTextWordByWord("Oh No..! Your Room is Messy Too, Dont worry Me and My Friend will help you clean it", 0.5f));
+            StartCoroutine(RevealTextWordByWord("Oh No..! Your Room is Messy Too, Dont worry Kiki Me and My Friend will help you clean it", 0.5f));
         }
     }
     private IEnumerator RevealTextWordByWord(string fullText, float delayBetweenWords)
@@ -124,6 +124,8 @@ public class BoyWalk1 : MonoBehaviour
             subtitleText.text = string.Join(" ", words, 0, i + 1);  // Show only the words up to the current index
             yield return new WaitForSeconds(delayBetweenWords);  // Wait before revealing the next word
         }
+
+        yield return new WaitForSeconds(0.5f);
         subtitleText.gameObject.SetActive(false);
     }
 }

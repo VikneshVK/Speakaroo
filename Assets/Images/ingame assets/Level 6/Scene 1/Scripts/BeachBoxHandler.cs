@@ -239,17 +239,21 @@ public class BeachBoxHandler : MonoBehaviour
             {
                 SetButtonPosition(centerButton, centerPosition);
             }
+            else if (rightButton.gameObject.activeSelf)
+            {
+                SetButtonPosition(rightButton, centerPosition);
+            }
         }
     }
     public Vector3 GetButtonPosition(string buttonName)
     {
         switch (buttonName)
         {
-            case "LeftButton":
+            case "Beach Ball":
                 return leftButton.transform.position;
-            case "CenterButton":
+            case "Bubbles":
                 return centerButton.transform.position;
-            case "RightButton":
+            case "Frisbee":
                 return rightButton.transform.position;
             default:
                 Debug.LogWarning("Button name not recognized: " + buttonName);

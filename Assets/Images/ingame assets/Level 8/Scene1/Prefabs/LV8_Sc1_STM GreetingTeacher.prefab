@@ -161,7 +161,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 2787212909641865064, guid: 83279ef8d1c8a0649a8e6d4d2ff5f0c4, type: 2}
-  m_audioClip: {fileID: 8300000, guid: af222c62a1cc7d443badee9d33899147, type: 3}
+  m_audioClip: {fileID: 8300000, guid: e558b28a120052c4ebabcb6aa85386ac, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1
@@ -525,6 +525,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scaleDownDuration: 0.5
   confettiEffectPrefab: {fileID: 8107113278513640013, guid: 537e034e86f39944cb7d492ad43c3e20, type: 3}
+  SfxAudio1: {fileID: 8300000, guid: 7afccd07b7621ac4fb04814e22bb7a24, type: 3}
 --- !u!61 &8252622704686351512
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -670,6 +671,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   scaleDownDuration: 0.5
   confettiEffectPrefab: {fileID: 8107113278513640013, guid: 537e034e86f39944cb7d492ad43c3e20, type: 3}
+  SfxAudio1: {fileID: 8300000, guid: 7afccd07b7621ac4fb04814e22bb7a24, type: 3}
 --- !u!61 &8039850480607106652
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -843,7 +845,7 @@ AudioSource:
   m_Enabled: 1
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 2787212909641865064, guid: 83279ef8d1c8a0649a8e6d4d2ff5f0c4, type: 2}
-  m_audioClip: {fileID: 8300000, guid: ffc69333428f61040a46cb5d7c20e9ad, type: 3}
+  m_audioClip: {fileID: 8300000, guid: f54045105b5b8834290a9c362a158740, type: 3}
   m_PlayOnAwake: 0
   m_Volume: 1
   m_Pitch: 1

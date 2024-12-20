@@ -119,6 +119,7 @@ public class BoyAnimationController : MonoBehaviour
         animator.SetBool("isWalking", false);
         BirdAnimator.SetTrigger("GoodMorning");
         audiomanager.PlayAudio(audio5);
+        StartCoroutine(RevealTextWordByWord("Hi Friend, Let's help JoJo brush his Teeth ", 0.5f));
         OnTalkAnimationEnd();
     }
 

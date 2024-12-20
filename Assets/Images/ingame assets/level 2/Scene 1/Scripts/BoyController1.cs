@@ -133,7 +133,7 @@ public class BoyController1 : MonoBehaviour
             isTalking = true;
             birdAnimator.SetBool("can talk", true);
             PlayAudioByIndex(3); //added temp, change after
-            StartCoroutine(RevealTextWordByWord("Put the Toys on the Shelf", 0.5f));
+            StartCoroutine(RevealTextWordByWord("Put the Big Toys on the Shelf", 0.5f));
             boyspriteRenderer.flipX = true;
         }
     }

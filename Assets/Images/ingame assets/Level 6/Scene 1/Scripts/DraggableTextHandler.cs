@@ -56,18 +56,19 @@ public class DraggableTextHandler : MonoBehaviour
         UpdateInitialPosition();
         if (ringImage != null) ringImage.fillAmount = 0;
     }
+    
 
     private void UpdateInitialPosition()
     {
         if (beachBoxHandler != null)
         {
             initialPosition = beachBoxHandler.GetButtonPosition(gameObject.name);
-            Debug.Log($"Updated initial position for {gameObject.name}: {initialPosition}");
+            
         }
         else
         {
             initialPosition = transform.position; // Fallback to current position
-            Debug.LogWarning($"BeachBoxHandler not assigned for {gameObject.name}. Using current position.");
+            
         }
     }
 
@@ -79,11 +80,29 @@ public class DraggableTextHandler : MonoBehaviour
 
         isButtonClicked = true;
 
-       
+        // Deactivate other game objects
+        foreach (var handler in allDraggableTextHandlers)
+        {
+            handler.GetComponent<Button>().interactable = false;
+            if (handler != this)
+            {                
+                handler.gameObject.SetActive(false);
+            }
+        }
 
-        /*// Disable the sprite image and set text based on the object name
-        imageComponent.enabled = false;*/
+        // Tween the clicked object to the center of the viewport
+        RectTransform rectTransform = GetComponent<RectTransform>();
+        Vector3 centerPosition = canvas.GetComponent<RectTransform>().rect.center;
 
+        LeanTween.move(rectTransform, centerPosition, 0.5f)
+            .setEase(LeanTweenType.easeInOutQuad)
+            .setOnComplete(() =>
+            {
+                // Start the audio and recording coroutine once the tween is complete
+                StartCoroutine(HandleAudioAndRecording());
+            });
+
+        // Update text based on the object name
         switch (gameObject.name)
         {
             case "Beach Ball":
@@ -101,7 +120,6 @@ public class DraggableTextHandler : MonoBehaviour
         }
 
         audioSource.Play();
-        StartCoroutine(HandleAudioAndRecording());
     }
 
 
@@ -329,47 +347,55 @@ public class DraggableTextHandler : MonoBehaviour
             .setEase(LeanTweenType.easeInBack)
             .setOnComplete(() =>
             {
-                // Check the game object name
+                // Check if prefab is spawned correctly
+                GameObject spawnedPrefab;
                 if (gameObject.name == "Beach Ball" || gameObject.name == "Frisbee")
                 {
-                    // Find the ST_Canvas in the scene
                     GameObject stCanvas = GameObject.Find("ST_Canvas");
 
                     if (stCanvas != null)
                     {
-                        // Instantiate the prefab as a child of ST_Canvas
-                        GameObject spawnedPrefab = Instantiate(prefabToSpawn, stCanvas.transform);
-
-                        // Reset position and scale of the spawned prefab
-                        spawnedPrefab.transform.localScale = Vector3.zero;
-                        spawnedPrefab.transform.localPosition = Vector3.zero;
-
-                        // Tween the scale to (1,1,1)
-                        LeanTween.scale(spawnedPrefab, Vector3.one, 0.5f).setEase(LeanTweenType.easeOutBack);
-                        Debug.Log("Prefab spawned inside ST_Canvas and tweened to scale (1,1,1)");
+                        spawnedPrefab = Instantiate(prefabToSpawn, stCanvas.transform);
                     }
                     else
                     {
                         Debug.LogWarning("ST_Canvas not found in the scene. Prefab cannot be parented to it.");
+                        return;
                     }
                 }
                 else
                 {
-                    // Default behavior for other objects
-                    GameObject spawnedPrefab = Instantiate(prefabToSpawn, Vector3.zero, Quaternion.identity);
-                    spawnedPrefab.transform.localScale = Vector3.zero;
+                    spawnedPrefab = Instantiate(prefabToSpawn, Vector3.zero, Quaternion.identity);
+                }
 
-                    LeanTween.scale(spawnedPrefab, Vector3.one, 0.5f).setEase(LeanTweenType.easeOutBack);
-                    Debug.Log("Prefab instantiated and tweened to scale (1,1,1)");
+                spawnedPrefab.transform.localScale = Vector3.zero;
+                LeanTween.scale(spawnedPrefab, Vector3.one, 0.5f).setEase(LeanTweenType.easeOutBack);
+
+                // Log and disable all button interactability
+                foreach (var handler in allDraggableTextHandlers)
+                {
+                    Button button = handler.GetComponent<Button>();
+                    if (button != null)
+                    {
+                        Debug.Log($"Disabling interactability for button: {handler.gameObject.name}");
+                        button.interactable = false;
+                    }
+                    else
+                    {
+                        Debug.LogWarning($"Button component not found on {handler.gameObject.name}");
+                    }
                 }
             });
 
-        textComponent.text = "What do we play Next?";
+        textComponent.text = "What do we play next?";
         gameObject.SetActive(false);
 
-        // Re-enable dragging for all buttons for the next playthrough
+        // Re-enable dragging for the next playthrough
         EnableAllButtonsEventTriggers();
     }
+
+
+
 
 
     public void UpdateInitialPositionFromHandler()

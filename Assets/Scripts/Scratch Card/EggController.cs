@@ -7,6 +7,8 @@ public class EggController : MonoBehaviour
     private Collider2D boxCollider;
     public int tapCount = 0;
     private Vector3 originalWordScale;
+    private AudioSource SfxAudioSource;
+    public AudioClip SfxAudio1;
 
     public GameObject word; // Reference to the word GameObject
 
@@ -15,7 +17,7 @@ public class EggController : MonoBehaviour
         // Get references to the Animator and Collider components
         animator = GetComponent<Animator>();
         boxCollider = GetComponent<Collider2D>();
-
+        SfxAudioSource = GameObject.FindWithTag("SFXAudioSource").GetComponent<AudioSource>();
         // Store the original scale of the word GameObject and set it to 0
         if (word != null)
         {
@@ -44,14 +46,17 @@ public class EggController : MonoBehaviour
         {
             case 1:
                 animator.SetTrigger("isTapped1");
+                SfxAudioSource.PlayOneShot(SfxAudio1);
                 StartCoroutine(WaitForAnimation("egg"));
                 break;
             case 2:
                 animator.SetTrigger("isTapped2");
+                SfxAudioSource.PlayOneShot(SfxAudio1);
                 StartCoroutine(WaitForAnimation("egg2"));
                 break;
             case 3:
                 animator.SetTrigger("isTapped3");
+                SfxAudioSource.PlayOneShot(SfxAudio1);
                 StartCoroutine(WaitForAnimation("egg3", true));
                 break;
             default:

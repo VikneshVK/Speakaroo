@@ -1237,7 +1237,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 2
-  m_Sprite: {fileID: 21300000, guid: 1ab23e0d019172b4abc384faa56f3e3f, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 707869b4cabd45e4a9512eda29605da4, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -1893,7 +1893,7 @@ MonoBehaviour:
   boy: {fileID: 1306510782}
   itemHolder: {fileID: 1421998271}
   prefabToSpawn: {fileID: 2720721835439482840, guid: f55c1377d8d9d124eb5ee95c3d7f65a7, type: 3}
-  prefabToSpawn2: {fileID: 2720721835439482840, guid: 08d5208dd67bee449ac25b4150ec9560, type: 3}
+  prefabToSpawn2: {fileID: 2720721835439482840, guid: d87e4945c1565604b8bcac1c51c0a77a, type: 3}
   spawnLocation: {fileID: 1476618657}
   dropTarget: {fileID: 54429907}
   flySpeed: 5
@@ -2172,7 +2172,7 @@ Transform:
   m_GameObject: {fileID: 1476618656}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -5.9, y: 5.85, z: 0}
+  m_LocalPosition: {x: -5.66, y: 7.42, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2615,7 +2615,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 2
-  m_Sprite: {fileID: 21300000, guid: 707869b4cabd45e4a9512eda29605da4, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 1ab23e0d019172b4abc384faa56f3e3f, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -2636,7 +2636,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -15.906666, y: 4.14, z: 0}
-  m_LocalScale: {x: 1.67, y: 1.67, z: 1.67}
+  m_LocalScale: {x: 2.45, y: 2.45, z: 2.45}
   m_ConstrainProportionsScale: 1
   m_Children: []
   m_Father: {fileID: 0}
@@ -3402,7 +3402,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1344485585000176431, guid: 38c3ba35d14005043834dd07df69c366, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -1.1001282
+      value: -1.1000977
       objectReference: {fileID: 0}
     - target: {fileID: 2005177704910390261, guid: 38c3ba35d14005043834dd07df69c366, type: 3}
       propertyPath: m_Name

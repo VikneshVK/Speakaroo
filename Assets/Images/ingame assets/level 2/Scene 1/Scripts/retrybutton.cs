@@ -26,10 +26,10 @@ public class RetryButton : MonoBehaviour
     private void Start()
     {
         // Load sprites
-        playbackSprite = Resources.Load<Sprite>("Images/STMechanics/Listening");
-        retrySprite = Resources.Load<Sprite>("Images/STMechanics/mic-on");
-        defaultSprite = Resources.Load<Sprite>("Images/STMechanics/mic-off");
-        retrySprite2 = Resources.Load<Sprite>("Images/STMechanics/RetrySprite");
+        playbackSprite = Resources.Load<Sprite>("Images/STMechanics/speak");
+        retrySprite = Resources.Load<Sprite>("Images/STMechanics/speak-2");
+        defaultSprite = Resources.Load<Sprite>("Images/STMechanics/speak-2");
+        retrySprite2 = Resources.Load<Sprite>("Images/STMechanics/speak-1");
         scratchAudioClip = Resources.Load<AudioClip>("Audio/ScratchAudio");
         revealAudioClip = Resources.Load<AudioClip>("Audio/RevealAudio");
         GameObject stCanvas = GameObject.FindGameObjectWithTag("STCanvas");

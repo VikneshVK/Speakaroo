@@ -2,6 +2,7 @@ using TMPro;
 using UnityEngine;
 using System.Collections;
 
+
 public class dragManager : MonoBehaviour
 {
     public static int totalCorrectDrops;  // Track the number of correct drops
@@ -93,7 +94,8 @@ public class dragManager : MonoBehaviour
 
     private IEnumerator HandleAllItemsDropped()
     {
-        kikiAudio.Play();  // Play the audio
+        kikiAudio.Play();
+        StartCoroutine(RevealTextWordByWord("Thank You, Jojo and Friend. My Room looks so clean now", 0.5f));// Play the audio
         yield return new WaitUntil(() => !kikiAudio.isPlaying);  // Wait until the audio finishes playing
 
         allDone = true;  // Set allDone to true after audio finishes
@@ -183,7 +185,7 @@ public class dragManager : MonoBehaviour
             yield return new WaitForSeconds(delayBetweenWords);  // Wait before revealing the next word
         }
 
-        // Hide the subtitle after the full text is shown
+        yield return new WaitForSeconds(0.5f);
         subtitleText.gameObject.SetActive(false);
     }
 

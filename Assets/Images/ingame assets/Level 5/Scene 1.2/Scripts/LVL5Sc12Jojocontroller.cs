@@ -191,7 +191,7 @@ public class LVL5Sc12Jojocontroller : MonoBehaviour
                         {
                             boyAudioSource.clip = Audio2;
                             boyAudioSource.Play();
-                            StartCoroutine(RevealTextWordByWord("Please give me a Ticket", 0.5f));
+                            StartCoroutine(RevealTextWordByWord("Yay..! we got the Tickets", 0.5f));
                             ifDialougeComplete = true;
                         }
                     });
