@@ -259,6 +259,7 @@ GameObject:
   - component: {fileID: 339413073}
   - component: {fileID: 339413072}
   - component: {fileID: 339413071}
+  - component: {fileID: 339413074}
   m_Layer: 5
   m_Name: HomeButton
   m_TagString: Untagged
@@ -329,10 +330,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1461016457}
-        m_TargetAssemblyTypeName: Scene_Manager_Final, Assembly-CSharp
-        m_MethodName: LoadLevel
-        m_Mode: 5
+      - m_Target: {fileID: 339413074}
+        m_TargetAssemblyTypeName: ButtonClickListener, Assembly-CSharp
+        m_MethodName: OnButtonClick
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -379,6 +380,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 339413069}
   m_CullTransparentMesh: 1
+--- !u!114 &339413074
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 339413069}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f87a6b112ab62f468da6fa2dfbd49ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneManager: {fileID: 1461016457}
+  sceneName: Learn Words
+  sceneCategory: 3
 --- !u!1 &376860511
 GameObject:
   m_ObjectHideFlags: 0

@@ -466,6 +466,7 @@ GameObject:
   - component: {fileID: 345624012}
   - component: {fileID: 345624011}
   - component: {fileID: 345624010}
+  - component: {fileID: 345624013}
   m_Layer: 5
   m_Name: Monkey
   m_TagString: Untagged
@@ -536,10 +537,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 217765178}
-        m_TargetAssemblyTypeName: Scene_Manager_Final, Assembly-CSharp
-        m_MethodName: LoadLevel
-        m_Mode: 5
+      - m_Target: {fileID: 345624013}
+        m_TargetAssemblyTypeName: ButtonClickListener, Assembly-CSharp
+        m_MethodName: OnButtonClick
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -586,6 +587,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 345624008}
   m_CullTransparentMesh: 1
+--- !u!114 &345624013
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 345624008}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f87a6b112ab62f468da6fa2dfbd49ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneManager: {fileID: 217765178}
+  sceneName: Speak_Sentences_Animal_Monkey
+  sceneCategory: 4
 --- !u!1 &400035847
 GameObject:
   m_ObjectHideFlags: 0
@@ -810,6 +826,7 @@ GameObject:
   - component: {fileID: 781437031}
   - component: {fileID: 781437030}
   - component: {fileID: 781437029}
+  - component: {fileID: 781437032}
   m_Layer: 5
   m_Name: Lion
   m_TagString: Untagged
@@ -880,10 +897,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 217765178}
-        m_TargetAssemblyTypeName: Scene_Manager_Final, Assembly-CSharp
-        m_MethodName: LoadLevel
-        m_Mode: 5
+      - m_Target: {fileID: 781437032}
+        m_TargetAssemblyTypeName: ButtonClickListener, Assembly-CSharp
+        m_MethodName: OnButtonClick
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -930,6 +947,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 781437027}
   m_CullTransparentMesh: 1
+--- !u!114 &781437032
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 781437027}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f87a6b112ab62f468da6fa2dfbd49ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneManager: {fileID: 217765178}
+  sceneName: Speak_Sentences_Animal_Lion
+  sceneCategory: 4
 --- !u!1001 &804127580
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1128,6 +1160,7 @@ GameObject:
   - component: {fileID: 1132894622}
   - component: {fileID: 1132894621}
   - component: {fileID: 1132894620}
+  - component: {fileID: 1132894623}
   m_Layer: 5
   m_Name: Panda
   m_TagString: Untagged
@@ -1198,10 +1231,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 217765178}
-        m_TargetAssemblyTypeName: Scene_Manager_Final, Assembly-CSharp
-        m_MethodName: LoadLevel
-        m_Mode: 5
+      - m_Target: {fileID: 1132894623}
+        m_TargetAssemblyTypeName: ButtonClickListener, Assembly-CSharp
+        m_MethodName: OnButtonClick
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -1248,6 +1281,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1132894618}
   m_CullTransparentMesh: 1
+--- !u!114 &1132894623
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1132894618}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f87a6b112ab62f468da6fa2dfbd49ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneManager: {fileID: 217765178}
+  sceneName: Speak_Sentences_Animal_Panda
+  sceneCategory: 4
 --- !u!1 &1182097832
 GameObject:
   m_ObjectHideFlags: 0
@@ -1366,6 +1414,7 @@ GameObject:
   - component: {fileID: 1316424550}
   - component: {fileID: 1316424549}
   - component: {fileID: 1316424548}
+  - component: {fileID: 1316424551}
   m_Layer: 5
   m_Name: Croc
   m_TagString: Untagged
@@ -1436,10 +1485,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 217765178}
-        m_TargetAssemblyTypeName: Scene_Manager_Final, Assembly-CSharp
-        m_MethodName: LoadLevel
-        m_Mode: 5
+      - m_Target: {fileID: 1316424551}
+        m_TargetAssemblyTypeName: ButtonClickListener, Assembly-CSharp
+        m_MethodName: OnButtonClick
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -1486,6 +1535,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1316424546}
   m_CullTransparentMesh: 1
+--- !u!114 &1316424551
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1316424546}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f87a6b112ab62f468da6fa2dfbd49ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneManager: {fileID: 217765178}
+  sceneName: Speak_Sentences_Animal_Croc
+  sceneCategory: 4
 --- !u!1 &1350386128
 GameObject:
   m_ObjectHideFlags: 0
@@ -1498,6 +1562,7 @@ GameObject:
   - component: {fileID: 1350386132}
   - component: {fileID: 1350386131}
   - component: {fileID: 1350386130}
+  - component: {fileID: 1350386133}
   m_Layer: 5
   m_Name: Tiger
   m_TagString: Untagged
@@ -1568,10 +1633,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 217765178}
-        m_TargetAssemblyTypeName: Scene_Manager_Final, Assembly-CSharp
-        m_MethodName: LoadLevel
-        m_Mode: 5
+      - m_Target: {fileID: 1350386133}
+        m_TargetAssemblyTypeName: ButtonClickListener, Assembly-CSharp
+        m_MethodName: OnButtonClick
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -1618,6 +1683,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1350386128}
   m_CullTransparentMesh: 1
+--- !u!114 &1350386133
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1350386128}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f87a6b112ab62f468da6fa2dfbd49ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneManager: {fileID: 217765178}
+  sceneName: Speak_Sentences_Animal_Tiger
+  sceneCategory: 4
 --- !u!1 &1845482223
 GameObject:
   m_ObjectHideFlags: 0
@@ -1698,6 +1778,7 @@ GameObject:
   - component: {fileID: 1950267384}
   - component: {fileID: 1950267383}
   - component: {fileID: 1950267382}
+  - component: {fileID: 1950267385}
   m_Layer: 5
   m_Name: Hippo
   m_TagString: Untagged
@@ -1768,10 +1849,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 217765178}
-        m_TargetAssemblyTypeName: Scene_Manager_Final, Assembly-CSharp
-        m_MethodName: LoadLevel
-        m_Mode: 5
+      - m_Target: {fileID: 1950267385}
+        m_TargetAssemblyTypeName: ButtonClickListener, Assembly-CSharp
+        m_MethodName: OnButtonClick
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -1818,6 +1899,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1950267380}
   m_CullTransparentMesh: 1
+--- !u!114 &1950267385
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1950267380}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f87a6b112ab62f468da6fa2dfbd49ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneManager: {fileID: 217765178}
+  sceneName: Speak_Sentences_Animal_Hippo
+  sceneCategory: 4
 --- !u!1001 &2080218043
 PrefabInstance:
   m_ObjectHideFlags: 0

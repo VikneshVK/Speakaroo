@@ -1378,6 +1378,7 @@ GameObject:
   - component: {fileID: 1855552498}
   - component: {fileID: 1855552497}
   - component: {fileID: 1855552496}
+  - component: {fileID: 1855552500}
   m_Layer: 5
   m_Name: Next Button
   m_TagString: Untagged
@@ -1465,16 +1466,16 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 1667746095}
-        m_TargetAssemblyTypeName: Scene_Manager_Final, Assembly-CSharp
-        m_MethodName: LoadLevel
-        m_Mode: 5
+      - m_Target: {fileID: 1855552500}
+        m_TargetAssemblyTypeName: ButtonClickListener, Assembly-CSharp
+        m_MethodName: OnButtonClick
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
-          m_StringArgument: Learn Sentences
+          m_StringArgument: Speak_Sentences_JumpBed
           m_BoolArgument: 0
         m_CallState: 2
 --- !u!114 &1855552498
@@ -1515,6 +1516,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1855552494}
   m_CullTransparentMesh: 1
+--- !u!114 &1855552500
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1855552494}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f87a6b112ab62f468da6fa2dfbd49ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneManager: {fileID: 1667746095}
+  sceneName: Speak_Sentences_JumpBed
+  sceneCategory: 4
 --- !u!1 &1883120160
 GameObject:
   m_ObjectHideFlags: 0
@@ -1660,6 +1676,7 @@ GameObject:
   - component: {fileID: 2054688227}
   - component: {fileID: 2054688226}
   - component: {fileID: 2054688225}
+  - component: {fileID: 2054688229}
   m_Layer: 5
   m_Name: Prev Button
   m_TagString: Untagged
@@ -1747,10 +1764,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Scene_Manager, Assembly-CSharp
-        m_MethodName: LoadLevel
-        m_Mode: 5
+      - m_Target: {fileID: 2054688229}
+        m_TargetAssemblyTypeName: ButtonClickListener, Assembly-CSharp
+        m_MethodName: OnButtonClick
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -1797,6 +1814,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2054688223}
   m_CullTransparentMesh: 1
+--- !u!114 &2054688229
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2054688223}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f87a6b112ab62f468da6fa2dfbd49ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneManager: {fileID: 1667746095}
+  sceneName: HouseHold_SentenceSafari
+  sceneCategory: 4
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

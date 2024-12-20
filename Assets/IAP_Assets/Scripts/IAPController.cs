@@ -42,6 +42,7 @@ public class IAPController : MonoBehaviour, IStoreListener
         LoadRenewalData();
         DisplayUserSubscriptionStatus(); // Ensure this method is called after loading data
         CheckSubscriptionStatus();  // Check subscription status when the app starts
+        speakarooManager.ValidateReceiptOnStartup();
 
         FindButtons(); // Dynamically find buttons
         UpdateButtonStates(); // Set their states based on the purchase status
@@ -52,26 +53,21 @@ public class IAPController : MonoBehaviour, IStoreListener
         // Find the buttons in the scene by their names or tags
         if (yearlySubscriptionButton == null)
             yearlySubscriptionButton = GameObject.Find("Yearly_Sub")?.GetComponent<Button>();
-
-        if (lifetimeSubscriptionButton == null)
-            lifetimeSubscriptionButton = GameObject.Find("Lifetime_NCP")?.GetComponent<Button>();
     }
 
-   
+
 
     private void UpdateButtonStates()
     {
-        bool hasLifetime = HasLifetimeAccess();
         bool hasSubscription = IsSubscribed();
-        Debug.Log(hasLifetime + "lifetime status");
-        Debug.Log(hasSubscription + "sub status");
+        //Debug.Log(hasSubscription + "sub status");
 
         // Disable buttons if the respective product is already purchased
         if (yearlySubscriptionButton != null)
-            yearlySubscriptionButton.interactable = !hasSubscription && !hasLifetime;
+            yearlySubscriptionButton.interactable = !hasSubscription;
 
         if (lifetimeSubscriptionButton != null)
-            lifetimeSubscriptionButton.interactable = !hasLifetime && !hasSubscription;
+            lifetimeSubscriptionButton.interactable = !hasSubscription;
     }
 
 
@@ -83,10 +79,11 @@ public class IAPController : MonoBehaviour, IStoreListener
 
     private void OnEnable()
     {
+        speakarooManager.ValidateReceiptOnStartup();
         CheckSubscriptionStatus();
         Debug.Log("Force check");
 
-        
+
     }
 
     private void InitializeDebugUI()
@@ -154,28 +151,17 @@ public class IAPController : MonoBehaviour, IStoreListener
             {
                 LogMessage($"Validated receipt: {receiptInfo.productID}");
 
-                // Check which product is validated
-                if (receiptInfo.productID == LifetimeSub)
+
+                if (receiptInfo.productID == YearlySub)
                 {
-                    if(!HasLifetimeAccess())
-                    {
-                        PlayerPrefs.SetInt("Has LifeBill", 1); // 1 for having a valid lifetime receipt
-                        PlayerPrefs.Save();
-                        SaveLifetimeStatus(true); // Grant lifetime access
-                        UpdateButtonStates();
-                    }
-                  
-                }
-                else if (receiptInfo.productID == YearlySub)
-                {
-                    if(IsSubscribed())
+                    if (IsSubscribed())
                     {
                         PlayerPrefs.SetInt("Has Bill", 1); // 1 for having a valid subscription receipt
                         PlayerPrefs.Save();
                         SaveSubscriptionStatus(true); // Grant subscription access
                         UpdateButtonStates();
                     }
-                    
+
                 }
                 else
                 {
@@ -190,12 +176,10 @@ public class IAPController : MonoBehaviour, IStoreListener
             LogMessage($"Receipt validation failed: {ex.Message}");
 
             // Do not revert to free if user already has access
-            if (!IsSubscribed() && !HasLifetimeAccess())
+            if (!IsSubscribed())
             {
                 SaveSubscriptionStatus(false);
-                SaveLifetimeStatus(false);
                 PlayerPrefs.SetInt("Has Bill", 0);
-                PlayerPrefs.SetInt("Has LifeBill", 0);
                 UpdateButtonStates();
             }
 
@@ -210,7 +194,6 @@ public class IAPController : MonoBehaviour, IStoreListener
         if (storeController != null)
         {
             Product subscriptionProduct = storeController.products.WithID(YearlySub);
-            Product lifetimeProduct = storeController.products.WithID(LifetimeSub);
 
             if (subscriptionProduct != null && subscriptionProduct.hasReceipt)
             {
@@ -218,18 +201,12 @@ public class IAPController : MonoBehaviour, IStoreListener
                 ValidateReceipt(receipt);
             }
 
-            if (lifetimeProduct != null && lifetimeProduct.hasReceipt)
-            {
-                string receipt = lifetimeProduct.receipt;
-                ValidateReceipt(receipt);
-            }
-
             // Maintain user status if validation fails but status is already active
-            if (!IsSubscribed() && !HasLifetimeAccess())
+            if (!IsSubscribed())
             {
                 Debug.Log("No valid subscription or lifetime receipt found. Reverting to free user.");
                 SaveSubscriptionStatus(false);
-                SaveLifetimeStatus(false);
+                PlayerPrefs.SetInt("Has Bill", 0);
             }
         }
     }
@@ -278,12 +255,6 @@ public class IAPController : MonoBehaviour, IStoreListener
             SaveSubscriptionStatus(true);  // Subscription is active after purchase
             Debug.Log("Successfull purchase status has been updated: Premium user");
         }
-        else if (args.purchasedProduct.definition.id == LifetimeSub)
-        {
-            LogMessage("Lifetime subscription purchased.");
-            SaveLifetimeStatus(true);  // Lifetime access granted
-            Debug.Log("Lifetime purchase status updated: Premium user");
-        }
 
         UpdateRenewalCountUI();
         SaveRenewalDataToManager();
@@ -295,13 +266,12 @@ public class IAPController : MonoBehaviour, IStoreListener
     {
         LogMessage($"Purchase failed for {product.definition.id}. Reason: {failureReason}");
 
-        if (product.definition.id == YearlySub || product.definition.id == LifetimeSub)
+        if (product.definition.id == YearlySub)
         {
             // Log the failure but do not revert if the user has an active subscription or lifetime
-            if (!IsSubscribed() && !HasLifetimeAccess())
+            if (!IsSubscribed())
             {
                 SaveSubscriptionStatus(false);
-                SaveLifetimeStatus(false);
                 Debug.Log("Failed purchase status updated: Free user");
             }
             else
@@ -318,25 +288,18 @@ public class IAPController : MonoBehaviour, IStoreListener
         UpdateSubscriptionStatusUI();
     }
 
-    public void SaveLifetimeStatus(bool hasLifetime)
-    {
-        PlayerPrefs.SetInt("LifetimeAccess", hasLifetime ? 1 : 0);
-        PlayerPrefs.Save();
-    }
-
-    public bool HasLifetimeAccess() => PlayerPrefs.GetInt("LifetimeAccess", 0) == 1;
-
 
     public void RevertToFreeUser()
     {
         SaveSubscriptionStatus(false);
-        SaveLifetimeStatus(false);
         successfulRenewals = 0; // Reset renewal count
         failedRenewals = 0;
         SaveRenewalDataToManager();
         UpdateRenewalCountUI();
         DisplayUserSubscriptionStatus();
         LogMessage("User reverted to free status.");
+        PlayerPrefs.GetInt("Has Bill", 0);
+        PlayerPrefs.Save();
     }
 
     public bool IsSubscribed() => PlayerPrefs.GetInt("SubscriptionActive", 0) == 1;
@@ -441,7 +404,6 @@ public class IAPController : MonoBehaviour, IStoreListener
                 if (product.definition.id == LifetimeSub && isValid)
                 {
                     LogMessage("Restored lifetime purchase.");
-                    SaveLifetimeStatus(true); // Explicitly save lifetime access
                     anyPurchaseRestored = true;
                 }
 
@@ -467,11 +429,8 @@ public class IAPController : MonoBehaviour, IStoreListener
     {
         if (subscriptionStatusText != null)
         {
-            if (HasLifetimeAccess())
-            {
-                subscriptionStatusText.text = "Lifetime Premium User";
-            }
-            else if (IsSubscribed())
+
+            if (IsSubscribed())
             {
                 subscriptionStatusText.text = "Subscription Premium User";
             }
@@ -482,6 +441,6 @@ public class IAPController : MonoBehaviour, IStoreListener
         }
     }
 
-   
+
 
 }

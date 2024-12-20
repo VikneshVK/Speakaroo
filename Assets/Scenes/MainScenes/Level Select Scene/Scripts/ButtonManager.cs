@@ -46,10 +46,10 @@ public class ButtonManager : MonoBehaviour
         {
             Debug.LogError("mController is not assigned!");
             return; // Avoid calling methods if mController is not assigned
-            
+
         }
 
-        if(gameManager == null)
+        if (gameManager == null)
         {
             gameManager = FindObjectOfType<SpeakarooManager>();
         }
@@ -62,25 +62,25 @@ public class ButtonManager : MonoBehaviour
         Debug.Log("Checked button");
         Debug.Log("Checked button on enable");
     }
-
     private void CheckSubscriptionAndUpdateButtons()
     {
         bool isSubscribed = PlayerPrefs.GetInt("SubscriptionActive") == 1;
-        bool isLifetime = PlayerPrefs.GetInt("HasLifetimeAccess") == 1;
         bool hasReceipt = PlayerPrefs.GetInt("Has Bill") == 1;
-        bool hasLifetimeReciept = PlayerPrefs.GetInt("Has LifeBill") == 1;
 
-        bool hasAccess = (isSubscribed && hasReceipt) || (isLifetime && hasLifetimeReciept);
+        Debug.Log($"CheckSubscriptionAndUpdateButtons: isSubscribed={isSubscribed}, hasReceipt={hasReceipt}");
 
-        if (hasAccess)
+        if (isSubscribed && hasReceipt)
         {
             Debug.Log("Subscription or lifetime access detected. Updating buttons.");
 
             foreach (ButtonData buttonData in buttonDataArray)
             {
+                Debug.Log($"Button {buttonData.button.name} type before: {buttonData.buttonType}");
+
                 if (buttonData.buttonType == ButtonType.Premium)
                 {
                     buttonData.buttonType = ButtonType.Free; // Set to Free if user has access
+                    Debug.Log($"Button {buttonData.button.name} type after: {buttonData.buttonType}");
                 }
             }
         }
@@ -88,6 +88,9 @@ public class ButtonManager : MonoBehaviour
         {
             Debug.Log("No active subscription or lifetime access. Keeping buttons as Premium.");
         }
+
+        // Reflect the changes in button interactivity
+        UpdateButtonInteractability();
     }
 
 
@@ -98,7 +101,7 @@ public class ButtonManager : MonoBehaviour
         {
             if (buttonData.buttonType == ButtonType.Premium)
             {
-                if (gameManager.GetSubscriptionStatus() || gameManager.GetLifetimeStatus())
+                if (gameManager.GetSubscriptionStatus())
                 {
                     UnlockButton(buttonData.button); // Unlock premium buttons if subscribed
                 }
@@ -113,7 +116,6 @@ public class ButtonManager : MonoBehaviour
             }
         }
     }
-
     // Lock a button (make it non-interactable and adjust its alpha)
     private void LockButton(Button button)
     {

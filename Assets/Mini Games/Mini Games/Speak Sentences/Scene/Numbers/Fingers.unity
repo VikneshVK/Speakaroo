@@ -135,6 +135,7 @@ GameObject:
   - component: {fileID: 72979177}
   - component: {fileID: 72979176}
   - component: {fileID: 72979175}
+  - component: {fileID: 72979179}
   m_Layer: 5
   m_Name: Next Button
   m_TagString: Untagged
@@ -222,10 +223,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 121553684}
-        m_TargetAssemblyTypeName: Scene_Manager_Final, Assembly-CSharp
-        m_MethodName: LoadLevel
-        m_Mode: 5
+      - m_Target: {fileID: 72979179}
+        m_TargetAssemblyTypeName: ButtonClickListener, Assembly-CSharp
+        m_MethodName: OnButtonClick
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -272,6 +273,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 72979173}
   m_CullTransparentMesh: 1
+--- !u!114 &72979179
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 72979173}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f87a6b112ab62f468da6fa2dfbd49ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneManager: {fileID: 121553684}
+  sceneName: SeaShells
+  sceneCategory: 4
 --- !u!1001 &121553683
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -380,7 +396,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 467, y: 250}
+  m_AnchoredPosition: {x: 467, y: 273}
   m_SizeDelta: {x: 1500, y: 1500}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &148065671
@@ -507,6 +523,7 @@ GameObject:
   - component: {fileID: 264155438}
   - component: {fileID: 264155437}
   - component: {fileID: 264155436}
+  - component: {fileID: 264155440}
   m_Layer: 5
   m_Name: close Button
   m_TagString: Untagged
@@ -594,10 +611,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 121553684}
-        m_TargetAssemblyTypeName: Scene_Manager_Final, Assembly-CSharp
-        m_MethodName: LoadLevel
-        m_Mode: 5
+      - m_Target: {fileID: 264155440}
+        m_TargetAssemblyTypeName: ButtonClickListener, Assembly-CSharp
+        m_MethodName: OnButtonClick
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -644,6 +661,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 264155434}
   m_CullTransparentMesh: 1
+--- !u!114 &264155440
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 264155434}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f87a6b112ab62f468da6fa2dfbd49ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneManager: {fileID: 121553684}
+  sceneName: Numbers_SentenceSafari
+  sceneCategory: 4
 --- !u!1001 &515472433
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -823,8 +855,8 @@ MonoBehaviour:
   objectAnimator: {fileID: 1405617318}
   wordAudioClips:
   - {fileID: 8300000, guid: 13af1053eceec934bb03241758824963, type: 3}
-  - {fileID: 8300000, guid: 10478b78928391742ab92b8107b04d6e, type: 3}
-  - {fileID: 8300000, guid: f9a87d42c114fce40a5ea37095377808, type: 3}
+  - {fileID: 8300000, guid: b2a482868bf4ff043afecfa2811aaf29, type: 3}
+  - {fileID: 8300000, guid: 41ca8e57c6c53e44da03afe3040c5103, type: 3}
   AmbientSounds: {fileID: 0}
   wordButtons:
   - {fileID: 148065673}
@@ -1043,7 +1075,7 @@ GameObject:
   - component: {fileID: 1405617318}
   - component: {fileID: 1405617319}
   m_Layer: 5
-  m_Name: Orange
+  m_Name: Fingers
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1066,7 +1098,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 0.5}
   m_AnchorMax: {x: 1, y: 0.5}
   m_AnchoredPosition: {x: -471, y: 107.39}
-  m_SizeDelta: {x: 1500, y: 1500}
+  m_SizeDelta: {x: 894, y: 894}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1405617315
 MonoBehaviour:
@@ -1112,9 +1144,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: SentenceManager_Numbers, Assembly-CSharp
-        m_MethodName: playAll
+      - m_Target: {fileID: 777321389}
+        m_TargetAssemblyTypeName: SentenceManager, Assembly-CSharp
+        m_MethodName: OnCharacterClick
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1144,7 +1176,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 53fbe0dcd9a6c134884f9aa27b621bc5, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 47f036267654e1f47bae69b28a7ea104, type: 3}
   m_Type: 0
   m_PreserveAspect: 1
   m_FillCenter: 1
@@ -1172,7 +1204,7 @@ Animator:
   m_GameObject: {fileID: 1405617313}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 9fd31f3882b08a648bc3765ad1f1972a, type: 2}
+  m_Controller: {fileID: 0}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -1236,7 +1268,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 467, y: 24}
+  m_AnchoredPosition: {x: 467, y: -29}
   m_SizeDelta: {x: 1500, y: 1500}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1409272535
@@ -1259,7 +1291,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 2985178a6340e6e478637d59b54f82de, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 75d620e9ed62a234e8bc8aff0e7c8235, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1361,6 +1393,10 @@ PrefabInstance:
     - target: {fileID: 1261242162691769517, guid: 5cc33678a45eebd4eb94af593e86f318, type: 3}
       propertyPath: m_Name
       value: LVLTransistion Canvas
+      objectReference: {fileID: 0}
+    - target: {fileID: 1261242162691769517, guid: 5cc33678a45eebd4eb94af593e86f318, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3220799799381724627, guid: 5cc33678a45eebd4eb94af593e86f318, type: 3}
       propertyPath: m_Pivot.x
@@ -1793,7 +1829,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 9c851e6c90a110d4281a0d0dff495ac7, type: 3}
+  m_Sprite: {fileID: 21300000, guid: da7300ff30cca8a4c94efd83be1c5f2c, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -1827,7 +1863,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 490, y: -215}
+  m_AnchoredPosition: {x: 467, y: -311}
   m_SizeDelta: {x: 1500, y: 1500}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1926497211

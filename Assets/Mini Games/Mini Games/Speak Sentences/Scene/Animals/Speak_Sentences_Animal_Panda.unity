@@ -335,6 +335,7 @@ GameObject:
   - component: {fileID: 319161256}
   - component: {fileID: 319161255}
   - component: {fileID: 319161254}
+  - component: {fileID: 319161258}
   m_Layer: 5
   m_Name: Close Button
   m_TagString: Untagged
@@ -422,10 +423,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 128251030}
-        m_TargetAssemblyTypeName: Scene_Manager_Final, Assembly-CSharp
-        m_MethodName: LoadLevel
-        m_Mode: 5
+      - m_Target: {fileID: 319161258}
+        m_TargetAssemblyTypeName: ButtonClickListener, Assembly-CSharp
+        m_MethodName: OnButtonClick
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -472,6 +473,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 319161252}
   m_CullTransparentMesh: 1
+--- !u!114 &319161258
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 319161252}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f87a6b112ab62f468da6fa2dfbd49ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneManager: {fileID: 128251030}
+  sceneName: Animals_SentenceSafari
+  sceneCategory: 4
 --- !u!1001 &487524571
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1052,6 +1068,7 @@ GameObject:
   - component: {fileID: 1262992399}
   - component: {fileID: 1262992398}
   - component: {fileID: 1262992401}
+  - component: {fileID: 1262992402}
   m_Layer: 5
   m_Name: Next Button
   m_TagString: Untagged
@@ -1122,10 +1139,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 128251030}
-        m_TargetAssemblyTypeName: Scene_Manager_Final, Assembly-CSharp
-        m_MethodName: LoadLevel
-        m_Mode: 5
+      - m_Target: {fileID: 1262992402}
+        m_TargetAssemblyTypeName: ButtonClickListener, Assembly-CSharp
+        m_MethodName: OnButtonClick
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -1189,6 +1206,21 @@ MonoBehaviour:
   m_EffectColor: {r: 0, g: 0, b: 0, a: 0.5}
   m_EffectDistance: {x: -5.63, y: -8.68}
   m_UseGraphicAlpha: 1
+--- !u!114 &1262992402
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1262992396}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1f87a6b112ab62f468da6fa2dfbd49ae, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sceneManager: {fileID: 128251030}
+  sceneName: Speak_Sentences_Animal_Tiger
+  sceneCategory: 4
 --- !u!1 &1321828456
 GameObject:
   m_ObjectHideFlags: 0
