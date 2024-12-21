@@ -35,6 +35,11 @@ public class SpeechTherapyController1 : MonoBehaviour
     [Header("jojoController")]
     public Lvl7Sc1JojoController jojoController;
 
+    [Header("SFX")]
+    public AudioSource SfxAudioSource;
+    private AudioClip SfxAudio1;
+    private AudioClip SfxAudio2;
+
     private enum ButtonType { None, Button1, Button2, Button3 }
     private ButtonType retryButtonActivatedBy = ButtonType.None;
 
@@ -49,6 +54,9 @@ public class SpeechTherapyController1 : MonoBehaviour
         {
             audioSource = gameObject.AddComponent<AudioSource>();
         }
+        
+        SfxAudio1 = Resources.Load<AudioClip>("Audio/sfx/Start Record");
+        SfxAudio2 = Resources.Load<AudioClip>("Audio/sfx/Start Playback");
     }
 
 
@@ -83,7 +91,7 @@ public class SpeechTherapyController1 : MonoBehaviour
         retryButton.image.sprite = Mic;
         
         yield return StartCoroutine(RecordAudio(5)); // 5 seconds recording
-       
+        
         float[] samples = new float[recordedClip.samples];
         recordedClip.GetData(samples, 0);
 
@@ -92,8 +100,11 @@ public class SpeechTherapyController1 : MonoBehaviour
         ApplyBandpassFilter(samples, 100f, 3000f); // Bandpass filter between 100Hz and 3000Hz
 
         recordedClip.SetData(samples, 0);
+
+        
         retryButton.image.sprite = Speaker;
         RecordedAudioSource.clip = recordedClip;
+        SfxAudioSource.PlayOneShot(SfxAudio2);
         RecordedAudioSource.Play();
         Debug.Log("Playing the processed recorded audio...");
         
@@ -145,6 +156,7 @@ public class SpeechTherapyController1 : MonoBehaviour
     private IEnumerator RecordAudio(int duration)
     {
         Debug.Log("Recording audio...");
+        SfxAudioSource.PlayOneShot(SfxAudio1);
         float recordingTime = duration;
 
         recordedClip = Microphone.Start(null, false, duration, 44100);

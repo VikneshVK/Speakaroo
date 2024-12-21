@@ -14,6 +14,8 @@ public class ShampooController : MonoBehaviour
     public GameObject showerGameObject; // Reference to the shower GameObject
     public Lvl1Sc2HelperFunction helperFunctionScript;
     public GameObject HotTap;
+    private Animator hotTapAnimator;
+    public ParticleSystem showerParticles;
     public Animator birdAnimator;
     public AudioClip audio1;
     public AudioClip audio2;
@@ -24,6 +26,10 @@ public class ShampooController : MonoBehaviour
     private Camera mainCamera;
     private int foamCount = 0; // Current count of spawned foams
     public bool isDraggable = false;
+    private bool shampooApplied = false;
+    private bool tapClickedAfterShampoo = false;
+    private bool colliderEnabled = false;
+    private bool PositionReseted = false;
     private float nextSpawnTime = 0f; // Time when the next foam can be spawned
     private Collider2D shampooCollider; // Collider of the shampoo
 
@@ -36,6 +42,7 @@ public class ShampooController : MonoBehaviour
     private void Start()
     {
         mainCamera = Camera.main;
+        hotTapAnimator = HotTap.GetComponent<Animator>();
         initialPosition = transform.position;
         shampooCollider = GetComponent<Collider2D>();
         SfxAudioSource = GameObject.FindWithTag("SFXAudioSource").GetComponent<AudioSource>();
@@ -61,6 +68,14 @@ public class ShampooController : MonoBehaviour
             offset = transform.position - GetMouseWorldPos(); // Calculate offset
             helperFunctionScript.ResetTimer();
         }
+
+        // Check if shampoo has been applied and tap is clicked after shampoo application
+        if (shampooApplied && !tapClickedAfterShampoo)
+        {
+            // If shampoo has been applied, we need to handle tap click
+            tapClickedAfterShampoo = true; // Set the flag to prevent multiple clicks            
+            TriggerTapInteraction();
+        }
     }
 
     private void OnMouseUp()
@@ -84,16 +99,15 @@ public class ShampooController : MonoBehaviour
                     {
                         if (foamCount < maxFoamCount)
                         {
-                            SpawnFoam();
-                            if (foamCount == 1) // Trigger script switch on first foam
-                            {
-                                showerMechanics.DisableTapInteraction(); // New method to disable tap interaction
-                                showerController.enabled = true;
-                            }
+                            SpawnFoam();                            
                         }
                         else
                         {
-                            ResetPosition(); // Reset position and disable interactions
+                            if (!PositionReseted)
+                            {
+                                PositionReseted = true;
+                                ResetPosition();
+                            }                             
                             return;
                         }
                         break;
@@ -132,7 +146,12 @@ public class ShampooController : MonoBehaviour
 
     private void ResetPosition()
     {
-        HotTap.GetComponent<Collider2D>().enabled = true;
+        if (!colliderEnabled)
+        {
+            colliderEnabled = true;
+            HotTap.GetComponent<Collider2D>().enabled = true;
+        }
+        
         transform.position = shampooFinalPosition.position; // Reset the position
         transform.rotation = Quaternion.identity; // Reset the rotation
         birdAnimator.SetTrigger("open tap");
@@ -142,6 +161,7 @@ public class ShampooController : MonoBehaviour
         isDragging = false; // Stop dragging
         isDraggable = false; // Make non-draggable
         shampooCollider.enabled = false; // Deactivate the collider
+        shampooApplied = true;
 
         if (showerMechanics == null)
         {
@@ -159,18 +179,76 @@ public class ShampooController : MonoBehaviour
         }
     }
 
+    private void TriggerTapInteraction()
+    {
+        showerMechanics.hotTapOn = !showerMechanics.hotTapOn;
+
+        // Play the "Tap On" or "Tap Off" animation, based on the state
+        hotTapAnimator.SetTrigger(showerMechanics.hotTapOn ? "TapOn" : "TapOff");
+
+        // Play shower particles and audio
+        if (showerMechanics.hotTapOn)
+        {
+            showerParticles.Play(); // Turn on shower
+            if (SfxAudioSource != null)
+            {
+                SfxAudioSource.clip = audio1; // Set to appropriate sound
+                SfxAudioSource.loop = true;
+                SfxAudioSource.Play();
+            }
+
+            // Wait for the "TapOn" animation to complete before disabling collider
+            StartCoroutine(WaitForTapAnimationAndDisableCollider());
+        }
+        else
+        {
+            // Disable collider immediately when "Tap Off" animation starts playing
+            HotTap.GetComponent<Collider2D>().enabled = false;
+
+            showerParticles.Stop(); // Turn off shower
+            if (SfxAudioSource != null)
+            {
+                SfxAudioSource.loop = false;
+                SfxAudioSource.Stop();
+            }
+        }
+    }
+
+    private IEnumerator WaitForTapAnimationAndDisableCollider()
+    {
+        // Wait for the animation duration (adjust to the actual duration of the "TapOn" animation)
+        float animationDuration = 1f; // Set this to the length of the "TapOn" animation in seconds
+        yield return new WaitForSeconds(animationDuration);
+
+        // After animation completes, disable the collider
+        HotTap.GetComponent<Collider2D>().enabled = false;
+
+        // Proceed with further actions
+        StartCoroutine(TriggerCloseTapAfterDelay());
+    }
+
+
     private IEnumerator TriggerCloseTapAfterDelay()
     {
-        Debug.Log("closing the tap");
-        yield return new WaitForSeconds(2f);
-        
-        // Trigger "close tap" on the bird animator
+        yield return new WaitForSeconds(2f); // Wait for 2 seconds after tap is turned on
+
+        // Trigger "close tap" animation
         if (birdAnimator != null)
         {
             birdAnimator.SetTrigger("close tap");
             audiomanager.PlayAudio(audio2);
             StartCoroutine(RevealTextWordByWord("Close the Tap", 0.5f));
         }
+
+        // Wait until bird animation is done
+        yield return new WaitForSeconds(1.5f);
+
+        
+        
+            colliderEnabled = true;
+            HotTap.GetComponent<Collider2D>().enabled = true;
+        
+        
     }
 
     private IEnumerator RevealTextWordByWord(string fullText, float delayBetweenWords)

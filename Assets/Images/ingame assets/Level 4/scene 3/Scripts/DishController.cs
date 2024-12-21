@@ -58,7 +58,7 @@ public class DishController : MonoBehaviour
         {
             timer += Time.deltaTime;
 
-            if (timer >= 10f)
+            if (timer >= 7f)
             {
                 if (!helperActive)
                 {

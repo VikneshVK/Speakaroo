@@ -2515,6 +2515,11 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!4 &905617197 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 4503675493982950043, guid: 9ca53bf973acb1141bb97146ef2f095c, type: 3}
+  m_PrefabInstance: {fileID: 3920068713256532197}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &906474088
 GameObject:
   m_ObjectHideFlags: 0
@@ -4579,7 +4584,8 @@ Transform:
   m_LocalPosition: {x: -0.13, y: 0.16, z: 0}
   m_LocalScale: {x: 2.45, y: 2.45, z: 2.45}
   m_ConstrainProportionsScale: 1
-  m_Children: []
+  m_Children:
+  - {fileID: 905617197}
   m_Father: {fileID: 933049527}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &1689829925
@@ -4698,6 +4704,7 @@ MonoBehaviour:
   mainCamera: {fileID: 1058495480}
   pizzaBox: {fileID: 1298366465}
   pizzaEatingPanel: {fileID: 596381824}
+  glow: {fileID: 6008917645427281803, guid: 9ca53bf973acb1141bb97146ef2f095c, type: 3}
   questManager: {fileID: 1325381427}
   sprite1: {fileID: 21300000, guid: b1dce705b6be4e448836a14496a60903, type: 3}
   sprite2: {fileID: 21300000, guid: 960bf934095ca954e863b87817d76d93, type: 3}
@@ -5451,6 +5458,63 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!1001 &3920068713256532197
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 1689829924}
+    m_Modifications:
+    - target: {fileID: 4503675493982950043, guid: 9ca53bf973acb1141bb97146ef2f095c, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4503675493982950043, guid: 9ca53bf973acb1141bb97146ef2f095c, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4503675493982950043, guid: 9ca53bf973acb1141bb97146ef2f095c, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4503675493982950043, guid: 9ca53bf973acb1141bb97146ef2f095c, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4503675493982950043, guid: 9ca53bf973acb1141bb97146ef2f095c, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4503675493982950043, guid: 9ca53bf973acb1141bb97146ef2f095c, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4503675493982950043, guid: 9ca53bf973acb1141bb97146ef2f095c, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4503675493982950043, guid: 9ca53bf973acb1141bb97146ef2f095c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4503675493982950043, guid: 9ca53bf973acb1141bb97146ef2f095c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4503675493982950043, guid: 9ca53bf973acb1141bb97146ef2f095c, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6008917645427281803, guid: 9ca53bf973acb1141bb97146ef2f095c, type: 3}
+      propertyPath: m_Name
+      value: Glow 4
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 9ca53bf973acb1141bb97146ef2f095c, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

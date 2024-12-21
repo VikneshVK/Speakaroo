@@ -52,6 +52,7 @@ public class Lvl7Sc1JojoController : MonoBehaviour
     private bool hasCompletedTalk = false;
     private bool levelEnded = false;
     private bool finaldialouge = false;
+    private bool sfxAudioPlayed = false;
     public bool audioPlaying = false;
     private GameObject spawnedPrefab;
     public Sprite sprite1; // Reference to Sprite 1 (assigned in inspector)
@@ -63,6 +64,11 @@ public class Lvl7Sc1JojoController : MonoBehaviour
     public TextMeshProUGUI subtitleText;
     public Transform cameraFollowPoint; // New reference to child object of Jojo for camera to follow
 
+    [Header("SFX")]
+    private AudioSource SfxAudioSource;
+    public AudioClip SfxAudio1;
+    
+
     public AudioMixer audioMixer;
     private const string musicVolumeParam = "MusicVolume";
     private const string AmbientVolumeParam = "AmbientVolume";
@@ -73,6 +79,7 @@ public class Lvl7Sc1JojoController : MonoBehaviour
         boyAudioSource = GetComponent<AudioSource>();
         MoveToNextStopPosition();
         panel1Complete = false;
+        SfxAudioSource = GameObject.FindWithTag("SFXAudioSource").GetComponent<AudioSource>();
     }
 
     void Update()
@@ -265,7 +272,14 @@ public class Lvl7Sc1JojoController : MonoBehaviour
         // Move Jojo towards the current stop position
         Transform jojoTargetStop = stopPositions[currentStopIndex];
         transform.position = Vector3.MoveTowards(transform.position, jojoTargetStop.position, moveSpeed * Time.deltaTime);
-
+        if (!sfxAudioPlayed)
+        {
+            sfxAudioPlayed = true;
+            SfxAudioSource.loop = true;
+            SfxAudioSource.clip = SfxAudio1;
+            SfxAudioSource.Play();
+        }
+        
         Transform birdTargetStop = birdStopPositions[currentStopIndex];
 
         if (birdGameObject != null)
@@ -294,7 +308,10 @@ public class Lvl7Sc1JojoController : MonoBehaviour
             isWalking = false;
             jojoAnimator.SetBool("canWalk", false);
             kikiAnimator.SetBool("canFly", false);
-
+            
+            SfxAudioSource.Stop();
+            SfxAudioSource.loop = false;
+            sfxAudioPlayed = false;
             // Stop the camera from following when reaching the stop position
             cameraFollowing = false;
 

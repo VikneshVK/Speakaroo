@@ -37,6 +37,7 @@ public class ShowerMechanics : MonoBehaviour
     private bool hasShowerDoneStarted = false;
     private bool birdanimation = false;
     private bool allowTapInteraction = true;
+    private bool colliderEnabled = false;
     private bool handReachingAudioPlayed = false;
     private AudioSource SfxAudioSoure;
 
@@ -70,6 +71,7 @@ public class ShowerMechanics : MonoBehaviour
             if (hit.collider != null && hit.collider.CompareTag("Hot Tap"))
             {
                 helperFunctionScript.ResetTimer();
+                HotTap.GetComponent<Collider2D>().enabled = false;
                 ToggleTap();
             }
         }
@@ -81,11 +83,8 @@ public class ShowerMechanics : MonoBehaviour
     }
     void ToggleTap()
     {
-        // Toggle the hot tap state
         hotTapOn = !hotTapOn;
         hotTapAnimator.SetTrigger(hotTapOn ? "TapOn" : "TapOff");
-
-        // Update the boy's animation and shower state
         boyAnimator.SetBool("IsNormal", hotTapOn);
 
         if (hotTapOn)
@@ -98,32 +97,50 @@ public class ShowerMechanics : MonoBehaviour
                 SfxAudioSoure.Play();
             }
 
+            // Disable the collider when the "Tap On" animation starts playing
+            HotTap.GetComponent<Collider2D>().enabled = false;
+
             // Start coroutine to trigger "close tap" after 2 seconds
             StartCoroutine(TriggerCloseTapAfterDelay());
         }
         else
         {
+            // Disable collider immediately when "Tap Off" animation starts playing
+            HotTap.GetComponent<Collider2D>().enabled = false;
+
             showerParticles.Stop(); // Turn off shower
             if (SfxAudioSoure != null)
             {
                 SfxAudioSoure.loop = false;
                 SfxAudioSoure.Stop();
             }
+
+            // Do not enable the collider until the "Tap Off" animation finishes
         }
     }
 
+
+   
+
     private IEnumerator TriggerCloseTapAfterDelay()
     {
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(2f); // Wait for 2 seconds after tap is turned on
 
-        // Trigger "close tap" on the bird animator
+        // Trigger "close tap" animation
         if (birdAnimator != null)
         {
             birdAnimator.SetTrigger("close tap");
             Audiomanager.PlayAudio(audio6);
             StartCoroutine(RevealTextWordByWord("Close the Tap", 0.5f));
         }
+
+        // Wait until bird animation is done
+        yield return new WaitForSeconds(1.5f);
+
+        // Re-enable the collider after the "close tap" animation finishes
+        HotTap.GetComponent<Collider2D>().enabled = true;
     }
+
 
     void CheckHandReachingAnimation()
     {
@@ -142,8 +159,9 @@ public class ShowerMechanics : MonoBehaviour
         Collider2D hotCollider = HotTap.GetComponent<Collider2D>();
 
         // Enable tap collider when "Idle 1" animation finishes
-        if (stateInfo.IsName("Idle 1") && stateInfo.normalizedTime >= 1.0f)
+        if (stateInfo.IsName("Idle 1") && stateInfo.normalizedTime >= 1.0f && !colliderEnabled)
         {
+            colliderEnabled = true;
             hotCollider.enabled = true;
         }
 

@@ -308,9 +308,7 @@ public class LV4DragManager : MonoBehaviour
             {
                 dirtyDishesCollider.enabled = false;
             }
-
-            // Start the delay timer to check interactions in DishdragController
-            StartHelperHandDelayTimer();
+            
         });
 
         LeanTween.move(dirtyDishes, originalPosition, 0.5f);
@@ -336,25 +334,15 @@ public class LV4DragManager : MonoBehaviour
                 childCollider.enabled = true; // Enable the collider
             }
         }
+
+        Debug.Log("Calling HelperHandDelayTimerforchild from TweenDirtyDishesBack.");
+        StartCoroutine(HelperHandDelayTimerforchild());
     }
 
-    // Start the delay timer to check each DishdragController
-    private void StartHelperHandDelayTimer()
-    {
-        if (helperHandCoroutine != null)
-        {
-            StopCoroutine(helperHandCoroutine);
-        }
-        helperHandCoroutine = StartCoroutine(HelperHandDelayTimerforchild());
-    }
-
-    // Coroutine to control the delay for checking interactions on DishdragController
     private IEnumerator HelperHandDelayTimerforchild()
     {
-        // Wait for a moment before allowing DishdragController to handle its own checks
-        yield return new WaitForSeconds(1f);
-
-        // Notify DishdragController objects to start their interaction checks
+        yield return new WaitForSeconds(0.5f);
+        Debug.Log("Calling HelperHandDelayTimerforchild from TweenDirtyDishesBack. for all child");
         DishdragController.StartHelperHandCheckForAll();
     }
 

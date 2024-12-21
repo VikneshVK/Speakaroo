@@ -710,6 +710,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5368371823349792342, guid: 38c3ba35d14005043834dd07df69c366, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5368371823349792342, guid: 38c3ba35d14005043834dd07df69c366, type: 3}
       propertyPath: m_LocalScale.x
       value: 0
       objectReference: {fileID: 0}
@@ -2652,6 +2656,7 @@ MonoBehaviour:
   showerGameObject: {fileID: 854984596}
   helperFunctionScript: {fileID: 1065795624}
   HotTap: {fileID: 892564470}
+  showerParticles: {fileID: 2070074717}
   birdAnimator: {fileID: 1634345224}
   audio1: {fileID: 8300000, guid: cbe1d156ae1f5a84da6f29624d0c44dd, type: 3}
   audio2: {fileID: 8300000, guid: a9122026a261a7f4aa7fe219ce5461fe, type: 3}

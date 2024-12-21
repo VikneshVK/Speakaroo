@@ -15,6 +15,8 @@ public class PizzaDrag : MonoBehaviour
     public Camera mainCamera;             // Reference to the main camera
     public GameObject pizzaBox;           // Pizza box to tap
     public GameObject pizzaEatingPanel;   // UI panel for pizza eating
+    public GameObject glow;
+    private GameObject spawnedGlow;
    
 
     public Lvl7Sc2QuestManager questManager;  // Reference to quest manager
@@ -185,6 +187,11 @@ public class PizzaDrag : MonoBehaviour
                             kikiAnimator.SetTrigger("canEat");
                             audioManager.PlayAudio(EatAudio);
                             StartCoroutine(RevealTextWordByWord("Pizza is ready..! Let's Eat...!", 0.5f));
+                            // Instantiate the glow object and tween its scale
+                            spawnedGlow = Instantiate(glow, transform.position, Quaternion.identity);
+                            LeanTween.scale(spawnedGlow, Vector3.one * 15, 0.7f)
+                                .setEaseInOutSine()
+                                .setLoopPingPong();
                         });
                     });
                 });
@@ -196,6 +203,10 @@ public class PizzaDrag : MonoBehaviour
     {
         canTapPizzaBox = false;
 
+        if (spawnedGlow != null)
+        {
+            Destroy(spawnedGlow );
+        }
         
         LeanTween.scale(pizzaEatingPanel, Vector3.one, 0.4f).setEase(LeanTweenType.easeOutBounce).setOnComplete(() =>
         {

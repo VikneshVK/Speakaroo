@@ -160,9 +160,8 @@ public class RetryButton : MonoBehaviour
     private void HandleRecordingStart()
     {
         // Change the button image to the retry sprite with full opacity
-        buttonImage.sprite = retrySprite;
-        /*SetAlpha(buttonImage, 255);
-        SetAlpha(ringImage, 255);*/
+        buttonImage.sprite = playbackSprite;
+        
         retryButton.interactable = false;
 
         // Start filling the ring during recording
@@ -185,7 +184,7 @@ public class RetryButton : MonoBehaviour
         if (ST_AudioManager.Instance.recordedAudioSource != null && ST_AudioManager.Instance.recordedAudioSource.clip != null)
         {
             // Change the button image to the playback sprite
-            buttonImage.sprite = playbackSprite;
+            buttonImage.sprite = defaultSprite;
 
             // Disable raycasts for the retry button during playback
             retryButton.interactable = false;
@@ -270,8 +269,8 @@ public class RetryButton : MonoBehaviour
             retryButton.GetComponent<Image>().raycastTarget = true;
             yield return new WaitForSeconds(4f);
             retryButton.interactable = false;
-            retryButton.GetComponent<Image>().raycastTarget = false;     
-            
+            retryButton.GetComponent<Image>().raycastTarget = false;
+            ST_AudioManager.Instance.TriggerOnPlaybackComplete();
         }
     }
 

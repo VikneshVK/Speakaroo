@@ -313,7 +313,7 @@ public class PhotoQuestManager : MonoBehaviour
         albumImage.sprite = photoSprite;
         albumText.text = animalName;
 
-        yield return new WaitForSeconds(3f); // Wait for 2 seconds to show updated album slot
+        yield return new WaitForSeconds(5f); // Wait for 2 seconds to show updated album slot
 
         // Tween scales of Animation Panel children to zero
         foreach (Transform child in animationPanel)

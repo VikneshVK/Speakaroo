@@ -11,13 +11,16 @@ public class LVL4Sc3HelperHand : MonoBehaviour
     private GameObject currentHelperHand; 
     private Coroutine helperRoutine;
 
-    
+
     public void SpawnHelperHand(Vector3 spawnPosition, Vector3 tweenTargetPosition)
     {
+        Debug.Log($"Spawning helper hand at {spawnPosition}, moving to {tweenTargetPosition}");
+
         if (helperRoutine != null)
         {
             StopCoroutine(helperRoutine);
         }
+
         helperRoutine = StartCoroutine(HelperHandRoutine(spawnPosition, tweenTargetPosition));
     }
 
@@ -25,26 +28,26 @@ public class LVL4Sc3HelperHand : MonoBehaviour
 
     private IEnumerator HelperHandRoutine(Vector3 spawnPosition, Vector3 tweenTargetPosition)
     {
-
-        yield return new WaitForSeconds(helperHandDelay);
-
-
         if (currentHelperHand != null)
         {
             Destroy(currentHelperHand);
         }
 
-
         currentHelperHand = Instantiate(helperHandPrefab, spawnPosition, Quaternion.identity);
-
+        Debug.Log("Helper hand instantiated.");
 
         yield return new WaitForSeconds(delayBeforeTween);
 
-
-        LeanTween.move(currentHelperHand, tweenTargetPosition, tweenDuration).setLoopClamp();
+        if (currentHelperHand != null)
+        {
+            LeanTween.move(currentHelperHand, tweenTargetPosition, tweenDuration).setLoopClamp();
+            Debug.Log("Helper hand moving with LeanTween.");
+        }
+        else
+        {
+            Debug.LogError("Helper hand is null when attempting to move.");
+        }
     }
-
-    
 
 
 

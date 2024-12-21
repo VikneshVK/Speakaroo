@@ -71,12 +71,13 @@ public class ST_AudioManager : MonoBehaviour
 
     private void Start()
     {
-        SfxAudioSource = GameObject.FindWithTag("SFXAudioSource").GetComponent<AudioSource>();
+        
         ST_Canvas = GameObject.FindGameObjectWithTag("STCanvas");
         displayText = ST_Canvas.transform.Find("UI_Fitter/DisplayText").gameObject.GetComponent<TextMeshProUGUI>();
         retryButton = ST_Canvas.transform.Find("UI_Fitter/RetryButton").gameObject.GetComponent<Button>();
         Jojo = ST_Canvas.transform.Find("UI_Fitter/char holder/Jojo").gameObject.GetComponent<Image>();
         Kiki = ST_Canvas.transform.Find("UI_Fitter/char holder/Kiki").gameObject.GetComponent<Image>();
+        SfxAudioSource = GameObject.FindWithTag("SFXAudioSource").GetComponent<AudioSource>();
         SfxAudio1 = Resources.Load<AudioClip>("Audio/sfx/Start Record");
         SfxAudio2 = Resources.Load<AudioClip>("Audio/sfx/Start Playback");
         JojoAnimator = Jojo.GetComponent<Animator>();

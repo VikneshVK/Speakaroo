@@ -137,7 +137,7 @@ public class Lvl4Sc1JojoController : MonoBehaviour
     public void CheckAndEnableFridgeCollider()
     {
         if (!fridgeColliderEnabled && animator.GetCurrentAnimatorStateInfo(0).IsName("Talk") &&
-            animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.9f)
+            animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f)
         {
             if (fridgeCollider != null)
             {

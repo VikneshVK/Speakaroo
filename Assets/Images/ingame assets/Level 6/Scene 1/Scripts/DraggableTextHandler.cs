@@ -19,6 +19,8 @@ public class DraggableTextHandler : MonoBehaviour
     public AudioSource buttonAudioSource; // AudioSource attached to the button
     public GameObject childTextObject; // The TextMeshPro child object to enable and scale
     public Button retryButton;
+    private int retryButtonCount = 0;
+    private bool retryButtonClicked = false;
     public Canvas canvas; // Reference to the canvas
     public TextMeshProUGUI tmpText; // Reference to the TMP component
     public TextMeshProUGUI textComponent;
@@ -32,10 +34,15 @@ public class DraggableTextHandler : MonoBehaviour
     private static List<DraggableTextHandler> allDraggableTextHandlers = new List<DraggableTextHandler>(); // Static list of all instances
 
     /*private string recordedClipName = "RecordedAudio";*/
-     private bool isButtonClicked = false;
+    private bool isButtonClicked = false;
     public BeachBoxHandler beachBoxHandler;
+    private static DraggableTextHandler lastClickedHandler;
 
-     private const string musicVolumeParam = "MusicVolume";
+    private AudioSource SfxAudioSource;
+    private AudioClip SfxAudio1;
+    private AudioClip SfxAudio2;
+
+    private const string musicVolumeParam = "MusicVolume";
     private const string AmbientVolumeParam = "AmbientVolume";
 
     private void Awake()
@@ -54,6 +61,9 @@ public class DraggableTextHandler : MonoBehaviour
     {
         // Get the initial position dynamically from BeachBoxHandler once at start
         UpdateInitialPosition();
+        SfxAudioSource = GameObject.FindWithTag("SFXAudioSource").GetComponent<AudioSource>();
+        SfxAudio1 = Resources.Load<AudioClip>("Audio/sfx/Start Record");
+        SfxAudio2 = Resources.Load<AudioClip>("Audio/sfx/Start Playback");
         if (ringImage != null) ringImage.fillAmount = 0;
     }
     
@@ -79,6 +89,9 @@ public class DraggableTextHandler : MonoBehaviour
             return;
 
         isButtonClicked = true;
+        lastClickedHandler = this;
+        retryButton.onClick.RemoveAllListeners();
+        retryButton.onClick.AddListener(() => OnRetryButtonClick(this));
 
         // Deactivate other game objects
         foreach (var handler in allDraggableTextHandlers)
@@ -201,17 +214,55 @@ public class DraggableTextHandler : MonoBehaviour
         {
             Debug.Log("No significant voice detected.");
         }
-
+        SfxAudioSource.PlayOneShot(SfxAudio2);
         yield return StartCoroutine(PlayRecordedAudio());
 
         retryButton.interactable = true;
+        retryButtonClicked = false;
 
         retryButton.GetComponent<Image>().sprite = Resources.Load<Sprite>("Images/STMechanics/speak-1");
 
-        yield return new WaitForSeconds(3f);
+        float retryDuration = 2f;
+        float elapsedTime = 0f;
+
+        while (elapsedTime < retryDuration)
+        {
+            if (retryButtonClicked)
+            {
+                yield break; // Exit if the retry button was clicked
+            }
+
+            elapsedTime += Time.deltaTime;
+            yield return null;
+        }
 
         ScaleDownAndSpawnPrefab();
     }
+
+    public void OnRetryButtonClick(DraggableTextHandler handler)
+    {
+        if (lastClickedHandler != null)
+        {
+            if (retryButtonCount < 1)
+            {
+                retryButtonCount++;
+                retryButtonClicked = true;
+                lastClickedHandler.isButtonClicked = false; // Reset the flag
+                lastClickedHandler.OnButtonClicked(); // Call OnButtonClicked on the last clicked handler
+            }
+            else
+            {
+                retryButton.interactable = false;
+                lastClickedHandler.ScaleDownAndSpawnPrefab(); // Or any final action
+            }
+        }
+        else
+        {
+            Debug.LogError("No last clicked handler found.");
+        }
+    }
+
+
 
     private IEnumerator StartRecording()
     {
@@ -223,7 +274,7 @@ public class DraggableTextHandler : MonoBehaviour
 
         int recordingDuration = 5;
         int frequency = 44100;
-
+        SfxAudioSource.PlayOneShot(SfxAudio1);
         audioSource2.clip = Microphone.Start(null, false, recordingDuration, frequency);
         Debug.Log("Recording started...");
 
@@ -242,9 +293,9 @@ public class DraggableTextHandler : MonoBehaviour
         }
 
         Debug.Log("Recording completed.");
-
-        // Restore the music volume after recording
         
+        // Restore the music volume after recording
+
     }
 
 
@@ -388,7 +439,9 @@ public class DraggableTextHandler : MonoBehaviour
             });
 
         textComponent.text = "What do we play next?";
+        retryButtonCount = 0;
         gameObject.SetActive(false);
+        retryButton.interactable = false;
 
         // Re-enable dragging for the next playthrough
         EnableAllButtonsEventTriggers();

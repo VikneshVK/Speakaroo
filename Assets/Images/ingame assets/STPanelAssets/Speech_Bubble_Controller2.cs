@@ -24,11 +24,11 @@ public class Speech_Bubble_Controller2 : MonoBehaviour
         }
     }
 
-    private void Update()
+    private void OnMouseDown()
     {
-        if (!isTapped && Input.GetMouseButtonDown(0)) 
+        if (!isTapped)
         {
-            isTapped = true; 
+            isTapped = true;
             OnTapped();
         }
     }

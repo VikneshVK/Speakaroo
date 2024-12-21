@@ -7,7 +7,7 @@ public class DishdragController : MonoBehaviour
 {
     public static List<DishdragController> allDishControllers = new List<DishdragController>();    
     public LVL4Sc3HelperHand helperHandManager;
-    public float helperHandDelay = 5f;
+    public float helperHandDelay;
     public bool isDroppedCorrectly = false;
     public AudioSource audio1;
     public TextMeshProUGUI subtitleText;
@@ -198,14 +198,27 @@ public class DishdragController : MonoBehaviour
 
     private Transform GetAvailableTarget(Transform target1, Transform target2, HashSet<Transform> usedTargets)
     {
-        if (!usedTargets.Contains(target1) && Vector3.Distance(transform.position, target1.position) < 1.0f)
+        if (!usedTargets.Contains(target1))
         {
-            return target1;
+            Debug.Log($"Checking Target1 {target1.name} for {gameObject.name}. Distance: {Vector3.Distance(transform.position, target1.position)}");
+            if (Vector3.Distance(transform.position, target1.position) < 1.0f)
+            {
+                Debug.Log($"Target1 {target1.name} is valid for {gameObject.name}");
+                return target1;
+            }
         }
-        if (!usedTargets.Contains(target2) && Vector3.Distance(transform.position, target2.position) < 1.0f)
+
+        if (!usedTargets.Contains(target2))
         {
-            return target2;
+            Debug.Log($"Checking Target2 {target2.name} for {gameObject.name}. Distance: {Vector3.Distance(transform.position, target2.position)}");
+            if (Vector3.Distance(transform.position, target2.position) < 1.0f)
+            {
+                Debug.Log($"Target2 {target2.name} is valid for {gameObject.name}");
+                return target2;
+            }
         }
+
+       
         return null;
     }
 
@@ -229,50 +242,80 @@ public class DishdragController : MonoBehaviour
     // Start the helper hand delay timer
     public void StartHelperHandTimer()
     {
-        if (helperHandCoroutine != null)
+        if (helperHandManager == null)
         {
-            StopCoroutine(helperHandCoroutine);
+            Debug.LogError("Helper Hand Manager is not assigned for " + gameObject.name);
+            return;
         }
-        helperHandCoroutine = StartCoroutine(HelperHandDelayTimer());
-    }
-
-    private IEnumerator HelperHandDelayTimer()
-    {
-        yield return new WaitForSeconds(helperHandDelay);
-
         if (!isDroppedCorrectly)
         {
-            // Determine the appropriate drop target dynamically
-            Transform target = null;
-
-            if (gameObject.name.Contains("Bowl"))
-            {
-                target = GetAvailableTarget(bowlDropTarget1, bowlDropTarget2, usedBowlTargets);
-            }
-            else if (gameObject.name.Contains("glass"))
-            {
-                target = GetAvailableTarget(glassDropTarget1, glassDropTarget2, usedGlassTargets);
-            }
-            else if (gameObject.name.Contains("plate"))
-            {
-                target = GetAvailableTarget(plateDropTarget1, plateDropTarget2, usedPlateTargets);
-            }
-
-            // If a valid target exists, spawn the helper hand
-            if (target != null)
-            {
-                helperHandManager.SpawnHelperHand(transform.position, target.position);
-            }
+            StartCoroutine(TriggerHelperHandWithDelay());
         }
     }
+    private IEnumerator TriggerHelperHandWithDelay()
+    {
+        Debug.Log("TriggerHelperHandWithDelay started for " + gameObject.name);
+        yield return new WaitForSeconds(helperHandDelay);
 
+        Transform target = null;
+
+        // Determine drop targets based on the object name
+        if (gameObject.name.Contains("Bowl"))
+        {
+            target = GetAvailableTarget(bowlDropTarget1, bowlDropTarget2, usedBowlTargets);
+            if (target == null && !usedBowlTargets.Contains(bowlDropTarget1))
+            {
+                target = bowlDropTarget1; // Fallback to unused target
+            }
+            else if (target == null && !usedBowlTargets.Contains(bowlDropTarget2))
+            {
+                target = bowlDropTarget2; // Fallback to unused target
+            }
+        }
+        else if (gameObject.name.Contains("glass"))
+        {
+            target = GetAvailableTarget(glassDropTarget1, glassDropTarget2, usedGlassTargets);
+            if (target == null && !usedGlassTargets.Contains(glassDropTarget1))
+            {
+                target = glassDropTarget1; // Fallback to unused target
+            }
+            else if (target == null && !usedGlassTargets.Contains(glassDropTarget2))
+            {
+                target = glassDropTarget2; // Fallback to unused target
+            }
+        }
+        else if (gameObject.name.Contains("plate"))
+        {
+            target = GetAvailableTarget(plateDropTarget1, plateDropTarget2, usedPlateTargets);
+            if (target == null && !usedPlateTargets.Contains(plateDropTarget1))
+            {
+                target = plateDropTarget1; // Fallback to unused target
+            }
+            else if (target == null && !usedPlateTargets.Contains(plateDropTarget2))
+            {
+                target = plateDropTarget2; // Fallback to unused target
+            }
+        }
+
+        if (target != null)
+        {
+            Debug.Log("Target found: " + target.name + " for " + gameObject.name);
+            helperHandManager.SpawnHelperHand(transform.position, target.position);
+        }
+        else
+        {
+            Debug.LogWarning("No valid target found for " + gameObject.name);
+        }
+    }
 
     public static void StartHelperHandCheckForAll()
     {
+        Debug.Log("checking Dish Controller");
         foreach (var dishController in allDishControllers)
         {
             if (!dishController.isDroppedCorrectly)
             {
+                Debug.Log("Dish Controller identified calling helper timer");
                 dishController.StartHelperHandTimer();
                 break;
             }
