@@ -343,7 +343,7 @@ public class Lvl7Sc1JojoController : MonoBehaviour
                 jojoAnimator.SetBool("canTalk", true);
                 boyAudioSource.clip = Audio3;
                 boyAudioSource.Play();
-                StartCoroutine(RevealTextWordByWord("I want omething Sweet", 0.5f));
+                StartCoroutine(RevealTextWordByWord("I want Something Sweet", 0.5f));
             }
 
             isTalking = true;
