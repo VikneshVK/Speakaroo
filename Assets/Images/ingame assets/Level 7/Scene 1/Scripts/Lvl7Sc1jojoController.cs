@@ -43,7 +43,7 @@ public class Lvl7Sc1JojoController : MonoBehaviour
     public AudioClip Audio3;
     public AudioClip Audio4;
     private AudioSource boyAudioSource;
-    public static int currentStopIndex = 0; // Current stop position index
+    public static int currentStopIndex; 
     private Animator kikiAnimator;
     private bool AudioPlayed = false;
     private bool isWalking = false;
@@ -80,6 +80,7 @@ public class Lvl7Sc1JojoController : MonoBehaviour
         MoveToNextStopPosition();
         panel1Complete = false;
         SfxAudioSource = GameObject.FindWithTag("SFXAudioSource").GetComponent<AudioSource>();
+        currentStopIndex = 0;
     }
 
     void Update()
@@ -492,7 +493,7 @@ public class Lvl7Sc1JojoController : MonoBehaviour
                 Debug.Log($"Scaling non-button {child.name}, Initial Scale: {child.localScale}");
                 child.localScale = Vector3.zero;
 
-                LeanTween.scale(childGameObject, Vector3.one, 0.5f)
+                LeanTween.scale(childGameObject, Vector3.one, 0.2f)
                     .setEase(LeanTweenType.easeOutBack)
                     .setDelay(tweenDelay)
                     .setOnComplete(() =>
@@ -504,7 +505,7 @@ public class Lvl7Sc1JojoController : MonoBehaviour
                             Debug.Log($"Playing audio on {childGameObject.name}");
                         }
                     });
-                tweenDelay += 1.5f; // Increase delay for the next tween
+                tweenDelay += 0.6f; // Increase delay for the next tween
             }
         }
 

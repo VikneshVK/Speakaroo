@@ -69,8 +69,8 @@ public class RetryButton : MonoBehaviour
 
         // Set initial sprite to default with alpha 20
         buttonImage.sprite = defaultSprite;
-       /* SetAlpha(buttonImage, 20);
-        SetAlpha(ringImage, 20);*/
+        SetAlpha(buttonImage, 20);
+        SetAlpha(ringImage, 20);
 
         retryButton.interactable = false;
 
@@ -163,7 +163,8 @@ public class RetryButton : MonoBehaviour
         buttonImage.sprite = playbackSprite;
         
         retryButton.interactable = false;
-
+        SetAlpha(buttonImage, 255);
+        SetAlpha(ringImage, 255);
         // Start filling the ring during recording
         ringImage.fillAmount = 1f;
         LeanTween.value(gameObject, 1f, 0f, recordLength)
@@ -185,7 +186,8 @@ public class RetryButton : MonoBehaviour
         {
             // Change the button image to the playback sprite
             buttonImage.sprite = defaultSprite;
-
+            SetAlpha(buttonImage, 255);
+            SetAlpha(ringImage, 255);
             // Disable raycasts for the retry button during playback
             retryButton.interactable = false;
             retryButton.GetComponent<Image>().raycastTarget = false;
@@ -228,9 +230,9 @@ public class RetryButton : MonoBehaviour
             buttonImage.sprite = defaultSprite;
             retryButton.interactable = false; // Disable interaction
             retryButton.GetComponent<Image>().raycastTarget = false; // Disable raycasts.
-            
-           /* SetAlpha(buttonImage, 20);
-            SetAlpha(ringImage, 20);*/
+
+            SetAlpha(buttonImage, 20);
+            SetAlpha(ringImage, 20);
 
             Debug.Log("Max retries reached for Card 1. Retry button is now disabled.");
 
@@ -291,8 +293,8 @@ public class RetryButton : MonoBehaviour
 
         // Reset button appearance for Card 2
         buttonImage.sprite = defaultSprite;
-       /* SetAlpha(buttonImage, 20);
-        SetAlpha(ringImage, 20);*/
+        SetAlpha(buttonImage, 20);
+        SetAlpha(ringImage, 20);
 
         Debug.Log("Card 2 enabled. Ready for interaction.");
     }
@@ -302,8 +304,8 @@ public class RetryButton : MonoBehaviour
     {
 
         buttonImage.sprite = defaultSprite;
-       /* SetAlpha(buttonImage, 20);
-        SetAlpha(ringImage, 20);*/
+        SetAlpha(buttonImage, 20);
+        SetAlpha(ringImage, 20);
         retryButton.interactable = false;
     }
 
@@ -377,10 +379,10 @@ public class RetryButton : MonoBehaviour
     }
 
 
-   /* private void SetAlpha(Image image, float alphaValue)
+    private void SetAlpha(Image image, float alphaValue)
     {
         Color color = image.color;
         color.a = alphaValue / 255f;
         image.color = color;
-    }*/
+    }
 }

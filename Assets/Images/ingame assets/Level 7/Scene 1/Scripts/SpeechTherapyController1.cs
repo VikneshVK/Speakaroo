@@ -25,6 +25,7 @@ public class SpeechTherapyController1 : MonoBehaviour
 
     [Header("Retrybutton")]
     public Button retryButton;
+    private Image buttonImage;
     public Image ringImage;
     public Sprite Mic;
     public Sprite Speaker;
@@ -54,7 +55,7 @@ public class SpeechTherapyController1 : MonoBehaviour
         {
             audioSource = gameObject.AddComponent<AudioSource>();
         }
-        
+        buttonImage = retryButton.GetComponent<Image>();
         SfxAudio1 = Resources.Load<AudioClip>("Audio/sfx/Start Record");
         SfxAudio2 = Resources.Load<AudioClip>("Audio/sfx/Start Playback");
     }
@@ -155,6 +156,8 @@ public class SpeechTherapyController1 : MonoBehaviour
     }
     private IEnumerator RecordAudio(int duration)
     {
+        SetAlpha(buttonImage, 255);
+        SetAlpha(ringImage, 255);
         Debug.Log("Recording audio...");
         SfxAudioSource.PlayOneShot(SfxAudio1);
         float recordingTime = duration;
@@ -364,6 +367,9 @@ public class SpeechTherapyController1 : MonoBehaviour
                 Debug.LogWarning("Unknown button type. PrefabToSpawn not updated.");
                 break;
         }
+
+        SetAlpha(buttonImage, 20);
+        SetAlpha(ringImage, 20);
         Debug.Log($"PrefabToSpawn updated to {jojoController.PrefabToSpawn}");
     }
     public void retryButtonClick()
@@ -384,5 +390,11 @@ public class SpeechTherapyController1 : MonoBehaviour
                 Debug.LogWarning("Unknown button type. Retry button click not handled.");
                 break;
         }
+    }
+    private void SetAlpha(Image image, float alphaValue)
+    {
+        Color color = image.color;
+        color.a = alphaValue / 255f;
+        image.color = color;
     }
 }

@@ -14,7 +14,7 @@ public class SpeechTherapyController2 : MonoBehaviour
     public Button Button1;
     public Button Button2;
     public Button Button3;
-    
+
 
     [Header("Audio References")]
     public AudioClip audioClip1; // AudioClip to play when button1Click is called
@@ -25,6 +25,7 @@ public class SpeechTherapyController2 : MonoBehaviour
 
     [Header("Retrybutton")]
     public Button retryButton;
+    private Image buttonImage;
     public Image ringImage;
     public Sprite Mic;
     public Sprite Speaker;
@@ -50,13 +51,13 @@ public class SpeechTherapyController2 : MonoBehaviour
     private void Start()
     {
         retryCount = 0;
-       
+
         audioSource = GetComponent<AudioSource>();
         if (audioSource == null)
         {
             audioSource = gameObject.AddComponent<AudioSource>();
         }
-        
+        buttonImage = retryButton.GetComponent<Image>();
         SfxAudio1 = Resources.Load<AudioClip>("Audio/sfx/Start Record");
         SfxAudio2 = Resources.Load<AudioClip>("Audio/sfx/Start Playback");
     }
@@ -92,9 +93,9 @@ public class SpeechTherapyController2 : MonoBehaviour
         }
 
         retryButton.image.sprite = Mic;
-        
+
         yield return StartCoroutine(RecordAudio(5)); // 5 seconds recording
-      
+
         float[] samples = new float[recordedClip.samples];
         recordedClip.GetData(samples, 0);
 
@@ -104,12 +105,12 @@ public class SpeechTherapyController2 : MonoBehaviour
 
         recordedClip.SetData(samples, 0);
         retryButton.image.sprite = Speaker;
-       
+
         RecordedAudioSource.clip = recordedClip;
         SfxAudioSource.PlayOneShot(SfxAudio2);
         RecordedAudioSource.Play();
         Debug.Log("Playing the processed recorded audio...");
-        
+
         float recordedAudioDuration = RecordedAudioSource.clip.length;
         float startTime = Time.time;
         while (Time.time - startTime < recordedAudioDuration)
@@ -158,6 +159,8 @@ public class SpeechTherapyController2 : MonoBehaviour
 
     private IEnumerator RecordAudio(int duration)
     {
+        SetAlpha(buttonImage, 255);
+        SetAlpha(ringImage, 255);
         Debug.Log("Recording audio...");
         SfxAudioSource.PlayOneShot(SfxAudio1);
         float recordingTime = duration;
@@ -234,7 +237,7 @@ public class SpeechTherapyController2 : MonoBehaviour
     }
     private IEnumerator HandleButton2Click()
     {
-        
+
         text1.text = "I want to Eat";
         text2.text = "BlueBerry Icecream";
         setButtonnotInteractable();
@@ -270,7 +273,7 @@ public class SpeechTherapyController2 : MonoBehaviour
         RecordedAudioSource.clip = recordedClip;
         RecordedAudioSource.Play();
         Debug.Log("Playing the processed recorded audio...");
-        
+
         float recordedAudioDuration = RecordedAudioSource.clip.length;
         float startTime = Time.time;
         while (Time.time - startTime < recordedAudioDuration)
@@ -326,7 +329,7 @@ public class SpeechTherapyController2 : MonoBehaviour
         retryButton.image.sprite = Speaker;
         RecordedAudioSource.clip = recordedClip;
         RecordedAudioSource.Play();
-        Debug.Log("Playing the processed recorded audio...");        
+        Debug.Log("Playing the processed recorded audio...");
         float recordedAudioDuration = RecordedAudioSource.clip.length;
         float startTime = Time.time;
         while (Time.time - startTime < recordedAudioDuration)
@@ -345,7 +348,7 @@ public class SpeechTherapyController2 : MonoBehaviour
     {
         Button1.interactable = false;
         Button2.interactable = false;
-        Button3.interactable = false;        
+        Button3.interactable = false;
     }
 
     private void UpdatePrefabToSpawn()
@@ -365,6 +368,9 @@ public class SpeechTherapyController2 : MonoBehaviour
                 Debug.LogWarning("Unknown button type. PrefabToSpawn not updated.");
                 break;
         }
+
+        SetAlpha(buttonImage, 20);
+        SetAlpha(ringImage, 20);
         Debug.Log($"PrefabToSpawn updated to {jojoController.PrefabToSpawn}");
     }
     public void retryButtonClick()
@@ -385,5 +391,12 @@ public class SpeechTherapyController2 : MonoBehaviour
                 Debug.LogWarning("Unknown button type. Retry button click not handled.");
                 break;
         }
+    }
+
+    private void SetAlpha(Image image, float alphaValue)
+    {
+        Color color = image.color;
+        color.a = alphaValue / 255f;
+        image.color = color;
     }
 }

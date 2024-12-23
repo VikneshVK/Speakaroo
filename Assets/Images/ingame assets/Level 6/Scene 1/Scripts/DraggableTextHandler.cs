@@ -19,6 +19,7 @@ public class DraggableTextHandler : MonoBehaviour
     public AudioSource buttonAudioSource; // AudioSource attached to the button
     public GameObject childTextObject; // The TextMeshPro child object to enable and scale
     public Button retryButton;
+    private Image buttonImage;
     private int retryButtonCount = 0;
     private bool retryButtonClicked = false;
     public Canvas canvas; // Reference to the canvas
@@ -65,6 +66,9 @@ public class DraggableTextHandler : MonoBehaviour
         SfxAudio1 = Resources.Load<AudioClip>("Audio/sfx/Start Record");
         SfxAudio2 = Resources.Load<AudioClip>("Audio/sfx/Start Playback");
         if (ringImage != null) ringImage.fillAmount = 0;
+        buttonImage = retryButton.GetComponent<Image>();
+        SetAlpha(buttonImage, 20);
+        SetAlpha(ringImage, 20);
     }
     
 
@@ -269,7 +273,8 @@ public class DraggableTextHandler : MonoBehaviour
         // Mute the music before recording
         SetMusicVolume(-80f);
         SetAmbientVolume(-80f);
-
+        SetAlpha(buttonImage, 255);
+        SetAlpha(ringImage, 255);
         retryButton.GetComponent<Image>().sprite = Resources.Load<Sprite>("Images/STMechanics/speak");
 
         int recordingDuration = 5;
@@ -440,6 +445,8 @@ public class DraggableTextHandler : MonoBehaviour
 
         textComponent.text = "What do we play next?";
         retryButtonCount = 0;
+        SetAlpha(buttonImage, 20);
+        SetAlpha(ringImage, 20);
         gameObject.SetActive(false);
         retryButton.interactable = false;
 
@@ -447,9 +454,12 @@ public class DraggableTextHandler : MonoBehaviour
         EnableAllButtonsEventTriggers();
     }
 
-
-
-
+    private void SetAlpha(Image image, float alphaValue)
+    {
+        Color color = image.color;
+        color.a = alphaValue / 255f;
+        image.color = color;
+    }
 
     public void UpdateInitialPositionFromHandler()
     {
