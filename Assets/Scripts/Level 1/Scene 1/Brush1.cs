@@ -8,6 +8,7 @@ public class Brush1 : MonoBehaviour
     private GameObject foam;
     private ParticleSystem foamParticles;
     private GameObject Boy;
+    private Animator boyAnimator;
     public float zoomSize = 5f;
     public float zoomDuration = 2f;
     public float hoverDuration = 5f;
@@ -34,6 +35,7 @@ public class Brush1 : MonoBehaviour
         teeth = GameObject.FindWithTag("Teeth");
         foam = GameObject.FindWithTag("Foam");
         Boy = GameObject.FindWithTag("Player");
+        boyAnimator = Boy.GetComponent<Animator>();
         foamParticles = foam?.GetComponentInChildren<ParticleSystem>();
         brushSpriteRenderer = GetComponent<SpriteRenderer>();
         originalSprite = brushSpriteRenderer.sprite;
@@ -120,6 +122,7 @@ public class Brush1 : MonoBehaviour
                 if (hit.collider.gameObject == teeth)
                 {
                     currentlyHovering = true;
+                    boyAnimator.SetTrigger("shakeHead");
                     if (!isHovering)
                     {
                         isHovering = true;
