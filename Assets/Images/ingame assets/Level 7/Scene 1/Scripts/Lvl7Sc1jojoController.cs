@@ -189,7 +189,7 @@ public class Lvl7Sc1JojoController : MonoBehaviour
             .setEase(LeanTweenType.easeOutBack)
             .setOnComplete(() =>
             {
-                SetMusicVolume(-35f);
+                SetMusicVolume(-25f);
                 SetAmbientVolume(-10f);
                 panelToScale1.SetActive(false);
                 int prefabIndex = Mathf.Clamp(PrefabToSpawn - 1, 0, foodPrefabs.Length - 1);
@@ -211,7 +211,7 @@ public class Lvl7Sc1JojoController : MonoBehaviour
             .setEase(LeanTweenType.easeOutBack)
             .setOnComplete(() =>
             {
-                SetMusicVolume(-35f);
+                SetMusicVolume(-25f);
                 SetAmbientVolume(-10f);
                 panelToScale2.SetActive(false);
                 int prefabIndex = Mathf.Clamp(PrefabToSpawn - 1, 0, foodPrefabs.Length - 1);
@@ -236,7 +236,7 @@ public class Lvl7Sc1JojoController : MonoBehaviour
                 int prefabIndex = Mathf.Clamp(PrefabToSpawn - 1, 0, foodPrefabs.Length - 1);
                 if (!isFood3Spawned)
                 {
-                    SetMusicVolume(-35f);
+                    SetMusicVolume(-25f);
                     SetAmbientVolume(-10f);
                     isFood3Spawned = true;
                     SpawnAndTweenPrefab(prefabIndex, foodSpawnLocation3);
@@ -335,7 +335,7 @@ public class Lvl7Sc1JojoController : MonoBehaviour
                 jojoAnimator.SetBool("canTalk", true);
                 boyAudioSource.clip = Audio1;
                 boyAudioSource.Play();
-                StartCoroutine(RevealTextWordByWord("Iam Hungry..! Lets buy some Food", 0.5f));
+                StartCoroutine(RevealTextWordByWord("I am Hungry..! Lets buy some Food", 0.5f));
             }
             else
             {
@@ -478,13 +478,44 @@ public class Lvl7Sc1JojoController : MonoBehaviour
 
         Debug.Log($"Scaling children of {uiElementsHolder.name}, Count: {uiElementsHolder.childCount}");
 
-        // First, tween all the buttons
-        float buttonTweenDelay = 0f;
+        float tweenDelay = 0f; // Start delay for all tweens
+
         for (int i = 0; i < uiElementsHolder.childCount; i++)
         {
             Transform child = uiElementsHolder.GetChild(i);
             GameObject childGameObject = child.gameObject;
             Button button = childGameObject.GetComponent<Button>();
+
+            // Process only non-button objects
+            if (button == null || button.name == "RetryButton")
+            {
+                Debug.Log($"Scaling non-button {child.name}, Initial Scale: {child.localScale}");
+                child.localScale = Vector3.zero;
+
+                LeanTween.scale(childGameObject, Vector3.one, 0.5f)
+                    .setEase(LeanTweenType.easeOutBack)
+                    .setDelay(tweenDelay)
+                    .setOnComplete(() =>
+                    {
+                        AudioSource audio = childGameObject.GetComponent<AudioSource>();
+                        if (audio != null)
+                        {
+                            audio.Play();
+                            Debug.Log($"Playing audio on {childGameObject.name}");
+                        }
+                    });
+                tweenDelay += 1.5f; // Increase delay for the next tween
+            }
+        }
+
+        // Then, tween the button game objects
+        for (int i = 0; i < uiElementsHolder.childCount; i++)
+        {
+            Transform child = uiElementsHolder.GetChild(i);
+            GameObject childGameObject = child.gameObject;
+            Button button = childGameObject.GetComponent<Button>();
+
+            // Process only button objects
             if (button != null && button.name != "RetryButton")
             {
                 Debug.Log($"Scaling button {child.name}, Initial Scale: {child.localScale}");
@@ -493,7 +524,7 @@ public class Lvl7Sc1JojoController : MonoBehaviour
 
                 LeanTween.scale(childGameObject, Vector3.one, 0.5f)
                     .setEase(LeanTweenType.easeOutBack)
-                    .setDelay(buttonTweenDelay)
+                    .setDelay(tweenDelay)
                     .setOnComplete(() =>
                     {
                         AudioSource audio = childGameObject.GetComponent<AudioSource>();
@@ -502,41 +533,13 @@ public class Lvl7Sc1JojoController : MonoBehaviour
                             audio.Play();
                             Debug.Log($"Playing audio on {childGameObject.name}");
                         }
+                        button.interactable = true; // Re-enable button after tweening
                     });
-                buttonTweenDelay += 1.5f; // Increase delay for the next button
+                tweenDelay += 1.5f; // Increase delay for the next tween
             }
         }
 
-        // Then, tween the rest (non-button) game objects
-        float nonButtonTweenDelay = buttonTweenDelay; // Start non-button tweens after all button tweens
-        for (int i = 0; i < uiElementsHolder.childCount; i++)
-        {
-            Transform child = uiElementsHolder.GetChild(i);
-            GameObject childGameObject = child.gameObject;
-            Button button = childGameObject.GetComponent<Button>();
-            if (button == null || button.name == "RetryButton")
-            {
-                Debug.Log($"Scaling non-button {child.name}, Initial Scale: {child.localScale}");
-                child.localScale = Vector3.zero;
-
-                LeanTween.scale(childGameObject, Vector3.one, 0.5f)
-                    .setEase(LeanTweenType.easeOutBack)
-                    .setDelay(nonButtonTweenDelay)
-                    .setOnComplete(() =>
-                    {
-                        AudioSource audio = childGameObject.GetComponent<AudioSource>();
-                        if (audio != null)
-                        {
-                            audio.Play();
-                            Debug.Log($"Playing audio on {childGameObject.name}");
-                        }
-                    });
-                nonButtonTweenDelay += 1.5f; // Increase delay for the next non-button
-            }
-        }
-
-        // Wait for all tweens to complete before making buttons interactable
-        yield return new WaitForSeconds(Mathf.Max(buttonTweenDelay, nonButtonTweenDelay));
+        yield return new WaitForSeconds(tweenDelay);
 
         // Finally, make all buttons interactable after all tweens are complete
         foreach (Transform child in uiElementsHolder)

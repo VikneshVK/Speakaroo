@@ -33,6 +33,7 @@ public class DishController : MonoBehaviour
     private DishWashingManager dishWashingManager;
     private LV4DragManager LV4DragManager;
     private AudioSource audioSource;
+    private Coroutine subtitleCoroutine;
 
     private float timer = 0f;
     public bool helperActive = false;
@@ -111,15 +112,20 @@ public class DishController : MonoBehaviour
             string subtitleText = "";
             if (gameObject.name == "Bowl_1")
             {
-                subtitleText = "scrub scrub scrub the bowl";
+                subtitleText = "Scrub Scrub Scrub the Bowl";
             }
-            else if (gameObject.name == "Plate")
+            else if (gameObject.name == "Plate_1")
             {
-                subtitleText = "scrub scrub scrub the plate";
+                subtitleText = "Scrub Scrub Scrub the Plate";
             }
-            else if (gameObject.name == "Glass")
+            else if (gameObject.name == "Glass_1")
             {
-                subtitleText = "scrub scrub scrub the glass";
+                subtitleText = "Scrub Scrub Scrub the cup";
+            }
+
+            if (subtitleCoroutine != null)
+            {
+                StopCoroutine(subtitleCoroutine);
             }
 
             LeanTween.move(birdRectTransform, new Vector2(-250, 250), 0.5f).setOnComplete(() =>
@@ -135,9 +141,8 @@ public class DishController : MonoBehaviour
                     Debug.LogError("AudioSource is not assigned or missing in the Inspector.");
                 }
 
-                StartCoroutine(RevealTextWordByWord(subtitleText, 0.5f));
+                subtitleCoroutine = StartCoroutine(RevealTextWordByWord(subtitleText, 0.5f));
                 StartCoroutine(WaitAndReturnBirdImage(birdRectTransform));
-                
 
                 Debug.Log("AnimateBirdInstruction: timerRunning set to true globally");
             });

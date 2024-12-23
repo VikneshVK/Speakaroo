@@ -10,6 +10,7 @@ public class Brush_Controller : MonoBehaviour
     public Animator boyAnimator;
     public LayerMask interactionLayers;
     public GameObject Paste;
+    public LVL1helperhandController helperhand;
 
     private Camera mainCamera;
     private Animator animator;
@@ -42,6 +43,7 @@ public class Brush_Controller : MonoBehaviour
     void OnMouseDown()
     {
         isDragging = true;
+        helperhand.ResetTimer();
     }
 
     void OnMouseUp()

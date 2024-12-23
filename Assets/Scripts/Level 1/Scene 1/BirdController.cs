@@ -15,6 +15,9 @@ public class BirdController : MonoBehaviour
     public Transform brushHolder; // Reference to the brush holder
     public Transform brushContainer; // Reference to the final position of the brush
     public Collider2D brushCollider; // Reference to the brush's collider
+    public Transform brush_Transform;
+    public Transform droplocationTransform;
+    public LVL1helperhandController helperhand;
 
     void Start()
     {
@@ -108,6 +111,7 @@ public class BirdController : MonoBehaviour
                 // Wait for the tween to complete before activating the collider
                 yield return new WaitForSeconds(tween.time);
                 brushCollider.enabled = true; // Activate the collider
+                helperhand.StartTimer(brush_Transform.position, droplocationTransform.position);
             }
             else
             {

@@ -154,6 +154,52 @@ Transform:
   - {fileID: 905095580}
   m_Father: {fileID: 380725177}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &28169395
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 28169397}
+  - component: {fileID: 28169396}
+  m_Layer: 0
+  m_Name: Helper Controller
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &28169396
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 28169395}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 134b9c26ff72b5b4284c04323504dfe6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  helperHandPrefab: {fileID: 668317662352755921, guid: f7ec2cdca01704e4cb724e19d9c8fdb8, type: 3}
+  waitTimer: 7
+--- !u!4 &28169397
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 28169395}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -3.464953, y: 0.89269364, z: 170.84389}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &33837111
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -955,6 +1001,9 @@ MonoBehaviour:
   brushHolder: {fileID: 1755840656}
   brushContainer: {fileID: 926611054}
   brushCollider: {fileID: 1224352305}
+  brush_Transform: {fileID: 1224352299}
+  droplocationTransform: {fileID: 1622203134}
+  helperhand: {fileID: 28169396}
 --- !u!61 &595711459
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -6711,6 +6760,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1
   Paste: {fileID: 751019022}
+  helperhand: {fileID: 28169396}
 --- !u!61 &1224352305
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -8089,3 +8139,4 @@ SceneRoots:
   - {fileID: 403084768}
   - {fileID: 2007530545}
   - {fileID: 2109710585}
+  - {fileID: 28169397}

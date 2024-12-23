@@ -75,7 +75,7 @@ public class Tween_Manager1 : MonoBehaviour
 
     private IEnumerator Timer(float time)
     {
-        SetMusicVolume(-35f);
+        SetMusicVolume(-25f);
         SetAmbientVolume(-10f);
         float counter = 0;
         isRetryClicked = false;

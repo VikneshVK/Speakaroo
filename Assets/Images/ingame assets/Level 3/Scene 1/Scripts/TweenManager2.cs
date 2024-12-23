@@ -78,7 +78,7 @@ public class TweenManager2 : MonoBehaviour
 
     private IEnumerator Timer(float time)
     {
-        SetMusicVolume(-35f);
+        SetMusicVolume(-25f);
         SetAmbientVolume(-10f);
         float counter = 0;
         isRetryClicked = false;
@@ -116,8 +116,7 @@ public class TweenManager2 : MonoBehaviour
     {
         speechTherapyCompleted = true;
         birdController.OnBigLeafDropped(); // Trigger bird's action for dropping the leaf
-        birdAnimator.SetTrigger("jump");
-        SetMusicVolume(0f);
+        birdAnimator.SetTrigger("jump");        
 
         LeanTween.scale(gameObject, Vector3.zero, 0.5f).setEase(LeanTweenType.easeInOutBack).setOnComplete(() =>
         {

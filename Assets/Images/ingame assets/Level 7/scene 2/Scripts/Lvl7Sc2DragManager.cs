@@ -113,7 +113,7 @@ public class Lvl7Sc2DragManager : MonoBehaviour
         if (topping == sauceTopping && sauceAudio != null)
         {
             audioManager.PlayAudio(sauceAudio);
-            StartCoroutine(RevealTextWordByWord("Put on the Tomato Sause", 0.5f));
+            StartCoroutine(RevealTextWordByWord("Put on the Tomato Sauce", 0.5f));
         }
         else if (topping == cheeseTopping && cheeseAudio != null)
         {

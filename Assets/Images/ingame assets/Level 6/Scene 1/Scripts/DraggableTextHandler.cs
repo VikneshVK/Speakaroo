@@ -222,7 +222,7 @@ public class DraggableTextHandler : MonoBehaviour
 
         retryButton.GetComponent<Image>().sprite = Resources.Load<Sprite>("Images/STMechanics/speak-1");
 
-        float retryDuration = 2f;
+        float retryDuration = 5f;
         float elapsedTime = 0f;
 
         while (elapsedTime < retryDuration)
@@ -325,7 +325,7 @@ public class DraggableTextHandler : MonoBehaviour
         retryButton.GetComponent<Image>().sprite = Resources.Load<Sprite>("Images/STMechanics/RetrySprite");
 
         // Restore the music volume after playback
-        SetMusicVolume(-35f);
+        SetMusicVolume(-25f);
         SetAmbientVolume(-10f);
     }
 
