@@ -143,8 +143,22 @@ public class dragManager : MonoBehaviour
     {
         if (index < gameObjects.Length)
         {
-            gameObjects[index].GetComponent<Collider2D>().enabled = true;
-            Debug.Log($"Activated {gameObjects[index].name} for dragging.");
+            GameObject nextObject = gameObjects[index];
+            nextObject.GetComponent<Collider2D>().enabled = true;
+
+            Debug.Log($"Activated {nextObject.name} for dragging.");
+
+            // Schedule the helper hand for the next game object
+            DragHandler dragHandler = nextObject.GetComponent<DragHandler>();
+            if (dragHandler != null && helperPointer != null)
+            {
+                helperPointer.ScheduleHelperHand(dragHandler, this);
+                Debug.Log($"Scheduled helper hand for {nextObject.name}.");
+            }
+            else
+            {
+                Debug.LogWarning($"Failed to schedule helper hand. DragHandler or HelperPointer is missing for {nextObject.name}.");
+            }
         }
     }
 
