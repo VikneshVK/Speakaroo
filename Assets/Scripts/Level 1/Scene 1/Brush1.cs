@@ -11,7 +11,7 @@ public class Brush1 : MonoBehaviour
     private Animator boyAnimator;
     public float zoomSize = 5f;
     public float zoomDuration = 2f;
-    public float hoverDuration = 5f;
+    public float hoverDuration ;
     public AudioClip sfxaudio1;
 
     private Vector3 originalCameraPosition;
