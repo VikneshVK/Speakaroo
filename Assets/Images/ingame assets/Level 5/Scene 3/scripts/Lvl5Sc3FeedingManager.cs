@@ -12,6 +12,7 @@ public class Lvl5Sc3FeedingManager : MonoBehaviour
     private Transform[] animals;
     private Animator birdAnimator;
     private AudioSource audioSource;
+    public LVL1helperhandController helperhand;
 
     public AudioClip audio1;
     public AudioClip audio2;
@@ -94,6 +95,7 @@ public class Lvl5Sc3FeedingManager : MonoBehaviour
         string animalName = currentAnimal.name;
         Transform rightFood = currentAnimal.Find("RightFood");
         Transform wrongFood = currentAnimal.Find("WrongFood");
+        Transform dropTarget = currentAnimal.Find("DropTarget");
 
         SpriteRenderer animalSprite = currentAnimal.GetComponent<SpriteRenderer>();
         if (animalSprite != null)
@@ -124,6 +126,7 @@ public class Lvl5Sc3FeedingManager : MonoBehaviour
 
         rightFood.GetComponent<Collider2D>().enabled = true;
         wrongFood.GetComponent<Collider2D>().enabled = true;
+        helperhand.StartTimer(rightFood.position, dropTarget.position);
     }
 
     private void SetBoardSprite(string animalName)

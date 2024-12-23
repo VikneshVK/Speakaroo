@@ -10,6 +10,7 @@ public class Lvl5Sc3FoodDragHandler : MonoBehaviour
     private Lvl5Sc3FeedingManager feedingManager;
     private Vector3 offset;
     private Transform glowObject;
+    public LVL1helperhandController helperController;
 
     private void Start()
     {
@@ -29,7 +30,7 @@ public class Lvl5Sc3FoodDragHandler : MonoBehaviour
         {
             Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             RaycastHit2D hit = Physics2D.Raycast(mousePos, Vector2.zero);
-
+            helperController.ResetTimer();
             if (hit.collider != null && hit.collider.gameObject == gameObject)
             {
                 isDragging = true;
