@@ -106,7 +106,9 @@ public class SpeakarooManager : MonoBehaviour
         {
             bool isSubscribed = PlayerPrefs.GetInt("SubscriptionActive", 0) == 1;
             Debug.Log($"Subscription Status: {isSubscribed}");
-            return isSubscribed;
+            //new
+            //iapController.UpdateButtonStates();
+            return isSubscribed;            
 
         }
         else
@@ -153,7 +155,8 @@ public class SpeakarooManager : MonoBehaviour
             {
                 // If the receipt is valid, update subscription status
                 SetSubscriptionStatus(true);
-                iapController.RefreshButtonStates();
+                //new
+                //iapController.UpdateButtonStates();
 
                 Debug.Log("Receipt validated successfully.");
             }
@@ -165,7 +168,8 @@ public class SpeakarooManager : MonoBehaviour
                 SetSubscriptionStatus(false);
                 PlayerPrefs.SetInt("Has Bill", 0);
                 Debug.Log("Receipt validation failed.");
-                iapController.RefreshButtonStates();
+                //new
+                //iapController.UpdateButtonStates();
             }
         }
         else

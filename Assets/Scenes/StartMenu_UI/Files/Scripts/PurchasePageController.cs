@@ -1,8 +1,12 @@
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PurchasePageController : MonoBehaviour
 {
     public IAPController iapController;  // Reference to IAPController in the Purchase page
+    //new
+    public Button yrarlyButton;
 
     private void Start()
     {
@@ -25,5 +29,9 @@ public class PurchasePageController : MonoBehaviour
         {
             Debug.LogError("SpeakarooManager or IAPController is missing.");
         }
+
+        iapController.UpdateButtonStates();
     }
+
+    
 }

@@ -35,7 +35,7 @@ public class Downloads_Manager : MonoBehaviour
             }
             else if (Screen.width == 1920 && Screen.height == 1200) // Phone resolution
             {
-                buttonRect.anchoredPosition = new Vector2(-422, 240); // Example position
+                buttonRect.anchoredPosition = new Vector2(-422, 300); // Example position
             }
 
             else if (Screen.width == 1280 && Screen.height == 720) // Phone resolution
@@ -50,7 +50,7 @@ public class Downloads_Manager : MonoBehaviour
 
             else if (Screen.width == 1920 && Screen.height == 1080) // Phone resolution
             {
-                buttonRect.anchoredPosition = new Vector2(-422, 300); // Example position
+                buttonRect.anchoredPosition = new Vector2(-422, 335); // Example position
             }
 
             else if (Screen.width == 2048 && Screen.height == 1536) // Phone resolution
@@ -86,6 +86,15 @@ public class Downloads_Manager : MonoBehaviour
             else if (Screen.width == 1200 && Screen.height == 2000) // Phone resolution
             {
                 buttonRect.anchoredPosition = new Vector2(-422, 250); // Example position
+            }
+
+            else if (Screen.width == 2772 && Screen.height == 1240 ) // Phone resolution
+            {
+                buttonRect.anchoredPosition = new Vector2(-422, 476); // Example position
+            }
+            else
+            {
+                buttonRect.anchoredPosition = new Vector2(-422, 480); // Example position
             }
         }
     }

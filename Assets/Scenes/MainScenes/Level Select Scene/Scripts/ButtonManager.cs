@@ -69,7 +69,7 @@ public class ButtonManager : MonoBehaviour
 
         Debug.Log($"CheckSubscriptionAndUpdateButtons: isSubscribed={isSubscribed}, hasReceipt={hasReceipt}");
 
-        if (isSubscribed && hasReceipt)
+        if (isSubscribed || hasReceipt)
         {
             Debug.Log("Subscription or lifetime access detected. Updating buttons.");
 
@@ -120,7 +120,7 @@ public class ButtonManager : MonoBehaviour
     private void LockButton(Button button)
     {
         button.interactable = false; // Disable the button interaction
-        SetButtonAlpha(button, 50);   // Lower the opacity to indicate it's locked
+        SetButtonAlpha(button, 100);   // Lower the opacity to indicate it's locked
     }
 
     // Unlock a button (make it interactable and reset its alpha)
