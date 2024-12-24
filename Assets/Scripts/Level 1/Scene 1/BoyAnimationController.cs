@@ -28,6 +28,7 @@ public class BoyAnimationController : MonoBehaviour
     private bool isAudio3Played;
     private bool isAudio4Played;
     private bool isAudio5Played;
+   
     private void Start()
     {
         animator = GetComponent<Animator>();

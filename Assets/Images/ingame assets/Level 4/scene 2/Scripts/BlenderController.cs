@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 using TMPro;
 
@@ -22,6 +23,7 @@ public class BlenderController : MonoBehaviour
     public AudioClip Audio1;
     public GameObject juiceDrinkingPanel;
     public GameObject jojoImage;
+    public Image GlassImage;
     private string subtitle1 = "mmm Tasty..!";
 
     private AudioSource SfxAudioSource;
@@ -120,6 +122,8 @@ public class BlenderController : MonoBehaviour
         juiceDrinkingPanel.SetActive(true); // Assuming juiceDrinkingPanel is assigned in the Inspector.
 
         GameObject glassImage = juiceDrinkingPanel.transform.Find("Glass").gameObject; // Find the Glass image game object.
+        Image glassComponent = glassImage.GetComponent<Image>(); // Get the Image component from the GameObject.
+        Sprite glassSprite = glassComponent.sprite; // Access the sprite property from the Image component.
         LeanTween.scale(glassImage, Vector3.one, 0.5f).setEase(LeanTweenType.easeInOutBack);
         yield return new WaitForSeconds(0.5f);
 
@@ -160,7 +164,21 @@ public class BlenderController : MonoBehaviour
         {
             Debug.LogError("Glass image does not have an Animator component!");
         }
-        yield return new WaitUntil(() => glassAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1 && !glassAnimator.IsInTransition(0));
+        yield return new WaitUntil(() =>
+     glassAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1 &&
+     !glassAnimator.IsInTransition(0));
+
+        // Load the new sprite
+        Sprite newGlassSprite = Resources.Load<Sprite>("Images/LVL 4 scene 2/gls");
+        if (newGlassSprite != null)
+        {
+            // Assign the new sprite to the Image component
+            glassComponent.sprite = newGlassSprite;
+        }
+        else
+        {
+            Debug.LogError("Failed to load new glass sprite from Resources.");
+        }
 
         RectTransform jojoRectTransform = jojoImage.GetComponent<RectTransform>();
         Animator jojoAnimator = jojoImage.GetComponent<Animator>();
@@ -248,13 +266,14 @@ public class BlenderController : MonoBehaviour
     {
         // Get the juice sprite name based on the fruits in the blender
         string juiceSpriteName = spriteChangeController.GetJuiceSpriteName();
+        string GlassSpriteName = spriteChangeController.GetGlassSpriteName();
         Sprite newGlassSprite = Resources.Load<Sprite>("Images/LVL 4 scene 2/" + juiceSpriteName);
-
+        GlassImage.sprite = Resources.Load<Sprite>("Images/LVL 4 scene 2/" + GlassSpriteName);
         // Update Glass 1
         SpriteRenderer glass1SpriteRenderer = glass1Transform.GetComponent<SpriteRenderer>();
         if (glass1SpriteRenderer != null && newGlassSprite != null)
         {
-            glass1SpriteRenderer.sprite = newGlassSprite;
+            glass1SpriteRenderer.sprite = newGlassSprite;            
         }
         else
         {
@@ -266,6 +285,7 @@ public class BlenderController : MonoBehaviour
         if (glass2SpriteRenderer != null && newGlassSprite != null)
         {
             glass2SpriteRenderer.sprite = newGlassSprite;
+
         }
         else
         {

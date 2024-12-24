@@ -91,8 +91,7 @@ public class ParentalControlScript : MonoBehaviour
 
                 if (currentInputIndex == codeSequence.Count) // Sequence completed
                 {
-                    isParentalControlPassed = true; // Set the boolean to true
-                    PTPanel.SetActive(false);
+                    isParentalControlPassed = true; // Set the boolean to true                   
                     ExecuteContextAction(); // Perform the action based on the button context
                 }
             }
@@ -131,6 +130,7 @@ public class ParentalControlScript : MonoBehaviour
                 button.GetComponent<Image>().sprite = defaultSprites[number];
             }
         }
+        /*PTPanel.SetActive(false);*/
     }
 
     void ShakeKeypad()

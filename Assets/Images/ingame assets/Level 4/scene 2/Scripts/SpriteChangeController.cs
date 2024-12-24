@@ -355,6 +355,42 @@ public class SpriteChangeController : MonoBehaviour
         return "default_blender";
     }
 
+    public string GetGlassSpriteName()
+    {
+        if (juiceManager.isKikiJuice && fruitsInBlender.Count == 2)
+        {
+            if (fruitsInBlender.Contains("Kiwi") && fruitsInBlender.Contains("SB"))
+            {
+                return "StrawKiwi_Tumblr";
+            }
+            if (fruitsInBlender.Contains("Kiwi") && fruitsInBlender.Contains("BB"))
+            {
+                return "KiwiBlue_Tumblr";
+            }
+            if (fruitsInBlender.Contains("SB") && fruitsInBlender.Contains("BB"))
+            {
+                return "BlueStraw_Tumblr";
+            }
+        }
+        else if (!juiceManager.isKikiJuice && fruitsInBlender.Count == 1)
+        {
+            if (fruitsInBlender.Contains("Kiwi"))
+            {
+                return "kiwi_Tumblr";
+            }
+            if (fruitsInBlender.Contains("SB"))
+            {
+                return "strawberry_Tumblr";
+            }
+            if (fruitsInBlender.Contains("BB"))
+            {
+                return "blueberry_Tumblr";
+            }
+        }
+
+        return "gls";
+    }
+
     private string DetermineJuiceSpriteName()
     {
         if (juiceManager.isKikiJuice && fruitsInBlender.Count == 2)

@@ -235,7 +235,7 @@ public class ShowerMechanics : MonoBehaviour
 
     private IEnumerator TriggerShampooAfterDelay()
     {
-        yield return new WaitForSeconds(2f);
+        yield return new WaitForSeconds(0.5f);
 
         // Trigger "shampoo" parameter on the bird animator
         if (birdAnimator != null)

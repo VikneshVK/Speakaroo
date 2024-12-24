@@ -626,7 +626,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
   m_AnchoredPosition: {x: 0, y: 50}
-  m_SizeDelta: {x: 0, y: 100}
+  m_SizeDelta: {x: -200, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &111346486
 MonoBehaviour:
@@ -1912,6 +1912,10 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 1874920694}
+    - target: {fileID: 4505276508103832329, guid: 13afa213e4054e24d9e1b7a1563f8e0d, type: 3}
+      propertyPath: sceneName
+      value: Follow Direction
+      objectReference: {fileID: 0}
     - target: {fileID: 4505276508103832329, guid: 13afa213e4054e24d9e1b7a1563f8e0d, type: 3}
       propertyPath: sceneManager
       value: 

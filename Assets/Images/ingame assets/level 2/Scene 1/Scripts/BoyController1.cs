@@ -63,7 +63,7 @@ public class BoyController1 : MonoBehaviour
     {
         // Check if the idle animation on the front view is complete
         if (!isIdleCompleted && boyAnimator.GetCurrentAnimatorStateInfo(0).IsName("Idle") &&
-            boyAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1.0f)
+            boyAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.1f)
         {
             isIdleCompleted = true;
 

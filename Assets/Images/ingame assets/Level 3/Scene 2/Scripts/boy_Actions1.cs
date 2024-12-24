@@ -111,7 +111,7 @@ public class boy_Actions1 : MonoBehaviour
         // Check if the colliding particle system is the water particles
         if (other.CompareTag("spray")) // Make sure the particle system object has the tag "WaterParticles"
         {
-            boysprite.flipX = false;
+            
             boyAnimator.SetBool("waterPlay", true);           
             
             if (!audioplayed)
@@ -128,7 +128,7 @@ public class boy_Actions1 : MonoBehaviour
     {
         if (tapControl != null && !tapControl.isFirstTime)
         {
-            boysprite.flipX = true  ;
+            
             boyAnimator.SetBool("waterPlay", false);
             if (!WaterAnimationPlayed) 
             {

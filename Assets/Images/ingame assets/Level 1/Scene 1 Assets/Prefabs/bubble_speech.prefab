@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 2415521729880175096}
   - component: {fileID: 2672854043516699021}
   - component: {fileID: -6109354823090161069}
+  - component: {fileID: 2958833229977598898}
   m_Layer: 0
   m_Name: bubble_speech
   m_TagString: Untagged
@@ -145,3 +146,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   STPrefab: {fileID: 681227826393822397, guid: e0b6fbdb30426cc4691160fe5b10c437, type: 3}
   audioMixer: {fileID: 24100000, guid: 83279ef8d1c8a0649a8e6d4d2ff5f0c4, type: 2}
+--- !u!95 &2958833229977598898
+Animator:
+  serializedVersion: 5
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2720721835439482840}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 7e00bf5a24ca43c44ad21dda5b7dd9f6, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0

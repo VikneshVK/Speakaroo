@@ -294,11 +294,7 @@ public class Lvl8Sc2QuestManager : MonoBehaviour
 
     private IEnumerator PlayCorrectAnimation(string trigger)
     {
-        beakerImageAnimator.SetTrigger(trigger);
-        if(SfxAudioSource != null)
-        {
-            SfxAudioSource.PlayOneShot(SfxAudio1);
-        }
+        beakerImageAnimator.SetTrigger(trigger);        
 
         yield return new WaitForSeconds(1.8f);
 
@@ -322,6 +318,8 @@ public class Lvl8Sc2QuestManager : MonoBehaviour
                 StartCoroutine(RevealTextWordByWord("Wow..! Yellow and Red made Orange", 0.5f));
             }
         }
+        SfxAudioSource.PlayOneShot(SfxAudio1);
+        
         yield return new WaitForSeconds(3.8f);
 
         yield return StartCoroutine(LeanTweenChildrenToZeroCoroutine());

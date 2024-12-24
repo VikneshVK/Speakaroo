@@ -172,7 +172,7 @@ public class DressDragDrop : MonoBehaviour
 
     private IEnumerator JojoDialoge()
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(0.1f);
         audiomanager.PlayAudio(audio2);
         StartCoroutine(RevealTextWordByWord("Woo Hoo..! Let's go to School Now", 0.5f));        
     }

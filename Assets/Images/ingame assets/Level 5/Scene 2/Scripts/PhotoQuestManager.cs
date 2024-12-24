@@ -472,7 +472,7 @@ public class PhotoQuestManager : MonoBehaviour
         {
             validationSuccess = true;
             birdAnimator.SetTrigger("rightTalk");
-            StartCoroutine(RevealTextWordByWord("Awesome, you got it Right", 0.5f));
+            StartCoroutine(RevealTextWordByWord("Good Job..!", 0.5f));
             GetComponent<AudioSource>().PlayOneShot(rightAudio);
             StartCoroutine(HandleCorrectPhotoSequence(tappedAnimal));
         }

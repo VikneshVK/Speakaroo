@@ -1537,6 +1537,10 @@ PrefabInstance:
       value: Scene_Manager
       objectReference: {fileID: 0}
     - target: {fileID: 6592354494236497805, guid: a232b446d9762d848ad2c29abb38ffd2, type: 3}
+      propertyPath: TransitionAnim
+      value: 
+      objectReference: {fileID: 2137016307}
+    - target: {fileID: 6592354494236497805, guid: a232b446d9762d848ad2c29abb38ffd2, type: 3}
       propertyPath: currentSceneCategory
       value: 1
       objectReference: {fileID: 0}
@@ -2365,7 +2369,7 @@ RectTransform:
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
   m_AnchoredPosition: {x: 0, y: 46.03003}
-  m_SizeDelta: {x: -150, y: 50}
+  m_SizeDelta: {x: -200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1598527368
 MonoBehaviour:
@@ -2901,6 +2905,10 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 928436310}
+    - target: {fileID: 4505276508103832329, guid: 13afa213e4054e24d9e1b7a1563f8e0d, type: 3}
+      propertyPath: sceneName
+      value: Learn to Speak
+      objectReference: {fileID: 0}
     - target: {fileID: 4505276508103832329, guid: 13afa213e4054e24d9e1b7a1563f8e0d, type: 3}
       propertyPath: sceneManager
       value: 

@@ -93,7 +93,7 @@ public class BeachBoxHandler : MonoBehaviour
         tapCount++;
         ShakeBox();
 
-        if (tapCount >= 3)
+        if (tapCount >= 2)
         {
             if (SfxAudioSource != null)
             {
