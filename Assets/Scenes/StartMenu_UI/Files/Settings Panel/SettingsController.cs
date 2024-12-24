@@ -13,30 +13,44 @@ public class SettingsController : MonoBehaviour
     private bool soundOn = true; // Tracks the sound state (initially true)
     private const string musicVolumeParam = "MusicVolume";
 
-
     void Start()
     {
         // Assign listeners for button clicks
         soundButton.onClick.AddListener(ToggleSound);
         closeButton.onClick.AddListener(CloseSettings);
+
+        // Initialize the sound state based on the BGAudioManager
+        if (BGAudioManager_Final.Instance != null)
+        {
+            soundOn = BGAudioManager_Final.Instance.TurnonVolume;
+            UpdateSoundButtonSprite();
+        }
     }
 
     void ToggleSound()
     {
         soundOn = !soundOn; // Toggle the sound state
-        if (soundOn)
+
+        if (BGAudioManager_Final.Instance != null)
         {
-            soundButton.image.sprite = sprite1; // Set to sprite1 for "Sound On"
-            SetMusicVolume(-25f);
-            Debug.Log("Sound is ON");
+            BGAudioManager_Final.Instance.SetVolume(soundOn); // Update the global volume state
         }
-        else
+
+        UpdateSoundButtonSprite(); // Update the button sprite
+
+        if (audioMixer != null)
         {
-            soundButton.image.sprite = sprite2; // Set to sprite2 for "Sound Off"
-            SetMusicVolume(-80f);
-            Debug.Log("Sound is OFF");
+            SetMusicVolume(soundOn ? -25f : -80f); // Adjust the audio mixer volume
         }
     }
+
+
+    private void UpdateSoundButtonSprite()
+    {
+        soundButton.image.sprite = soundOn ? sprite1 : sprite2;
+        Debug.Log($"Sound is {(soundOn ? "ON" : "OFF")}");
+    }
+
     private void SetMusicVolume(float volume)
     {
         if (audioMixer != null)

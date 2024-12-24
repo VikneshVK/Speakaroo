@@ -48,19 +48,23 @@ public class Lvl8Sc1TweenManager2 : MonoBehaviour
 
     private void SetMusicVolume(float volume)
     {
-        if (audioMixer != null)
+        if (BGAudioManager_Final.Instance != null && BGAudioManager_Final.Instance.IsVolumeEnabled())
         {
-            bool result = audioMixer.SetFloat(musicVolumeParam, volume); // "MusicVolume" should match the exposed parameter name
-            if (!result)
+            if (audioMixer != null)
             {
-                Debug.LogError($"Failed to set MusicVolume to {volume}. Is the parameter exposed?");
+                bool result = audioMixer.SetFloat(musicVolumeParam, volume);
+                if (!result)
+                {
+                    Debug.LogError($"Failed to set MusicVolume to {volume}. Is the parameter exposed?");
+                }
+            }
+            else
+            {
+                Debug.LogError("AudioMixer is not assigned in the Inspector.");
             }
         }
-        else
-        {
-            Debug.LogError("AudioMixer is not assigned in the Inspector.");
-        }
     }
+
     private void SetAmbientVolume(float volume)
     {
         if (audioMixer != null)
@@ -96,7 +100,10 @@ public class Lvl8Sc1TweenManager2 : MonoBehaviour
 
     private IEnumerator Timer(float time)
     {
-        SetMusicVolume(-25f);
+        if (BGAudioManager_Final.Instance != null && BGAudioManager_Final.Instance.IsVolumeEnabled())
+        {
+            SetMusicVolume(-25f);
+        }
         SetAmbientVolume(-10f);
         float counter = 0;
         isRetryClicked = false;

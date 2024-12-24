@@ -190,7 +190,10 @@ public class Lvl7Sc1JojoController : MonoBehaviour
             .setEase(LeanTweenType.easeOutBack)
             .setOnComplete(() =>
             {
-                SetMusicVolume(-25f);
+                if (BGAudioManager_Final.Instance != null && BGAudioManager_Final.Instance.IsVolumeEnabled())
+                {
+                    SetMusicVolume(-25f);
+                }
                 SetAmbientVolume(-10f);
                 panelToScale1.SetActive(false);
                 int prefabIndex = Mathf.Clamp(PrefabToSpawn - 1, 0, foodPrefabs.Length - 1);
@@ -212,7 +215,10 @@ public class Lvl7Sc1JojoController : MonoBehaviour
             .setEase(LeanTweenType.easeOutBack)
             .setOnComplete(() =>
             {
-                SetMusicVolume(-25f);
+                if (BGAudioManager_Final.Instance != null && BGAudioManager_Final.Instance.IsVolumeEnabled())
+                {
+                    SetMusicVolume(-25f);
+                }
                 SetAmbientVolume(-10f);
                 panelToScale2.SetActive(false);
                 int prefabIndex = Mathf.Clamp(PrefabToSpawn - 1, 0, foodPrefabs.Length - 1);
@@ -237,7 +243,10 @@ public class Lvl7Sc1JojoController : MonoBehaviour
                 int prefabIndex = Mathf.Clamp(PrefabToSpawn - 1, 0, foodPrefabs.Length - 1);
                 if (!isFood3Spawned)
                 {
-                    SetMusicVolume(-25f);
+                    if (BGAudioManager_Final.Instance != null && BGAudioManager_Final.Instance.IsVolumeEnabled())
+                    {
+                        SetMusicVolume(-25f);
+                    }
                     SetAmbientVolume(-10f);
                     isFood3Spawned = true;
                     SpawnAndTweenPrefab(prefabIndex, foodSpawnLocation3);
@@ -574,17 +583,20 @@ public class Lvl7Sc1JojoController : MonoBehaviour
     }
     private void SetMusicVolume(float volume)
     {
-        if (audioMixer != null)
+        if (BGAudioManager_Final.Instance != null && BGAudioManager_Final.Instance.IsVolumeEnabled())
         {
-            bool result = audioMixer.SetFloat(musicVolumeParam, volume); // "MusicVolume" should match the exposed parameter name
-            if (!result)
+            if (audioMixer != null)
             {
-                Debug.LogError($"Failed to set MusicVolume to {volume}. Is the parameter exposed?");
+                bool result = audioMixer.SetFloat(musicVolumeParam, volume);
+                if (!result)
+                {
+                    Debug.LogError($"Failed to set MusicVolume to {volume}. Is the parameter exposed?");
+                }
             }
-        }
-        else
-        {
-            Debug.LogError("AudioMixer is not assigned in the Inspector.");
+            else
+            {
+                Debug.LogError("AudioMixer is not assigned in the Inspector.");
+            }
         }
     }
     private void ChangePanelSprite()
