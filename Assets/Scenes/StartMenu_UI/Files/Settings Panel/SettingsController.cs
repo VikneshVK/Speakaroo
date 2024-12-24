@@ -27,7 +27,7 @@ public class SettingsController : MonoBehaviour
         if (soundOn)
         {
             soundButton.image.sprite = sprite1; // Set to sprite1 for "Sound On"
-            SetMusicVolume(-35f);
+            SetMusicVolume(-25f);
             Debug.Log("Sound is ON");
         }
         else

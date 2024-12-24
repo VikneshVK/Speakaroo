@@ -226,7 +226,7 @@ public class DraggableTextHandler : MonoBehaviour
 
         retryButton.GetComponent<Image>().sprite = Resources.Load<Sprite>("Images/STMechanics/speak-1");
 
-        float retryDuration = 5f;
+        float retryDuration = 2f;
         float elapsedTime = 0f;
 
         while (elapsedTime < retryDuration)
