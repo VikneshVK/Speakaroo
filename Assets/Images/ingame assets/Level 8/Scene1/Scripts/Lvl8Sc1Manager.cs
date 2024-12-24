@@ -213,7 +213,7 @@ public class Lvl8Sc1Manager : MonoBehaviour
         
         teacherAnimator.SetTrigger("Learn");
         PlayAudio(teacherAudio2);
-        StartCoroutine(RevealTextWordByWord("Let's learn Alpabets", 0.5f));
+        StartCoroutine(RevealTextWordByWord("Let's learn Alphabets", 0.5f));
     }
 
     private void TriggerJojoDontHavePencil()

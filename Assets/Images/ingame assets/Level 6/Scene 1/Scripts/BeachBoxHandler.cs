@@ -21,6 +21,7 @@ public class BeachBoxHandler : MonoBehaviour
     public bool playRestared = false;
     private AudioSource SfxAudioSource;
     public AudioClip SfxAudio1;
+    public AudioClip SfxAudio2;
 
     private MiniGameController miniGameController;
 
@@ -108,7 +109,7 @@ public class BeachBoxHandler : MonoBehaviour
     {
         float shakeIntensity = 10f;
         float shakeTime = 0.3f;
-
+        SfxAudioSource.PlayOneShot(SfxAudio2);
         LeanTween.moveX(rectTransform, rectTransform.anchoredPosition.x + shakeIntensity, shakeTime)
                  .setEase(LeanTweenType.easeShake)
                  .setLoopPingPong(1);

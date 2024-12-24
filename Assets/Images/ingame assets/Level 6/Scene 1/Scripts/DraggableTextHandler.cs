@@ -347,37 +347,53 @@ public class DraggableTextHandler : MonoBehaviour
     }
     private void NormalizeAudio(float[] samples)
     {
-        float maxAmplitude = Mathf.Max(samples);
-        for (int i = 0; i < samples.Length; i++)
+        float maxAmplitude = 0f;
+        // Find the maximum amplitude
+        foreach (float sample in samples)
         {
-            samples[i] /= maxAmplitude;
+            if (Mathf.Abs(sample) > maxAmplitude)
+                maxAmplitude = Mathf.Abs(sample);
+        }
+
+        // Normalize if necessary
+        if (maxAmplitude > 0f)
+        {
+            for (int i = 0; i < samples.Length; i++)
+            {
+                samples[i] /= maxAmplitude; // Scale all samples down by the max amplitude
+            }
         }
     }
 
     private void ApplyNoiseReduction(float[] samples)
     {
-        float noiseThreshold = 0.02f;
+        // Adjust noise threshold dynamically for Android
+        float noiseThreshold = Application.platform == RuntimePlatform.Android ? 0.05f : 0.02f;
+
         for (int i = 0; i < samples.Length; i++)
         {
+            // Suppress low-level background noise
             if (Mathf.Abs(samples[i]) < noiseThreshold)
             {
-                samples[i] = 0f;
+                samples[i] = 0f; // Set very low values to zero
             }
         }
     }
 
     private void ApplyBandpassFilter(float[] samples, float lowFreq, float highFreq)
     {
-        float sampleRate = 44100f;
+        // Example implementation using a simple bandpass algorithm
+        // Note: For high-quality filtering, consider using DSP libraries (e.g., SoX, Unity's audio filters)
+        float sampleRate = 44100f; // Assuming 44.1 kHz sample rate
         float low = lowFreq / sampleRate;
         float high = highFreq / sampleRate;
 
-        for (int i = 0; i < samples.Length; i++)
+        for (int i = 1; i < samples.Length - 1; i++)
         {
-            samples[i] *= (high - low);
+            // Simple bandpass filter logic
+            samples[i] = samples[i] * (high - low);
         }
     }
-
     private bool DetectVoicePresence(float[] samples)
     {
         foreach (float sample in samples)
