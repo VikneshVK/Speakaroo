@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using TMPro;
-using Firebase.Analytics;
+
 
 public class LVL6Sc2KikiController : MonoBehaviour
 {
