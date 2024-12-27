@@ -251,7 +251,7 @@ public class ST_AudioManager : MonoBehaviour
         else if (cardNumber == 2)
         {
             displayText.text = "Good Job..! Scratch the cards to reveal word";
-            OnPlaybackComplete?.Invoke();
+            /*OnPlaybackComplete?.Invoke();*/
             isCard2PlaybackComplete = true;
         }
 

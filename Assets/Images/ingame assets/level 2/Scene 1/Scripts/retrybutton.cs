@@ -22,6 +22,7 @@ public class RetryButton : MonoBehaviour
     private int retryCountCard1 = 0;
     private int retryCountCard2 = 0;
     private const int maxRetries = 1;
+    private Coroutine currentCoroutine;
 
     private void Start()
     {
@@ -210,15 +211,19 @@ public class RetryButton : MonoBehaviour
 
     private void HandleRecordingPlaybackEnd(int cardNumber)
     {
-        StopAllCoroutines();
+        if (currentCoroutine != null)
+        {
+            StopCoroutine(currentCoroutine);
+        }
+
         if (cardNumber == 1)
         {
-            StartCoroutine(HandlePostPlaybackActionsForCard1());
+            currentCoroutine = StartCoroutine(HandlePostPlaybackActionsForCard1());
         }
         else if (cardNumber == 2)
         {
-            StartCoroutine(HandlePostPlaybackActionsForCard2());
-        }        
+            currentCoroutine = StartCoroutine(HandlePostPlaybackActionsForCard2());
+        }
     }
 
 
@@ -255,10 +260,12 @@ public class RetryButton : MonoBehaviour
     private IEnumerator HandlePostPlaybackActionsForCard2()
     {
         Debug.Log("Handling retry for Card 2...");
+
+        // If the max retries have been reached, disable the retry button and complete playback
         if (retryCountCard2 >= maxRetries)
         {
             retryButton.interactable = false; // Disable interaction
-            retryButton.GetComponent<Image>().raycastTarget = false;
+            retryButton.GetComponent<Image>().raycastTarget = false; // Disable raycast
             Debug.Log("Max retries reached for Card 2. Completing playback.");
             ST_AudioManager.Instance.TriggerOnPlaybackComplete();
             yield break;
@@ -267,14 +274,39 @@ public class RetryButton : MonoBehaviour
         if (retryCountCard2 < maxRetries)
         {
             buttonImage.sprite = retrySprite2;
-            retryButton.interactable = true;
-            retryButton.GetComponent<Image>().raycastTarget = true;
-            yield return new WaitForSeconds(4f);
-            retryButton.interactable = false;
-            retryButton.GetComponent<Image>().raycastTarget = false;
-            ST_AudioManager.Instance.TriggerOnPlaybackComplete();
+            retryButton.interactable = true; // Enable the retry button
+            retryButton.GetComponent<Image>().raycastTarget = true; // Enable raycast for the button
+
+            bool retryClicked = false;
+
+            // Wait for 4 seconds to see if the retry button is clicked
+            float timer = 0f;
+            while (timer < 4f)
+            {
+                if (retryButton.interactable == false)
+                {
+                    retryClicked = true;
+                    break; // If clicked, break out of the loop
+                }
+                timer += Time.deltaTime;
+                yield return null; // Wait for the next frame
+            }
+
+            if (retryClicked)
+            {
+                // Retry button was clicked, handle the retry action
+                HandleRetryButtonClick();
+            }
+            else
+            {
+                // Retry button was not clicked within 4 seconds, disable the button and complete playback
+                retryButton.interactable = false;
+                retryButton.GetComponent<Image>().raycastTarget = false;
+                ST_AudioManager.Instance.TriggerOnPlaybackComplete();
+            }
         }
     }
+
 
 
 
@@ -332,7 +364,7 @@ public class RetryButton : MonoBehaviour
             if (retryCountCard2 >= maxRetries)
             {
                 retryButton.interactable = false;
-                ST_AudioManager.Instance.TriggerOnPlaybackComplete();
+                /*ST_AudioManager.Instance.TriggerOnPlaybackComplete();*/
                 return;
             }
         }

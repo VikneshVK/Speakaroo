@@ -69,6 +69,8 @@ public class DraggableTextHandler : MonoBehaviour
         buttonImage = retryButton.GetComponent<Image>();
         SetAlpha(buttonImage, 20);
         SetAlpha(ringImage, 20);
+        CheckMicrophonePermissions();
+        InitializeAudioComponents();
     }
     
 
@@ -86,6 +88,44 @@ public class DraggableTextHandler : MonoBehaviour
         }
     }
 
+    void CheckMicrophonePermissions()
+    {
+        if (!Application.HasUserAuthorization(UserAuthorization.Microphone))
+        {
+            StartCoroutine(RequestMicrophonePermission());
+        }
+        else
+        {
+            Debug.Log("Microphone permission granted.");
+        }
+    }
+
+    IEnumerator RequestMicrophonePermission()
+    {
+        yield return Application.RequestUserAuthorization(UserAuthorization.Microphone);
+
+        if (Application.HasUserAuthorization(UserAuthorization.Microphone))
+        {
+            Debug.Log("Microphone permission granted.");
+        }
+        else
+        {
+            Debug.LogError("Microphone permission denied.");
+        }
+    }
+
+    private void InitializeAudioComponents()
+    {
+        // Set up audio components and ensure microphone devices are detected
+        if (Microphone.devices.Length > 0)
+        {
+            Debug.Log("Available Microphones: " + string.Join(", ", Microphone.devices));
+        }
+        else
+        {
+            Debug.LogError("No microphones detected.");
+        }
+    }
 
     public void OnButtonClicked()
     {
