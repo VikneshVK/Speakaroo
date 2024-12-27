@@ -84,7 +84,8 @@ public class ST_AudioManager : MonoBehaviour
         KikiAnimator = Kiki.GetComponent<Animator>();
 
         retryButton.onClick.AddListener(OnRetryButtonClick);
-
+        CheckMicrophonePermissions();
+        InitializeAudioComponents();
         // Set initial feedback text
         displayText.text = "Scratch the Cards to Reveal the Word";
     }
@@ -94,6 +95,44 @@ public class ST_AudioManager : MonoBehaviour
         // Reduce the volume of the "Music" group when recording starts
         SetMusicVolume(-80f); // Set to minimum volume (mute)
         OnRecordingStart?.Invoke();
+    }
+    void CheckMicrophonePermissions()
+    {
+        if (!Application.HasUserAuthorization(UserAuthorization.Microphone))
+        {
+            StartCoroutine(RequestMicrophonePermission());
+        }
+        else
+        {
+            Debug.Log("Microphone permission granted.");
+        }
+    }
+
+    IEnumerator RequestMicrophonePermission()
+    {
+        yield return Application.RequestUserAuthorization(UserAuthorization.Microphone);
+
+        if (Application.HasUserAuthorization(UserAuthorization.Microphone))
+        {
+            Debug.Log("Microphone permission granted.");
+        }
+        else
+        {
+            Debug.LogError("Microphone permission denied.");
+        }
+    }
+
+    private void InitializeAudioComponents()
+    {
+        // Set up audio components and ensure microphone devices are detected
+        if (Microphone.devices.Length > 0)
+        {
+            Debug.Log("Available Microphones: " + string.Join(", ", Microphone.devices));
+        }
+        else
+        {
+            Debug.LogError("No microphones detected.");
+        }
     }
 
     public void TriggerRecordingStop()
