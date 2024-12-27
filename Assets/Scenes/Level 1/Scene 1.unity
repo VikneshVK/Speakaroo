@@ -705,6 +705,7 @@ MonoBehaviour:
   audiomanager: {fileID: 2007530544}
   speechBubblePrefab: {fileID: 2720721835439482840, guid: d803db582d99af44994028f69f904686, type: 3}
   speechBubbleContainer: {fileID: 1426675463}
+  resolutionMagicPrefab: {fileID: 2010481772}
 --- !u!114 &400940099 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6592354494236497805, guid: a232b446d9762d848ad2c29abb38ffd2, type: 3}
@@ -7418,6 +7419,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &2010481772 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1000010277789090, guid: fa8112416b9288943bd251711cfab331, type: 3}
+  m_PrefabInstance: {fileID: 539353701}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &2087500669
 GameObject:
   m_ObjectHideFlags: 0

@@ -28,7 +28,8 @@ public class BoyAnimationController : MonoBehaviour
     private bool isAudio3Played;
     private bool isAudio4Played;
     private bool isAudio5Played;
-   
+    public GameObject resolutionMagicPrefab;
+
     private void Start()
     {
         animator = GetComponent<Animator>();
@@ -50,7 +51,7 @@ public class BoyAnimationController : MonoBehaviour
         isAudio2Played = false;
         isAudio3Played = false;
         isAudio4Played = false;
-        originalOrthographicSize = mainCamera.orthographicSize;
+        
         targetPosition = new Vector3(0, transform.position.y, transform.position.z); // Center of the viewport    
 
         // Start the scene by walking to the center
@@ -133,13 +134,26 @@ public class BoyAnimationController : MonoBehaviour
     private IEnumerator HandlePostTalk()
     {
         yield return new WaitForSeconds(6f);
+        originalOrthographicSize = mainCamera.orthographicSize;
+        Debug.Log("camera size is " + originalOrthographicSize);
         StartCoroutine(ZoomIn());
     }
 
     private IEnumerator ZoomIn()
     {
-        float startOrthographicSize = mainCamera.orthographicSize;
+        Debug.Log($"ZoomIn: Starting zoom-in process. Current orthographic size: {mainCamera.orthographicSize}");
 
+        // Deactivate the Resolution Magic prefab before zooming in
+        if (resolutionMagicPrefab != null)
+        {
+            resolutionMagicPrefab.SetActive(false);
+        }
+        else
+        {
+            Debug.LogError("Resolution Magic prefab is not assigned in the Inspector.");
+        }
+
+        float startOrthographicSize = mainCamera.orthographicSize;
         float elapsedTime = 0;
 
         while (elapsedTime < zoomDuration)
@@ -150,13 +164,16 @@ public class BoyAnimationController : MonoBehaviour
         }
 
         mainCamera.orthographicSize = zoomSize;
-        animator.SetBool("showTeeth", true);        
+        Debug.Log($"ZoomIn: Zoom-in complete. Final orthographic size: {mainCamera.orthographicSize}");
+        animator.SetBool("showTeeth", true);
+
         yield return new WaitForSeconds(3.5f);
         StartCoroutine(ZoomOut());
     }
 
     private IEnumerator ZoomOut()
     {
+        Debug.Log("ZoomOut: Starting zoom-out process.");
         float startOrthographicSize = mainCamera.orthographicSize;
         float elapsedTime = 0;
 
@@ -168,8 +185,19 @@ public class BoyAnimationController : MonoBehaviour
         }
 
         mainCamera.orthographicSize = originalOrthographicSize;
-
+        Debug.Log($"ZoomOut: Camera orthographic size reset to {mainCamera.orthographicSize}");
         animator.SetBool("showTeeth", false);
+
+        // Reactivate the Resolution Magic prefab after zooming out
+        if (resolutionMagicPrefab != null)
+        {
+            resolutionMagicPrefab.SetActive(true);
+        }
+        else
+        {
+            Debug.LogError("Resolution Magic prefab is not assigned in the Inspector.");
+        }
+
         audiomanager.PlayAudio(audio1);
         StartCoroutine(RevealTextWordByWord("Oh No My Teeth is Yellow..! Let's Brush", 0.5f));
     }
