@@ -189,17 +189,26 @@ public class ST_AudioManager : MonoBehaviour
 
     private IEnumerator RecordAndAnalyzeAudio(int cardNumber)
     {
-        int minFreq, maxFreq;
-        Microphone.GetDeviceCaps(null, out minFreq, out maxFreq); // Get supported frequencies
-        int chosenFreq = (maxFreq == 0 || maxFreq < 44100) ? Mathf.Clamp(44100, minFreq, maxFreq) : 44100;
+        int minFreq = 0, maxFreq = 0;
+        Microphone.GetDeviceCaps(null, out minFreq, out maxFreq);
+
+        // Set a default frequency if the device returns invalid caps
+        int chosenFreq = (maxFreq == 0 || maxFreq < 44100) ? 44100 : Mathf.Clamp(44100, minFreq, maxFreq);
 
         // Start recording
-        JojoAnimator.SetBool("StartRecording",true);
+        JojoAnimator.SetBool("StartRecording", true);
         SfxAudioSource.PlayOneShot(SfxAudio1);
+
         AudioClip recordedClip = Microphone.Start(null, false, Mathf.CeilToInt(recordLength), chosenFreq);
+
+        if (recordedClip == null)
+        {
+            Debug.LogError("Microphone.Start returned null. Check permissions or device compatibility.");
+            yield break;
+        }
+
         yield return StartCoroutine(WaitForSecondsRealtime(recordLength));
         Microphone.End(null);
-       /* TriggerRecordingStop();*/
 
         // Process the recorded audio
         float[] samples = new float[Mathf.CeilToInt(chosenFreq * recordLength)];
@@ -248,6 +257,7 @@ public class ST_AudioManager : MonoBehaviour
 
         OnRecordingComplete?.Invoke(cardNumber);
     }
+
 
 
 
