@@ -324,6 +324,10 @@ public class DraggableTextHandler : MonoBehaviour
         int recordingDuration = 5;
         int frequency = 44100;
         SfxAudioSource.PlayOneShot(SfxAudio1);
+        if (Microphone.devices.Length > 0)
+        {
+            frequency = AudioSettings.outputSampleRate; // Use the device's output sample rate
+        }
         audioSource2.clip = Microphone.Start(null, false, recordingDuration, frequency);
         Debug.Log("Recording started...");
 
@@ -342,8 +346,24 @@ public class DraggableTextHandler : MonoBehaviour
         }
 
         Debug.Log("Recording completed.");
-        
-        // Restore the music volume after recording
+
+        // Verify the recorded clip length
+        if (audioSource2.clip != null)
+        {
+            float actualClipLength = audioSource2.clip.length;
+            Debug.Log($"Actual recorded clip length: {actualClipLength} seconds");
+
+            // Adjust handling based on clip length if necessary
+            if (actualClipLength > recordingDuration)
+            {
+                Debug.LogWarning("Recorded audio exceeds the target duration.");
+            }
+        }
+        else
+        {
+            Debug.LogError("Recording failed; audio clip is null.");
+        }
+
 
     }
 

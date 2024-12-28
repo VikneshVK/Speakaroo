@@ -298,22 +298,21 @@ public class ST_AudioManager : MonoBehaviour
     private void NormalizeAudio(float[] samples)
     {
         float maxAmplitude = 0f;
-        // Find the maximum amplitude
         foreach (float sample in samples)
         {
             if (Mathf.Abs(sample) > maxAmplitude)
                 maxAmplitude = Mathf.Abs(sample);
         }
 
-        // Normalize if necessary
-        if (maxAmplitude > 0f)
+        if (maxAmplitude > 0.01f) // Normalize only if above a threshold
         {
             for (int i = 0; i < samples.Length; i++)
             {
-                samples[i] /= maxAmplitude; // Scale all samples down by the max amplitude
+                samples[i] /= maxAmplitude;
             }
         }
     }
+
 
     private void ApplyNoiseReduction(float[] samples)
     {
@@ -344,6 +343,12 @@ public class ST_AudioManager : MonoBehaviour
             // Simple bandpass filter logic
             samples[i] = samples[i] * (high - low);
         }
+
+        /* AudioLowPassFilter lowPass = recordedAudioSource.gameObject.AddComponent<AudioLowPassFilter>();
+         lowPass.cutoffFrequency = 3000f;
+
+         AudioHighPassFilter highPass = recordedAudioSource.gameObject.AddComponent<AudioHighPassFilter>();
+         highPass.cutoffFrequency = 80f;*/
     }
 
     private void OnRetryButtonClick()

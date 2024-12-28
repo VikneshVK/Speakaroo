@@ -853,6 +853,8 @@ GameObject:
   - component: {fileID: 8294751151040036509}
   - component: {fileID: 67967210034188983}
   - component: {fileID: 8513605010604780879}
+  - component: {fileID: 5757768127453712884}
+  - component: {fileID: 1591292589412291033}
   m_Layer: 0
   m_Name: Audio Manager
   m_TagString: Untagged
@@ -894,7 +896,7 @@ MonoBehaviour:
   scratchAudioClipPath: Audio/ScratchAudio
   revealAudioClipPath: Audio/RevealAudio
   recordLength: 5
-  highPitchFactor: 1.5
+  highPitchFactor: 1
   currentCardTag: 
   isCard1PlaybackComplete: 0
   isCard2PlaybackComplete: 0
@@ -985,6 +987,41 @@ AudioSource:
     - serializedVersion: 3
       time: 0
       value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!165 &5757768127453712884
+AudioHighPassFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8106651651803658136}
+  m_Enabled: 1
+  m_CutoffFrequency: 80
+  m_HighpassResonanceQ: 1
+--- !u!169 &1591292589412291033
+AudioLowPassFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8106651651803658136}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_LowpassResonanceQ: 1
+  lowpassLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0.13597089
       inSlope: 0
       outSlope: 0
       tangentMode: 0
