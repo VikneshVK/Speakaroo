@@ -364,7 +364,7 @@ GameObject:
   - component: {fileID: 737235981}
   - component: {fileID: 737235983}
   m_Layer: 5
-  m_Name: Yearly_Sub
+  m_Name: promo_image
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -652,7 +652,7 @@ GameObject:
   - component: {fileID: 1446141675}
   - component: {fileID: 1446141674}
   m_Layer: 5
-  m_Name: Button
+  m_Name: Yearly_Sub
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1496,6 +1496,10 @@ PrefabInstance:
       propertyPath: subscriptionStatusText
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 8836046583807312052, guid: e47caa392aff349429f10a1da79eaf3a, type: 3}
+      propertyPath: yearlySubscriptionButton
+      value: 
+      objectReference: {fileID: 1446141674}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

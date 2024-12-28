@@ -120,7 +120,7 @@ public class ButtonManager : MonoBehaviour
     private void LockButton(Button button)
     {
         button.interactable = false; // Disable the button interaction
-        SetButtonAlpha(button, 100);   // Lower the opacity to indicate it's locked
+        SetButtonAlpha(button, 175);   // Lower the opacity to indicate it's locked
     }
 
     // Unlock a button (make it interactable and reset its alpha)
