@@ -72,7 +72,7 @@ public class Scene_Manager_Final : MonoBehaviour
         }
     }
 
-   
+
 
     private IEnumerator LoadSceneDirectly(string sceneName, int targetSceneCategory)
     {
@@ -94,14 +94,33 @@ public class Scene_Manager_Final : MonoBehaviour
         Resources.UnloadUnusedAssets();
         System.GC.Collect();
 
-        Debug.Log("Now loading scene.");
-        SceneManager.LoadScene(sceneName);
+        Debug.Log("Now loading scene asynchronously.");
+
+        // Load the scene asynchronously
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName);
+
+        // Optionally, block activation until desired
+        asyncLoad.allowSceneActivation = false;
+
+        // Wait until the scene is loaded
+        while (!asyncLoad.isDone)
+        {
+            // Check if the load is nearly complete
+            if (asyncLoad.progress >= 0.9f && !asyncLoad.allowSceneActivation)
+            {
+                // Optionally, trigger activation at the right moment
+                Debug.Log("Scene almost loaded. Activating...");
+                asyncLoad.allowSceneActivation = true;
+            }
+            yield return null; // Wait for the next frame
+        }
+
         yield return new WaitForEndOfFrame();
 
         ResetAllAnimators();
-        
     }
-   
+
+
 
 
 

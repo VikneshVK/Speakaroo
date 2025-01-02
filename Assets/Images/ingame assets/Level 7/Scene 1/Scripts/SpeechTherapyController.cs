@@ -21,6 +21,7 @@ public class SpeechTherapyController : MonoBehaviour
     public AudioClip audioClip2;
     public AudioClip audioClip3;
     public AudioSource RecordedAudioSource;
+    public AudioSource SuggestionAudioSource;
     private AudioSource audioSource; // AudioSource on the GameObject
 
     [Header("Retrybutton")]
@@ -126,6 +127,12 @@ public class SpeechTherapyController : MonoBehaviour
         }
 
         retryButton.image.sprite = Mic;
+
+        yield return new WaitForSeconds(1f);
+
+        SuggestionAudioSource.Play();
+
+        yield return new WaitForSeconds(SuggestionAudioSource.clip.length);
 
         yield return StartCoroutine(RecordAudio(5)); // 5 seconds recording
 
@@ -290,6 +297,13 @@ public class SpeechTherapyController : MonoBehaviour
         }
 
         retryButton.image.sprite = Mic;
+
+        yield return new WaitForSeconds(1f);
+
+        SuggestionAudioSource.Play();
+
+        yield return new WaitForSeconds(SuggestionAudioSource.clip.length);
+
         yield return StartCoroutine(RecordAudio(5)); // 5 seconds recording
 
 
@@ -348,6 +362,12 @@ public class SpeechTherapyController : MonoBehaviour
         }
 
         retryButton.image.sprite = Mic;
+
+        yield return new WaitForSeconds(1f);
+
+        SuggestionAudioSource.Play();
+
+        yield return new WaitForSeconds(SuggestionAudioSource.clip.length);
         yield return StartCoroutine(RecordAudio(5)); // 5 seconds recording
 
         float[] samples = new float[recordedClip.samples];

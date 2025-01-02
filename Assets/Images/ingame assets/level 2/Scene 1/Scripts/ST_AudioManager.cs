@@ -11,6 +11,7 @@ public class ST_AudioManager : MonoBehaviour
     public AudioMixer audioMixer;
     public AudioSource audioSourceCard1;
     public AudioSource audioSourceCard2;
+    public AudioSource suggestionAudioSource;
     public AudioSource recordedAudioSource;
     public string scratchAudioClipPath = "Audio/ScratchAudio";
     public string revealAudioClipPath = "Audio/RevealAudio";
@@ -196,7 +197,7 @@ public class ST_AudioManager : MonoBehaviour
         int chosenFreq = (maxFreq == 0 || maxFreq < 44100) ? 44100 : Mathf.Clamp(44100, minFreq, maxFreq);
 
         // Start recording
-        JojoAnimator.SetBool("StartRecording", true);
+        
         SfxAudioSource.PlayOneShot(SfxAudio1);
 
         AudioClip recordedClip = Microphone.Start(null, false, Mathf.CeilToInt(recordLength), chosenFreq);
@@ -229,7 +230,7 @@ public class ST_AudioManager : MonoBehaviour
         {
             displayText.text = "Did You Say..?";
             OnRecordingPlaybackStart?.Invoke();
-            JojoAnimator.SetBool("StartRecording", false);
+            
             SfxAudioSource.PlayOneShot(SfxAudio2);
             PlayRecordedClipWithFunnyVoice(processedClip); // Play processed clip
             yield return StartCoroutine(WaitForSecondsRealtime(processedClip.length));
@@ -397,6 +398,12 @@ public class ST_AudioManager : MonoBehaviour
         originalAudioSource.Play();
         yield return StartCoroutine(WaitForSecondsRealtime(originalAudioSource.clip.length));
 
+        yield return new WaitForSeconds(1f);
+
+        suggestionAudioSource.Play();
+        JojoAnimator.SetBool("StartRecording", true);
+        yield return StartCoroutine(WaitForSecondsRealtime(suggestionAudioSource.clip.length));
+        JojoAnimator.SetBool("StartRecording", false);
         // Trigger the OnRecordingStart event and update feedback text
         OnRecordingStart?.Invoke();
 

@@ -155,17 +155,35 @@ public class CardManagerWithTapCount : MonoBehaviour
             Collider2D cardCollider = card.GetComponent<Collider2D>();
             if (cardCollider != null && cardCollider.enabled)
             {
+                // Disable the collider to prevent interactions during the animation
+                cardCollider.enabled = false;
+
+                // Perform the scale up animation
+                bool scaleUpComplete = false;
                 LeanTween.scale(card, card.transform.localScale * 1.2f, 0.5f).setEase(LeanTweenType.easeOutBack)
                     .setOnComplete(() =>
                     {
-                        if (card != null && card.GetComponent<Collider2D>() != null && card.GetComponent<Collider2D>().enabled)
-                        {
-                            LeanTween.scale(card, card.transform.localScale / 1.2f, 0.5f).setEase(LeanTweenType.easeInBack);
-                        }
+                        // Perform the scale down animation
+                        LeanTween.scale(card, card.transform.localScale / 1.2f, 0.5f).setEase(LeanTweenType.easeInBack)
+                            .setOnComplete(() =>
+                            {
+                                scaleUpComplete = true;
+                            });
                     });
 
+                // Wait for both animations to complete
+                yield return new WaitUntil(() => scaleUpComplete);
+
+                // Re-enable the collider after both animations are complete
+                if (cardCollider != null)
+                {
+                    cardCollider.enabled = true;
+                }
+
+                // Wait for the remaining time to maintain the 3-second interval
                 yield return new WaitForSeconds(3f);
 
+                // Stop if conditions to end the coroutine are met
                 if (card == null || eggController.tapCount >= 3 || cardCollider == null || !cardCollider.enabled)
                 {
                     yield break;
@@ -177,7 +195,10 @@ public class CardManagerWithTapCount : MonoBehaviour
             }
         }
 
+        // Update the shake state flags when done
         if (card == card1) isCard1Shaking = false;
         else if (card == card2) isCard2Shaking = false;
     }
+
+
 }

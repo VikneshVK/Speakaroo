@@ -116,18 +116,27 @@ public class ButtonManager : MonoBehaviour
             }
         }
     }
+    private void SetChildActiveState(Button button, bool isActive)
+    {
+        Transform childTransform = button.transform.childCount > 0 ? button.transform.GetChild(0) : null;
+        if (childTransform != null)
+        {
+            childTransform.gameObject.SetActive(isActive);
+        }
+    }
     // Lock a button (make it non-interactable and adjust its alpha)
     private void LockButton(Button button)
     {
-        button.interactable = false; // Disable the button interaction
-        SetButtonAlpha(button, 175);   // Lower the opacity to indicate it's locked
+        button.interactable = false;
+        SetButtonAlpha(button, 255);
+        SetChildActiveState(button, true);
     }
 
-    // Unlock a button (make it interactable and reset its alpha)
     private void UnlockButton(Button button)
     {
-        button.interactable = true;  // Enable the button interaction
-        SetButtonAlpha(button, 255); // Reset opacity to full
+        button.interactable = true;
+        SetButtonAlpha(button, 255);
+        SetChildActiveState(button, false);
     }
 
     // Helper function to set the button alpha (opacity)

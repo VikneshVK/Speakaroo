@@ -856,7 +856,7 @@ PrefabInstance:
     - target: {fileID: 1671538399259911464, guid: a232b446d9762d848ad2c29abb38ffd2, type: 3}
       propertyPath: TransitionAnim
       value: 
-      objectReference: {fileID: 843386362}
+      objectReference: {fileID: 0}
     - target: {fileID: 4342623162831916697, guid: a232b446d9762d848ad2c29abb38ffd2, type: 3}
       propertyPath: m_Name
       value: Scene_Manager
@@ -864,7 +864,7 @@ PrefabInstance:
     - target: {fileID: 6592354494236497805, guid: a232b446d9762d848ad2c29abb38ffd2, type: 3}
       propertyPath: TransitionAnim
       value: 
-      objectReference: {fileID: 843386362}
+      objectReference: {fileID: 903010702}
     - target: {fileID: 6592354494236497805, guid: a232b446d9762d848ad2c29abb38ffd2, type: 3}
       propertyPath: currentSceneCategory
       value: 1
@@ -1499,11 +1499,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 660435548}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!95 &843386362 stripped
-Animator:
-  m_CorrespondingSourceObject: {fileID: 4622859189109833440, guid: 5cc33678a45eebd4eb94af593e86f318, type: 3}
-  m_PrefabInstance: {fileID: 903010701}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &884465387
 GameObject:
   m_ObjectHideFlags: 0
@@ -1637,6 +1632,18 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3220799799381724627, guid: 5cc33678a45eebd4eb94af593e86f318, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3220799799381724627, guid: 5cc33678a45eebd4eb94af593e86f318, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3220799799381724627, guid: 5cc33678a45eebd4eb94af593e86f318, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3220799799381724627, guid: 5cc33678a45eebd4eb94af593e86f318, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0
       objectReference: {fileID: 0}
@@ -1693,6 +1700,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5cc33678a45eebd4eb94af593e86f318, type: 3}
+--- !u!95 &903010702 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 5734438891387517021, guid: 5cc33678a45eebd4eb94af593e86f318, type: 3}
+  m_PrefabInstance: {fileID: 903010701}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &929052375
 GameObject:
   m_ObjectHideFlags: 0

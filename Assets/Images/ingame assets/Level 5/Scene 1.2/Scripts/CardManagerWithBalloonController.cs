@@ -149,22 +149,41 @@ public class CardManagerWithBalloonController : MonoBehaviour
     {
         while (card != null)
         {
-            if (card.transform.localScale == Vector3.zero) yield break;
+            if (card.transform.localScale == Vector3.zero) yield break; // Exit if card is inactive
 
             Collider2D cardCollider = card.GetComponent<Collider2D>();
             if (cardCollider != null && cardCollider.enabled)
             {
+                // Disable the collider to prevent interaction during the animation
+                cardCollider.enabled = false;
+
+                bool scaleUpComplete = false;
+
+                // Perform the scale up animation
                 LeanTween.scale(card, card.transform.localScale * 1.2f, 0.5f).setEase(LeanTweenType.easeOutBack)
                     .setOnComplete(() =>
                     {
-                        if (card != null && card.GetComponent<Collider2D>() != null && card.GetComponent<Collider2D>().enabled)
-                        {
-                            LeanTween.scale(card, card.transform.localScale / 1.2f, 0.5f).setEase(LeanTweenType.easeInBack);
-                        }
+                        // Perform the scale down animation
+                        LeanTween.scale(card, card.transform.localScale / 1.2f, 0.5f).setEase(LeanTweenType.easeInBack)
+                            .setOnComplete(() =>
+                            {
+                                scaleUpComplete = true; // Mark the animation cycle as complete
+                            });
                     });
 
-                yield return new WaitForSeconds(3f);
+                // Wait for the animations to complete
+                yield return new WaitUntil(() => scaleUpComplete);
 
+                // Re-enable the collider after the animation is complete
+                if (cardCollider != null)
+                {
+                    cardCollider.enabled = true;
+                }
+
+                // Wait for the remaining time to maintain the 3-second interval
+                yield return new WaitForSeconds(1f);
+
+                // Validate the card's state before continuing
                 if (card == null || card.transform.localScale == Vector3.zero || cardCollider == null || !cardCollider.enabled)
                 {
                     yield break;
@@ -172,11 +191,13 @@ public class CardManagerWithBalloonController : MonoBehaviour
             }
             else
             {
-                yield break;
+                yield break; // Exit if the collider is disabled or the card is null
             }
         }
 
+        // Reset the shaking state when the coroutine ends
         if (card == card1) isCard1Shaking = false;
         else if (card == card2) isCard2Shaking = false;
     }
+
 }

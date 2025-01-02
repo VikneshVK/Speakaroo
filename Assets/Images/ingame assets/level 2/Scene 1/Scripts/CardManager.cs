@@ -183,23 +183,41 @@ public class CardManager : MonoBehaviour
     {
         while (card != null)
         {
-            if (card == null) yield break; // Ensure card hasn't been destroyed
+            if (card == null) yield break; // Ensure the card hasn't been destroyed
 
             Collider2D cardCollider = card.GetComponent<Collider2D>();
             if (cardCollider != null && cardCollider.enabled)
             {
+                // Disable the collider to prevent interaction during the animation
+                cardCollider.enabled = false;
+
+                bool scaleUpComplete = false;
+
+                // Perform the scale up animation
                 LeanTween.scale(card, card.transform.localScale * 1.2f, 0.5f).setEase(LeanTweenType.easeOutBack)
                     .setOnComplete(() =>
                     {
-                        if (card != null && card.GetComponent<Collider2D>() != null && card.GetComponent<Collider2D>().enabled)
-                        {
-                            LeanTween.scale(card, card.transform.localScale / 1.2f, 0.5f).setEase(LeanTweenType.easeInBack);
-                        }
+                        // Perform the scale down animation
+                        LeanTween.scale(card, card.transform.localScale / 1.2f, 0.5f).setEase(LeanTweenType.easeInBack)
+                            .setOnComplete(() =>
+                            {
+                                scaleUpComplete = true; // Mark the animation cycle as complete
+                            });
                     });
 
-                yield return new WaitForSeconds(3f);
+                // Wait for both animations to complete
+                yield return new WaitUntil(() => scaleUpComplete);
 
-                // Check if the card is still valid before continuing
+                // Re-enable the collider after the animation is complete
+                if (cardCollider != null)
+                {
+                    cardCollider.enabled = true;
+                }
+
+                // Wait for the remaining time to maintain the 3-second interval
+                yield return new WaitForSeconds(1f);
+
+                // Validate the card before continuing
                 if (card == null || IsMaskPrefabSpawned(card) || cardCollider == null || !cardCollider.enabled)
                 {
                     yield break;
@@ -215,4 +233,5 @@ public class CardManager : MonoBehaviour
         if (card == card1) isCard1Shaking = false;
         else if (card == card2) isCard2Shaking = false;
     }
+
 }

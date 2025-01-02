@@ -17,6 +17,7 @@ public class DraggableTextHandler : MonoBehaviour
     public AudioMixer audioMixer;
 
     public AudioSource buttonAudioSource; // AudioSource attached to the button
+    public AudioSource suggestionAudioSource;
     public GameObject childTextObject; // The TextMeshPro child object to enable and scale
     public Button retryButton;
     private Image buttonImage;
@@ -250,6 +251,12 @@ public class DraggableTextHandler : MonoBehaviour
         retryButton.GetComponent<Image>().sprite = Resources.Load<Sprite>("Images/STMechanics/speak-2");
 
         yield return new WaitForSeconds(audioSource.clip.length);
+
+        yield return new WaitForSeconds(1f);
+
+        suggestionAudioSource.Play();
+
+        yield return new WaitForSeconds(suggestionAudioSource.clip.length);
 
         yield return StartCoroutine(StartRecording());
 
