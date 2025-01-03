@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using TMPro;
+using System.Collections.Generic;
 
 public class DraggingController1 : MonoBehaviour
 {
@@ -74,7 +75,7 @@ public class DraggingController1 : MonoBehaviour
     private bool isMilkSequenceStarted;
     private bool isCherrySequenceStarted;
     /*private bool isTweenBackInProgress = false;*/
-
+    private List<GameObject> spawnedMasks = new List<GameObject>();
 
 
 
@@ -327,7 +328,12 @@ public class DraggingController1 : MonoBehaviour
 
         while (elapsedTime < 3f)
         {
-            InstantiateMaskWithinBounds();
+            GameObject mask = InstantiateMaskWithinBounds();
+            if (mask != null)
+            {
+                spawnedMasks.Add(mask); // Add the mask to the list
+                Destroy(mask, 3f); // Destroy the mask after 3 seconds
+            }
             elapsedTime += maskInterval;
             yield return new WaitForSeconds(maskInterval);
         }
@@ -341,14 +347,14 @@ public class DraggingController1 : MonoBehaviour
         StartBirdTweenSequence("Tasty", Audio5, subtitle5);
     }
 
-    private void InstantiateMaskWithinBounds()
+    private GameObject InstantiateMaskWithinBounds()
     {
         if (finalBowlSpriteObject == null)
-            return;
+            return null;
 
         Collider2D bowlCollider = finalBowlSpriteObject.GetComponent<Collider2D>();
         if (bowlCollider == null)
-            return;
+            return null;
 
         Bounds bounds = bowlCollider.bounds;
         Vector2 randomPosition;
@@ -364,7 +370,8 @@ public class DraggingController1 : MonoBehaviour
             positionValid = IsPositionWithinBounds(randomPosition, bowlCollider) && !IsPositionInsideMaskCollider(randomPosition);
         } while (!positionValid);
 
-        Instantiate(maskPrefab, randomPosition, Quaternion.identity);
+        // Instantiate the mask and return the reference
+        return Instantiate(maskPrefab, randomPosition, Quaternion.identity);
     }
 
     private bool IsPositionWithinBounds(Vector2 position, Collider2D collider)
