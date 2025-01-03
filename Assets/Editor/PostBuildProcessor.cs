@@ -19,7 +19,7 @@ public class PostBuildProcessor
 
             plist.root.SetString(
                 "NSMicrophoneUsageDescription",
-                "This app requires microphone access to record audio for Speech Therpy"
+                "This app requires microphone access to record audio for Speech Therapy"
             );
             
             plist.WriteToFile(plistPath);
