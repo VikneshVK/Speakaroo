@@ -19,6 +19,7 @@ public class ParrotController : MonoBehaviour
     private AudioSource audioSource;
     public GameObject referenceContainer;
     public AudioSource kikiwalkSoundSource;
+    public GameObject glowPrefab;
 
     private float speed2 = 5f;
     private SpriteRenderer kikiSprite;
@@ -245,7 +246,48 @@ public class ParrotController : MonoBehaviour
         animator.SetBool("startWalking", false);
         animator.SetBool("canKnock", false);
         animator.SetBool("cleaningDone", false);
+        SpawnAndTweenGlowOnInteractableObjects();
     }
+
+    public void SpawnAndTweenGlowOnInteractableObjects()
+    {
+        foreach (var obj in mainObjects.Values)
+        {
+            InteractableObject interactable = obj.GetComponent<InteractableObject>();
+            if (interactable != null && !interactable.isInteracted)
+            {
+                // Instantiate the glow prefab at the object's position
+                Vector3 glowPosition = obj.transform.position;
+                GameObject glowInstance = Instantiate(glowPrefab, glowPosition, Quaternion.identity);
+
+                // Optionally parent the glow to the object
+                glowInstance.transform.SetParent(obj.transform);
+
+                // Apply tweening animation
+                float initialScale = 0.1f; // Start small
+                float targetScale = 8f; // Scale up
+                float tweenDuration = 0.5f;
+
+                glowInstance.transform.localScale = Vector3.one * initialScale; // Set initial scale
+
+                // Scale up with LeanTween
+                LeanTween.scale(glowInstance, Vector3.one * targetScale, tweenDuration)
+                    .setEase(LeanTweenType.easeOutBounce) // Add a bounce effect
+                    .setOnComplete(() =>
+                    {
+                        LeanTween.delayedCall(glowInstance, 2f, () =>
+                        {
+                            // Fade out
+                            LeanTween.alpha(glowInstance, 0f, 0.5f)
+                                .setOnComplete(() => Destroy(glowInstance));
+                        });
+                    });
+
+                Debug.Log($"Spawned and tweened glow on {obj.name}");
+            }
+        }
+    }
+
 
     private void UpdateColliderStatus(string pushedName)
     {

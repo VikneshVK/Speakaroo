@@ -8,6 +8,7 @@ public class BoyController1 : MonoBehaviour
     public float walkSpeed = 2f;
 
     public GameObject Bird;
+    private ParrotController parrotController;
     public GameObject Bus;
     public GameObject Whale;
     public GameObject Building;
@@ -43,7 +44,7 @@ public class BoyController1 : MonoBehaviour
         birdAnimator = Bird.GetComponent<Animator>();
         jojoAudio = GetComponent<AudioSource>();
         SfxAudioSource = GameObject.FindWithTag("SFXAudioSource").GetComponent<AudioSource>();
-
+        parrotController = Bird.GetComponent<ParrotController>();
         if (stopPosition == null)
         {
             Debug.LogError("Stop position not set for BoyController.");
@@ -132,6 +133,7 @@ public class BoyController1 : MonoBehaviour
             boyAnimator.SetBool("canTalk", false);
             isTalking = true;
             birdAnimator.SetBool("can talk", true);
+            parrotController.SpawnAndTweenGlowOnInteractableObjects();
             PlayAudioByIndex(3); //added temp, change after
             StartCoroutine(RevealTextWordByWord("Put the Big Toys on the Shelf", 0.5f));
             boyspriteRenderer.flipX = true;
@@ -144,7 +146,7 @@ public class BoyController1 : MonoBehaviour
             birdAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.9f)
         {
             EnableColliders();
-            birdAnimator.SetBool("TalkCompleted", true);
+            birdAnimator.SetBool("TalkCompleted", true);            
             collidersEnabled = true;
         }
     }

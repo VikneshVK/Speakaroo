@@ -1485,7 +1485,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c856ad9b32e6094eba6c121df466a0a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  delayBeforeHelp: 10
+  delayBeforeHelp: 14
   isInteracted: 0
   needsHelp: 0
 --- !u!1 &731790912
@@ -2526,6 +2526,7 @@ MonoBehaviour:
   targetDistance: 10
   referenceContainer: {fileID: 2094902404}
   kikiwalkSoundSource: {fileID: 1528684698}
+  glowPrefab: {fileID: 6008917645427281803, guid: 98f653f208adcf14aa39655e1f137f8f, type: 3}
 --- !u!95 &1148544127
 Animator:
   serializedVersion: 5
@@ -2924,6 +2925,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1bf2923fc0c70244d8206020e523e8dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  birdAnimator: {fileID: 1148544127}
   pointer: {fileID: 1327913757}
   glowPrefab: {fileID: 6008917645427281803, guid: 98f653f208adcf14aa39655e1f137f8f, type: 3}
   subtitleText: {fileID: 844778320}

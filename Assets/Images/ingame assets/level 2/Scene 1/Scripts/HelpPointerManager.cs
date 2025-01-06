@@ -6,21 +6,22 @@ public class HelpPointerManager : MonoBehaviour
 {
     public static HelpPointerManager Instance;
     public static bool IsAnyObjectBeingInteracted = false;
+    public Animator birdAnimator;
 
-    public GameObject pointer;  // Helper hand pointer
-    public GameObject glowPrefab;      // Glow object to be assigned in inspector
-    public TextMeshProUGUI subtitleText;  // Reference to the TMP text component
+    public GameObject pointer; // Helper hand pointer
+    public GameObject glowPrefab; // Glow object to be assigned in inspector
+    public TextMeshProUGUI subtitleText; // Reference to the TMP text component
     private AudioSource audioSource;
 
-    // New flag to track if any help is active
-    private bool isHelpActive = false;
+    private bool isHelpActive = false; // Shared flag for help activity
+    private GameObject currentHelpObject; // Tracks the object currently being helped
 
     private void Awake()
     {
         if (Instance == null)
         {
             Instance = this;
-            audioSource = GetComponent<AudioSource>();  // Get the AudioSource component attached to the game object
+            audioSource = GetComponent<AudioSource>(); // Get the AudioSource component attached to the game object
         }
         else
         {
@@ -59,18 +60,16 @@ public class HelpPointerManager : MonoBehaviour
 
     public void CheckAndShowHelpForObject(GameObject reactivatedObject, float delayBeforeHelp)
     {
-        if (isHelpActive) return;
+        if (isHelpActive || currentHelpObject == reactivatedObject) return;
 
         InteractableObject interactable = reactivatedObject.GetComponent<InteractableObject>();
         if (interactable != null && !interactable.isInteracted)
         {
-            
+            currentHelpObject = reactivatedObject;
             pointer.transform.position = interactable.transform.position;
             pointer.SetActive(true);
-
+            birdAnimator.SetTrigger("onceMore");
             StartCoroutine(HandleHelpPointer(interactable, delayBeforeHelp));
-
-            SpawnGlowEffect(reactivatedObject);  // Spawn glow when help is triggered
 
             if (subtitleText != null)
             {
@@ -89,12 +88,11 @@ public class HelpPointerManager : MonoBehaviour
 
     private IEnumerator HandleHelpPointer(InteractableObject interactable, float delayBeforeHelp)
     {
-        while (!interactable.isInteracted)  // Continue tweens until the object is interacted with
+        while (!interactable.isInteracted) // Continue until the object is interacted with
         {
-            // Fetch the current drop position dynamically
             Vector3 dropPosition = interactable.GetDropLocation();
 
-            // Tween the helper hand to the drop position
+            // Tween the pointer to the drop position
             LeanTween.move(pointer, dropPosition, 2f)
                 .setEase(LeanTweenType.easeInOutSine)
                 .setOnComplete(() =>
@@ -103,14 +101,12 @@ public class HelpPointerManager : MonoBehaviour
                     pointer.transform.position = interactable.transform.position;
                 });
 
-            // Wait for the tween to finish before starting the next tween (1 second duration in this case)
-            yield return new WaitForSeconds(1f);
+            yield return new WaitForSeconds(2f); // Wait for tween duration before repeating
         }
 
-        // Once interacted, stop the pointer if needed
-        StopHelpPointer();
+        // Object was interacted with, reset help
+        ClearHelpRequest(interactable);
     }
-
 
     // Coroutine to reveal text word by word
     private IEnumerator RevealTextWordByWord(string fullText, float delayBetweenWords)
@@ -150,7 +146,7 @@ public class HelpPointerManager : MonoBehaviour
 
     public void ClearHelpRequest(InteractableObject interactable)
     {
-        if (pointer.activeInHierarchy && pointer.transform.position == interactable.transform.position)
+        if (pointer.activeInHierarchy && interactable.gameObject == currentHelpObject)
         {
             StopHelpPointer();
         }
@@ -158,17 +154,27 @@ public class HelpPointerManager : MonoBehaviour
 
     public void StopHelpPointer()
     {
-        isHelpActive = false;  // Reset the help active flag
-        LeanTween.cancel(pointer);  // Stop any ongoing tween
-        pointer.SetActive(false);   // Deactivate the pointer
-
-        if (audioSource != null)
+        if (isHelpActive)
         {
-            audioSource.Stop();  // Stop the audio if the helper hand is deactivated
-        }
+            isHelpActive = false;
+            currentHelpObject = null;
+            LeanTween.cancel(pointer);
+            pointer.SetActive(false);
 
-        Debug.Log("Help pointer deactivated");
+            if (audioSource != null)
+            {
+                audioSource.Stop();
+            }
+
+            Debug.Log("Help pointer deactivated");
+        }
     }
+
+    public bool IsHelpActive()
+    {
+        return isHelpActive;
+    }
+
 
 
 }

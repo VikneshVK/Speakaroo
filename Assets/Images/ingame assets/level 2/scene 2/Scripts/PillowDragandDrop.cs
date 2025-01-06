@@ -21,6 +21,7 @@ public class PillowDragAndDrop : MonoBehaviour
     public AudioClip sfxAudio2;
     public AudioClip sfxAudio3;
     public HelperHandController helperHandController;
+    public GameObject glowPrefab;
     private bool isDragging = false;
     private Animator boyAnimator;
     private Animator kikiAnimator;
@@ -28,7 +29,7 @@ public class PillowDragAndDrop : MonoBehaviour
     private Vector3 offset;
     private int originalSortingOrder;
     private SpriteRenderer spriteRenderer;
-
+    private Vector3 targetInitialScale;
     public static int droppedPillowsCount;
 
     private AudioSource feedbackAudioSource;
@@ -39,6 +40,8 @@ public class PillowDragAndDrop : MonoBehaviour
     // New audio clips for pillow types
     private AudioClip audioClipBigPillow;
     private AudioClip audioClipSmallPillow;
+    private bool isScaling = false; // Track if scaling is happening
+    /*private bool isShaking = false; // Track if shaking is happening*/
 
     void Start()
     {
@@ -67,7 +70,7 @@ public class PillowDragAndDrop : MonoBehaviour
         {
             Debug.LogError("SpriteRenderer component not found.");
         }
-
+        targetInitialScale = targetPosition.localScale;
         // Load audio clips from Resources
         positiveAudio1 = Resources.Load<AudioClip>("Audio/FeedbackAudio/GOOD JOB");
         positiveAudio2 = Resources.Load<AudioClip>("Audio/FeedbackAudio/KEEP GOING");
@@ -111,7 +114,29 @@ public class PillowDragAndDrop : MonoBehaviour
         {
             Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             transform.position = mousePosition + offset;
-           
+            /*if (!isScaling && targetPosition != null)
+            {
+                isScaling = true;
+                // Scale up from initial scale
+                LeanTween.scale(targetPosition.gameObject, targetInitialScale * 1.2f, 0.5f).setEase(LeanTweenType.easeInOutSine).setOnComplete(() =>
+                {
+                    isScaling = false; // Reset scaling flag when done
+                });
+            }
+*/
+           /* // Apply shaking if not done yet
+            if (!isShaking && targetPosition != null)
+            {
+                isShaking = true;
+                // Shake the target position
+                LeanTween.moveX(targetPosition.gameObject, targetPosition.position.x + 0.1f, 0.1f)
+                         .setEase(LeanTweenType.easeShake)
+                         .setLoopPingPong(1)
+                         .setOnComplete(() =>
+                         {
+                             isShaking = false; // Reset shaking flag when done
+                         });
+            }*/
             /*// If the player is interacting, stop the helper hand
             helperHandController.StopHelperHand();*/
         }
@@ -148,65 +173,104 @@ public class PillowDragAndDrop : MonoBehaviour
                 spriteRenderer.sortingOrder = originalSortingOrder;
             }
 
+           /* if (targetPosition != null)
+            {
+                // Reset scale to original scale and stop shaking
+                LeanTween.scale(targetPosition.gameObject, targetInitialScale, 0.2f).setEase(LeanTweenType.easeInOutSine);
+                *//*LeanTween.cancel(targetPosition.gameObject); // Stop any ongoing shaking*//*
+            }*/
+
             if (Vector3.Distance(transform.position, targetPosition.position) < offsetValue)
             {
-                canDrag = false;
-                PillowDragAndDrop[] allPillows = FindObjectsOfType<PillowDragAndDrop>();
-
-                foreach (PillowDragAndDrop pillow in allPillows)
-                {
-                   pillow.GetComponent<Collider2D>().enabled = false;                    
-                }
-                LeanTween.move(gameObject, targetPosition.position, 0.5f).setOnComplete(() =>
-                {
-                    transform.rotation = Quaternion.identity;
-                    GetComponent<Collider2D>().enabled = false;
-                    HasInteracted = true;
-
-                    ActivateDust();
-                    UpdateBedsheetSprite();
-                    targetPosition.gameObject.SetActive(false);
-
-                    // Increment the droppedPillowsCount
-                    droppedPillowsCount++;
-                    Debug.Log("droppedpillows count: " + droppedPillowsCount);
-                    // Call the coroutine to handle animation and audio with a delay
-                    StartCoroutine(HandlePillowAnimationAndAudio());
-                });
-
-                if (droppedPillowsCount < 3) // Only play audio for the first three pillows
-                {
-                    boyAnimator.SetTrigger("rightDrop");
-                    kikiAnimator.SetTrigger("rightDrop");
-                    PlayPositiveFeedbackAudio();
-                }
-               /* else
-                {
-                    boyAnimator.SetTrigger("rightDrop");
-                    kikiAnimator.SetTrigger("rightDrop");
-                }*/
+                // Handle correct drop logic
+                HandleCorrectDrop();
             }
             else
             {
-                boyAnimator.SetTrigger("wrongDrop");
-                kikiAnimator.SetTrigger("wrongDrop");
-
-                if (droppedPillowsCount < 4)
-                {
-                    PlayNegativeFeedbackAudio();
-                }
-
-                // Reset the position if the drop was incorrect
-                transform.position = startPosition;
-                transform.rotation = Quaternion.identity;
-
-                // Reset the interaction status and reschedule the helper hand after a delay
-                HasInteracted = false;
-                helperHandController.ScheduleHelperHand(this);
-
-                // If you need a delay, use a coroutine instead of Invoke:
-                StartCoroutine(DelayedScheduleHelperHand());
+                // Handle incorrect drop logic
+                HandleIncorrectDrop();
             }
+        }
+    }
+
+    private void HandleCorrectDrop()
+    {
+        canDrag = false;
+        PillowDragAndDrop[] allPillows = FindObjectsOfType<PillowDragAndDrop>();
+
+        foreach (PillowDragAndDrop pillow in allPillows)
+        {
+            pillow.GetComponent<Collider2D>().enabled = false;
+        }
+
+        LeanTween.move(gameObject, targetPosition.position, 0.5f).setOnComplete(() =>
+        {
+            transform.rotation = Quaternion.identity;
+            GetComponent<Collider2D>().enabled = false;
+            HasInteracted = true;
+
+            ActivateDust();
+            UpdateBedsheetSprite();
+            targetPosition.gameObject.SetActive(false);
+
+            // Increment the droppedPillowsCount
+            droppedPillowsCount++;
+            Debug.Log("droppedpillows count: " + droppedPillowsCount);
+            // Call the coroutine to handle animation and audio with a delay
+            StartCoroutine(HandlePillowAnimationAndAudio());
+        });
+
+        if (droppedPillowsCount < 3) // Only play audio for the first three pillows
+        {
+            boyAnimator.SetTrigger("rightDrop");
+            kikiAnimator.SetTrigger("rightDrop");
+            PlayPositiveFeedbackAudio();
+        }
+    }
+
+    private void HandleIncorrectDrop()
+    {
+        boyAnimator.SetTrigger("wrongDrop");
+        kikiAnimator.SetTrigger("wrongDrop");
+
+        if (droppedPillowsCount < 4)
+        {
+            PlayNegativeFeedbackAudio();
+        }
+
+        // Wait for 2.5 seconds, then show helper feedback
+        StartCoroutine(ShowHelperFeedbackAfterDelay());
+
+        // Reset the position if the drop was incorrect
+        transform.position = startPosition;
+        transform.rotation = Quaternion.identity;
+
+        // Reset the interaction status and reschedule the helper hand after a delay
+        HasInteracted = false;
+        helperHandController.ScheduleHelperHand(this);
+    }
+
+    private IEnumerator ShowHelperFeedbackAfterDelay()
+    {
+        yield return new WaitForSeconds(2.5f);
+
+        if (IsBigPillow())
+        {
+            kikiAnimator.SetTrigger("bigPillow");
+            SpawnGlow(gameObject); // Spawn glow on the big pillow
+            AudioSource audioSource = nextaudiosoucre.GetComponent<AudioSource>() ?? feedbackAudioSource;
+            if (audioSource != null) audioSource.PlayOneShot(audioClipBigPillow);
+            StartCoroutine(RevealTextWordByWord("Put the Big Pillow at the Back", 0.5f));
+            Debug.Log("Playing big pillow audio.");
+        }
+        else
+        {
+            kikiAnimator.SetTrigger("smallPillow");
+            SpawnGlow(gameObject); // Spawn glow on the small pillow
+            AudioSource audioSource = nextaudiosoucre.GetComponent<AudioSource>() ?? feedbackAudioSource;
+            if (audioSource != null) audioSource.PlayOneShot(audioClipSmallPillow);
+            StartCoroutine(RevealTextWordByWord("Put the Small Pillow at the front of the big Pillow", 0.3f));
+            Debug.Log("Playing small pillow audio.");
         }
     }
 
@@ -235,6 +299,7 @@ public class PillowDragAndDrop : MonoBehaviour
                         if (nextPillow.IsBigPillow())
                         {
                             kikiAnimator.SetTrigger("bigPillow");
+                            SpawnGlow(nextPillow.gameObject); // Spawn glow on the big pillow
                             audioSource.PlayOneShot(audioClipBigPillow);
                             StartCoroutine(RevealTextWordByWord("Put the Big Pillow at the Back", 0.5f));
                             Debug.Log("Playing big pillow audio.");
@@ -242,6 +307,7 @@ public class PillowDragAndDrop : MonoBehaviour
                         else
                         {
                             kikiAnimator.SetTrigger("smallPillow");
+                            SpawnGlow(nextPillow.gameObject); // Spawn glow on the small pillow
                             audioSource.PlayOneShot(audioClipSmallPillow);
                             StartCoroutine(RevealTextWordByWord("Put the Small Pillow at the front of the big Pillow", 0.3f));
                             Debug.Log("Playing small pillow audio.");
@@ -255,6 +321,36 @@ public class PillowDragAndDrop : MonoBehaviour
             yield return new WaitForSeconds(4f);
             canDrag = true;
         }
+    }
+
+    private void SpawnGlow(GameObject targetPillow)
+    {
+        if (glowPrefab != null && targetPillow != null)
+        {
+            GameObject glowInstance = Instantiate(glowPrefab, targetPillow.transform.position, Quaternion.identity);
+            glowInstance.transform.localScale = Vector3.zero;
+
+            // Tween scale up and destroy after animation
+            LeanTween.scale(glowInstance, new Vector3(15f, 15f, 15f), 1f).setOnComplete(() =>
+            {
+                StartCoroutine(TweenGlowOut(glowInstance));
+            });
+        }
+        else
+        {
+            Debug.LogWarning("Glow prefab or target pillow is not assigned.");
+        }
+    }
+
+    private IEnumerator TweenGlowOut(GameObject glowInstance)
+    {
+        yield return new WaitForSeconds(2f); // Wait for 2 seconds
+
+        // Tween scale back to zero
+        LeanTween.scale(glowInstance, Vector3.zero, 1f).setOnComplete(() =>
+        {
+            Destroy(glowInstance); // Destroy the glow instance after the animation completes
+        });
     }
 
 

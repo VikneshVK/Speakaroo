@@ -20,33 +20,24 @@ public class InteractableObject : MonoBehaviour
 
     void Update()
     {
-        if (ColliderIsEnabled() && !isInteracted && isTrackingEnabled && !isPaused)
+        if (ColliderIsEnabled() && !isInteracted && isTrackingEnabled && !needsHelp)
         {
             interactionTimer += Time.deltaTime;
 
-            // Trigger glow effect halfway through the delay time
-            if (interactionTimer >= delayBeforeHelp / 2 && !needsHelp && !isGlowDone)
-            {
-                isGlowDone = true;
-                HelpPointerManager.Instance.SpawnGlowEffect(gameObject);  // Spawn glow prefab
-                StartCoroutine(PauseInteractionTimer(2f));
-            }
-
-            // Trigger helper hand and additional glow at the full delay
-            if (interactionTimer >= delayBeforeHelp && !needsHelp)
+            if (interactionTimer >= delayBeforeHelp)
             {
                 needsHelp = true;
-                HelpPointerManager.Instance.CheckAndShowHelpForObject(gameObject, delayBeforeHelp);                
+                HelpPointerManager.Instance.CheckAndShowHelpForObject(gameObject, delayBeforeHelp);
             }
         }
     }
 
-    private IEnumerator PauseInteractionTimer(float pauseDuration)
-    {
-        isPaused = true;
-        yield return new WaitForSeconds(pauseDuration);
-        isPaused = false;
-    }
+    /* private IEnumerator PauseInteractionTimer(float pauseDuration)
+     {
+         isPaused = true;
+         yield return new WaitForSeconds(pauseDuration);
+         isPaused = false;
+     }*/
 
     public void EnableInteractionTracking()
     {
@@ -65,12 +56,11 @@ public class InteractableObject : MonoBehaviour
     public void OnInteract()
     {
         isInteracted = true;
-        needsHelp = false; // Reset needsHelp
-        interactionTimer = 0f; // Reset the timer
-        isTrackingEnabled = false; // Stop tracking after interaction
-        HelpPointerManager.Instance.ClearHelpRequest(this);
-        HelpPointerManager.Instance.StopHelpPointer(); // Stop the help pointer
-        Debug.Log($"Interaction completed for {gameObject.name}, resetting timer and stopping help pointer.");
+        needsHelp = false;
+        interactionTimer = 0f;
+        isTrackingEnabled = false;
+        HelpPointerManager.Instance.ClearHelpRequest(this); // Reset help when interacted
+        Debug.Log($"Interaction completed for {gameObject.name}");
     }
 
     public Vector3 GetDropLocation()

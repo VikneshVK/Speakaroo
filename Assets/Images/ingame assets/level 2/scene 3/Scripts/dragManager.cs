@@ -11,7 +11,7 @@ public class dragManager : MonoBehaviour
     public AudioClip[] objectAudioClips;  // Array for each object's audio clip
     public AudioClip[] feedbackClips;  // Array for feedback audios (2 correct, 1 wrong)
     public GameObject[] interactables;
-
+    public GameObject glowPrefab;
     public Animator birdAnimator;
     public Animator boyAnimator;
     public GameObject[] gameObjects;  // The 6 game objects
@@ -27,6 +27,7 @@ public class dragManager : MonoBehaviour
     private HelperPointer helperPointer;
     private GameObject parrot;
     private SpriteRenderer interactableSpriteRender;
+    private GameObject glowInstance;
 
     void Start()
     {
@@ -134,7 +135,8 @@ public class dragManager : MonoBehaviour
             boyAnimator.SetTrigger("wrongDrop");
 
             feedbackAudioSource.Play();
-            yield return new WaitUntil(() => !feedbackAudioSource.isPlaying);
+            yield return new WaitForSeconds(2.5f);
+            PlayObjectAudio(totalCorrectDrops);
         }
     }
 
@@ -167,6 +169,8 @@ public class dragManager : MonoBehaviour
     {
         if (index < objectAudioClips.Length && audioSource != null)
         {
+            GameObject nextObject = gameObjects[index];
+            SpawnAndTweenGlow(nextObject.transform.position);
             audioSource.clip = objectAudioClips[index];
             audioSource.Play();
             birdAnimator.SetTrigger(triggerNames[index]);  // Trigger the animation for the current object
@@ -213,4 +217,22 @@ public class dragManager : MonoBehaviour
     {
         allDone = true;
     }
+
+    private void SpawnAndTweenGlow(Vector3 position)
+    {
+        if (glowInstance != null)
+        {
+            Destroy(glowInstance);
+        }
+
+        glowInstance = Instantiate(glowPrefab, position, Quaternion.identity);
+        LeanTween.scale(glowInstance, Vector3.one * 8, 0.5f).setEase(LeanTweenType.easeInOutQuad).setOnComplete(() =>
+        {
+            LeanTween.scale(glowInstance, Vector3.zero, 0.5f).setEase(LeanTweenType.easeInOutQuad).setDelay(1f).setOnComplete(() =>
+            {
+                Destroy(glowInstance);
+            });
+        });
+    }
+
 }

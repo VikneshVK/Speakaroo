@@ -24,6 +24,7 @@ public class DragAndDropController : MonoBehaviour
 
     private Animator boyAnimator;
     private Animator birdAnimator;
+    private ParrotController parrotController;
     private Animator animator;
     private InteractableObject interactableObject;
     private bool isDragging = false;
@@ -42,6 +43,7 @@ public class DragAndDropController : MonoBehaviour
     void Start()
     {
         boyAnimator = Boy.GetComponent<Animator>();
+        parrotController = bird.GetComponent<ParrotController>();
         interactionStatus.Add(miniBus, false);
         interactionStatus.Add(miniWhale, false);
         interactionStatus.Add(miniBuilding, false);
@@ -81,7 +83,13 @@ public class DragAndDropController : MonoBehaviour
             {
                 isDragging = true;
                 HelpPointerManager.IsAnyObjectBeingInteracted = true;
-                HelpPointerManager.Instance.StopHelpPointer(); // Stop the help pointer
+
+                // Stop the help pointer for all objects
+                if (HelpPointerManager.Instance.IsHelpActive())
+                {
+                    HelpPointerManager.Instance.StopHelpPointer();
+                }
+
                 offset = transform.position - mousePosition;
                 interactableObject.OnInteract();
             }
@@ -100,6 +108,7 @@ public class DragAndDropController : MonoBehaviour
         }
     }
 
+
     void DragObject()
     {
         Vector3 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
@@ -114,6 +123,7 @@ public class DragAndDropController : MonoBehaviour
             birdAnimator.SetTrigger("RightDrop");
             feedbackAudioSource.clip = positiveAudio1;
             feedbackAudioSource.Play();
+
             // Start coroutine to add delay before playing audio
             StartCoroutine(PlayAudioWithDelay());
 
@@ -136,13 +146,23 @@ public class DragAndDropController : MonoBehaviour
         {
             birdAnimator.SetTrigger("wrongDrop");
 
-            PlayNegativeFeedbackAudio();
-
-            ResetInteractionStatus();
-
+            PlayNegativeFeedbackAudio();            
             ResetObjectPosition();
+            interactableObject.isInteracted = false;
+            StartCoroutine(HandleNegativeFeedbackDelay());
         }
     }
+
+    private IEnumerator HandleNegativeFeedbackDelay()
+    {
+        
+        yield return new WaitForSeconds(2.5f); // Wait for 2.5 seconds
+        birdAnimator.SetTrigger("onceMore");
+        parentController.PlayAudioByIndex(3);
+        parrotController.SpawnAndTweenGlowOnInteractableObjects();        
+        ResetInteractionStatus();
+    }
+
 
     // Coroutine to add delay before playing audio
     private IEnumerator PlayAudioWithDelay()
@@ -158,11 +178,10 @@ public class DragAndDropController : MonoBehaviour
         {
             interactionStatus[gameObject] = false;
         }
-
-        InteractableObject interactableObject = GetComponent<InteractableObject>();
+      
         if (interactableObject != null)
         {
-            interactableObject.EnableInteractionTracking();
+            interactableObject.EnableInteractionTracking();           
         }
     }
 

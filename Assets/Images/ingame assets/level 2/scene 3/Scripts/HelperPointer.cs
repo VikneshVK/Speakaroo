@@ -3,8 +3,7 @@ using System.Collections;
 
 public class HelperPointer : MonoBehaviour
 {
-    public GameObject helperHandPrefab;
-    public GameObject glowPrefab;
+    public GameObject helperHandPrefab;    
     public float helperDelay = 10f;
     public float helperMoveDuration = 1f;
     public AudioSource audioSource;
@@ -30,22 +29,8 @@ public class HelperPointer : MonoBehaviour
 
     private IEnumerator HandleHelperDelay(float totalDelay)
     {
-        float halfDelay = totalDelay / 2f;
-        yield return new WaitForSeconds(halfDelay);
-
-        // Spawn the glow effect
-        if (currentDragHandler != null && glowPrefab != null)
-        {
-            SpawnAndTweenGlow(currentDragHandler.transform.position);
-        }
-
-        // Wait for glow tweening
-        yield return new WaitForSeconds(1.5f);
-
-        // Complete the remaining delay
-        yield return new WaitForSeconds(halfDelay);
-
-        // Spawn the helper hand and play the Kiki animation
+        
+        yield return new WaitForSeconds(totalDelay);
         StartHelperHand();
         PlayKikiAnimation();
     }
@@ -67,24 +52,7 @@ public class HelperPointer : MonoBehaviour
                 Debug.LogWarning("No trigger available for this index.");
             }
         }
-    }
-
-    private void SpawnAndTweenGlow(Vector3 position)
-    {
-        if (glowInstance != null)
-        {
-            Destroy(glowInstance);
-        }
-
-        glowInstance = Instantiate(glowPrefab, position, Quaternion.identity);
-        LeanTween.scale(glowInstance, Vector3.one * 8, 0.5f).setEase(LeanTweenType.easeInOutQuad).setOnComplete(() =>
-        {
-            LeanTween.scale(glowInstance, Vector3.zero, 0.5f).setEase(LeanTweenType.easeInOutQuad).setDelay(1f).setOnComplete(() =>
-            {
-                Destroy(glowInstance);
-            });
-        });
-    }
+    }   
 
     private void StartHelperHand()
     {

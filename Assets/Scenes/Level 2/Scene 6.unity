@@ -343,7 +343,7 @@ BoxCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 36023386}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Density: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -490,7 +490,7 @@ BoxCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 57430200}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Density: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -937,6 +937,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 6565473552deff94cafbec350021c2e8, type: 3}
   - {fileID: 8300000, guid: 4dde01cc722a25d4187d0fcfbae121f7, type: 3}
   interactables: []
+  glowPrefab: {fileID: 6008917645427281803, guid: 0731d8d4fca69ca4c87c9e055a7cc7f9, type: 3}
   birdAnimator: {fileID: 275504936}
   boyAnimator: {fileID: 1132920344}
   gameObjects:
@@ -1375,7 +1376,7 @@ BoxCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 422953007}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Density: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -1522,7 +1523,7 @@ BoxCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 523711538}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Density: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -2144,7 +2145,7 @@ BoxCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 915501614}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Density: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:
@@ -2322,8 +2323,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   helperHandPrefab: {fileID: 668317662352755921, guid: 75692ccf92d941440b5a63993daa8d77, type: 3}
-  glowPrefab: {fileID: 6008917645427281803, guid: 0731d8d4fca69ca4c87c9e055a7cc7f9, type: 3}
-  helperDelay: 15
+  helperDelay: 5
   helperMoveDuration: 2
   audioSource: {fileID: 268866139}
 --- !u!4 &943344315
@@ -3060,7 +3060,7 @@ BoxCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1525820765}
-  m_Enabled: 1
+  m_Enabled: 0
   m_Density: 1
   m_Material: {fileID: 0}
   m_IncludeLayers:

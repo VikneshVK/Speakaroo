@@ -19,15 +19,16 @@ public class LeafDragAndDrop : MonoBehaviour
     public AudioClip SfxAudio1;
     public AudioClip SfxAudio2;
     public HP_HelperpointerController helperPointerController;
+    public GameObject glowPrefab;
 
     private Animator boyAnimator;
-    private Animator parrotAnimator;    
+    private Animator parrotAnimator;
     private Animator leavesAnimator;
     private Animator smokeAnimator;
     private Animator binAnimator;
     private AudioSource SfxAudioSource;
     private bool SfxaudioPlaying = false;
-
+    private AudioSource instructionAudio;
     public bool dragging = false; // Changed to public
 
 
@@ -49,6 +50,7 @@ public class LeafDragAndDrop : MonoBehaviour
         parrotAnimator = Parrot.GetComponent<Animator>();
         anchorGameObjectScript = GetComponent<AnchorGameObject>();
         SfxAudioSource = GameObject.FindWithTag("SFXAudioSource").GetComponent<AudioSource>();
+        instructionAudio = helperPointerController.gameObject.GetComponent<AudioSource>();
     }
 
     private void Update()
@@ -58,7 +60,7 @@ public class LeafDragAndDrop : MonoBehaviour
             binAnimator.SetBool("binOpen", true);
             Vector3 mousePosition = new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10);
             transform.position = Camera.main.ScreenToWorldPoint(mousePosition) + offset;
-            if (SfxAudioSource != null && !SfxaudioPlaying) 
+            if (SfxAudioSource != null && !SfxaudioPlaying)
             {
                 SfxaudioPlaying = true;
                 /*SfxAudioSource.loop = true;*/
@@ -96,16 +98,25 @@ public class LeafDragAndDrop : MonoBehaviour
         dragging = false;
         binAnimator.SetBool("binOpen", false);
         if (SfxAudioSource != null)
-        {           
+        {
             SfxAudioSource.loop = false;
             SfxAudioSource.clip = SfxAudio2;
             SfxAudioSource.Play();
         }
         SfxaudioPlaying = false;
-        // If the leaf is dropped correctly in the bin
-        if (bin && gameObject.GetComponent<Collider2D>().bounds.Intersects(bin.GetComponent<Collider2D>().bounds))
+
+        // If the leaf is dropped incorrectly
+        if (bin && !gameObject.GetComponent<Collider2D>().bounds.Intersects(bin.GetComponent<Collider2D>().bounds))
         {
-            // Apply dropOffset for correct positioning and play animations
+            boyAnimator.SetTrigger("WrongDrop");
+            parrotAnimator.SetTrigger("WrongDrop");
+            Audio2.Play();
+            transform.position = startPosition;
+            StartCoroutine(Instruction());
+        }
+        else
+        {
+            // If the leaf is dropped correctly in the bin
             transform.position += dropOffset;
             boyAnimator.SetTrigger("RightDrop");
             parrotAnimator.SetTrigger("RightDrop");
@@ -121,16 +132,8 @@ public class LeafDragAndDrop : MonoBehaviour
 
             StartCoroutine(DelayedInstantiate(1.5f)); // Delay instantiation by 1.5 seconds
         }
-        else
-        {
-            // If drop is incorrect, return the object to the start position
-            boyAnimator.SetTrigger("WrongDrop");
-            parrotAnimator.SetTrigger("WrongDrop");
-            Audio2.Play();
-            transform.position = startPosition;
-            helperPointerController.StartInactivityTimer();
-        }
     }
+
 
     // Disables both leaves1 and leaves2 colliders when a correct drop occurs
     private void DisableColliders()
@@ -169,5 +172,39 @@ public class LeafDragAndDrop : MonoBehaviour
         {
             Instantiate(spawnPrefab, spawnLocation.position, Quaternion.identity);
         }
+    }
+
+    private IEnumerator Instruction()
+    {
+        yield return new WaitForSeconds(2.5f);
+        parrotAnimator.SetTrigger("onceMore");
+        instructionAudio.Play();
+        SpawnGlowEffect();
+    }
+
+    private void SpawnGlowEffect()
+    {
+        if (glowPrefab != null)
+        {
+            // Instantiate the glow prefab on the current game object
+            GameObject glow = Instantiate(glowPrefab, transform.position, Quaternion.identity);
+            glow.transform.localScale = Vector3.zero; // Start with scale 0
+
+            // Tween the glow's scale to 8, and then scale down and destroy after 2 seconds
+            LeanTween.scale(glow, new Vector3(8, 8, 1), 0.5f).setOnComplete(() =>
+            {
+                StartCoroutine(ScaleDownAndDestroy(glow));
+            });
+        }
+    }
+
+    private IEnumerator ScaleDownAndDestroy(GameObject glow)
+    {
+        yield return new WaitForSeconds(2f); // Wait for 2 seconds
+        LeanTween.scale(glow, Vector3.zero, 0.5f).setOnComplete(() =>
+        {
+            Destroy(glow); // Destroy the glow object after scaling down
+            helperPointerController.StartInactivityTimer();
+        });
     }
 }

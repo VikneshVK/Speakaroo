@@ -13,6 +13,7 @@ public class HP_HelperpointerController : MonoBehaviour
     public float inactivityTime = 10f; // Time before the pointer spawns, adjustable in Inspector
     public float tweenDuration = 2f; // Duration of the tween to trash can
     public TextMeshProUGUI subtitleText;
+    public Animator kikiAnimator;
 
     private bool isTimerActive = false;
     private bool leaves1Interacted = false;
@@ -73,12 +74,12 @@ public class HP_HelperpointerController : MonoBehaviour
         {
             timer += Time.deltaTime;
 
-            // Spawn glow effect at half inactivity time
+           /* // Spawn glow effect at half inactivity time
             if (timer >= inactivityTime / 2 && !glowSpawned)
             {
                 glowSpawned = true;
                 SpawnGlowEffect(leaf.transform.position);
-            }
+            }*/
 
             // Spawn helper pointer at full inactivity time
             if (timer >= inactivityTime && helperPointerInstance == null)
@@ -96,7 +97,7 @@ public class HP_HelperpointerController : MonoBehaviour
         glowSpawned = false;
     }
 
-    private void SpawnGlowEffect(Vector3 position)
+   /* private void SpawnGlowEffect(Vector3 position)
     {
         GameObject glowInstance = Instantiate(glowPrefab, position, Quaternion.identity);
 
@@ -108,7 +109,7 @@ public class HP_HelperpointerController : MonoBehaviour
                     .setDelay(1f)
                     .setOnComplete(() => Destroy(glowInstance));
             });
-    }
+    }*/
 
     private void SpawnHelperPointer(Vector3 startPosition)
     {
@@ -116,6 +117,7 @@ public class HP_HelperpointerController : MonoBehaviour
 
         if (audioSource != null)
         {
+            kikiAnimator.SetTrigger("onceMore");
             audioSource.Play();
             StartCoroutine(RevealTextWordByWord("Put the Dry Leaves inside the Bin", 0.5f));
         }

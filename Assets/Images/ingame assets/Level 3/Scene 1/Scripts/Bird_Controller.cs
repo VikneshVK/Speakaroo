@@ -17,6 +17,7 @@ public class Bird_Controller : MonoBehaviour
     public Collider2D bigLeaf1Collider;
     public Collider2D bigLeaf2Collider;
     public bool LevelComplete;
+    public GameObject glowPrefab;
 
     private HP_HelperpointerController helpercontroller;
     private AudioSource instructionAudio;
@@ -80,6 +81,7 @@ public class Bird_Controller : MonoBehaviour
             birdAnimator.SetTrigger("instruction");
             instructionAudio.Play();
             StartCoroutine(RevealTextWordByWord("Put the Dry Leaves inside the Bin", 0.5f));
+            SpawnGlowEffect();
         }
 
         if (stateInfo.IsName("Jump") && stateInfo.normalizedTime < 0.1f)
@@ -115,8 +117,46 @@ public class Bird_Controller : MonoBehaviour
         if (stateInfo.IsName("Idle1") && !colliderEnabled)
         {
             colliderEnabled = true;
-            OnIdle1State();            
+            OnIdle1State();
         }
+    }
+    
+    void SpawnGlowAtTarget(Transform target)
+    {
+        if (target == null || glowPrefab == null) return;
+
+        // Instantiate the glow prefab
+        GameObject glow = Instantiate(glowPrefab, target.position, Quaternion.identity);
+        glow.transform.localScale = Vector3.zero; // Start with scale 0
+
+        // Tween the glow's scale to 8, and then scale down and destroy after 2 seconds
+        LeanTween.scale(glow, new Vector3(8, 8, 1), 0.5f).setOnComplete(() =>
+        {
+            StartCoroutine(ScaleDownAndDestroy(glow));
+        });
+    }
+
+    void SpawnGlowEffect()
+    {
+        // Check if each leaf's sprite renderer is enabled and spawn glow accordingly
+        if (bigLeaf1Collider != null && bigLeaf1Collider.GetComponent<SpriteRenderer>().enabled)
+        {
+            SpawnGlowAtTarget(bigLeaf1Collider.transform);
+        }
+
+        if (bigLeaf2Collider != null && bigLeaf2Collider.GetComponent<SpriteRenderer>().enabled)
+        {
+            SpawnGlowAtTarget(bigLeaf2Collider.transform);
+        }
+    }
+
+    private IEnumerator ScaleDownAndDestroy(GameObject glow)
+    {
+        yield return new WaitForSeconds(2f); // Wait for 2 seconds
+        LeanTween.scale(glow, Vector3.zero, 0.5f).setOnComplete(() =>
+        {
+            Destroy(glow); // Destroy the glow object after scaling down
+        });
     }
 
     IEnumerator DelayedOnJumpComplete(float delay)
@@ -191,6 +231,7 @@ public class Bird_Controller : MonoBehaviour
         {
             birdAnimator.SetTrigger("canTalk2");
             instructionAudio.Play();
+            SpawnGlowEffect();
             inactivityTimerStarted = false;
             StartCoroutine(RevealTextWordByWord("Put the Leaves inside the Bin", 0.5f));
         }

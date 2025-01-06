@@ -500,6 +500,7 @@ MonoBehaviour:
   inactivityTime: 10
   tweenDuration: 2
   subtitleText: {fileID: 446684931}
+  kikiAnimator: {fileID: 1425595985}
 --- !u!82 &211681283
 AudioSource:
   m_ObjectHideFlags: 0
@@ -2352,7 +2353,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5a3264278b24284daec3f9f0dc67e41, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  leafType: 0
+  leafType: 1
   dropOffset: {x: 0, y: 0, z: 0}
   bin: {fileID: 2053674524777386230}
   spawnPrefab: {fileID: 2720721835439482840, guid: 4b86fdcc2a6c6cb429eda89b9a8ac346, type: 3}
@@ -2366,6 +2367,7 @@ MonoBehaviour:
   SfxAudio1: {fileID: 8300000, guid: 38cfce84d6c382c46b1fe36ccc4ed473, type: 3}
   SfxAudio2: {fileID: 8300000, guid: ce3572a00278c4c47b3faf5c6a83afa2, type: 3}
   helperPointerController: {fileID: 211681282}
+  glowPrefab: {fileID: 6008917645427281803, guid: 94472380805745840b38e78ebe661f37, type: 3}
   dragging: 0
   leaves1Collider: {fileID: 8783514866351162436}
   leaves2Collider: {fileID: 1354767952}
@@ -2458,6 +2460,7 @@ MonoBehaviour:
   bigLeaf1Collider: {fileID: 8783514866351162436}
   bigLeaf2Collider: {fileID: 1354767952}
   LevelComplete: 0
+  glowPrefab: {fileID: 6008917645427281803, guid: 94472380805745840b38e78ebe661f37, type: 3}
   returnMoveSpeed: 6
 --- !u!95 &1425595985
 Animator:
@@ -4354,6 +4357,7 @@ MonoBehaviour:
   SfxAudio1: {fileID: 8300000, guid: 38cfce84d6c382c46b1fe36ccc4ed473, type: 3}
   SfxAudio2: {fileID: 8300000, guid: ce3572a00278c4c47b3faf5c6a83afa2, type: 3}
   helperPointerController: {fileID: 211681282}
+  glowPrefab: {fileID: 6008917645427281803, guid: 94472380805745840b38e78ebe661f37, type: 3}
   dragging: 0
   leaves1Collider: {fileID: 8783514866351162436}
   leaves2Collider: {fileID: 1354767952}

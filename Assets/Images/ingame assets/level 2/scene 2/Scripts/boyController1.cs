@@ -22,6 +22,7 @@ public class boyController1 : MonoBehaviour
     // Reference to the PillowDragAndDrop script
     public PillowDragAndDrop pillowDragAndDrop;
     public TextMeshProUGUI subtitleText;
+    public GameObject glowPrefab;
     /* private Animator walkingAnimator;
      private Animator normalAnimator;*/
     private Animator BoyAnimator;
@@ -117,11 +118,36 @@ public class boyController1 : MonoBehaviour
 
     private IEnumerator DelayedBigPillowTrigger()
     {
-        yield return new WaitForSeconds(2.5f); // Add 1-second delay     
-       
+        yield return new WaitForSeconds(2.5f); 
         if (!pillowAudioPlayer)
         {
             birdAnimator.SetTrigger("bigPillow");
+
+            if (glowPrefab != null)
+            {
+                if (pillowBigRight != null)
+                {
+                    SpawnAndTweenGlow(pillowBigRight);
+                }
+                else
+                {
+                    Debug.LogWarning("pillowBigRight is not assigned.");
+                }
+
+                if (pillowBigLeft != null)
+                {
+                    SpawnAndTweenGlow(pillowBigLeft);
+                }
+                else
+                {
+                    Debug.LogWarning("pillowBigLeft is not assigned.");
+                }
+            }
+            else
+            {
+                Debug.LogWarning("Glow prefab is not assigned in the Inspector.");
+            }
+
             AudioSource audioSource = nextaudiosoucre.GetComponent<AudioSource>();
             audioSource.PlayOneShot(audioClipBigPillow);
             StartCoroutine(RevealTextWordByWord("Put the Big Pillow at the Back", 0.5f));
@@ -129,6 +155,27 @@ public class boyController1 : MonoBehaviour
         }
 
         EnableBigPillowColliders();
+    }
+
+    private void SpawnAndTweenGlow(GameObject targetPillow)
+    {
+        GameObject glowInstance = Instantiate(glowPrefab, targetPillow.transform.position, Quaternion.identity);
+        glowInstance.transform.localScale = Vector3.zero;
+
+        LeanTween.scale(glowInstance, new Vector3(15f, 15f, 15f), 1f).setOnComplete(() =>
+        {            
+            StartCoroutine(TweenGlowOut(glowInstance));
+        });
+    }
+
+    private IEnumerator TweenGlowOut(GameObject glowInstance)
+    {
+        yield return new WaitForSeconds(2f); 
+
+        LeanTween.scale(glowInstance, Vector3.zero, 1f).setOnComplete(() =>
+        {
+            Destroy(glowInstance); 
+        });
     }
 
     private void PlayAudioOnPillowsDropped()
@@ -173,6 +220,8 @@ public class boyController1 : MonoBehaviour
             }
         }
     }
+
+
 
     private void DisableColliders()
     {
