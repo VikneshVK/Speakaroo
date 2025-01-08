@@ -230,14 +230,20 @@ public class DraggingController1 : MonoBehaviour
         if (gameObject.CompareTag("Milk") && milkInitialPosition != null)
         {
             transform.position = milkInitialPosition.position;
+            StartBirdTweenSequence("Milk", Audio3, subtitle3);
+            helperHandController.SpawnGlowEffect(milkCollider.gameObject);
         }
         else if (gameObject.CompareTag("Cereal") && cerealInitialPosition != null)
         {
             transform.position = cerealInitialPosition.position;
+            StartBirdTweenSequence("Cereal", Audio2, subtitle2);
+            helperHandController.SpawnGlowEffect(cerealCollider.gameObject);
         }
         else if (gameObject.CompareTag("Cherry") && cherryInitialPosition != null)
         {
             transform.position = cherryInitialPosition.position;
+            StartBirdTweenSequence("Cherry", Audio4, subtitle4);
+            helperHandController.SpawnGlowEffect(cherryCollider.gameObject);
         }
         transform.rotation = initialRotation;
         Debug.Log("Position Reset");
@@ -296,6 +302,7 @@ public class DraggingController1 : MonoBehaviour
         if (isCerealDropped)
         {
             StartBirdTweenSequence("Milk", Audio3, subtitle3);
+            helperHandController.SpawnGlowEffect(milkCollider.gameObject);
         }
         
     }
@@ -306,6 +313,7 @@ public class DraggingController1 : MonoBehaviour
         if (isMilkDropped) 
         {
             StartBirdTweenSequence("Cherry", Audio4, subtitle4);
+            helperHandController.SpawnGlowEffect(cherryCollider.gameObject);
         }        
     }
 
@@ -454,6 +462,7 @@ public class DraggingController1 : MonoBehaviour
     private IEnumerator EnableCerealWithDelay()
     {
         StartBirdTweenSequence("Cereal", Audio2, subtitle2);
+        helperHandController.SpawnGlowEffect(cerealCollider.gameObject);
         yield return new WaitForSeconds(3f);
         cerealCollider.enabled = true;
         helperHandController.StartDelayTimer();

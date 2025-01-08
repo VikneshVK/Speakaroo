@@ -55,6 +55,8 @@ public class Lvl6QuestManager : MonoBehaviour
 
     public GameObject BlackoutPanel;
 
+    public GameObject glowPrefab;
+
     private List<GameObject> spawnedObjects = new List<GameObject>();
     private LVL6Sc2KikiController kikiController;
     private Dictionary<GameObject, Vector3> originalScales = new Dictionary<GameObject, Vector3>();
@@ -67,8 +69,6 @@ public class Lvl6QuestManager : MonoBehaviour
         Debug.Log("Spawning Items. ItemstobeFound: " + ItemstobeFound);
 
     }
-
-
     public void SpawnItems()
     {
         ClearSpawnedObjects();
@@ -81,7 +81,6 @@ public class Lvl6QuestManager : MonoBehaviour
 
         List<Transform> oddPositions = new List<Transform> { position2, position4, position6 };
         List<Transform> evenPositions = new List<Transform> { position1, position3, position5 };
-
 
         ShuffleList(shells);
         ShuffleList(seaAnimals);
@@ -98,6 +97,9 @@ public class Lvl6QuestManager : MonoBehaviour
                 originalScales[spawnedObject] = spawnedObject.transform.localScale;
 
                 EnableSpecificCollider(evenPositions[i]);
+
+                // Spawn glow effect
+                SpawnGlowEffect(evenPositions[i].position);
             }
         }
         else
@@ -108,23 +110,21 @@ public class Lvl6QuestManager : MonoBehaviour
                 spawnedObject.transform.localPosition = Vector3.zero;
                 spawnedObjects.Add(spawnedObject);
 
-
                 originalScales[spawnedObject] = spawnedObject.transform.localScale;
 
                 EnableSpecificCollider(oddPositions[i]);
+
+                // Spawn glow effect
+                SpawnGlowEffect(oddPositions[i].position);
             }
         }
 
-
         string questItemName = QuestGiver();
-
 
         GameObject currentQuestItem = spawnedObjects.Find(item => item.name.Contains(questItemName));
 
-
         AudioClip questAudio = GetQuestAudio();
         kikiController.PlayQuestAudio(questAudio);
-
 
         if (currentQuestItem != null)
         {
@@ -135,6 +135,43 @@ public class Lvl6QuestManager : MonoBehaviour
             Debug.LogWarning("Quest item not found among spawned objects.");
         }
     }
+
+    private void SpawnGlowEffect(Vector3 position)
+    {
+        // Instantiate the glow prefab at the specified position
+        GameObject glowInstance = Instantiate(glowPrefab, position, Quaternion.identity);
+
+        // Ensure the glow starts with its default scale
+        glowInstance.transform.localScale = Vector3.zero;
+
+        // Tween the glow to scale up, wait, fade out, and destroy
+        LeanTween.scale(glowInstance, Vector3.one * 10f, 0.5f) // Scale up to 8 over 0.5 seconds
+            .setOnComplete(() =>
+            {
+                StartCoroutine(HandleGlowFadeOut(glowInstance));
+            });
+    }
+
+    private IEnumerator HandleGlowFadeOut(GameObject glowInstance)
+    {
+        yield return new WaitForSeconds(2f); // Wait for 2 seconds before fading out
+
+        // Fade out the glow
+        SpriteRenderer glowRenderer = glowInstance.GetComponent<SpriteRenderer>();
+        if (glowRenderer != null)
+        {
+            LeanTween.alpha(glowRenderer.gameObject, 0f, 0.5f) // Fade out over 0.5 seconds
+                .setOnComplete(() =>
+                {
+                    Destroy(glowInstance); // Destroy the glow instance after fading out
+                });
+        }
+        else
+        {
+            Destroy(glowInstance); // Fallback: destroy if no SpriteRenderer is found
+        }
+    }
+
 
 
     // Enable the collider of the specified position and disable others

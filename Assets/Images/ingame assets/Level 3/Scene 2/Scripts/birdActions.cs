@@ -124,7 +124,7 @@ public class birdActions : MonoBehaviour
                 animator.SetBool("canFly", false);
                 if (!hasPlayedAudioClip2 && audioClip2 != null && jojoController.jojoAudioPlayed)
                 {
-                    animator.SetTrigger("helper");
+                    /*animator.SetTrigger("helper");*/
                     kikiAudiosource.clip = audioClip2;
                     kikiAudiosource.Play();
                     StartCoroutine(RevealTextWordByWord("Now show your toys under the water", 0.5f));

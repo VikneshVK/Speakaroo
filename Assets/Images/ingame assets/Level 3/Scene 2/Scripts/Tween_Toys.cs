@@ -14,6 +14,8 @@ public class Tween_Toys : MonoBehaviour
     public Transform bunnyFinalPosition;
     public Transform basketFinalPosition;
 
+    public GameObject glowPrefab;
+
     private TapControl tapControl;
     private int currentToyIndex = 0;
     private bool hasTweened = false;
@@ -41,9 +43,41 @@ public class Tween_Toys : MonoBehaviour
         LeanTween.move(basket, basketFinalPosition.position, 1f).setEase(LeanTweenType.easeInOutQuad)
                 .setOnComplete(() =>
                 {
+                    SpawnGlowEffects();
                     EnableColliderForCurrentToy();
                     FindObjectOfType<Helper_PointerController>().EnableHelperHandForToy(currentToyIndex);
                 });
+    }
+
+    private void SpawnGlowEffects()
+    {
+        SpawnGlow(teddy.transform.position);
+        SpawnGlow(dino.transform.position);
+        SpawnGlow(bunny.transform.position);
+    }
+
+    private void SpawnGlow(Vector3 position)
+    {
+        GameObject glow = Instantiate(glowPrefab, position, Quaternion.identity);
+        LeanTween.scale(glow, Vector3.one * 8, 1f).setEase(LeanTweenType.easeOutQuad);
+        StartCoroutine(FadeOutAndDestroy(glow, 2f));
+    }
+
+    private IEnumerator FadeOutAndDestroy(GameObject glow, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        SpriteRenderer sr = glow.GetComponent<SpriteRenderer>();
+        if (sr != null)
+        {
+            LeanTween.alpha(glow, 0f, 1f).setEase(LeanTweenType.easeOutQuad).setOnComplete(() =>
+            {
+                Destroy(glow);
+            });
+        }
+        else
+        {
+            Destroy(glow);
+        }
     }
 
     private void DisableAllColliders()

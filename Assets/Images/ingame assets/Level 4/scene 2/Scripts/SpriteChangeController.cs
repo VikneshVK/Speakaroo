@@ -22,11 +22,13 @@ public class SpriteChangeController : MonoBehaviour
     public Animator birdAnimator;
     public Vector3 birdInitialPosition;
 
+
     [Header("Tween Settings")]
     public LVL4Sc2AudioManager audioManager;
     public TextMeshProUGUI subtitleText;
     public AudioClip audio1;
     public AudioClip audio2;
+
     private string subtitle1 = "Turn on the Blender";
     private string subtitle2 = "Not Sure about that";
 
@@ -34,11 +36,12 @@ public class SpriteChangeController : MonoBehaviour
     {
         blenderJarSpriteRenderer = GameObject.FindGameObjectWithTag("Blender_Jar").GetComponent<SpriteRenderer>();
         juiceController = FindObjectOfType<JuiceController>();
-        juiceManager = FindObjectOfType<JuiceManager>();
+        
 
         if (bird != null)
         {
             birdInitialPosition = bird.transform.position;
+            
         }
         validationStatus = false;
         animationProcess = false;
@@ -235,16 +238,17 @@ public class SpriteChangeController : MonoBehaviour
             DisableAllFruitColliders();
             animationProcess = false;
             Debug.Log("Kiki's juice mode: Two fruits in blender. Validating fruits...");
+
             if (juiceController.ValidateFruit(fruitsInBlender) && !animationProcess)
             {
-                validationStatus = true;                
+                validationStatus = true;
                 StartBirdTweenSequence("BlenderOn", audio1, subtitle1);
-                 // Start monitoring blender interaction
             }
             else
             {
                 validationStatus = false;
                 StartBirdTweenSequence("Kiki_negativeFeedback", audio2, subtitle2);
+                StartCoroutine(CallTriggerBirdAfterDelay(4f));
                 Debug.Log("Fruits validation failed for Kiki's juice. Starting bird tween sequence.");
             }
         }
@@ -253,6 +257,7 @@ public class SpriteChangeController : MonoBehaviour
             DisableAllFruitColliders();
             animationProcess = false;
             Debug.Log("Jojo's juice mode: One fruit in blender. Validating fruit...");
+
             if (juiceController.ValidateFruit(fruitsInBlender) && !animationProcess)
             {
                 validationStatus = true;
@@ -260,10 +265,45 @@ public class SpriteChangeController : MonoBehaviour
             }
             else
             {
-                validationStatus = false;                
+                /*juiceManager.hasTriggeredMultipleFruitAnimation = false;
+                juiceManager.hasTriggeredSingleFruitAnimation = false;*/
+                validationStatus = false;
                 StartBirdTweenSequence("Kiki_negativeFeedback", audio2, subtitle2);
-                Debug.Log("Fruits validation failed for Kiki's juice. Starting bird tween sequence.");
+                StartCoroutine(CallTriggerBirdAfterDelay(4f));
+                Debug.Log("Fruits validation failed for Jojo's juice. Starting bird tween sequence.");
             }
+        }
+    }
+
+    private IEnumerator CallTriggerBirdAfterDelay(float delay)
+    {
+        Debug.Log($"Waiting for {delay} seconds before triggering bird animation...");
+        yield return new WaitForSeconds(delay); // Wait for the tween and audio duration
+        juiceManager.hasTriggeredMultipleFruitAnimation = false;
+        juiceManager.hasTriggeredSingleFruitAnimation = false;
+        yield return StartCoroutine(Triggerbird());
+    }
+    private IEnumerator Triggerbird()
+    {
+        Debug.Log("Triggerbird() called");
+
+        if (juiceManager != null)
+        {
+            Debug.Log("juiceManager is not null. Waiting for StartBirdTweenSequence to complete...");
+
+            // Wait for the StartBirdTweenSequence to finish
+            yield return new WaitForSeconds(4f);
+
+            // Avoid race conditions by checking flags again
+            if (!juiceManager.hasTriggeredSingleFruitAnimation && !juiceManager.hasTriggeredMultipleFruitAnimation)
+            {
+                juiceManager.TriggerBirdAnimation();
+                Debug.Log("TriggerBirdAnimation() successfully triggered after waiting.");
+            }
+        }
+        else
+        {
+            Debug.LogError("juiceManager is null. Cannot call TriggerBirdAnimation()");
         }
     }
 
@@ -457,7 +497,10 @@ public class SpriteChangeController : MonoBehaviour
 
             StartCoroutine(WaitAndTweenBack(birdRectTransform));
         });
+
+        
     }
+
 
 
     private IEnumerator WaitAndTweenBack(RectTransform birdRectTransform)
@@ -480,9 +523,10 @@ public class SpriteChangeController : MonoBehaviour
             {
                 ResetBlender();
                 juiceManager.ResetUIImages();
-            }
-
+            }            
             animationProcess = true;
+
+            
         });
     }
 

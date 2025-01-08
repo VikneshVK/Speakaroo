@@ -709,6 +709,10 @@ PrefabInstance:
       propertyPath: m_SizeDelta.x
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5368371823349792342, guid: 38c3ba35d14005043834dd07df69c366, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7936221226806780116, guid: 38c3ba35d14005043834dd07df69c366, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -1257,7 +1261,7 @@ Transform:
   m_GameObject: {fileID: 857276096}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: -14.27, z: 0}
+  m_LocalPosition: {x: 9.98, y: -4.55, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1509,6 +1513,7 @@ MonoBehaviour:
   delayTimer: 10
   glowPrefab: {fileID: 6008917645427281803, guid: 24b687e8ea8ab5c4294a121a92380373, type: 3}
   helperPointerPrefab: {fileID: 668317662352755921, guid: f7ec2cdca01704e4cb724e19d9c8fdb8, type: 3}
+  helperPointerPrefab2: {fileID: 668317662352755921, guid: 3ad9617a0d3ebf74ca390077a51b8b7e, type: 3}
   tapPosition: {fileID: 892564473}
   tapoffScreenPosition: {fileID: 857276097}
   shampooPosition: {fileID: 1824060253}

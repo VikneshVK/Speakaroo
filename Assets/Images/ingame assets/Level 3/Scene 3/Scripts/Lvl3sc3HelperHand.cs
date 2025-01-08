@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class Lvl3sc3HelperHand : MonoBehaviour
 {
-    public GameObject glowPrefab;
+   /* public GameObject glowPrefab;*/
     public GameObject helperHandPrefab;
     public float delayDuration = 10f; // Time before helper appears
     public float audioDelay = 0.5f; // Delay before playing audio
@@ -79,10 +79,10 @@ public class Lvl3sc3HelperHand : MonoBehaviour
 
         while (timer < delayDuration)
         {
-            if (timer >= halfDelay && currentGlow == null && !isGlowComplted)
+            /*if (timer >= halfDelay && currentGlow == null && !isGlowComplted)
             {
                 yield return StartCoroutine(GlowEffect());
-            }
+            }*/
 
             timer += Time.deltaTime;
             yield return null;
@@ -102,14 +102,14 @@ public class Lvl3sc3HelperHand : MonoBehaviour
         }
     }
 
-    private IEnumerator GlowEffect()
+    /*private IEnumerator GlowEffect()
     {
         currentGlow = Instantiate(glowPrefab, target.position, Quaternion.identity);
         LeanTween.scale(currentGlow, Vector3.one * 10, 0.5f);
         yield return new WaitForSeconds(2f);
         LeanTween.scale(currentGlow, Vector3.zero, 0.5f).setOnComplete(() => Destroy(currentGlow));
         isGlowComplted = true;
-    }
+    }*/
 
     private void TweenHelperHand()
     {

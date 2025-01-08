@@ -34,7 +34,8 @@ public class LV4DragManager : MonoBehaviour
 
     private AudioSource SfxAudioSource;
     public AudioClip SfxAudio1;
-
+    public GameObject glowPrefab;
+    public GameObject glowPrefab2;
     public bool timerRunning;
 
     void Start()
@@ -95,9 +96,10 @@ public class LV4DragManager : MonoBehaviour
         }
     }
 
-    
+
     private IEnumerator PlayAnimationsWithAudio()
     {
+        dirtyDishes.GetComponent<Collider2D>().enabled = false;
         yield return new WaitUntil(() => birdAnimator.GetCurrentAnimatorStateInfo(0).IsName("Talk"));
 
         audioSource1.Play();
@@ -107,12 +109,22 @@ public class LV4DragManager : MonoBehaviour
 
         yield return new WaitForSeconds(0.5f);
 
-        /*birdAnimator.SetTrigger("next");*/
-
         yield return new WaitUntil(() => birdAnimator.GetCurrentAnimatorStateInfo(0).IsName("Put Dishes in Sink"));
-        
+
         audioSource2.Play();
-        StartCoroutine(RevealTextWordByWord("Please put the dishes in the sink!", 0.5f)); // Modified subtitle for clarity
+        StartCoroutine(RevealTextWordByWord("Put the dishes in the sink!", 0.5f)); // Modified subtitle for clarity
+
+        // Spawn the glow prefab, scale it, wait, and destroy
+        if (glowPrefab != null)
+        {
+            GameObject glow = Instantiate(glowPrefab, dirtyDishes.transform.position, Quaternion.identity);
+
+            // Tween scale to 8
+            LeanTween.scale(glow, Vector3.one * 14f, 0.5f).setOnComplete(() =>
+            {
+                StartCoroutine(FadeOutAndDestroyGlow(glow));
+            });
+        }
 
         yield return new WaitUntil(() => birdAnimator.GetCurrentAnimatorStateInfo(0).IsName("Put Dishes in Sink") == false);
 
@@ -121,6 +133,35 @@ public class LV4DragManager : MonoBehaviour
         dirtyDishes.GetComponent<Collider2D>().enabled = true;
         helperHandCoroutine = StartCoroutine(HelperHandDelayTimer());
     }
+
+    private IEnumerator FadeOutAndDestroyGlow(GameObject glow)
+    {
+        yield return new WaitForSeconds(2f); // Wait for 2 seconds
+
+        SpriteRenderer glowRenderer = glow.GetComponent<SpriteRenderer>();
+        if (glowRenderer != null)
+        {
+            float fadeDuration = 1f;
+            float startAlpha = glowRenderer.color.a;
+
+            for (float t = 0; t < fadeDuration; t += Time.deltaTime)
+            {
+                float normalizedTime = t / fadeDuration;
+                Color newColor = glowRenderer.color;
+                newColor.a = Mathf.Lerp(startAlpha, 0, normalizedTime);
+                glowRenderer.color = newColor;
+                yield return null;
+            }
+
+            Color finalColor = glowRenderer.color;
+            finalColor.a = 0;
+            glowRenderer.color = finalColor;
+        }
+
+        Destroy(glow); // Destroy the glow object
+    }
+
+
 
     private IEnumerator HelperHandDelayTimer()
     {
@@ -153,8 +194,8 @@ public class LV4DragManager : MonoBehaviour
         {
             
             dirtyDishes.transform.position = originalPosition;
-
-            helperHandCoroutine = StartCoroutine(HelperHandDelayTimer());
+            birdAnimator.SetTrigger(canTalkParam);
+            StartCoroutine(PlayAnimationsWithAudio());
         }
     }
 
@@ -171,17 +212,18 @@ public class LV4DragManager : MonoBehaviour
         Transform floor = spawnedObject.transform.Find("floor");
         Transform sink = spawnedObject.transform.Find("sink");
         Transform canvasGameObject = spawnedObject.transform.Find("PrefabCanvas");
+
         if (canvasGameObject == null)
         {
             Debug.LogError("PrefabCanvas not found in the spawned object hierarchy!");
             return;
         }
+
         Vector3 floorOriginalScale = floor.localScale;
         Vector3 sinkOriginalScale = sink.localScale;
-        
+
         floor.localScale = Vector3.zero;
         sink.localScale = Vector3.zero;
-       
 
         Dictionary<Transform, Vector3> dishOriginalScales = new Dictionary<Transform, Vector3>();
 
@@ -214,6 +256,13 @@ public class LV4DragManager : MonoBehaviour
                     {
                         birdAnimator.SetTrigger("instruction");
                         imageAudioSource.Play();
+
+                        // Spawn glowPrefab2 on each dish
+                        foreach (Transform dish in sink)
+                        {
+                            SpawnAndAnimateGlow(dish);
+                        }
+
                         StartCoroutine(RevealTextWordByWord("Lets Wash the Dishes", 0.5f));
                         StartCoroutine(WaitAndReturnBirdImage(birdRectTransform));
                         timerRunning = true;
@@ -226,7 +275,7 @@ public class LV4DragManager : MonoBehaviour
             });
         });
 
-        Canvas canvas = canvasGameObject.GetComponent<Canvas>();       
+        Canvas canvas = canvasGameObject.GetComponent<Canvas>();
         if (canvas == null)
         {
             Debug.LogError("Canvas component not found on PrefabCanvas!");
@@ -251,6 +300,47 @@ public class LV4DragManager : MonoBehaviour
 
         PrefabSpawned = true;
     }
+
+    void SpawnAndAnimateGlow(Transform dish)
+    {
+        if (glowPrefab2 == null)
+        {
+            Debug.LogError("Glow prefab is not assigned!");
+            return;
+        }
+
+        // Instantiate the glowPrefab2 and set it as a child of the dish
+        GameObject glow = Instantiate(glowPrefab2, dish.position, Quaternion.identity, dish);
+        glow.transform.localScale = Vector3.zero;
+
+        // Tween the scale of the glow
+        LeanTween.scale(glow, Vector3.one * 8f, 0.5f).setEase(LeanTweenType.easeOutExpo).setOnComplete(() =>
+        {
+            StartCoroutine(FadeOutAndDestroy(glow, 2f));
+        });
+    }
+
+
+    IEnumerator FadeOutAndDestroy(GameObject obj, float duration)
+    {
+        SpriteRenderer sr = obj.GetComponent<SpriteRenderer>();
+        if (sr != null)
+        {
+            float elapsedTime = 0f;
+            Color originalColor = sr.color;
+
+            while (elapsedTime < duration)
+            {
+                elapsedTime += Time.deltaTime;
+                float alpha = Mathf.Lerp(1f, 0f, elapsedTime / duration);
+                sr.color = new Color(originalColor.r, originalColor.g, originalColor.b, alpha);
+                yield return null;
+            }
+        }
+
+        Destroy(obj);
+    }
+
 
     // Coroutine to wait and then move the bird image back to its original position
     private IEnumerator WaitAndReturnBirdImage(RectTransform birdRectTransform)
@@ -327,7 +417,19 @@ public class LV4DragManager : MonoBehaviour
         StartCoroutine(RevealTextWordByWord("lets put the dishes on the rack", 0.5f));
 
         foreach (Transform child in dirtyDishes.transform)
-        {            
+        {
+            // Spawn glowPrefab at each child's position
+            if (glowPrefab != null)
+            {
+                GameObject glow = Instantiate(glowPrefab, child.position, Quaternion.identity);
+
+                // Tween scale to 8
+                LeanTween.scale(glow, Vector3.one * 8f, 0.5f).setOnComplete(() =>
+                {
+                    StartCoroutine(FadeOutAndDestroyGlow(glow));
+                });
+            }
+
             Collider2D childCollider = child.GetComponent<Collider2D>();
             if (childCollider != null)
             {
@@ -338,6 +440,7 @@ public class LV4DragManager : MonoBehaviour
         Debug.Log("Calling HelperHandDelayTimerforchild from TweenDirtyDishesBack.");
         StartCoroutine(HelperHandDelayTimerforchild());
     }
+
 
     private IEnumerator HelperHandDelayTimerforchild()
     {

@@ -1,10 +1,12 @@
 using UnityEngine;
 using System.Collections;
+using UnityEngine.Rendering.LookDev;
+using Unity.VisualScripting;
 
 public class Lvl3Sc3ToysdragHandler : MonoBehaviour
 {
     public bool isDry = false;
-    private Collider2D myCollider;
+    public Collider2D myCollider;
     public Sprite driedSprite;
     public Transform[] toyBasketPositions;
     public Collider2D toyBasketCollider;
@@ -15,6 +17,9 @@ public class Lvl3Sc3ToysdragHandler : MonoBehaviour
 
     public AudioSource fedbackAudio1;
     public AudioSource fedbackAudio2;
+    public GameObject sun;
+    public GameObject sky;
+    public Lvl3sc3HelperHand helperHand;
 
     public static int toysDropped = 0;
     private bool eveningProcessed = false;
@@ -31,6 +36,7 @@ public class Lvl3Sc3ToysdragHandler : MonoBehaviour
         toyBasketCollider.enabled = false;
         isdropped = false;
     }
+
 
     private void Update()
     {
@@ -61,6 +67,7 @@ public class Lvl3Sc3ToysdragHandler : MonoBehaviour
     private void OnMouseDown()
     {
         resetPosition = transform.position;
+        helperHand.ResetHelperHand();
     }
 
     private void OnMouseDrag()
@@ -248,6 +255,63 @@ public class Lvl3Sc3ToysdragHandler : MonoBehaviour
 
         // Reset position after blinking
         transform.position = resetPosition;
+        yield return new WaitForSeconds(2f);
+        // Spawn the glow effect at the reset position
+        if (glowPrefab != null)
+        {
+            // Trigger "helper1" on Kiki's animator
+            if (kikiAnimator != null)
+            {
+                kikiAnimator.SetTrigger("helper2");
+            }
+
+            if (!isDry)
+            {
+                AudioSource skyAudio = sky.GetComponent<AudioSource>();
+                if (skyAudio != null)
+                {
+                    skyAudio.Play();
+                }
+            }
+            else 
+            {
+                AudioSource sunAudio = sun.GetComponent<AudioSource>();
+                if (sunAudio != null)
+                {
+                    sunAudio.Play();
+                }
+            }
+           
+            GameObject glow = Instantiate(glowPrefab, resetPosition, Quaternion.identity);
+            glow.transform.localScale = Vector3.zero;
+
+            // Tween the glow's scale to 8
+            LeanTween.scale(glow, Vector3.one * 8, 0.5f).setEaseOutQuad();
+
+            // Wait for 2 seconds
+            yield return new WaitForSeconds(2f);
+
+            // Fade out the glow
+            SpriteRenderer glowRenderer = glow.GetComponent<SpriteRenderer>();
+            if (glowRenderer != null)
+            {
+                Color originalGlowColor = glowRenderer.color;
+                float fadeDuration = 0.5f;
+                float elapsedTime = 0f;
+
+                while (elapsedTime < fadeDuration)
+                {
+                    elapsedTime += Time.deltaTime;
+                    glowRenderer.color = new Color(originalGlowColor.r, originalGlowColor.g, originalGlowColor.b, 1 - (elapsedTime / fadeDuration));
+                    yield return null;
+                }
+            }
+
+            // Destroy the glow object
+            Destroy(glow);
+        }
+
         EnableAllColliders();
     }
+
 }

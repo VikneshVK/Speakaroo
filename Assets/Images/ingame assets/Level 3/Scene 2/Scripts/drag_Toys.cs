@@ -20,6 +20,8 @@ public class drag_Toys : MonoBehaviour
     public AudioClip SfxAudio1;
     public AudioSource SfxAudioSource;
     public AudioSource SfxAudioSource1;
+    public GameObject glowPrefab;
+    public int currentToyIndex;
 
     public static bool isTeddyInteracted = false;
     public static bool isDinoInteracted = false;
@@ -33,8 +35,9 @@ public class drag_Toys : MonoBehaviour
     private Collider2D toysCollider;
     private Animator kikiAnimator;
     private Animator jojoAnimator;
+    private AudioClip audioClip2;
     public bool audioplayed = false;
-
+    private AudioSource helperAudiosource;
     private Vector3 initialPosition; // Store the initial position
 
     private Helper_PointerController helperController;
@@ -47,8 +50,9 @@ public class drag_Toys : MonoBehaviour
         jojoAnimator = jojo.GetComponent<Animator>();
         completedTweens = 0;
         colliderHit = false;
-
+        audioClip2 = Resources.Load<AudioClip>("audio/Lvl3sc2/Now show your toys under the water");
         helperController = FindObjectOfType<Helper_PointerController>();
+        helperAudiosource = helperController.gameObject.GetComponent<AudioSource>();
     }
 
     void Update()
@@ -96,7 +100,39 @@ public class drag_Toys : MonoBehaviour
         isDragging = false;
         if (!colliderHit)
         {
-            StartCoroutine(BlinkAndResetPosition());
+            StartCoroutine(HandleMouseUpEffects());
+        }
+    }
+    private IEnumerator HandleMouseUpEffects()
+    {
+        yield return BlinkAndResetPosition();
+        SpawnGlow(transform.position);
+        kikiAnimator.SetTrigger("helper");
+        helperAudiosource.clip = audioClip2;
+        helperAudiosource.Play();
+    }
+    private void SpawnGlow(Vector3 position)
+    {
+        GameObject glow = Instantiate(glowPrefab, position, Quaternion.identity);
+        LeanTween.scale(glow, Vector3.one * 8, 1f).setEase(LeanTweenType.easeOutQuad);
+        StartCoroutine(FadeOutAndDestroy(glow, 2f));
+    }
+
+    private IEnumerator FadeOutAndDestroy(GameObject glow, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        SpriteRenderer sr = glow.GetComponent<SpriteRenderer>();
+        if (sr != null)
+        {
+            LeanTween.alpha(glow, 0f, 1f).setEase(LeanTweenType.easeOutQuad).setOnComplete(() =>
+            {
+                Destroy(glow);
+                helperController.EnableHelperHandForToy(currentToyIndex);
+            });
+        }
+        else
+        {
+            Destroy(glow);
         }
     }
 

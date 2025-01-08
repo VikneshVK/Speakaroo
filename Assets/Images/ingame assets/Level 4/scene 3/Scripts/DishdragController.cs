@@ -7,6 +7,7 @@ public class DishdragController : MonoBehaviour
 {
     public static List<DishdragController> allDishControllers = new List<DishdragController>();    
     public LVL4Sc3HelperHand helperHandManager;
+    public LV4DragManager dragManager;
     public float helperHandDelay;
     public bool isDroppedCorrectly = false;
     public AudioSource audio1;
@@ -29,9 +30,11 @@ public class DishdragController : MonoBehaviour
     public static int dishesArranged = 0;
 
     private AudioSource SfxAudioSource;
+    public AudioSource correctAudioSource;
+    public AudioSource wrongAudioSource;
     public AudioClip SfxAudio1;
     public AudioClip SfxAudio2;
-
+    public GameObject glowPrefab;
     private Vector3 startPosition;
     private bool isDragging = false;
     private Coroutine helperHandCoroutine;
@@ -96,45 +99,30 @@ public class DishdragController : MonoBehaviour
         // Reset the sorting order when dragging stops
         GetComponent<SpriteRenderer>().sortingOrder = 2;
 
-
         if (gameObject.name.Contains("Bowl"))
         {
-            // Check if dropped near any available bowl drop location
             Transform target = GetAvailableTarget(bowlDropTarget1, bowlDropTarget2, usedBowlTargets);
             if (target != null)
             {
                 usedBowlTargets.Add(target); // Mark target as used
-                if (SfxAudioSource != null)
-                {
-                    SfxAudioSource.loop = false;
-                    SfxAudioSource.PlayOneShot(SfxAudio1);
-                }
-                OnDropped(true, isBowl: true, target: target);
+                HandleCorrectDrop(target, isBowl: true);
             }
             else
             {
-                ResetPosition();
-                OnDropped(false);
+                StartCoroutine(HandleWrongDropSequence());
             }
         }
         else if (gameObject.name.Contains("glass"))
         {
-            // Check if dropped near any available glass drop location
             Transform target = GetAvailableTarget(glassDropTarget1, glassDropTarget2, usedGlassTargets);
             if (target != null)
             {
                 usedGlassTargets.Add(target); // Mark target as used
-                if (SfxAudioSource != null)
-                {
-                    SfxAudioSource.loop = false;
-                    SfxAudioSource.PlayOneShot(SfxAudio1);
-                }
-                OnDropped(true, isGlass: true, target: target);
+                HandleCorrectDrop(target, isGlass: true);
             }
             else
             {
-                ResetPosition();
-                OnDropped(false);
+                StartCoroutine(HandleWrongDropSequence());
             }
         }
         else if (gameObject.name.Contains("plate"))
@@ -143,19 +131,84 @@ public class DishdragController : MonoBehaviour
             if (target != null)
             {
                 usedPlateTargets.Add(target); // Mark target as used
-                if (SfxAudioSource != null)
-                {
-                    SfxAudioSource.loop = false;
-                    SfxAudioSource.PlayOneShot(SfxAudio1);
-                }
-                OnDropped(true, isPlate: true, target: target);
+                HandleCorrectDrop(target, isPlate: true);
             }
             else
             {
-                ResetPosition();
-                OnDropped(false);
+                StartCoroutine(HandleWrongDropSequence());
             }
         }
+    }
+    private void HandleCorrectDrop(Transform target, bool isGlass = false, bool isPlate = false, bool isBowl = false)
+    {
+        if (dishesArranged < 5)
+        {
+            birdAnimator.SetTrigger("correct");
+
+            if (correctAudioSource != null)
+            {
+                correctAudioSource.Play();
+            }
+
+            if (SfxAudioSource != null)
+            {
+                SfxAudioSource.PlayOneShot(SfxAudio1);
+            }
+        }        
+
+        OnDropped(true, isGlass, isPlate, isBowl, target);
+    }
+    private IEnumerator HandleWrongDropSequence()
+    {
+        // Trigger wrong animation
+        birdAnimator.SetTrigger("wrong");
+
+        // Play wrong audio
+        if (wrongAudioSource != null)
+        {
+            wrongAudioSource.Play();
+            yield return new WaitForSeconds(wrongAudioSource.clip.length);
+        }
+
+        // Call HandleWrongDrop after the wrong animation and audio are complete
+        HandleWrongDrop();
+    }
+
+    private void HandleWrongDrop()
+    {
+        ResetPosition();
+
+        birdAnimator.SetTrigger("dishArrange");
+
+        dragManager.audioSource4.Play(); 
+
+        GameObject glow = Instantiate(glowPrefab, transform.position, Quaternion.identity);
+        glow.transform.localScale = Vector3.zero;
+        LeanTween.scale(glow, Vector3.one * 8f, 0.5f).setOnComplete(() =>
+        {
+            StartCoroutine(FadeOutAndDestroy(glow, 2f));
+        });
+    }
+
+    private IEnumerator FadeOutAndDestroy(GameObject glow, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+
+        SpriteRenderer glowRenderer = glow.GetComponent<SpriteRenderer>();
+        Color originalColor = glowRenderer.color;
+
+        // Fade out
+        float fadeDuration = 1f;
+        float elapsedTime = 0f;
+        while (elapsedTime < fadeDuration)
+        {
+            elapsedTime += Time.deltaTime;
+            float alpha = Mathf.Lerp(1f, 0f, elapsedTime / fadeDuration);
+            glowRenderer.color = new Color(originalColor.r, originalColor.g, originalColor.b, alpha);
+            yield return null;
+        }
+
+        Destroy(glow);
     }
 
 

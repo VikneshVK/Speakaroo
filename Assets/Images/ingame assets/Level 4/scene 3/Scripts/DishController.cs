@@ -269,7 +269,7 @@ public class DishController : MonoBehaviour
             RestoreOriginalSortingOrders();
             objectCollider.enabled = false;
             EnableOtherColliders();
-
+            StartCoroutine(SpawnGlowEffect());
             if (scrubberController != null)
             {
                 scrubberController.ResetPosition();

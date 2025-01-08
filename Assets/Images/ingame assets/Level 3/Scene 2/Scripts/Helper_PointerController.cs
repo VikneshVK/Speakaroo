@@ -5,6 +5,7 @@ using UnityEngine;
 public class Helper_PointerController : MonoBehaviour
 {
     public GameObject helperHandPrefab;
+    public GameObject helperHandPrefab2;
     public ParticleSystem waterParticleSystem;
     public float delayBeforeHelp = 2f;
     public float toyDragDelay = 10f;
@@ -75,8 +76,8 @@ public class Helper_PointerController : MonoBehaviour
 
             if (!hasSpawnedHelperHand)
             {
-                SpawnHelperHand(offscreenPosition.position, true);
-                StartHelperHandTweenLoop(targetPosition);
+                SpawnHelperHand2(offscreenPosition.position, true);
+                /*StartHelperHandTweenLoop(targetPosition);*/
             }
         }
     }
@@ -127,6 +128,23 @@ public class Helper_PointerController : MonoBehaviour
         if (helperHandInstance == null)
         {
             helperHandInstance = Instantiate(helperHandPrefab, startPosition, Quaternion.identity);
+            hasSpawnedHelperHand = true;
+            birdAnimator.SetTrigger("helper");
+
+            if (isTapPosition && audioClip1 != null)
+            {
+                audioSource.clip = audioClip1;
+                StartCoroutine(RevealTextWordByWord("Friend, open the tap", 0.5f));
+                audioSource.Play();
+            }
+        }
+    }
+
+    public void SpawnHelperHand2(Vector3 startPosition, bool isTapPosition)
+    {
+        if (helperHandInstance == null)
+        {
+            helperHandInstance = Instantiate(helperHandPrefab2, startPosition, Quaternion.identity);
             hasSpawnedHelperHand = true;
             birdAnimator.SetTrigger("helper");
 
@@ -228,16 +246,7 @@ public class Helper_PointerController : MonoBehaviour
 
         // Check if the toy has been interacted with
         if (!toyScript.IsInteracted())
-        {
-            PauseAndSpawnGlow(toy.transform.position);
-
-            // Wait until glow effect completes
-            while (glowInstance != null)
-            {
-                yield return null;
-            }
-
-            // Spawn and tween helper hand to the toy’s position
+        {            
             SpawnHelperHand(toy.transform.position, false);
             TweenHelperHandToParticlesPosition(toy.transform.position);
         }

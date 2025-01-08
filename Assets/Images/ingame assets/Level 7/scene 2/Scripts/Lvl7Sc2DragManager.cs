@@ -34,6 +34,8 @@ public class Lvl7Sc2DragManager : MonoBehaviour
     public LVL7Sc2HelperFunction helperFunction;
     public Transform pizzaLocation;
 
+    public GameObject glowPrefab;
+
     void Start()
     {
         if (kikiImage != null)
@@ -75,7 +77,7 @@ public class Lvl7Sc2DragManager : MonoBehaviour
         }
 
         questManager.UpdateQuestDisplay();
-        
+
     }
 
     // Enable the next topping in the sequence
@@ -92,7 +94,9 @@ public class Lvl7Sc2DragManager : MonoBehaviour
                 kikiAnimator.SetTrigger(animationTrigger);
 
                 PlayToppingAudio(topping);
-                
+
+                SpawnAndAnimateGlow(topping.transform.position);
+
                 StartCoroutine(WaitForAnimationAndEnableCollider(animationTrigger, topping));
             }
             else
@@ -100,6 +104,67 @@ public class Lvl7Sc2DragManager : MonoBehaviour
                 Debug.LogError("Invalid topping or missing Kiki Animator.");
             }
         }
+    }
+
+    private void SpawnAndAnimateGlow(Vector3 position)
+    {
+        if (glowPrefab == null)
+        {
+            Debug.LogError("Glow prefab is not assigned.");
+            return;
+        }
+
+        // Instantiate the glow prefab
+        GameObject glow = Instantiate(glowPrefab, position, Quaternion.identity);
+        glow.transform.localScale = Vector3.zero;
+
+        // Tween the scale of the glow prefab
+        LeanTween.scale(glow, Vector3.one * 8f, 0.5f).setEase(LeanTweenType.easeOutExpo).setOnComplete(() =>
+        {
+            // Wait for 2 seconds before fading out and destroying
+            StartCoroutine(FadeOutAndDestroy(glow, 2f));
+        });
+    }
+    public void SpawnAndAnimateGlow2(Vector3 position)
+    {
+        if (glowPrefab == null)
+        {
+            Debug.LogError("Glow prefab is not assigned.");
+            return;
+        }
+
+        // Instantiate the glow prefab
+        GameObject glow = Instantiate(glowPrefab, position, Quaternion.identity);
+        glow.transform.localScale = Vector3.zero;
+
+        // Tween the scale of the glow prefab
+        LeanTween.scale(glow, Vector3.one * 20f, 0.5f).setEase(LeanTweenType.easeOutExpo).setOnComplete(() =>
+        {
+            // Wait for 2 seconds before fading out and destroying
+            StartCoroutine(FadeOutAndDestroy(glow, 2f));
+        });
+    }
+
+    private IEnumerator FadeOutAndDestroy(GameObject glow, float fadeDuration)
+    {
+        SpriteRenderer sr = glow.GetComponent<SpriteRenderer>();
+        if (sr != null)
+        {
+            Color initialColor = sr.color;
+            float time = 0;
+
+            while (time < fadeDuration)
+            {
+                time += Time.deltaTime;
+                float alpha = Mathf.Lerp(initialColor.a, 0f, time / fadeDuration);
+                sr.color = new Color(initialColor.r, initialColor.g, initialColor.b, alpha);
+                yield return null;
+            }
+
+            sr.color = new Color(initialColor.r, initialColor.g, initialColor.b, 0f);
+        }
+
+        Destroy(glow);
     }
 
     private void PlayToppingAudio(GameObject topping)
@@ -150,8 +215,34 @@ public class Lvl7Sc2DragManager : MonoBehaviour
             topping.GetComponent<Collider2D>().enabled = true;
             Debug.Log($"{topping.name} collider enabled after Kiki animation.");
             helperFunction.ResetTimer(); // Reset any existing timer
-            helperFunction.StartTimer(topping.transform.position, pizzaLocation.position);
 
+            AudioClip audioToPlay = null;
+            string animationToTrigger = string.Empty;
+
+            // Set the audio and animation trigger based on the topping
+            if (topping == sauceTopping)
+            {
+                audioToPlay = sauceAudio;
+                animationToTrigger = "Sauce";
+            }
+            else if (topping == cheeseTopping)
+            {
+                audioToPlay = cheeseAudio;
+                animationToTrigger = "Cheese";
+            }
+            else if (topping == mushroomTopping)
+            {
+                audioToPlay = mushroomAudio;
+                animationToTrigger = "Mushroom";
+            }
+            else if (topping == pepperoniTopping)
+            {
+                audioToPlay = pepperoniAudio;
+                animationToTrigger = "Pepperoni";
+            }
+
+            // Call StartTimer with the audio and animation trigger
+            helperFunction.StartTimer(topping.transform.position, pizzaLocation.position, audioToPlay, animationToTrigger);
         }
         else
         {
@@ -160,21 +251,22 @@ public class Lvl7Sc2DragManager : MonoBehaviour
 
         UpdateIconOpacityForTopping(topping);
     }
-   /* public void OnHelperTimerEnded()
-    {
-        if (currentToppingIndex < totalToppings && helperFunction != null)
-        {
-            GameObject topping = currentToppings[currentToppingIndex];
-            if (topping != null && pizzaLocation != null)
-            {
-                Vector3 toppingPosition = topping.transform.position;
-                Vector3 pizzaPosition = pizzaLocation.position;
 
-                // Spawn and tween the helper hand
-                helperFunction.SpawnAndTweenHelperHand(toppingPosition, pizzaPosition);
-            }
-        }
-    }*/
+    /* public void OnHelperTimerEnded()
+     {
+         if (currentToppingIndex < totalToppings && helperFunction != null)
+         {
+             GameObject topping = currentToppings[currentToppingIndex];
+             if (topping != null && pizzaLocation != null)
+             {
+                 Vector3 toppingPosition = topping.transform.position;
+                 Vector3 pizzaPosition = pizzaLocation.position;
+
+                 // Spawn and tween the helper hand
+                 helperFunction.SpawnAndTweenHelperHand(toppingPosition, pizzaPosition);
+             }
+         }
+     }*/
 
 
     private void EnableToppingCollider()
@@ -210,6 +302,7 @@ public class Lvl7Sc2DragManager : MonoBehaviour
             if (currentToppingIndex == totalToppings)
             {
                 pizzaDrag.EnablePizzaCollider();
+                SpawnAndAnimateGlow2(pizzaDrag.gameObject.transform.position);
             }
             else
             {

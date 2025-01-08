@@ -825,6 +825,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   helperHandPrefab: {fileID: 668317662352755921, guid: 75692ccf92d941440b5a63993daa8d77, type: 3}
+  helperHandPrefab2: {fileID: 668317662352755921, guid: 3ad9617a0d3ebf74ca390077a51b8b7e, type: 3}
   waterParticleSystem: {fileID: 1073381987}
   delayBeforeHelp: 10
   toyDragDelay: 10
@@ -1679,6 +1680,7 @@ MonoBehaviour:
   dinoFinalPosition: {fileID: 1354449823}
   bunnyFinalPosition: {fileID: 1266672956}
   basketFinalPosition: {fileID: 1140695884}
+  glowPrefab: {fileID: 6008917645427281803, guid: 9d7bfc51219aca6428fdc03e3f20ac4d, type: 3}
 --- !u!4 &802900630
 Transform:
   m_ObjectHideFlags: 0
@@ -1719,7 +1721,7 @@ Transform:
   m_GameObject: {fileID: 835205140}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -16.06, z: 0}
+  m_LocalPosition: {x: -8.93, y: -5.73, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -7452,7 +7454,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 11
+  m_SortingOrder: 12
   m_Sprite: {fileID: 21300000, guid: 9b0b7cc6daa5fc84fb30eb10219d37ca, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -9230,6 +9232,8 @@ MonoBehaviour:
   SfxAudio1: {fileID: 8300000, guid: b7e9ba78353c8e14e9920fedb970da5c, type: 3}
   SfxAudioSource: {fileID: 0}
   SfxAudioSource1: {fileID: 1195867537}
+  glowPrefab: {fileID: 6008917645427281803, guid: 9d7bfc51219aca6428fdc03e3f20ac4d, type: 3}
+  currentToyIndex: 2
   audioplayed: 0
 --- !u!61 &2477201199004833259
 BoxCollider2D:
@@ -9556,6 +9560,8 @@ MonoBehaviour:
   SfxAudio1: {fileID: 8300000, guid: b7e9ba78353c8e14e9920fedb970da5c, type: 3}
   SfxAudioSource: {fileID: 0}
   SfxAudioSource1: {fileID: 1195867537}
+  glowPrefab: {fileID: 6008917645427281803, guid: 9d7bfc51219aca6428fdc03e3f20ac4d, type: 3}
+  currentToyIndex: 1
   audioplayed: 0
 --- !u!61 &4333728417720889688
 BoxCollider2D:
@@ -9985,6 +9991,8 @@ MonoBehaviour:
   SfxAudio1: {fileID: 8300000, guid: b7e9ba78353c8e14e9920fedb970da5c, type: 3}
   SfxAudioSource: {fileID: 0}
   SfxAudioSource1: {fileID: 1195867537}
+  glowPrefab: {fileID: 6008917645427281803, guid: 9d7bfc51219aca6428fdc03e3f20ac4d, type: 3}
+  currentToyIndex: 0
   audioplayed: 0
 --- !u!61 &8121061670222656362
 BoxCollider2D:

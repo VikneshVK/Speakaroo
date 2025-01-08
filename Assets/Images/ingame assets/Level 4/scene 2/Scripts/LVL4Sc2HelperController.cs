@@ -98,12 +98,12 @@ public class LVL4Sc2HelperController : MonoBehaviour
         {
             timer += Time.deltaTime;
 
-            // At halfway, trigger the glow effect on the next required item
+            /*// At halfway, trigger the glow effect on the next required item
             if (timer >= helperHandDelay / 2 && !glowSpawned)
             {
                 glowSpawned = true;
                 SpawnGlowOnNextItem();
-            }
+            }*/
 
             yield return null;
         }

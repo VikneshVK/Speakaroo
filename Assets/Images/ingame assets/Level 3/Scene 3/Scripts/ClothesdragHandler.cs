@@ -16,6 +16,8 @@ public class ClothesdragHandler : MonoBehaviour
     public AudioSource fedbackAudio1;
     public AudioSource fedbackAudio2;
     public GameObject glowPrefab;
+    public GameObject clothStand;
+    public Lvl3sc3HelperHand helperHand;
     private GameObject currentGlow;
     public bool IsDragging { get; private set; }
 
@@ -66,6 +68,7 @@ public class ClothesdragHandler : MonoBehaviour
     private void OnMouseDown()
     {
         resetPosition = transform.position;
+        helperHand.ResetHelperHand();
     }
 
     private void OnMouseDrag()
@@ -116,7 +119,51 @@ public class ClothesdragHandler : MonoBehaviour
         else if (!CheckBasketCollision())
         {
             TriggerWrongDrop(); // Incorrect drop feedback
-            yield return BlinkRedAndResetPosition();
+            StartCoroutine(BlinkRedAndResetPosition());
+            yield return new WaitForSeconds(2f);
+            if (glowPrefab != null)
+            {
+                // Trigger "helper1" on Kiki's animator
+                if (kikiAnimator != null)
+                {
+                    kikiAnimator.SetTrigger("helper1");
+                }
+
+                // Play audio from the AudioSource on the clothStand GameObject
+                AudioSource clothStandAudio = clothStand.GetComponent<AudioSource>();
+                if (clothStandAudio != null)
+                {
+                    clothStandAudio.Play();
+                }
+                GameObject glow = Instantiate(glowPrefab, transform.position, Quaternion.identity);
+                glow.transform.localScale = Vector3.zero; // Start with zero scale
+
+                // Tween the glow's scale to 8
+                LeanTween.scale(glow, Vector3.one * 8, 0.5f).setEaseOutQuad();
+
+                // Wait for 2 seconds
+                yield return new WaitForSeconds(2f);
+
+                // Fade out the glow
+                SpriteRenderer glowRenderer = glow.GetComponent<SpriteRenderer>();
+                if (glowRenderer != null)
+                {
+                    Color originalColor = glowRenderer.color;
+                    float fadeDuration = 0.5f;
+                    float elapsedTime = 0f;
+
+                    while (elapsedTime < fadeDuration)
+                    {
+                        elapsedTime += Time.deltaTime;
+                        glowRenderer.color = new Color(originalColor.r, originalColor.g, originalColor.b, 1 - (elapsedTime / fadeDuration));
+                        yield return null;
+                    }
+                }
+
+                // Destroy the glow object
+                Destroy(glow);
+            }
+
             yield return new WaitForSeconds(1f);
             EnableAllColliders();
         }

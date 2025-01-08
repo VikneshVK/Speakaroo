@@ -101,6 +101,7 @@ public class Lvl3Sc3DragManager : MonoBehaviour
             if (hangerCollider != null)
             {
                 hangerCollider.enabled = true;
+
             }
         }
     }
@@ -109,9 +110,40 @@ public class Lvl3Sc3DragManager : MonoBehaviour
     {
         foreach (var handler in toysHandlers)
         {
-            handler.EnableCollider();
+            if (handler != null && !handler.isdropped) // Ensure the toy hasn't been dropped
+            {
+                // Spawn glow effect
+                GameObject glow = Instantiate(handler.glowPrefab, handler.transform.position, Quaternion.identity);
+
+                // Tween the glow's scale to 8
+                glow.transform.localScale = Vector3.zero;
+                LeanTween.scale(glow, Vector3.one * 8, 0.5f).setEaseOutBounce();
+
+                StartCoroutine(DestroyGlowAfterDelay(glow, handler));
+            }
         }
     }
+
+    // Coroutine to destroy the glow after 2 seconds
+    private IEnumerator DestroyGlowAfterDelay(GameObject glow, Lvl3Sc3ToysdragHandler handler)
+    {
+        yield return new WaitForSeconds(2f);
+
+        // Fade out the glow before destroying it
+        LeanTween.scale(glow, Vector3.zero, 0.5f).setOnComplete(() =>
+        {
+            Destroy(glow);
+        });
+
+        // Enable the toy's collider after the glow fades out
+        if (handler.myCollider != null)
+        {
+            handler.myCollider.enabled = true;
+        }
+    }
+
+
+
 
     public void OnToyDropped(Transform hanger)
     {

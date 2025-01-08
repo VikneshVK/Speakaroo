@@ -74,13 +74,13 @@ public class ToppingDrag : MonoBehaviour
             ChangeDropTargetSprite();
 
             transform.position = startPosition;
-            StartCoroutine(delayedCall());
-           
+            StartCoroutine(delayedCall());           
         }
         else
         {
             // If not dropped on the target, return to the starting position
             transform.position = startPosition;
+            dragManager.EnableNextTopping();
         }
     }
 

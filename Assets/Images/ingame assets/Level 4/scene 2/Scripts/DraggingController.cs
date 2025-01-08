@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 using UnityEngine.UI;
 
 public class DraggingController : MonoBehaviour
@@ -26,6 +27,8 @@ public class DraggingController : MonoBehaviour
 
     private AudioSource SfxAudioSource;
     public AudioClip SfxAudio1;
+
+
 
     void Start()
     {
@@ -107,6 +110,12 @@ public class DraggingController : MonoBehaviour
             UpdateImageSpritesOnDrop(gameObject.tag); // Update the image sprites based on the dragged fruit
             helperHandInstance.DestroySpawnedHelperHand();
         }
+        else
+        {
+            juiceManager.hasTriggeredSingleFruitAnimation = false;
+            juiceManager.hasTriggeredMultipleFruitAnimation = false;
+            StartCoroutine(Triggerbird());
+        }
 
         if (juiceManager.requiredFruits.Contains(gameObject.tag))
         {
@@ -115,6 +124,27 @@ public class DraggingController : MonoBehaviour
         if (spriteRenderer != null)
         {
             spriteRenderer.sortingOrder = originalSortingOrder;
+        }
+    }
+    private IEnumerator Triggerbird()
+    {
+        Debug.Log("Triggerbird() called");
+
+        if (juiceManager != null)
+        {
+            Debug.Log("juiceManager is not null. Calling TriggerBirdAnimation()...");
+            yield return new WaitForSeconds(4f);
+
+            // Avoid race conditions by checking flags again
+            if (!juiceManager.hasTriggeredSingleFruitAnimation && !juiceManager.hasTriggeredMultipleFruitAnimation)
+            {
+                juiceManager.TriggerBirdAnimation();
+                Debug.Log("TriggerBirdAnimation() successfully triggered.");
+            }
+        }
+        else
+        {
+            Debug.LogError("juiceManager is null. Cannot call TriggerBirdAnimation()");
         }
     }
 

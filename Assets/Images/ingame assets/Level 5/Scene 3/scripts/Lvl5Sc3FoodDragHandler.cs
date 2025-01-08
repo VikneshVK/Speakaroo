@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class Lvl5Sc3FoodDragHandler : MonoBehaviour
 {
@@ -9,8 +10,9 @@ public class Lvl5Sc3FoodDragHandler : MonoBehaviour
     private Collider2D dropTargetCollider;
     private Lvl5Sc3FeedingManager feedingManager;
     private Vector3 offset;
-    private Transform glowObject;
+    public GameObject glowPrefab2;
     public LVL1helperhandController helperController;
+    public Animator kikiAnimator;
 
     private void Start()
     {
@@ -21,7 +23,7 @@ public class Lvl5Sc3FoodDragHandler : MonoBehaviour
 
         dropTarget = transform.parent.Find("DropTarget");
         dropTargetCollider = dropTarget.GetComponent<Collider2D>();
-        glowObject = transform.Find("Glow 2");
+
     }
 
     private void Update()
@@ -36,10 +38,7 @@ public class Lvl5Sc3FoodDragHandler : MonoBehaviour
                 isDragging = true;
 
                 offset = transform.position - (Vector3)mousePos;
-                if (glowObject != null)
-                {
-                    LeanTween.scale(glowObject.gameObject, Vector3.zero, 0.3f).setEaseInOutQuad();
-                }
+
             }
 
         }
@@ -47,7 +46,7 @@ public class Lvl5Sc3FoodDragHandler : MonoBehaviour
         if (isDragging)
         {
             Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            transform.position = mousePos + (Vector2)offset; 
+            transform.position = mousePos + (Vector2)offset;
         }
 
         if (Input.GetMouseButtonUp(0) && isDragging)
@@ -60,12 +59,59 @@ public class Lvl5Sc3FoodDragHandler : MonoBehaviour
             }
             else
             {
+                // Reset position and play instruction animation
                 transform.position = startPosition;
-                if (glowObject != null)
+                kikiAnimator.SetTrigger("instruction");
+                feedingManager.PlayAudioBasedOnAnimal(transform.parent.name);
+
+                // Find sibling objects for RightFood and WrongFood
+                Transform rightFood = transform.parent.Find("RightFood");
+                Transform wrongFood = transform.parent.Find("WrongFood");
+
+                // Spawn glow at the position of both foods
+                if (rightFood != null)
                 {
-                    LeanTween.scale(glowObject.gameObject, Vector3.one * 6, 0.3f).setEaseInOutQuad();
+                    SpawnAndAnimateGlow(rightFood.position);
+                }
+
+                if (wrongFood != null)
+                {
+                    SpawnAndAnimateGlow(wrongFood.position);
                 }
             }
         }
+
+    }
+    private void SpawnAndAnimateGlow(Vector3 position)
+    {
+        GameObject glow = Instantiate(glowPrefab2, position, Quaternion.identity);
+        glow.transform.localScale = Vector3.zero;
+
+        // Tween the scale of the glow prefab
+        LeanTween.scale(glow, Vector3.one * 10f, 0.5f).setEase(LeanTweenType.easeOutExpo).setOnComplete(() =>
+        {
+            StartCoroutine(FadeOutAndDestroy(glow, 2f));
+        });
+    }   
+    private IEnumerator FadeOutAndDestroy(GameObject glow, float fadeDuration)
+    {
+        SpriteRenderer sr = glow.GetComponent<SpriteRenderer>();
+        if (sr != null)
+        {
+            Color initialColor = sr.color;
+            float time = 0;
+
+            while (time < fadeDuration)
+            {
+                time += Time.deltaTime;
+                float alpha = Mathf.Lerp(initialColor.a, 0f, time / fadeDuration);
+                sr.color = new Color(initialColor.r, initialColor.g, initialColor.b, alpha);
+                yield return null;
+            }
+
+            sr.color = new Color(initialColor.r, initialColor.g, initialColor.b, 0f);
+        }
+
+        Destroy(glow);
     }
 }

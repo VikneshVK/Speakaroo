@@ -16,10 +16,14 @@ public class PizzaDrag : MonoBehaviour
     public GameObject pizzaBox;           // Pizza box to tap
     public GameObject pizzaEatingPanel;   // UI panel for pizza eating
     public GameObject glow;
+    private Coroutine tapPizzaBoxTimerCoroutine;
+    public Transform helperSpawnLocation; // Location to spawn helper pointer
+    public GameObject helperPointerPrefab; // Helper pointer prefab
     private GameObject spawnedGlow;
-   
+    private GameObject spawnedHelperPointer;
 
     public Lvl7Sc2QuestManager questManager;  // Reference to quest manager
+    public Lvl7Sc2DragManager dragManager;
 
     public Sprite sprite1;  // PizzaMade == 0
     public Sprite sprite2;  // PizzaMade == 1
@@ -132,6 +136,8 @@ public class PizzaDrag : MonoBehaviour
         else
         {
             transform.position = startPosition;
+            EnablePizzaCollider();
+            dragManager.SpawnAndAnimateGlow2(gameObject.transform.position);
         }
     }
 
@@ -192,6 +198,8 @@ public class PizzaDrag : MonoBehaviour
                             LeanTween.scale(spawnedGlow, Vector3.one * 15, 0.7f)
                                 .setEaseInOutSine()
                                 .setLoopPingPong();
+                            
+                            StartTapPizzaBoxTimer(10.0f);
                         });
                     });
                 });
@@ -199,9 +207,53 @@ public class PizzaDrag : MonoBehaviour
         });
     }
 
+    public void StartTapPizzaBoxTimer(float timerDuration)
+    {
+        // If a previous timer is running, stop it first
+        if (tapPizzaBoxTimerCoroutine != null)
+        {
+            StopCoroutine(tapPizzaBoxTimerCoroutine);
+        }
+
+        tapPizzaBoxTimerCoroutine = StartCoroutine(TapPizzaBoxTimerCoroutine(timerDuration));
+    }
+
+    private IEnumerator TapPizzaBoxTimerCoroutine(float timerDuration)
+    {
+        // Wait for the specified duration
+        yield return new WaitForSeconds(timerDuration);
+
+        // If TapPizzaBox() hasn't been called, spawn the helper pointer
+        if (canTapPizzaBox && spawnedHelperPointer == null)
+        {
+            spawnedHelperPointer = Instantiate(helperPointerPrefab, helperSpawnLocation.position, Quaternion.identity);
+            Debug.Log("Helper pointer spawned.");
+        }
+    }
+
+    
+
+    public void DestroyHelperPointer()
+    {
+        if (tapPizzaBoxTimerCoroutine != null)
+        {
+            StopCoroutine(tapPizzaBoxTimerCoroutine);
+            tapPizzaBoxTimerCoroutine = null;
+        }
+
+        if (spawnedHelperPointer != null)
+        {
+            Destroy(spawnedHelperPointer);
+            spawnedHelperPointer = null;
+            Debug.Log("Helper pointer destroyed.");
+        }
+    }
+
     private void TapPizzaBox()
     {
         canTapPizzaBox = false;
+
+        DestroyHelperPointer();
 
         if (spawnedGlow != null)
         {
@@ -422,7 +474,7 @@ public class PizzaDrag : MonoBehaviour
             audioManager.PlayAudio(OvenAudio);
             StartCoroutine(RevealTextWordByWord("Let's put it in the Oven", 0.5f));
             // Start a coroutine to wait until the "intoOven" animation state is complete
-            StartCoroutine(WaitForAnimationAndEnableCollider());
+            StartCoroutine(WaitForAnimationAndEnableCollider(OvenAudio, "intoOven"));
         }
         else
         {
@@ -430,14 +482,15 @@ public class PizzaDrag : MonoBehaviour
         }
     }
 
-    private IEnumerator WaitForAnimationAndEnableCollider()
+    private IEnumerator WaitForAnimationAndEnableCollider(AudioClip audioClip, string animationTrigger)
     {
         if (kikiAnimator == null)
         {
             Debug.LogError("Kiki Animator is null.");
             yield break;
         }
-       
+
+        // Wait for a few seconds to let the animation play
         yield return new WaitForSeconds(2f);
 
         // Enable the pizza collider
@@ -445,11 +498,13 @@ public class PizzaDrag : MonoBehaviour
         {
             pizzacollider.enabled = true;
             Debug.Log("Pizza collider enabled after Kiki animation.");
+
+            // Reset the helper timer and start it
             helperFunction.ResetTimer();
-            helperFunction.StartTimer(gameObject.transform.position, pizzaDropLocation.transform.position);
+            helperFunction.StartTimer(gameObject.transform.position, pizzaDropLocation.transform.position, audioClip, animationTrigger);
         }
-       
     }
+
 
 
     public void OnPizzaImageTapped(GameObject tappedImage)

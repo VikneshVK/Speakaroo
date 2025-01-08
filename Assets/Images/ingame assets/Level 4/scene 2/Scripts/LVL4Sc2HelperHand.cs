@@ -55,9 +55,9 @@ public class LVL4Sc2HelperHand : MonoBehaviour
 
     private IEnumerator DelayTimerCoroutine()
     {
-        yield return new WaitForSeconds(delayTime / 2);
+        yield return new WaitForSeconds(delayTime);
 
-        // Spawn glow on the required fruit
+        /*// Spawn glow on the required fruit
         string nextTarget = GetCurrentTarget();
         if (!string.IsNullOrEmpty(nextTarget))
         {
@@ -70,7 +70,7 @@ public class LVL4Sc2HelperHand : MonoBehaviour
         }
 
         yield return new WaitForSeconds(delayTime / 2);
-        Debug.Log("Timer ended.");
+        Debug.Log("Timer ended.");*/
 
         // After timer, spawn helper hand on the next target
         SpawnHelperHandForNextTarget();

@@ -306,6 +306,7 @@ Transform:
   - {fileID: 20806399}
   - {fileID: 1589580110}
   - {fileID: 1607014435}
+  - {fileID: 1806278612}
   - {fileID: 1582558651}
   - {fileID: 811992642}
   m_Father: {fileID: 0}
@@ -2113,8 +2114,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c757708f26681e34db7c259add06b0d8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  helpTimer: 5
+  helpTimer: 10
   helperHandPrefab: {fileID: 668317662352755921, guid: c81899e09cd96214b90a71003cb79695, type: 3}
+  kikiAnimator: {fileID: 1333003464}
 --- !u!4 &701340269
 Transform:
   m_ObjectHideFlags: 0
@@ -3849,6 +3851,7 @@ MonoBehaviour:
   subtitleText: {fileID: 768427413}
   helperFunction: {fileID: 701340268}
   pizzaLocation: {fileID: 1689829924}
+  glowPrefab: {fileID: 6008917645427281803, guid: e4b4fb4de98997c48be7cb4e5f605e9a, type: 3}
 --- !u!4 &1406925497
 Transform:
   m_ObjectHideFlags: 0
@@ -4728,7 +4731,10 @@ MonoBehaviour:
   pizzaBox: {fileID: 1298366465}
   pizzaEatingPanel: {fileID: 596381824}
   glow: {fileID: 6008917645427281803, guid: 9ca53bf973acb1141bb97146ef2f095c, type: 3}
+  helperSpawnLocation: {fileID: 1806278612}
+  helperPointerPrefab: {fileID: 668317662352755921, guid: 3ad9617a0d3ebf74ca390077a51b8b7e, type: 3}
   questManager: {fileID: 1325381427}
+  dragManager: {fileID: 1406925496}
   sprite1: {fileID: 21300000, guid: b1dce705b6be4e448836a14496a60903, type: 3}
   sprite2: {fileID: 21300000, guid: 960bf934095ca954e863b87817d76d93, type: 3}
   sprite3: {fileID: 21300000, guid: 68d531365cce5ea469193010776f9d90, type: 3}
@@ -4751,6 +4757,37 @@ MonoBehaviour:
   subtitleText: {fileID: 768427413}
   audioManager: {fileID: 1445845225}
   helperFunction: {fileID: 701340268}
+--- !u!1 &1806278611
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1806278612}
+  m_Layer: 0
+  m_Name: PizzaPoint Helper spawn
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1806278612
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1806278611}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 37.83, y: -1.2, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 157685851}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1835769653
 GameObject:
   m_ObjectHideFlags: 0

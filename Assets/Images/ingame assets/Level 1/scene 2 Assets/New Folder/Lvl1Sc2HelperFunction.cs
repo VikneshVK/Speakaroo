@@ -9,6 +9,7 @@ public class Lvl1Sc2HelperFunction : MonoBehaviour
     public float delayTimer; // Total timer duration
     public GameObject glowPrefab; // Prefab for the glow effect
     public GameObject helperPointerPrefab; // Prefab for the helper pointer
+    public GameObject helperPointerPrefab2;
 
     [Header("Positions")]
     public Transform tapPosition; // Position for the tap
@@ -127,8 +128,8 @@ public class Lvl1Sc2HelperFunction : MonoBehaviour
         if (isForTap)
         {
             // Spawn pointer outside viewport and tween to tap position
-            activePointer = Instantiate(helperPointerPrefab, tapoffScreenPosition.position, Quaternion.identity);
-            LeanTween.move(activePointer, tapPosition.position, 1f).setLoopClamp();
+            activePointer = Instantiate(helperPointerPrefab2, tapoffScreenPosition.position, Quaternion.identity);
+           /* LeanTween.move(activePointer, tapPosition.position, 1f).setLoopClamp();*/
 
             // Trigger appropriate parameter in bird animator based on tap states
             if (showerMechanics != null && showerController != null && birdAnimator != null)

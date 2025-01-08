@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using Unity.VisualScripting;
 
 public class Jojo_action1 : MonoBehaviour
 {
@@ -16,7 +17,7 @@ public class Jojo_action1 : MonoBehaviour
     public GameObject clothStand;
     public GameObject sun;
     public GameObject farm;
-   
+    public GameObject glowPrefab;
 
     private Animator jojoAnimator;
     public Animator kikiAnimator;
@@ -200,14 +201,48 @@ public class Jojo_action1 : MonoBehaviour
             kikiAnimator.SetTrigger("helper2");
         }
 
-        // Play audio from the AudioSource on the clothStand GameObject
+        // Play audio from the AudioSource on the sun GameObject
         AudioSource sunAudio = sun.GetComponent<AudioSource>();
         if (sunAudio != null)
         {
             sunAudio.Play();
         }
+
+        // Start the coroutine to reveal text and spawn glow prefabs
         StartCoroutine(RevealTextWordByWord("Let's put the toys and the clothes in the basket", 0.5f));
+
+        // After the text reveals, spawn glow prefabs for the handlers
+        SpawnGlowForHandlers();
     }
+
+    private void SpawnGlowForHandlers()
+    {
+        // Get the combined list of clothesHandlers and toysHandlers from dragmanager
+        var allHandlers = new List<GameObject>();
+
+        // Add the GameObjects of the handlers, not the components
+        foreach (var handler in dragmanager.clothesHandlers)
+        {
+            allHandlers.Add(handler.gameObject); // Ensure you add the GameObject
+        }
+
+        foreach (var handler in dragmanager.toysHandlers)
+        {
+            allHandlers.Add(handler.gameObject); // Ensure you add the GameObject
+        }
+
+        // Now spawn the glow for each handler (which are GameObjects)
+        foreach (var handler in allHandlers)
+        {
+            // Ensure the handler GameObject is valid before spawning the glow
+            if (handler != null)
+            {
+                // Spawn the glow prefab and enable the collider
+                StartCoroutine(SpawnGlowAndEnableCollider(handler, handler.GetComponent<Collider2D>()));
+            }
+        }
+    }
+
 
     private void CheckAndEnableColliders()
     {
@@ -225,16 +260,59 @@ public class Jojo_action1 : MonoBehaviour
                     Collider2D collider = obj.GetComponent<Collider2D>();
                     if (collider != null)
                     {
-                        collider.enabled = true;
+                        StartCoroutine(SpawnGlowAndEnableCollider(obj, collider));
                         enabledCount++;
                     }
-                    // Start monitoring for helper hand on the first active object
-                    
                 }
             }
-            dragmanager.StartHelperTimerForNextObject();
-            collidersEnabled = true;
+            
         }
+    }
+
+    private IEnumerator SpawnGlowAndEnableCollider(GameObject targetObject, Collider2D collider)
+    {
+        if (glowPrefab == null) yield break;
+
+        // Instantiate the glow prefab
+        GameObject glow = Instantiate(glowPrefab, targetObject.transform.position, Quaternion.identity);
+        glow.transform.localScale = Vector3.zero; // Start with a scale of 0
+
+        // Tween the scale to 8
+        float duration = 0.5f;
+        Vector3 targetScale = Vector3.one * 8;
+        float elapsedTime = 0f;
+
+        while (elapsedTime < duration)
+        {
+            elapsedTime += Time.deltaTime;
+            glow.transform.localScale = Vector3.Lerp(Vector3.zero, targetScale, elapsedTime / duration);
+            yield return null;
+        }
+
+        yield return new WaitForSeconds(2f); // Wait for 2 seconds
+
+        // Fade out the glow
+        SpriteRenderer glowRenderer = glow.GetComponent<SpriteRenderer>();
+        if (glowRenderer != null)
+        {
+            Color originalColor = glowRenderer.color;
+            elapsedTime = 0f;
+
+            while (elapsedTime < duration)
+            {
+                elapsedTime += Time.deltaTime;
+                glowRenderer.color = new Color(originalColor.r, originalColor.g, originalColor.b, 1 - (elapsedTime / duration));
+                yield return null;
+            }
+        }
+
+        // Destroy the glow object
+        Destroy(glow);
+
+        // Enable the collider
+        collider.enabled = true;
+        dragmanager.StartHelperTimerForNextObject();
+        collidersEnabled = true;
     }
 
     private IEnumerator RevealTextWordByWord(string fullText, float delayBetweenWords)

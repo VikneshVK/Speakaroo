@@ -35,6 +35,8 @@ public class Lvl5Sc3FeedingManager : MonoBehaviour
     public Sprite sprite5;
     public Sprite sprite6;
 
+    public GameObject glowPrefab2;
+
     private void Start()
     {
         audioSource = GetComponent<AudioSource>();
@@ -123,6 +125,13 @@ public class Lvl5Sc3FeedingManager : MonoBehaviour
             yield return rightFoodFade;
         if (wrongFoodFade != null)
             yield return wrongFoodFade;
+        if (rightFood != null)
+            SpawnAndAnimateGlow(rightFood.position, rightFood);
+        if (wrongFood != null)
+            SpawnAndAnimateGlow(wrongFood.position, wrongFood);
+
+        // Wait for glow animations to complete before enabling colliders
+        yield return new WaitForSeconds(2.5f);
 
         rightFood.GetComponent<Collider2D>().enabled = true;
         wrongFood.GetComponent<Collider2D>().enabled = true;
@@ -321,36 +330,80 @@ public class Lvl5Sc3FeedingManager : MonoBehaviour
         }
     }
 
-    private void PlayAudioBasedOnAnimal(string animalName)
-    {
+    public void PlayAudioBasedOnAnimal(string animalName)
+    { 
         switch (animalName)
         {
             case "Hippo":
                 PlayAudioClip(audio2);
-                StartCoroutine(RevealTextWordByWord("Lets Feed the Hippo", 0.5f));
+                StartCoroutine(RevealTextWordByWord("Let's Feed the Hippo", 0.5f));
                 break;
             case "Lion":
                 PlayAudioClip(audio3);
-                StartCoroutine(RevealTextWordByWord("Lets Feed the Lion", 0.5f));
+                StartCoroutine(RevealTextWordByWord("Let's Feed the Lion", 0.5f));
                 break;
             case "Monkey":
                 PlayAudioClip(audio4);
-                StartCoroutine(RevealTextWordByWord("Lets Feed the Monkey", 0.5f));
+                StartCoroutine(RevealTextWordByWord("Let's Feed the Monkey", 0.5f));
                 break;
             case "Croc":
                 PlayAudioClip(audio5);
-                StartCoroutine(RevealTextWordByWord("Lets Feed the Crocodile", 0.5f));
+                StartCoroutine(RevealTextWordByWord("Let's Feed the Crocodile", 0.5f));
                 break;
             case "Panda":
                 PlayAudioClip(audio6);
-                StartCoroutine(RevealTextWordByWord("Lets Feed the Panda", 0.5f));
+                StartCoroutine(RevealTextWordByWord("Let's Feed the Panda", 0.5f));
                 break;
             case "Tiger":
                 PlayAudioClip(audio7);
-                StartCoroutine(RevealTextWordByWord("Lets Feed the Tiger", 0.5f));
+                StartCoroutine(RevealTextWordByWord("Let's Feed the Tiger", 0.5f));
                 break;
         }
     }
+    private void SpawnAndAnimateGlow(Vector3 position, Transform parent)
+    {
+        if (glowPrefab2 == null)
+        {
+            Debug.LogError("Glow prefab is not assigned!");
+            return;
+        }
+
+        // Instantiate glow prefab and set it as a child of the specified parent
+        GameObject glow = Instantiate(glowPrefab2, position, Quaternion.identity, parent);
+        glow.transform.localScale = Vector3.zero;
+
+        // Tween the scale of the glow prefab
+        LeanTween.scale(glow, Vector3.one * 10f, 0.5f).setEase(LeanTweenType.easeOutExpo).setOnComplete(() =>
+        {
+            StartCoroutine(FadeOutAndDestroy(glow, 2f));
+        });
+    }
+
+
+    private IEnumerator FadeOutAndDestroy(GameObject glow, float fadeDuration)
+    {
+        SpriteRenderer sr = glow.GetComponent<SpriteRenderer>();
+        if (sr != null)
+        {
+            Color initialColor = sr.color;
+            float time = 0;
+
+            while (time < fadeDuration)
+            {
+                time += Time.deltaTime;
+                float alpha = Mathf.Lerp(initialColor.a, 0f, time / fadeDuration);
+                sr.color = new Color(initialColor.r, initialColor.g, initialColor.b, alpha);
+                yield return null;
+            }
+
+            sr.color = new Color(initialColor.r, initialColor.g, initialColor.b, 0f);
+        }
+
+        Destroy(glow);
+    }
+
+
+
 
     private IEnumerator RevealTextWordByWord(string fullText, float delayBetweenWords)
     {

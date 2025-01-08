@@ -8,7 +8,9 @@ public class LVL4Sc1HelperController : MonoBehaviour
     public float delayTimer = 5f; // Time in seconds
     public GameObject fridge; // Fridge reference set in the inspector
     public GameObject helperHandPrefab; // Helper hand prefab set in the inspector
+    public GameObject helperHandPrefab2;
     public GameObject glowPrefab; // Glow prefab set in the inspector
+    public GameObject spawnPosition;
     public TextMeshProUGUI subtitleText;
     private Lvl4Sc1Audiomanger lvl4Sc1Audiomanger;
     public GameObject AudioManager;
@@ -110,14 +112,14 @@ public class LVL4Sc1HelperController : MonoBehaviour
         if (currentInteractable == fridge)
         {
             Debug.Log("Spawning helper hand from outside viewport for fridge"); // Debug log
-            Vector3 spawnPosition = Camera.main.ViewportToWorldPoint(new Vector3(1.1f, 0.5f, 10f)); // Right side of the viewport
-            helperHandInstance = Instantiate(helperHandPrefab, spawnPosition, Quaternion.identity);
+            /*Vector3 spawnPosition = Camera.main.ViewportToWorldPoint(new Vector3(1.1f, 0.5f, 10f)); // Right side of the viewport*/
+            helperHandInstance = Instantiate(helperHandPrefab2, spawnPosition.transform.position, Quaternion.identity);
             lvl4Sc1Audiomanger.PlayAudio(Audio1);
             StartCoroutine(RevealTextWordByWord("Let's see What's inside the Fridge", 0.5f));
 
-            LeanTween.move(helperHandInstance, fridge.transform.position, 3f) // 3 seconds for slower speed
+           /* LeanTween.move(helperHandInstance, fridge.transform.position, 3f) // 3 seconds for slower speed
                 .setEase(LeanTweenType.easeInOutQuad)
-                .setLoopClamp();
+                .setLoopClamp();*/
         }
         else
         {

@@ -20,7 +20,7 @@ public class JuiceManager : MonoBehaviour
     public Sprite Sprite1; // Sprite for Kiwi
     public Sprite Sprite2; // Sprite for Strawberry
     public Sprite Sprite3; // Sprite for Blueberry
-
+    public GameObject glowPrefab;
     private TweeningController tweeningController;
     private Animator birdAnimator;
     private GameObject bird;
@@ -28,8 +28,8 @@ public class JuiceManager : MonoBehaviour
 
     private Vector3 birdInitialPosition; // Store the initial position of the bird
 
-    private bool hasTriggeredSingleFruitAnimation = false; // Flag for single fruit animation
-    private bool hasTriggeredMultipleFruitAnimation = false; // Flag for multiple fruits animation
+    public bool hasTriggeredSingleFruitAnimation = false; // Flag for single fruit animation
+    public bool hasTriggeredMultipleFruitAnimation = false; // Flag for multiple fruits animation
 
     public LVL4Sc2AudioManager audioManager;
     public AudioClip Audio1; // For Kiwi
@@ -195,7 +195,7 @@ public class JuiceManager : MonoBehaviour
         Debug.Log("All fruit colliders enabled.");
     }
 
-    private void TriggerBirdAnimation()
+    public void TriggerBirdAnimation()
     {
         if (birdAnimator == null || birdEndPosition == null) return;
 
@@ -213,6 +213,10 @@ public class JuiceManager : MonoBehaviour
             }).setOnComplete(() =>
             {
                 PlayBirdAnimation(requiredFruits[0]);
+
+                // Spawn glow on the required fruit's position
+                SpawnGlowOnFruit(requiredFruits[0]);
+
                 StartCoroutine(ReturnBirdToInitialPosition(birdRectTransform));
             });
         }
@@ -239,10 +243,48 @@ public class JuiceManager : MonoBehaviour
                     PlayBirdAnimation("StrawberryBlueberry");
                 }
 
+                // Spawn glow on both required fruit positions
+                foreach (var fruit in requiredFruits)
+                {
+                    SpawnGlowOnFruit(fruit);
+                }
+
                 StartCoroutine(ReturnBirdToInitialPosition(birdRectTransform));
             });
         }
     }
+
+    private void SpawnGlowOnFruit(string fruit)
+    {
+        // Get the position of the required fruit
+        GameObject fruitObject = GameObject.FindWithTag(fruit); // Assuming that fruits are tagged by their names (e.g., Kiwi, SB, BB)
+        if (fruitObject == null) return;
+
+        // Get the position of the fruit
+        Vector3 fruitPosition = fruitObject.transform.position;
+
+        // Instantiate the glow prefab at the fruit's position
+        GameObject glow = Instantiate(glowPrefab, fruitPosition, Quaternion.identity);
+
+        // Use LeanTween to animate the scale of the glow
+        LeanTween.scale(glow, new Vector3(8f, 8f, 8f), 1f).setEase(LeanTweenType.easeOutQuad);
+
+        // Wait for 2 seconds, then fade out and destroy the glow prefab
+        StartCoroutine(FadeOutAndDestroyGlow(glow, 2f));
+    }
+
+    private IEnumerator FadeOutAndDestroyGlow(GameObject glowPrefab, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+
+        // Start fading out the glow
+        LeanTween.alpha(glowPrefab, 0f, 1f).setEase(LeanTweenType.easeInQuad).setOnComplete(() =>
+        {
+            // Destroy the glow after fading out
+            Destroy(glowPrefab);
+        });
+    }
+
 
     private void PlayBirdAnimation(string fruitTag)
     {
