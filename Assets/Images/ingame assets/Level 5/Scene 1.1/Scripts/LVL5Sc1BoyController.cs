@@ -10,7 +10,7 @@ public class LVL5Sc1BoyController : MonoBehaviour
     public Transform stopPosition;
     public Transform stopPosition2;
     public float walkSpeed = 2f;
-    public TextMeshProUGUI subtitleText;
+    public SubtitleManager subtitleManager;
     private bool isWalking;
     private bool hasReachedStopPosition;
     private bool hasReachedStopPosition2;
@@ -88,10 +88,10 @@ public class LVL5Sc1BoyController : MonoBehaviour
             boyAnimator.SetBool("canWalk", false);
             hasReachedStopPosition = true;
             isWalking = false;
-            walkingSfxPlayed= false;
+            walkingSfxPlayed = false;
             boyAnimator.SetTrigger("canTalk");
             Audio1.Play();
-            StartCoroutine(RevealTextWordByWord("YAY, We are at the Zoo. Let's go get the entry tickets", 0.5f));
+            subtitleManager.DisplaySubtitle("YAY, We are at the Zoo. Let's go get the entry tickets", "Kiki", Audio1.clip);
         }
     }
 
@@ -107,20 +107,5 @@ public class LVL5Sc1BoyController : MonoBehaviour
             boyAnimator.SetBool("canWalk2", false);
 
         }
-    }
-
-    private IEnumerator RevealTextWordByWord(string fullText, float delayBetweenWords)
-    {
-        subtitleText.text = "";
-        subtitleText.gameObject.SetActive(true);
-
-        string[] words = fullText.Split(' ');
-
-        for (int i = 0; i < words.Length; i++)
-        {
-            subtitleText.text = string.Join(" ", words, 0, i + 1);
-            yield return new WaitForSeconds(delayBetweenWords);
-        }
-        subtitleText.text = "";
     }
 }

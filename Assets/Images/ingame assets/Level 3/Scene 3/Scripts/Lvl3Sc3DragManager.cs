@@ -19,7 +19,7 @@ public class Lvl3Sc3DragManager : MonoBehaviour
 
     public Jojo_action1 jojo; // Reference to Jojo's script
     public Kiki_actions kiki; // Reference to Kiki's script
-    public TextMeshProUGUI subtitleText;
+    public SubtitleManager subtitleManager;
 
     public AudioClip SfxAudio1;
     private AudioSource SfxAudioSource;
@@ -84,6 +84,7 @@ public class Lvl3Sc3DragManager : MonoBehaviour
         if (skyAudio != null)
         {
             skyAudio.Play();
+            subtitleManager.DisplaySubtitle("Super now, let's hang the wet toys", "Kiki", skyAudio.clip);
         }
 
         yield return new WaitForSeconds(3f);
@@ -167,7 +168,7 @@ public class Lvl3Sc3DragManager : MonoBehaviour
         {
             kikiAudioSource.Play();
         }
-        StartCoroutine(RevealTextWordByWord("In the morning, the sun will dry the clothes", 0.5f));
+        subtitleManager.DisplaySubtitle("In the morning, The Sun will dry the clothes", "Kiki", kikiAudioSource.clip);
 
         Animator kikiAnimator = kiki.GetComponent<Animator>();
         if (kikiAnimator != null)
@@ -332,20 +333,7 @@ public class Lvl3Sc3DragManager : MonoBehaviour
         return activeHangers;
     }
 
-    private IEnumerator RevealTextWordByWord(string fullText, float delayBetweenWords)
-    {
-        subtitleText.text = "";
-        subtitleText.gameObject.SetActive(true);
-
-        string[] words = fullText.Split(' ');
-
-        for (int i = 0; i < words.Length; i++)
-        {
-            subtitleText.text = string.Join(" ", words, 0, i + 1);
-            yield return new WaitForSeconds(delayBetweenWords);
-        }
-        subtitleText.text = "";
-    }
+   
 
     // Helper hand functions
 

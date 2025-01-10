@@ -18,7 +18,8 @@ public class ParrotController : MonoBehaviour
     public float targetDistance = 10.0f;
     private AudioSource audioSource;
     public GameObject referenceContainer;
-    public AudioSource kikiwalkSoundSource;
+    public SubtitleManager subtitleManager;
+   
     public GameObject glowPrefab;
 
     private float speed2 = 5f;
@@ -174,6 +175,7 @@ public class ParrotController : MonoBehaviour
             if(pushedObjects.Count < requiredObjects.Count)
             {
                 ReferenceaudioSource.Play();
+                subtitleManager.DisplaySubtitle("Put the Big Toys on the Shelf", "Kiki",ReferenceaudioSource.clip);
                 ResetAnimatorBooleans();
             }
             else

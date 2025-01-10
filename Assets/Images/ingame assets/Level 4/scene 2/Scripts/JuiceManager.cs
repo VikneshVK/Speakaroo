@@ -38,7 +38,7 @@ public class JuiceManager : MonoBehaviour
     public AudioClip Audio4; // For Kiwi + BB
     public AudioClip Audio5; // For Kiwi + SB
     public AudioClip Audio6; // For SB + BB
-    public TextMeshProUGUI subtitleText;
+    public SubtitleManager subtitleManager;
 
     void Start()
     {
@@ -293,32 +293,32 @@ public class JuiceManager : MonoBehaviour
             case "Kiwi":
                 birdAnimator.SetTrigger("Kiwi");
                 audioManager.PlayAudio(Audio1);
-                StartCoroutine(RevealTextWordByWord("Put the Kiwis in the Blender", 0.5f));
+                subtitleManager.DisplaySubtitle("Put the Kiwis in the Blender", "Kiki", Audio1);                
                 break;
             case "SB":
                 birdAnimator.SetTrigger("Strawberry");
                 audioManager.PlayAudio(Audio2);
-                StartCoroutine(RevealTextWordByWord("Put the Strawberries in the Blender", 0.5f));
+                subtitleManager.DisplaySubtitle("Put the Strawberrys in the Blender", "Kiki", Audio2);
                 break;
             case "BB":
                 birdAnimator.SetTrigger("BlueBerry");
                 audioManager.PlayAudio(Audio3);
-                StartCoroutine(RevealTextWordByWord("Put the Blueberry in the Blender", 0.5f));
+                subtitleManager.DisplaySubtitle("Put the Blueberry in the Blender", "Kiki", Audio3);
                 break;
             case "KiwiStrawberry":
                 birdAnimator.SetTrigger("KiwiStrawberry");
                 audioManager.PlayAudio(Audio5);
-                StartCoroutine(RevealTextWordByWord("Put the Strawberries and the Kiwis in the Blender", 0.5f));
+                subtitleManager.DisplaySubtitle("Put the Strawberries and the Kiwis in the Blender", "Kiki", Audio5);
                 break;
             case "KiwiBlueBerry":
                 birdAnimator.SetTrigger("KiwiBlueBerry");
                 audioManager.PlayAudio(Audio4);
-                StartCoroutine(RevealTextWordByWord("Put the Kiwis and the Blueberries in the Blender", 0.5f));
+                subtitleManager.DisplaySubtitle("Put the Kiwis and the Blueberries in the Blender", "Kiki", Audio4);
                 break;
             case "StrawberryBlueberry":
                 birdAnimator.SetTrigger("StrawberryBlueberry");
                 audioManager.PlayAudio(Audio6);
-                StartCoroutine(RevealTextWordByWord("Put the Blueberry and the Strawberries in the Blender", 0.5f));
+                subtitleManager.DisplaySubtitle("Put the Blueberry and the Strawberries in the Blender", "Kiki", Audio6);
                 break;
         }
     }
@@ -333,20 +333,5 @@ public class JuiceManager : MonoBehaviour
         {
             birdRectTransform.anchoredPosition = new Vector2(x, 21f);
         });
-    }
-    private IEnumerator RevealTextWordByWord(string fullText, float delayBetweenWords)
-    {
-        subtitleText.text = "";
-        subtitleText.gameObject.SetActive(true);
-
-        string[] words = fullText.Split(' ');
-
-        // Reveal words one by one
-        for (int i = 0; i < words.Length; i++)
-        {
-            subtitleText.text = string.Join(" ", words, 0, i + 1);
-            yield return new WaitForSeconds(delayBetweenWords);
-        }
-        subtitleText.text = "";
-    }
+    }   
 }

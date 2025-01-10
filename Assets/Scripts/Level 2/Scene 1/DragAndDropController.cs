@@ -158,7 +158,7 @@ public class DragAndDropController : MonoBehaviour
         
         yield return new WaitForSeconds(2.5f); // Wait for 2.5 seconds
         birdAnimator.SetTrigger("onceMore");
-        parentController.PlayAudioByIndex(3);
+        parentController.PlayAudioWithSubtitles(3, "Put the Big Toys on the Shelf", "Kiki");
         parrotController.SpawnAndTweenGlowOnInteractableObjects();        
         ResetInteractionStatus();
     }
@@ -168,7 +168,7 @@ public class DragAndDropController : MonoBehaviour
     private IEnumerator PlayAudioWithDelay()
     {
         yield return new WaitForSeconds(2f); // Adjust delay time as needed
-        parentController.PlayAudioByIndex(1);
+        parentController.PlayAudioWithSubtitles(1, "Hey Kiki, Its your turn to clean up", "JoJo");
     }
 
 

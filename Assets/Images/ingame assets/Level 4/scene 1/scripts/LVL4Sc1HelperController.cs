@@ -11,7 +11,7 @@ public class LVL4Sc1HelperController : MonoBehaviour
     public GameObject helperHandPrefab2;
     public GameObject glowPrefab; // Glow prefab set in the inspector
     public GameObject spawnPosition;
-    public TextMeshProUGUI subtitleText;
+   
     private Lvl4Sc1Audiomanger lvl4Sc1Audiomanger;
     public GameObject AudioManager;
     public AudioClip Audio1;
@@ -114,12 +114,7 @@ public class LVL4Sc1HelperController : MonoBehaviour
             Debug.Log("Spawning helper hand from outside viewport for fridge"); // Debug log
             /*Vector3 spawnPosition = Camera.main.ViewportToWorldPoint(new Vector3(1.1f, 0.5f, 10f)); // Right side of the viewport*/
             helperHandInstance = Instantiate(helperHandPrefab2, spawnPosition.transform.position, Quaternion.identity);
-            lvl4Sc1Audiomanger.PlayAudio(Audio1);
-            StartCoroutine(RevealTextWordByWord("Let's see What's inside the Fridge", 0.5f));
-
-           /* LeanTween.move(helperHandInstance, fridge.transform.position, 3f) // 3 seconds for slower speed
-                .setEase(LeanTweenType.easeInOutQuad)
-                .setLoopClamp();*/
+            lvl4Sc1Audiomanger.PlayAudio(Audio1);            
         }
         else
         {
@@ -172,21 +167,5 @@ public class LVL4Sc1HelperController : MonoBehaviour
             helperHandInstance = null;
             Debug.Log("Helper hand instance destroyed.");
         }
-    }
-
-    private IEnumerator RevealTextWordByWord(string fullText, float delayBetweenWords)
-    {
-        subtitleText.text = "";
-        subtitleText.gameObject.SetActive(true);
-
-        string[] words = fullText.Split(' ');
-
-        // Reveal words one by one
-        for (int i = 0; i < words.Length; i++)
-        {
-            subtitleText.text = string.Join(" ", words, 0, i + 1);
-            yield return new WaitForSeconds(delayBetweenWords);
-        }
-        subtitleText.text = "";
-    }
+    }   
 }

@@ -12,7 +12,7 @@ public class boy_Actions1 : MonoBehaviour
     public GameObject Hose;    
     public AudioSource tubeAudiosource;
     public AudioSource sunAudioSource;
-    public TextMeshProUGUI subtitleText;
+    public SubtitleManager subtitleManager;
     public bool jojoAudioPlayed;
 
     private SpriteRenderer boysprite;
@@ -101,7 +101,7 @@ public class boy_Actions1 : MonoBehaviour
             canTalk = true;
             boyAnimator.SetTrigger("CanTalk");
             jojoAudiosource.Play();
-            StartCoroutine(RevealTextWordByWord("Look, it's a water tap come on. Let's play", 0.5f));
+            subtitleManager.DisplaySubtitle("Look, it's a water tap come on. Let's play", "JoJo", jojoAudiosource.clip);            
             hoseCollider.enabled = true;
             /*pipeCollider.enabled = true;   */
         }
@@ -136,7 +136,7 @@ public class boy_Actions1 : MonoBehaviour
                 boyAnimator.SetTrigger("Play done");
                 sunAudioSource.Play();
                 StartCoroutine(audioPlayed());
-                StartCoroutine(RevealTextWordByWord("HaHa..! That was so Fun..!", 0.5f));
+                subtitleManager.DisplaySubtitle("HaHa..! That was so Fun..!", "JoJo", sunAudioSource.clip);                
             }
             
         }
@@ -147,19 +147,5 @@ public class boy_Actions1 : MonoBehaviour
         yield return new WaitForSeconds(2f);
         jojoAudioPlayed = true;
     }
-    private IEnumerator RevealTextWordByWord(string fullText, float delayBetweenWords)
-    {
-        subtitleText.text = "";
-        subtitleText.gameObject.SetActive(true);
-
-        string[] words = fullText.Split(' ');
-
-        // Reveal words one by one
-        for (int i = 0; i < words.Length; i++)
-        {
-            subtitleText.text = string.Join(" ", words, 0, i + 1);
-            yield return new WaitForSeconds(delayBetweenWords);
-        }
-        subtitleText.text = "";
-    }
+    
 }

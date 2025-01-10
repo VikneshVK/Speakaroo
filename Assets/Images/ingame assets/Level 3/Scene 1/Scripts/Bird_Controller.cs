@@ -12,7 +12,7 @@ public class Bird_Controller : MonoBehaviour
     public Animator trashBinAnimator;
     public GameObject boyController;
     public GameObject helperpointer;
-    public TextMeshProUGUI subtitleText;
+    public SubtitleManager subtitleManager;
 
     public Collider2D bigLeaf1Collider;
     public Collider2D bigLeaf2Collider;
@@ -79,8 +79,8 @@ public class Bird_Controller : MonoBehaviour
         if (stateInfo.IsName("Talk") && stateInfo.normalizedTime >= 0.95f)
         {
             birdAnimator.SetTrigger("instruction");
-            instructionAudio.Play();
-            StartCoroutine(RevealTextWordByWord("Put the Dry Leaves inside the Bin", 0.5f));
+            instructionAudio.Play();            
+            subtitleManager.DisplaySubtitle("Put the Leaves inside the Bin", "Kiki", instructionAudio.clip);
             SpawnGlowEffect();
         }
 
@@ -232,8 +232,8 @@ public class Bird_Controller : MonoBehaviour
             birdAnimator.SetTrigger("canTalk2");
             instructionAudio.Play();
             SpawnGlowEffect();
-            inactivityTimerStarted = false;
-            StartCoroutine(RevealTextWordByWord("Put the Leaves inside the Bin", 0.5f));
+            inactivityTimerStarted = false;            
+            subtitleManager.DisplaySubtitle("Put the Leaves inside the Bin", "Kiki", instructionAudio.clip);
         }
     }
 
@@ -285,21 +285,5 @@ public class Bird_Controller : MonoBehaviour
                 inactivityTimerStarted = true;
             }
         }
-    }
-
-    private IEnumerator RevealTextWordByWord(string fullText, float delayBetweenWords)
-    {
-        subtitleText.text = "";  // Clear the text before starting
-        subtitleText.gameObject.SetActive(true);  // Ensure the subtitle text is active
-
-        string[] words = fullText.Split(' ');  // Split the full text into individual words
-
-        // Reveal words one by one
-        for (int i = 0; i < words.Length; i++)
-        {
-            subtitleText.text = string.Join(" ", words, 0, i + 1);  // Show only the words up to the current index
-            yield return new WaitForSeconds(delayBetweenWords);  // Wait before revealing the next word
-        }
-        subtitleText.gameObject.SetActive(false);
-    }
+    }    
 }

@@ -11,6 +11,7 @@ public class LVL6Sc2KikiController : MonoBehaviour
     public Lvl6QuestManager Lvl6QuestManager;
     public LVL6Sc2Helperhand helperHandController;
     public TextMeshProUGUI subtitleText;
+    public SubtitleManager subtitleManager;
     private Animator animator;
 
     private void Start()
@@ -27,7 +28,8 @@ public class LVL6Sc2KikiController : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
         audioSource.clip = audioClip1;
         audioSource.Play();
-        StartCoroutine(RevealTextWordByWord("Something is under the Sand", 0.5f));
+        
+        subtitleManager.DisplaySubtitle("Something is under the Sand", "Kiki", audioClip1);
         yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).IsName("FirstTalk") &&
                                         animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.9f);
 
@@ -68,18 +70,5 @@ public class LVL6Sc2KikiController : MonoBehaviour
         audioSource.Play();
     }
 
-    private IEnumerator RevealTextWordByWord(string fullText, float delayBetweenWords)
-    {
-        subtitleText.text = "";
-        subtitleText.gameObject.SetActive(true);
-
-        string[] words = fullText.Split(' ');
-
-        for (int i = 0; i < words.Length; i++)
-        {
-            subtitleText.text = string.Join(" ", words, 0, i + 1);
-            yield return new WaitForSeconds(delayBetweenWords);
-        }
-        subtitleText.text = "";
-    }
+    
 }

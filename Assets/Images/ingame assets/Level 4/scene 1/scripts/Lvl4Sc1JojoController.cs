@@ -17,7 +17,7 @@ public class Lvl4Sc1JojoController : MonoBehaviour
     public AudioClip Audioclip1;
     public AudioClip AudioClip2;
     public AudioClip AudioClip3;
-    public TextMeshProUGUI subtitleText;
+    public SubtitleManager subtitleManager;
 
     [Header("SFX")]
     private AudioSource SfxAudioSource;
@@ -116,7 +116,7 @@ public class Lvl4Sc1JojoController : MonoBehaviour
                 animator.SetBool("canWalk", false);
                 animator.SetBool("canTalk", true);
                 lvl4Sc1Audiomanger.PlayAudio(Audioclip1);
-                StartCoroutine(RevealTextWordByWord("I am very Hungry, Let's see, What's inside the Fridge", 0.5f));
+                subtitleManager.DisplaySubtitle("I am very Hungry, Let's see, What's inside the Fridge", "JoJo", Audioclip1);                
             }
         }
     }
@@ -152,7 +152,7 @@ public class Lvl4Sc1JojoController : MonoBehaviour
             {
                 birdAnimator.SetTrigger("fridge");
                 lvl4Sc1Audiomanger.PlayAudio(AudioClip3);
-                StartCoroutine(RevealTextWordByWord("Open the Fridge", 0.5f));
+                subtitleManager.DisplaySubtitle("Open the Fridge", "Kiki", AudioClip3);                
             }
         }
     }
@@ -199,22 +199,6 @@ public class Lvl4Sc1JojoController : MonoBehaviour
         yield return new WaitForSeconds(1f); // Wait for 1 second
         animator.SetTrigger("IceCream");
         lvl4Sc1Audiomanger.PlayAudio(AudioClip2);
-        StartCoroutine(RevealTextWordByWord("I want to eat ice cream..!", 0.5f));
-    }
-
-    private IEnumerator RevealTextWordByWord(string fullText, float delayBetweenWords)
-    {
-        subtitleText.text = "";
-        subtitleText.gameObject.SetActive(true);
-
-        string[] words = fullText.Split(' ');
-
-        // Reveal words one by one
-        for (int i = 0; i < words.Length; i++)
-        {
-            subtitleText.text = string.Join(" ", words, 0, i + 1);
-            yield return new WaitForSeconds(delayBetweenWords);
-        }
-        subtitleText.text = "";
-    }
+        subtitleManager.DisplaySubtitle("I want to eat ice cream..!", "JoJo", AudioClip2);       
+    }    
 }

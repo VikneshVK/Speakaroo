@@ -11,7 +11,7 @@ public class birdActions : MonoBehaviour
     public GameObject pipe;
     public GameObject objectsToEnable;
     public float helperHandDelay = 5f;
-    public TextMeshProUGUI subtitleText;
+    public SubtitleManager subtitleManager;
     public boy_Actions1 jojoController;
     private Animator animator;
     private TapControl tapControl;
@@ -70,8 +70,7 @@ public class birdActions : MonoBehaviour
                 animator.SetBool("canFly", false);
                 kikiAudiosource.clip = audioClip1;
                 kikiAudiosource.Play();
-                StartCoroutine(RevealTextWordByWord("Mom told us to wash our toys", 0.5f));
-
+                subtitleManager.DisplaySubtitle("Mom told us to wash our toys", "Kiki", kikiAudiosource.clip);                
             }
         }
     }
@@ -127,26 +126,11 @@ public class birdActions : MonoBehaviour
                     /*animator.SetTrigger("helper");*/
                     kikiAudiosource.clip = audioClip2;
                     kikiAudiosource.Play();
-                    StartCoroutine(RevealTextWordByWord("Now show your toys under the water", 0.5f));
+                    subtitleManager.DisplaySubtitle("Now show your toys under the water", "Kiki", kikiAudiosource.clip);
                     hasPlayedAudioClip2 = true; // Mark that the second audio has been played
                 }
             }
         }
     }
-
-    private IEnumerator RevealTextWordByWord(string fullText, float delayBetweenWords)
-    {
-        subtitleText.text = "";
-        subtitleText.gameObject.SetActive(true);
-
-        string[] words = fullText.Split(' ');
-
-        // Reveal words one by one
-        for (int i = 0; i < words.Length; i++)
-        {
-            subtitleText.text = string.Join(" ", words, 0, i + 1);
-            yield return new WaitForSeconds(delayBetweenWords);
-        }
-        subtitleText.text = "";
-    }
+   
 }

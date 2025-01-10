@@ -13,7 +13,8 @@ public class DressDragDrop : MonoBehaviour
     public GameObject schoolDress;
     public Animator boyAnimator;
     public Animator birdAnimator;
-    public TextMeshProUGUI subtitleText;
+    /*public TextMeshProUGUI subtitleText;*/
+    public SubtitleManager subtitleManager;
     public Lvl1Sc1AudioManager audiomanager;
     public Lvl1Sc3HelperController helperController;
     public AudioClip audio1;
@@ -66,8 +67,8 @@ public class DressDragDrop : MonoBehaviour
             boyAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.1f && !hasboyTalkStarted)
         {
             hasboyTalkStarted = true;
-            audiomanager.PlayAudio(audio3);
-            StartCoroutine(RevealTextWordByWord("Lets get Dressed for School", 0.5f));
+            audiomanager.PlayAudio(audio3);            
+            subtitleManager.DisplaySubtitle("Lets get Dressed for School", "JoJo", audio3);
         }
     }
 
@@ -154,7 +155,7 @@ public class DressDragDrop : MonoBehaviour
                     SfxAudioSource.PlayOneShot(sfxAudio3);                                       
                     EnableDisableDresses(summerDress, schoolDress, winterDress);
                     incorrectDrops--;
-                    StartCoroutine(HandleBirdInteraction("That's not the School Outfit, Jojo"));
+                    StartCoroutine(HandleBirdInteraction());
                     break;
 
                 case "Winter":
@@ -163,7 +164,7 @@ public class DressDragDrop : MonoBehaviour
                     SfxAudioSource.PlayOneShot(sfxAudio3);
                     EnableDisableDresses(winterDress, summerDress, schoolDress);
                     incorrectDrops--;
-                    StartCoroutine(HandleBirdInteraction("That's not the School Outfit, Jojo"));
+                    StartCoroutine(HandleBirdInteraction());
                     break;
             }
         }
@@ -174,16 +175,16 @@ public class DressDragDrop : MonoBehaviour
     {
         yield return new WaitForSeconds(0.1f);
         audiomanager.PlayAudio(audio2);
-        StartCoroutine(RevealTextWordByWord("Woo Hoo..! Let's go to School Now", 0.5f));        
+        subtitleManager.DisplaySubtitle("Woo Hoo..! Let's go to School Now", "JoJo", audio2);        
     }
 
-    private IEnumerator HandleBirdInteraction(string subtitleTextContent)
+    private IEnumerator HandleBirdInteraction()
     {
         yield return new WaitForSeconds(1f); // Add 1-second delay
 
         birdAnimator.SetTrigger("talk"); // Trigger bird animation
         audiomanager.PlayAudio(audio1); // Play bird's audio
-        yield return StartCoroutine(RevealTextWordByWord(subtitleTextContent, 0.5f)); // Display subtitles
+       
 
         yield return new WaitForSeconds(0.5f); // Add 2-second delay before handling glow or helper hand
 
@@ -301,18 +302,5 @@ public class DressDragDrop : MonoBehaviour
     }
 
 
-    private IEnumerator RevealTextWordByWord(string fullText, float delayBetweenWords)
-    {
-        subtitleText.text = "";
-        subtitleText.gameObject.SetActive(true);
-
-        string[] words = fullText.Split(' ');
-
-        for (int i = 0; i < words.Length; i++)
-        {
-            subtitleText.text = string.Join(" ", words, 0, i + 1);
-            yield return new WaitForSeconds(delayBetweenWords);
-        }
-        subtitleText.text = "";
-    }
+    
 }

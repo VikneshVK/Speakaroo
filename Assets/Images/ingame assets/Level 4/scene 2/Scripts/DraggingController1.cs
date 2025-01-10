@@ -49,7 +49,7 @@ public class DraggingController1 : MonoBehaviour
     public AudioClip Audio4;
     public AudioClip Audio5;
 
-    public TextMeshProUGUI subtitleText;
+    public SubtitleManager subtitleManager;
     private string subtitle1 = "Lets make Cereal for Breakfast";
     private string subtitle2 = "Put the Cereal in the Bowl";
     private string subtitle3 = "Pour the Milk in the Bowl";
@@ -65,8 +65,7 @@ public class DraggingController1 : MonoBehaviour
     private bool finalBowlDisabled;
 
     public GameObject maskPrefab;
-    public GameObject finalBowlSpriteObject;
-    public GameObject eatenBowl;
+    public GameObject finalBowlSpriteObject;    
 
     public LVL4Sc2HelperController helperHandController;
 
@@ -416,7 +415,7 @@ public class DraggingController1 : MonoBehaviour
             audioManager.PlayAudio(audioClip);
 
             // Start subtitle display coroutine
-            StartCoroutine(RevealTextWordByWord(subtitleTextContent, 0.5f));
+            subtitleManager.DisplaySubtitle(subtitleTextContent, "Kiki", audioClip);
 
             StartCoroutine(WaitAndTweenBack(birdRectTransform));
         });
@@ -483,26 +482,4 @@ public class DraggingController1 : MonoBehaviour
         helperHandController.StartDelayTimer();
         cherryCollider.enabled = true;
     }
-
-
-
-    private IEnumerator RevealTextWordByWord(string fullText, float delayBetweenWords)
-    {
-        subtitleText.text = "";
-        subtitleText.gameObject.SetActive(true);
-
-        string[] words = fullText.Split(' ');
-
-        // Reveal words one by one
-        for (int i = 0; i < words.Length; i++)
-        {
-            subtitleText.text = string.Join(" ", words, 0, i + 1);
-            yield return new WaitForSeconds(delayBetweenWords);
-        }
-
-        yield return new WaitForSeconds(1f); // Wait for a bit after the last word
-        subtitleText.text = "";
-        subtitleText.gameObject.SetActive(false);
-    }
-
 }

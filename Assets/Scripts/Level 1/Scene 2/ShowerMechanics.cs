@@ -23,7 +23,8 @@ public class ShowerMechanics : MonoBehaviour
     public AudioClip audio7;
     public AudioClip audio8;
     public AudioClip sfxAudio1;
-    public TextMeshProUGUI subtitleText;
+    /*public TextMeshProUGUI subtitleText;*/
+    public SubtitleManager subtitleManager;
 
     [Header("Helper Timer")]
     public Lvl1Sc2HelperFunction helperFunctionScript; // Reference to the helper function script
@@ -130,8 +131,8 @@ public class ShowerMechanics : MonoBehaviour
         if (birdAnimator != null)
         {
             birdAnimator.SetTrigger("close tap");
-            Audiomanager.PlayAudio(audio6);
-            StartCoroutine(RevealTextWordByWord("Close the Tap", 0.5f));
+            Audiomanager.PlayAudio(audio6);            
+            /*subtitleManager.DisplaySubtitle("Close the Tap", "Kiki", audio6);*/
         }
 
         // Wait until bird animation is done
@@ -182,7 +183,7 @@ public class ShowerMechanics : MonoBehaviour
         {
             hasTalkStarted = true;
             Audiomanager.PlayAudio(audio1);
-            StartCoroutine(RevealTextWordByWord("Let's take a Shower", 0.5f));
+            subtitleManager.DisplaySubtitle("Let's take a Shower", "JoJo", audio1);
         }
 
         // Check if the "Talk sample" animation has just ended
@@ -191,7 +192,7 @@ public class ShowerMechanics : MonoBehaviour
             hasTalkEnded = true;
             birdAnimator.SetTrigger("open tap");
             Audiomanager.PlayAudio(audio5);
-            StartCoroutine(RevealTextWordByWord("Open the Tap", 0.5f));
+            /*subtitleManager.DisplaySubtitle("Open the Tap", "Kiki", audio5);*/
             StartHelperTimerForTap();
         }
 
@@ -209,7 +210,7 @@ public class ShowerMechanics : MonoBehaviour
         {
             hasAskKikiStarted = true;
             Audiomanager.PlayAudio(audio2);
-            StartCoroutine(RevealTextWordByWord("Uh..! I can't reach it, Lets ask Kiki", 0.5f));
+            subtitleManager.DisplaySubtitle("Uh..! I can't reach it, Lets ask Kiki", "JoJo", audio2);
         }
     }
 
@@ -221,7 +222,7 @@ public class ShowerMechanics : MonoBehaviour
         {
             birdanimation = true;
             Audiomanager.PlayAudio(audio4);
-            StartCoroutine(RevealTextWordByWord("Here you go...! JoJo ", 0.5f));
+            subtitleManager.DisplaySubtitle("Here you go...! JoJo ", "Kiki", audio4);
         }
 
         if (stateInfo.IsName("birdKnock") && stateInfo.normalizedTime >= 0.9f && birdanimation)
@@ -242,7 +243,7 @@ public class ShowerMechanics : MonoBehaviour
         {
             birdAnimator.SetTrigger("shampoo");
             Audiomanager.PlayAudio(audio8);
-            StartCoroutine(RevealTextWordByWord("Put the Shampoo", 0.5f));
+            subtitleManager.DisplaySubtitle("Put the Shampoo", "Kiki", audio8);
         }
     }
 
@@ -288,7 +289,7 @@ public class ShowerMechanics : MonoBehaviour
         {
             hasShowerDoneStarted = true;
             Audiomanager.PlayAudio(audio3);
-            StartCoroutine(RevealTextWordByWord("All Clean..! Let's get Dressed", 0.5f));
+            subtitleManager.DisplaySubtitle("All Clean..! Let's get Dressed", "JoJo", audio3);
         }
     }
 
@@ -321,19 +322,5 @@ public class ShowerMechanics : MonoBehaviour
     {
         hasSpawned = false; // Reset the spawning flag
     }
-
-    private IEnumerator RevealTextWordByWord(string fullText, float delayBetweenWords)
-    {
-        subtitleText.text = "";
-        subtitleText.gameObject.SetActive(true);
-
-        string[] words = fullText.Split(' ');
-
-        for (int i = 0; i < words.Length; i++)
-        {
-            subtitleText.text = string.Join(" ", words, 0, i + 1);
-            yield return new WaitForSeconds(delayBetweenWords);
-        }
-        subtitleText.text = "";
-    }
+    
 }

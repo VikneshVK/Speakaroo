@@ -23,7 +23,7 @@ public class Jojo_action1 : MonoBehaviour
     public Animator kikiAnimator;
     private SpriteRenderer jojoSprite;
 
-    public TextMeshProUGUI subtitleText;
+    public SubtitleManager subtitleManager;
 
     // AudioSource and AudioClips
     private AudioSource audioSource;
@@ -84,7 +84,7 @@ public class Jojo_action1 : MonoBehaviour
         if (!subtitleTriggered) 
         {
             subtitleTriggered = true;
-            StartCoroutine(RevealTextWordByWord("Woo Hoo..! the Laundry is done. lets take it in", 0.5f)); 
+            subtitleManager.DisplaySubtitle("Woo Hoo..! the Laundry is done. lets take it in", "JoJo", farmaudio.clip); 
         }        
         audioPlayed = true;
     }
@@ -159,14 +159,14 @@ public class Jojo_action1 : MonoBehaviour
         {
             audioSource.clip = audioClip1;
             audioSource.Play();
-            StartCoroutine(RevealTextWordByWord("Looks like some clothes are still Wet", 0.5f));
+            subtitleManager.DisplaySubtitle("Looks like some clothes are still wet", "JoJo", audioSource.clip);
             StartCoroutine(TriggerHelperAfterDialogue());
         }
         else if (talkTrigger == "canTalk2" && audioClip2 != null)
         {
             audioSource.clip = audioClip2;
             audioSource.Play();
-            StartCoroutine(RevealTextWordByWord("You are right, Kiki. It is evening now the clothes and toys are dry", 0.5f));
+            subtitleManager.DisplaySubtitle("You are right, Kiki. It is evening now the clothes and toys are dry", "JoJo", audioSource.clip);
             StartCoroutine(TriggerHelper2AfterDialogue());
         }
     }
@@ -187,7 +187,7 @@ public class Jojo_action1 : MonoBehaviour
         {
             clothStandAudio.Play();
         }
-        StartCoroutine(RevealTextWordByWord("Let's put the dry clothes in the basket", 0.5f));
+        subtitleManager.DisplaySubtitle("Let's put the dry clothes in the basket", "Kiki", clothStandAudio.clip);
         CheckAndEnableColliders();
     }
 
@@ -209,7 +209,7 @@ public class Jojo_action1 : MonoBehaviour
         }
 
         // Start the coroutine to reveal text and spawn glow prefabs
-        StartCoroutine(RevealTextWordByWord("Let's put the toys and the clothes in the basket", 0.5f));
+        subtitleManager.DisplaySubtitle("Let's put the toys and the clothes in the basket", "Kiki", sunAudio.clip);
 
         // After the text reveals, spawn glow prefabs for the handlers
         SpawnGlowForHandlers();
@@ -313,21 +313,5 @@ public class Jojo_action1 : MonoBehaviour
         collider.enabled = true;
         dragmanager.StartHelperTimerForNextObject();
         collidersEnabled = true;
-    }
-
-    private IEnumerator RevealTextWordByWord(string fullText, float delayBetweenWords)
-    {
-        subtitleText.text = "";
-        subtitleText.gameObject.SetActive(true);
-
-        string[] words = fullText.Split(' ');
-
-        // Reveal words one by one
-        for (int i = 0; i < words.Length; i++)
-        {
-            subtitleText.text = string.Join(" ", words, 0, i + 1);
-            yield return new WaitForSeconds(delayBetweenWords);
-        }
-        subtitleText.text = "";
-    }
+    }   
 }

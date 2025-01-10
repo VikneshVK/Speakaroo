@@ -19,10 +19,9 @@ public class dragManager : MonoBehaviour
     public string[] feedbackTriggers = { "rightDrop1", "rightDrop2", "wrongDrop" };  // Triggers for feedback audios
     public bool allDone = false;  // Flag to indicate all drops are done
     public AudioSource kikiAudio;
-    public TextMeshProUGUI subtitleText;
+    public SubtitleManager subtitleManager;
 
-    public string[] subtitles;  // Array to hold the subtitle text for each audio
-    public float delayBetweenWords = 0.3f;  // Delay between words for subtitle reveal
+    public string[] subtitles;  // Array to hold the subtitle text for each audio    
 
     private HelperPointer helperPointer;
     private GameObject parrot;
@@ -96,7 +95,7 @@ public class dragManager : MonoBehaviour
     private IEnumerator HandleAllItemsDropped()
     {
         kikiAudio.Play();
-        StartCoroutine(RevealTextWordByWord("Thank You, Jojo and Friend. My Room looks so clean now", 0.5f));// Play the audio
+        subtitleManager.DisplaySubtitle("Thank You, Jojo and Friend. My Room looks so clean now", "Kiki", kikiAudio.clip);// Play the audio
         yield return new WaitUntil(() => !kikiAudio.isPlaying);  // Wait until the audio finishes playing
 
         allDone = true;  // Set allDone to true after audio finishes
@@ -179,7 +178,7 @@ public class dragManager : MonoBehaviour
             // Display the subtitle for the respective object
             if (index < subtitles.Length)
             {
-                StartCoroutine(RevealTextWordByWord(subtitles[index], delayBetweenWords));
+                subtitleManager.DisplaySubtitle(subtitles[index], "Kiki", audioSource.clip);
             }
         }
         else
@@ -189,23 +188,7 @@ public class dragManager : MonoBehaviour
     }
 
     // Coroutine to reveal text word by word
-    private IEnumerator RevealTextWordByWord(string fullText, float delayBetweenWords)
-    {
-        subtitleText.text = "";  // Clear the text before starting
-        subtitleText.gameObject.SetActive(true);  // Ensure the subtitle text is active
-
-        string[] words = fullText.Split(' ');  // Split the full text into individual words
-
-        // Reveal words one by one
-        for (int i = 0; i < words.Length; i++)
-        {
-            subtitleText.text = string.Join(" ", words, 0, i + 1);  // Show only the words up to the current index
-            yield return new WaitForSeconds(delayBetweenWords);  // Wait before revealing the next word
-        }
-
-        yield return new WaitForSeconds(0.5f);
-        subtitleText.gameObject.SetActive(false);
-    }
+    
 
     public void OnWrongDrop()
     {

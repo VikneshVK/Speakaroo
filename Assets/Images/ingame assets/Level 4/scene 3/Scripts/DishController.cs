@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UnityEngine.UI;
 using UnityEngine;
 
 public class DishController : MonoBehaviour
@@ -15,6 +16,8 @@ public class DishController : MonoBehaviour
     private bool isTweening = false; // Flag to ensure the tween occurs only once
     private GameObject instantiatedMask;
     private GameObject instantiatedGlow;
+    public Image jojoBanner;
+    public float fadeDuration = 0.5f;
 
     private Vector3 originalPosition;
     private Vector3 originalScale;
@@ -51,6 +54,7 @@ public class DishController : MonoBehaviour
         StoreOriginalSortingOrders();
         allDishes = FindObjectsOfType<DishController>();
         SfxAudioSource = GameObject.FindWithTag("SFXAudioSource").GetComponent<AudioSource>();
+        if (jojoBanner != null) jojoBanner.color = new Color(1, 1, 1, 0);
     }
 
     private void Update()
@@ -141,7 +145,7 @@ public class DishController : MonoBehaviour
                     Debug.LogError("AudioSource is not assigned or missing in the Inspector.");
                 }
 
-                subtitleCoroutine = StartCoroutine(RevealTextWordByWord(subtitleText, 0.5f));
+                subtitleCoroutine = StartCoroutine(ShowSubtitle(subtitleText, "Kiki", audioSource.clip));
                 StartCoroutine(WaitAndReturnBirdImage(birdRectTransform));
 
                 Debug.Log("AnimateBirdInstruction: timerRunning set to true globally");
@@ -156,7 +160,7 @@ public class DishController : MonoBehaviour
     private IEnumerator WaitAndReturnBirdImage(RectTransform birdRectTransform)
     {
         yield return new WaitForSeconds(3f);
-        LeanTween.move(birdRectTransform, new Vector2(-250, -125), 0.5f).setOnComplete(()=>
+        LeanTween.move(birdRectTransform, new Vector2(-250, -200), 0.5f).setOnComplete(()=>
         {
             scrubberController.gameObject.GetComponent<Collider2D>().enabled = true;
             scrubbertimer = true;
@@ -377,19 +381,91 @@ public class DishController : MonoBehaviour
             }
         }
     }
-    private IEnumerator RevealTextWordByWord(string fullText, float delayBetweenWords)
+    private IEnumerator ShowSubtitle(string fullText, string dialogueType, AudioClip audioClip)
     {
-        subtitleText.text = "";
         subtitleText.gameObject.SetActive(true);
+        Image activeBanner = null;
 
-        string[] words = fullText.Split(' ');
-
-        // Reveal words one by one
-        for (int i = 0; i < words.Length; i++)
+        // Determine which banner to fade in based on the dialogue type
+        if (dialogueType == "Kiki")
         {
-            subtitleText.text = string.Join(" ", words, 0, i + 1);
-            yield return new WaitForSeconds(delayBetweenWords);
+            activeBanner = jojoBanner;
         }
+
+        if (activeBanner != null)
+        {
+            // Fade in the banner
+            for (float t = 0; t <= fadeDuration; t += Time.deltaTime)
+            {
+                float alpha = t / fadeDuration;
+                activeBanner.color = new Color(1, 1, 1, alpha);
+                yield return null;
+            }
+            activeBanner.color = new Color(1, 1, 1, 1);
+        }
+
+        // Calculate display time for subtitles
+        float totalDuration = audioClip != null ? audioClip.length : 3f; // Default to 3 seconds if no audio
+        float adjustedDuration = Mathf.Max(0, totalDuration - 1f); // Subtitles should end 1 second before the audio
+        string[] sentences = SplitTextIntoSentences(fullText);
+        float durationPerSentence = adjustedDuration / sentences.Length;
+
+        foreach (string sentence in sentences)
+        {
+            subtitleText.text = sentence;
+
+            // Wait for the calculated duration per sentence
+            yield return new WaitForSeconds(durationPerSentence);
+        }
+
+        // Hide the subtitle text
         subtitleText.text = "";
+        subtitleText.gameObject.SetActive(false);
+
+        // Fade out the banner
+        if (activeBanner != null)
+        {
+            for (float t = 0; t <= fadeDuration; t += Time.deltaTime)
+            {
+                float alpha = 1 - (t / fadeDuration);
+                activeBanner.color = new Color(1, 1, 1, alpha);
+                yield return null;
+            }
+            activeBanner.color = new Color(1, 1, 1, 0);
+        }
+    }
+    private string[] SplitTextIntoSentences(string text)
+    {
+        // Split the text by sentences or character limit
+        const int maxCharsPerSentence = 60; // Adjust based on your UI
+        if (text.Length <= maxCharsPerSentence)
+        {
+            return new string[] { text };
+        }
+
+        // Break the text into smaller parts
+        string[] words = text.Split(' ');
+        string currentSentence = "";
+        List<string> sentences = new List<string>();
+
+        foreach (string word in words)
+        {
+            if (currentSentence.Length + word.Length + 1 <= maxCharsPerSentence)
+            {
+                currentSentence += (currentSentence.Length > 0 ? " " : "") + word;
+            }
+            else
+            {
+                sentences.Add(currentSentence);
+                currentSentence = word;
+            }
+        }
+
+        if (!string.IsNullOrEmpty(currentSentence))
+        {
+            sentences.Add(currentSentence);
+        }
+
+        return sentences.ToArray();
     }
 }

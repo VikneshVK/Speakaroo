@@ -15,7 +15,7 @@ public class drag_Toys : MonoBehaviour
     public GameObject jojo;
     public bool isDragging = false;
     public AudioSource tapAudiosource;
-    public TextMeshProUGUI subtitleText;
+    public SubtitleManager subtitleManager;
     public Tween_Toys tweentoys;
     public AudioClip SfxAudio1;
     public AudioSource SfxAudioSource;
@@ -248,7 +248,7 @@ public class drag_Toys : MonoBehaviour
                                                        if (!audioplayed)
                                                        {
                                                            tapAudiosource.Play();
-                                                           StartCoroutine(RevealTextWordByWord("Super now, let's hang the wet toys", 0.5f));
+                                                           subtitleManager.DisplaySubtitle("Super now, let's hang the wet toys", "Kiki", tapAudiosource.clip);                                                           
                                                            audioplayed = true;
                                                        }
                                                    }
@@ -267,19 +267,5 @@ public class drag_Toys : MonoBehaviour
             Debug.LogError("Sprite not found for tag: " + gameObject.tag);
         }
     }
-
-    private IEnumerator RevealTextWordByWord(string fullText, float delayBetweenWords)
-    {
-        subtitleText.text = "";
-        subtitleText.gameObject.SetActive(true);
-
-        string[] words = fullText.Split(' ');
-
-        for (int i = 0; i < words.Length; i++)
-        {
-            subtitleText.text = string.Join(" ", words, 0, i + 1);
-            yield return new WaitForSeconds(delayBetweenWords);
-        }
-        subtitleText.text = "";
-    }
+   
 }

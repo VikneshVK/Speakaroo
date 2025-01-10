@@ -21,7 +21,7 @@ public class boyController1 : MonoBehaviour
 
     // Reference to the PillowDragAndDrop script
     public PillowDragAndDrop pillowDragAndDrop;
-    public TextMeshProUGUI subtitleText;
+    public SubtitleManager subtitleManager;
     public GameObject glowPrefab;
     /* private Animator walkingAnimator;
      private Animator normalAnimator;*/
@@ -95,8 +95,7 @@ public class boyController1 : MonoBehaviour
         if (PillowDragAndDrop.droppedPillowsCount == 4 && !hasPlayedAudio)
         {
             BoyAnimator.SetTrigger("CanTalk");
-            birdAnimator.SetTrigger("allDone");
-            StartCoroutine(RevealTextWordByWord("WoW..! My Bed looks so Clean, Thank you Kiki and Friend", 0.5f));
+            birdAnimator.SetTrigger("allDone");  
             PlayAudioOnPillowsDropped();
             hasPlayedAudio = true; // Ensure the audio only plays once                         
         }
@@ -150,7 +149,7 @@ public class boyController1 : MonoBehaviour
 
             AudioSource audioSource = nextaudiosoucre.GetComponent<AudioSource>();
             audioSource.PlayOneShot(audioClipBigPillow);
-            StartCoroutine(RevealTextWordByWord("Put the Big Pillow at the Back", 0.5f));
+            subtitleManager.DisplaySubtitle("Put the Big Pillow at the Back", "Kiki", audioSource.clip);
             pillowAudioPlayer = true;
         }
 
@@ -183,6 +182,7 @@ public class boyController1 : MonoBehaviour
         if (audioSource != null)
         {
             audioSource.Play();
+            subtitleManager.DisplaySubtitle("WoW..! My Bed looks so Clean, Thank you Kiki and Friend", "JoJo", audioSource.clip);
         }
         else
         {
@@ -216,7 +216,7 @@ public class boyController1 : MonoBehaviour
             {
                 birdaudioplayed = true;
                 birdAudiosource.Play();
-                StartCoroutine(RevealTextWordByWord("Oh JoJo, Your Bed sure does look Messy, Don't worry my Friend, and I will help you ", 0.5f));
+                subtitleManager.DisplaySubtitle("Oh JoJo, Your Bed sure does look Messy, Don't worry my Friend, and I will help you ", "JoJo", birdAudiosource.clip);
             }
         }
     }
@@ -256,19 +256,5 @@ public class boyController1 : MonoBehaviour
         PillowDragAndDrop.canDrag = true;
     }
 
-    private IEnumerator RevealTextWordByWord(string fullText, float delayBetweenWords)
-    {
-        subtitleText.text = "";
-        subtitleText.gameObject.SetActive(true);
-
-        string[] words = fullText.Split(' ');
-
-        // Reveal words one by one
-        for (int i = 0; i < words.Length; i++)
-        {
-            subtitleText.text = string.Join(" ", words, 0, i + 1);
-            yield return new WaitForSeconds(delayBetweenWords);
-        }
-        subtitleText.text = "";
-    }
+    
 }

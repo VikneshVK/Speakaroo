@@ -12,7 +12,7 @@ public class Lvl8Sc2KikiController : MonoBehaviour
     public AudioClip beakerAudio; // Audio for Beaker
     public AudioSource audioSource;
     public GameObject beaker; // Beaker GameObject
-    public TextMeshProUGUI subtitleText;
+    public SubtitleManager subtitleManager;
     public Lvl8SSc2HelperController helperController;
 
     private Animator kikiAnimator;
@@ -102,7 +102,7 @@ public class Lvl8Sc2KikiController : MonoBehaviour
         {
             audioSource.clip = beakerAudio;
             audioSource.Play();
-            StartCoroutine(RevealTextWordByWord("Please place the Beaker on the Stand", 0.5f));
+            subtitleManager.DisplaySubtitle("Please place the Beaker on the Stand", "Kiki", beakerAudio);
         }
 
         while (kikiAnimator.GetCurrentAnimatorStateInfo(0).IsName("Beaker") &&
@@ -116,19 +116,5 @@ public class Lvl8Sc2KikiController : MonoBehaviour
             helperController.EnableTestTubeCollider(beaker);
             helperController.SpawnGlow(beaker);
         }
-    }
-    private IEnumerator RevealTextWordByWord(string fullText, float delayBetweenWords)
-    {
-        subtitleText.text = "";
-        subtitleText.gameObject.SetActive(true);
-
-        string[] words = fullText.Split(' ');
-
-        for (int i = 0; i < words.Length; i++)
-        {
-            subtitleText.text = string.Join(" ", words, 0, i + 1);
-            yield return new WaitForSeconds(delayBetweenWords);
-        }
-        subtitleText.text = "";
     }
 }

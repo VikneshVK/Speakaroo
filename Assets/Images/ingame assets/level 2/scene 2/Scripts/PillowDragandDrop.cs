@@ -13,7 +13,7 @@ public class PillowDragAndDrop : MonoBehaviour
     public GameObject nextaudiosoucre; // Reference to the HelperHandController
     public GameObject Boy;
     public GameObject Kiki;
-    public TextMeshProUGUI subtitleText;
+    public SubtitleManager subtitleManager;
     public static bool canDrag;
     public bool HasInteracted { get; private set; } = false;
     private AudioSource SfxAudioSource;
@@ -260,7 +260,7 @@ public class PillowDragAndDrop : MonoBehaviour
             SpawnGlow(gameObject); // Spawn glow on the big pillow
             AudioSource audioSource = nextaudiosoucre.GetComponent<AudioSource>() ?? feedbackAudioSource;
             if (audioSource != null) audioSource.PlayOneShot(audioClipBigPillow);
-            StartCoroutine(RevealTextWordByWord("Put the Big Pillow at the Back", 0.5f));
+            subtitleManager.DisplaySubtitle("Put the Big Pillow at the Back", "Kiki", audioSource.clip);
             Debug.Log("Playing big pillow audio.");
         }
         else
@@ -269,7 +269,7 @@ public class PillowDragAndDrop : MonoBehaviour
             SpawnGlow(gameObject); // Spawn glow on the small pillow
             AudioSource audioSource = nextaudiosoucre.GetComponent<AudioSource>() ?? feedbackAudioSource;
             if (audioSource != null) audioSource.PlayOneShot(audioClipSmallPillow);
-            StartCoroutine(RevealTextWordByWord("Put the Small Pillow at the front of the big Pillow", 0.3f));
+            subtitleManager.DisplaySubtitle("Put the Small Pillow at the front of the big Pillow", "Kiki", audioSource.clip);
             Debug.Log("Playing small pillow audio.");
         }
     }
@@ -301,7 +301,7 @@ public class PillowDragAndDrop : MonoBehaviour
                             kikiAnimator.SetTrigger("bigPillow");
                             SpawnGlow(nextPillow.gameObject); // Spawn glow on the big pillow
                             audioSource.PlayOneShot(audioClipBigPillow);
-                            StartCoroutine(RevealTextWordByWord("Put the Big Pillow at the Back", 0.5f));
+                            subtitleManager.DisplaySubtitle("Put the Big Pillow at the Back", "Kiki", audioSource.clip);
                             Debug.Log("Playing big pillow audio.");
                         }
                         else
@@ -309,7 +309,7 @@ public class PillowDragAndDrop : MonoBehaviour
                             kikiAnimator.SetTrigger("smallPillow");
                             SpawnGlow(nextPillow.gameObject); // Spawn glow on the small pillow
                             audioSource.PlayOneShot(audioClipSmallPillow);
-                            StartCoroutine(RevealTextWordByWord("Put the Small Pillow at the front of the big Pillow", 0.3f));
+                            subtitleManager.DisplaySubtitle("Put the Small Pillow at the front of the big Pillow", "Kiki", audioSource.clip);
                             Debug.Log("Playing small pillow audio.");
                         }
                     }
@@ -518,19 +518,5 @@ public class PillowDragAndDrop : MonoBehaviour
         StartCoroutine(PlayNegativeSound());
     
     }
-    private IEnumerator RevealTextWordByWord(string fullText, float delayBetweenWords)
-    {
-        subtitleText.text = "";
-        subtitleText.gameObject.SetActive(true);
-
-        string[] words = fullText.Split(' ');
-
-        // Reveal words one by one
-        for (int i = 0; i < words.Length; i++)
-        {
-            subtitleText.text = string.Join(" ", words, 0, i + 1);
-            yield return new WaitForSeconds(delayBetweenWords);
-        }
-        subtitleText.text = "";
-    }
+    
 }

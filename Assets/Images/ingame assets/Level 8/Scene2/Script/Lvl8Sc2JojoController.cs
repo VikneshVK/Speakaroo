@@ -9,7 +9,7 @@ public class Lvl8Sc2JojoController : MonoBehaviour
     public GameObject Bird;
     public AudioClip dialogueAudio;
     public AudioSource audioSource;
-    public TextMeshProUGUI subtitleText;
+    public SubtitleManager subtitleManager;
 
     [Header("SFX")]
     private AudioSource SfxAudioSource;
@@ -102,21 +102,7 @@ public class Lvl8Sc2JojoController : MonoBehaviour
         {
             audioSource.clip = dialogueAudio;
             audioSource.Play();
-            StartCoroutine(RevealTextWordByWord("YAY..! We are at the Lab, Let's mix some Colors", 0.5f));
+            subtitleManager.DisplaySubtitle("YAY..! We are at the Lab, Let's mix some Colors", "Kiki", dialogueAudio);
         }
-    }
-    private IEnumerator RevealTextWordByWord(string fullText, float delayBetweenWords)
-    {
-        subtitleText.text = "";
-        subtitleText.gameObject.SetActive(true);
-
-        string[] words = fullText.Split(' ');
-
-        for (int i = 0; i < words.Length; i++)
-        {
-            subtitleText.text = string.Join(" ", words, 0, i + 1);
-            yield return new WaitForSeconds(delayBetweenWords);
-        }
-        subtitleText.text = "";
     }
 }

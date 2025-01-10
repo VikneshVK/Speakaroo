@@ -16,7 +16,7 @@ public class LVL5Sc12Jojocontroller : MonoBehaviour
     public AudioClip Audio1;
     public AudioClip Audio2;
     public AudioClip Audio3;
-    public TextMeshProUGUI subtitleText;
+    public SubtitleManager subtitleManager;
 
     private AudioSource SfxAudioSource;
     public AudioClip SfxAudio1;
@@ -136,8 +136,7 @@ public class LVL5Sc12Jojocontroller : MonoBehaviour
                 animator.SetBool("canTalk", true); // Trigger talk animation
                 boyAudioSource.clip = Audio1;
                 boyAudioSource.Play();
-                StartCoroutine(RevealTextWordByWord("Ask for the tickets", 0.5f));
-
+                subtitleManager.DisplaySubtitle("Ask for the tickets", "JoJo", Audio1);
             }
             else
             {
@@ -191,7 +190,7 @@ public class LVL5Sc12Jojocontroller : MonoBehaviour
                         {
                             boyAudioSource.clip = Audio2;
                             boyAudioSource.Play();
-                            StartCoroutine(RevealTextWordByWord("Yay..! we got the Tickets", 0.5f));
+                            subtitleManager.DisplaySubtitle("Yay..! we got the Tickets", "JoJo", Audio1);
                             ifDialougeComplete = true;
                         }
                     });
@@ -229,7 +228,7 @@ public class LVL5Sc12Jojocontroller : MonoBehaviour
             animator.SetBool("canTalk3", true); // Trigger Talk3 animation
             boyAudioSource.clip = Audio3;
             boyAudioSource.Play();
-            StartCoroutine(RevealTextWordByWord("Let's go in", 0.5f));
+            subtitleManager.DisplaySubtitle("Let's go in", "JoJo", Audio3);
         }
     }
 
@@ -246,20 +245,5 @@ public class LVL5Sc12Jojocontroller : MonoBehaviour
             animator.SetBool("canWalk", true);
             /*boySprite.flipX = true;*/
         }
-    }
-
-    private IEnumerator RevealTextWordByWord(string fullText, float delayBetweenWords)
-    {
-        subtitleText.text = "";
-        subtitleText.gameObject.SetActive(true);
-
-        string[] words = fullText.Split(' ');
-
-        for (int i = 0; i < words.Length; i++)
-        {
-            subtitleText.text = string.Join(" ", words, 0, i + 1);
-            yield return new WaitForSeconds(delayBetweenWords);
-        }
-        subtitleText.text = "";
     }
 }

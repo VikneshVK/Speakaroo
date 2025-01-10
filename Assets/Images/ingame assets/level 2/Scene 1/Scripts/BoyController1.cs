@@ -1,6 +1,7 @@
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using static UnityEngine.Rendering.DebugUI;
 
 public class BoyController1 : MonoBehaviour
 {
@@ -15,7 +16,8 @@ public class BoyController1 : MonoBehaviour
     private AudioSource jojoAudio;
    /* public AudioSource kikiAudio; //temp addition,please change later*/
     public AudioClip[] audioClips; // Array to hold the audio clips
-    public TextMeshProUGUI subtitleText;
+   /* public TextMeshProUGUI subtitleText;*/
+   public SubtitleManager subtitleManager;
 
     [Header("SFX")]
     private AudioSource SfxAudioSource;
@@ -114,14 +116,11 @@ public class BoyController1 : MonoBehaviour
     private IEnumerator DelayBeforeCanTalk()
     {
         yield return new WaitForSeconds(0.3f);  // Wait for 1 second
-        /*boyspriteRenderer.flipX = false;*/
+        
         boyAnimator.SetBool("canTalk", true);  // Enable the "canTalk" animation after the delay
-        PlayAudioByIndex(0);
+        PlayAudioWithSubtitles(0, "Oh No..!, My Room is So Messy", "JoJo");
         Debug.Log("Walking complete, switching back to front view.");
-        if (subtitleText != null)
-        {
-            StartCoroutine(RevealTextWordByWord("Oh No..!, My Room is So Messy", 0.5f));  // Word by word reveal with 0.5s delay
-        }
+        
     }
 
     private void HandleTalking()
@@ -134,8 +133,8 @@ public class BoyController1 : MonoBehaviour
             isTalking = true;
             birdAnimator.SetBool("can talk", true);
             parrotController.SpawnAndTweenGlowOnInteractableObjects();
-            PlayAudioByIndex(3); //added temp, change after
-            StartCoroutine(RevealTextWordByWord("Put the Big Toys on the Shelf", 0.5f));
+            PlayAudioWithSubtitles(3, "Put the Big Toys on the Shelf", "Kiki" ); //added temp, change after
+            
             boyspriteRenderer.flipX = true;
         }
     }
@@ -179,11 +178,8 @@ public class BoyController1 : MonoBehaviour
             if (!hasFinalAudioPlayed)
             {
                 boyAnimator.SetTrigger("CleaningComplete");
-                PlayAudioByIndex(2);  // Play audio
-                if (subtitleText != null)
-                {
-                    StartCoroutine(RevealTextWordByWord("Wow.! My Room Looks so Clean. Thankyou Kiki and Friend", 0.5f));  // Word by word reveal with 0.5s delay
-                }
+                PlayAudioWithSubtitles(2, "Wow, Thank you, Kiki and Friend. My room looks so Clean", "JoJo");  // Play audio
+                
                 hasFinalAudioPlayed = true; // Mark as played
                 Debug.Log("final audio playing once");
             }
@@ -211,15 +207,17 @@ public class BoyController1 : MonoBehaviour
     }
 
     // Public method to play audio based on index
-    public void PlayAudioByIndex(int index)
+    public void PlayAudioWithSubtitles(int index, string subtitleText, string dialogueType)
     {
         if (jojoAudio != null && audioClips != null && index >= 0 && index < audioClips.Length)
         {
-
+            // Set and play the audio clip
             jojoAudio.clip = audioClips[index];
             jojoAudio.loop = false; // Ensure that the audio does not loop
             jojoAudio.Play();
 
+            // Display subtitles using the currently set audio clip
+            subtitleManager.DisplaySubtitle(subtitleText, dialogueType, jojoAudio.clip);
         }
         else
         {
@@ -227,21 +225,6 @@ public class BoyController1 : MonoBehaviour
         }
     }
 
-    private IEnumerator RevealTextWordByWord(string fullText, float delayBetweenWords)
-    {
-        subtitleText.text = "";  // Clear the text before starting
-        subtitleText.gameObject.SetActive(true);  // Ensure the subtitle text is active
 
-        string[] words = fullText.Split(' ');  // Split the full text into individual words
-
-        // Reveal words one by one
-        for (int i = 0; i < words.Length; i++)
-        {
-            // Instead of appending, build the text up to the current word
-            subtitleText.text = string.Join(" ", words, 0, i + 1);  // Show only the words up to the current index
-            yield return new WaitForSeconds(delayBetweenWords);  // Wait before revealing the next word
-        }
-        subtitleText.gameObject.SetActive(false);
-    }
 
 }

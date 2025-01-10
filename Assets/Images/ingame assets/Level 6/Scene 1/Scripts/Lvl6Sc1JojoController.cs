@@ -22,7 +22,7 @@ public class Lvl6Sc1JojoController : MonoBehaviour
     /*private bool dialougeDone;*/
     public bool hasSpawnedPrefab;
     private bool isFinalTalkCompleted;
-    public TextMeshProUGUI subtitleText;
+    public SubtitleManager subtitleManager;
 
     public AudioClip audio1;
     public AudioClip audio2;
@@ -76,7 +76,7 @@ public class Lvl6Sc1JojoController : MonoBehaviour
                 kikiAnimator.SetTrigger("Dialogue1");
                 audioSource.clip = audio1;
                 audioSource.Play();
-                StartCoroutine(RevealTextWordByWord("What do you want to Play With?", 0.5f));
+                subtitleManager.DisplaySubtitle("What do you want to Play With?", "Kiki", audio1);
             }
             StartCoroutine(WaitForKikiTalkAnimation());
         }
@@ -90,7 +90,7 @@ public class Lvl6Sc1JojoController : MonoBehaviour
                 kikiAnimator.SetTrigger("finalTalk");
                 audioSource.clip = audio3;
                 audioSource.Play();
-                StartCoroutine(RevealTextWordByWord("The Beach was a Blast", 0.5f));
+                subtitleManager.DisplaySubtitle("The Beach was a Blast", "JoJo", audio3);
                 Debug.Log("All mini-games completed, triggering final talk animation.");
             }
             else
@@ -104,7 +104,7 @@ public class Lvl6Sc1JojoController : MonoBehaviour
                     kikiAnimator.SetTrigger("Dialogue1"); // Trigger Kiki's Talk animation
                     audioSource.clip = audio1;
                     audioSource.Play();
-                    StartCoroutine(RevealTextWordByWord("What do you want to Play With?", 0.5f));
+                    subtitleManager.DisplaySubtitle("What do you want to Play With?", "Kiki", audio1);
                     StartCoroutine(WaitForKikiTalkAnimation());
                 }
             }
@@ -139,7 +139,7 @@ public class Lvl6Sc1JojoController : MonoBehaviour
             animator.SetBool("canTalk", true); // Start talking animation
             audioSource.clip = audio2;
             audioSource.Play();
-            StartCoroutine(RevealTextWordByWord("I love the Beach ", 0.5f));
+            subtitleManager.DisplaySubtitle("I love the Beach ", "JoJo", audio2);
             isTalking = true;
         }
     }
@@ -224,20 +224,5 @@ public class Lvl6Sc1JojoController : MonoBehaviour
             transform.position += Vector3.right * moveSpeed * Time.deltaTime;
             yield return null;
         }
-    }
-
-    private IEnumerator RevealTextWordByWord(string fullText, float delayBetweenWords)
-    {
-        subtitleText.text = "";
-        subtitleText.gameObject.SetActive(true);
-
-        string[] words = fullText.Split(' ');
-
-        for (int i = 0; i < words.Length; i++)
-        {
-            subtitleText.text = string.Join(" ", words, 0, i + 1);
-            yield return new WaitForSeconds(delayBetweenWords);
-        }
-        subtitleText.text = "";
     }
 }

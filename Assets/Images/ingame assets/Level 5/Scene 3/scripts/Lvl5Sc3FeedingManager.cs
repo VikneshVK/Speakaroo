@@ -7,7 +7,7 @@ public class Lvl5Sc3FeedingManager : MonoBehaviour
     public int animalsFed = 0;
     public GameObject birdImage;
     public GameObject board;
-    public TextMeshProUGUI subtitleText;
+    public SubtitleManager subtitleManager;
     private int currentAnimalIndex = 0;
     private Transform[] animals;
     private Animator birdAnimator;
@@ -66,7 +66,7 @@ public class Lvl5Sc3FeedingManager : MonoBehaviour
         {
             birdAnimator.SetTrigger("Dialogue1");
             PlayAudioClip(audio1);
-            StartCoroutine(RevealTextWordByWord("the Animals are Hungry", 0.5f));
+            subtitleManager.DisplaySubtitle("the Animals are Hungry", "Kiki", audio1);
         }
 
         StartCoroutine(FeedNextAnimal());
@@ -82,7 +82,7 @@ public class Lvl5Sc3FeedingManager : MonoBehaviour
             {
                 birdAnimator.SetTrigger("finalDialogue");
                 PlayAudioClip(audio10);
-                StartCoroutine(RevealTextWordByWord("The zoo was so much Fun", 0.5f));
+                subtitleManager.DisplaySubtitle("The zoo was so much Fun", "Kiki", audio10);
             }
             yield break;
         }
@@ -232,6 +232,7 @@ public class Lvl5Sc3FeedingManager : MonoBehaviour
 
     public void OnFoodDropped(Transform food, bool isRightFood)
     {
+        helperhand.ResetTimer();
         if (isRightFood)
             StartCoroutine(HandleCorrectFood(food));
         else
@@ -261,7 +262,6 @@ public class Lvl5Sc3FeedingManager : MonoBehaviour
         if (birdAnimator != null)
             birdAnimator.SetTrigger("rightFood");
         PlayAudioClip(audio8);
-        StartCoroutine(RevealTextWordByWord("Yumm..!", 0.5f));
 
         LeanTween.scale(food.gameObject, Vector3.zero, 0.5f);
 
@@ -300,7 +300,6 @@ public class Lvl5Sc3FeedingManager : MonoBehaviour
         if (birdAnimator != null)
             birdAnimator.SetTrigger("wrongFood");
         PlayAudioClip(audio9);
-        StartCoroutine(RevealTextWordByWord("Yuck..!", 0.5f));
 
         SpriteRenderer sr = food.GetComponent<SpriteRenderer>();
         for (int i = 0; i < 2; i++)
@@ -336,27 +335,27 @@ public class Lvl5Sc3FeedingManager : MonoBehaviour
         {
             case "Hippo":
                 PlayAudioClip(audio2);
-                StartCoroutine(RevealTextWordByWord("Let's Feed the Hippo", 0.5f));
+                subtitleManager.DisplaySubtitle("Let's Feed the Hippo", "Kiki", audio2);
                 break;
             case "Lion":
                 PlayAudioClip(audio3);
-                StartCoroutine(RevealTextWordByWord("Let's Feed the Lion", 0.5f));
+                subtitleManager.DisplaySubtitle("Let's Feed the Lion", "Kiki", audio3);
                 break;
             case "Monkey":
                 PlayAudioClip(audio4);
-                StartCoroutine(RevealTextWordByWord("Let's Feed the Monkey", 0.5f));
+                subtitleManager.DisplaySubtitle("Let's Feed the Monkey", "Kiki", audio4);
                 break;
             case "Croc":
                 PlayAudioClip(audio5);
-                StartCoroutine(RevealTextWordByWord("Let's Feed the Crocodile", 0.5f));
+                subtitleManager.DisplaySubtitle("Let's Feed the Crocodile", "Kiki", audio5);
                 break;
             case "Panda":
                 PlayAudioClip(audio6);
-                StartCoroutine(RevealTextWordByWord("Let's Feed the Panda", 0.5f));
+                subtitleManager.DisplaySubtitle("Let's Feed the Panda", "Kiki", audio6);
                 break;
             case "Tiger":
                 PlayAudioClip(audio7);
-                StartCoroutine(RevealTextWordByWord("Let's Feed the Tiger", 0.5f));
+                subtitleManager.DisplaySubtitle("Let's Feed the Tiger", "Kiki", audio7);
                 break;
         }
     }
@@ -400,23 +399,5 @@ public class Lvl5Sc3FeedingManager : MonoBehaviour
         }
 
         Destroy(glow);
-    }
-
-
-
-
-    private IEnumerator RevealTextWordByWord(string fullText, float delayBetweenWords)
-    {
-        subtitleText.text = "";
-        subtitleText.gameObject.SetActive(true);
-
-        string[] words = fullText.Split(' ');
-
-        for (int i = 0; i < words.Length; i++)
-        {
-            subtitleText.text = string.Join(" ", words, 0, i + 1);
-            yield return new WaitForSeconds(delayBetweenWords);
-        }
-        subtitleText.text = "";
     }
 }

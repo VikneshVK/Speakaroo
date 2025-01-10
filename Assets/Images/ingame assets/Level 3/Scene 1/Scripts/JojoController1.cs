@@ -7,7 +7,7 @@ public class JojoController1 : MonoBehaviour
 {
     public Transform stopPosition;
     public float walkSpeed = 2f;
-    public TextMeshProUGUI subtitleText;
+    public SubtitleManager subtitleManager;
     public GameObject bird;
     public AudioClip lvlCompleteaudio;
     /*public GameObject walkRig;
@@ -91,7 +91,7 @@ public class JojoController1 : MonoBehaviour
                 
                 boyAnimator.SetBool("canTalk", true);
                 audioSource.Play();
-                StartCoroutine(RevealTextWordByWord("Mom asked if we can Sweep the dry leaves in the Garden", 0.5f));
+                subtitleManager.DisplaySubtitle("Mom asked if we can Sweep the dry leaves in the Garden", "JoJo", audioSource.clip);
             }
 
         }
@@ -106,7 +106,7 @@ public class JojoController1 : MonoBehaviour
             birdcanTalk = true;
             kikiAudiosource.Play();
             birdAnimator.SetBool("canTalk", true);
-            StartCoroutine(RevealTextWordByWord("Yes, Let's sweep the Garden, my friend, and I will help you, Jojo", 0.3f));
+            subtitleManager.DisplaySubtitle("Yes, Let's sweep the Garden, my friend, and I will help you, Jojo", "Kiki", kikiAudiosource.clip);
         }
     }
 
@@ -119,26 +119,9 @@ public class JojoController1 : MonoBehaviour
             audioSource.Stop(); // Stop any ongoing audio
             audioSource.clip = lvlCompleteaudio; // Set level complete audio clip
             audioSource.Play();
-            StartCoroutine(RevealTextWordByWord("Good job, the garden looks clean now", 0.5f));
+            subtitleManager.DisplaySubtitle("Good job, the garden looks clean now", "Jojo", audioSource.clip);
         }
 
-
     }
-
-    private IEnumerator RevealTextWordByWord(string fullText, float delayBetweenWords)
-    {
-        subtitleText.text = "";  
-        subtitleText.gameObject.SetActive(true);  
-
-        string[] words = fullText.Split(' ');  
-
-        // Reveal words one by one
-        for (int i = 0; i < words.Length; i++)
-        {
-            subtitleText.text = string.Join(" ", words, 0, i + 1);  
-            yield return new WaitForSeconds(delayBetweenWords);  
-        }
-        
-        subtitleText.text = "";
-    }
+    
 }

@@ -64,8 +64,6 @@ public class Lvl7Sc2QuestManager : MonoBehaviour
     private Animator jojoAnimator;
     private Animator kikiFinalAnimator;
 
-    public TextMeshProUGUI subtitleText;
-
     void Start()
     {
         if (kikiImage != null)
@@ -284,19 +282,16 @@ public class Lvl7Sc2QuestManager : MonoBehaviour
                     kikiAnimator.SetTrigger("CheesePizza");
                     if (audioManager != null && cheesePizzaAudio != null)
                         audioManager.PlayAudio(cheesePizzaAudio);
-                        StartCoroutine(RevealTextWordByWord("Let's make a Cheese Pizza", 0.5f));
                     break;
                 case 1:
                     kikiAnimator.SetTrigger("MushroomPizza");
                     if (audioManager != null && mushroomPizzaAudio != null)
                         audioManager.PlayAudio(mushroomPizzaAudio);
-                        StartCoroutine(RevealTextWordByWord("Let's make Mushroom Pizza", 0.5f));
                     break;
                 case 2:
                     kikiAnimator.SetTrigger("PepperoniPizza");
                     if (audioManager != null && pepperoniPizzaAudio != null)
                         audioManager.PlayAudio(pepperoniPizzaAudio);
-                        StartCoroutine(RevealTextWordByWord("Let's make Pepperoni Pizza", 0.5f));
                     break;
                 default:
                     Debug.LogWarning("Invalid PizzaMade value for Kiki animation.");
@@ -360,20 +355,5 @@ public class Lvl7Sc2QuestManager : MonoBehaviour
             case 2: return "Let's make a Pepperoni Pizza!";
             default: return "Let's make a Pizza!";
         }
-    }
-
-    private IEnumerator RevealTextWordByWord(string fullText, float delayBetweenWords)
-    {
-        subtitleText.text = "";
-        subtitleText.gameObject.SetActive(true);
-
-        string[] words = fullText.Split(' ');
-
-        for (int i = 0; i < words.Length; i++)
-        {
-            subtitleText.text = string.Join(" ", words, 0, i + 1);
-            yield return new WaitForSeconds(delayBetweenWords);
-        }
-        subtitleText.text = "";
     }
 }

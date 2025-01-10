@@ -19,7 +19,7 @@ public class BlenderController : MonoBehaviour
     private Vector3 birdInitialPosition;
     private Animator parrotAnimator;
     public LVL4Sc2AudioManager audioManager;
-    public TextMeshProUGUI subtitleText;
+    public SubtitleManager subtitleManager;
     public AudioClip Audio1;
     public GameObject juiceDrinkingPanel;
     public GameObject jojoImage;
@@ -259,7 +259,7 @@ public class BlenderController : MonoBehaviour
         {
             parrotAnimator.SetTrigger(animationTrigger);
             audioManager.PlayAudio(audioClip); 
-            StartCoroutine(RevealTextWordByWord(subtitleTextContent, 0.5f));
+            subtitleManager.DisplaySubtitle(subtitleTextContent, "Kiki", audioClip);
         });
     }
     private void UpdateGlassSprite()
@@ -293,24 +293,5 @@ public class BlenderController : MonoBehaviour
         }
 
         Debug.Log($"Updated both glass sprites to {juiceSpriteName}");
-    }
-
-
-    private IEnumerator RevealTextWordByWord(string fullText, float delayBetweenWords)
-    {
-        subtitleText.text = "";
-        subtitleText.gameObject.SetActive(true);
-
-        string[] words = fullText.Split(' ');
-
-        for (int i = 0; i < words.Length; i++)
-        {
-            subtitleText.text = string.Join(" ", words, 0, i + 1);
-            yield return new WaitForSeconds(delayBetweenWords);
-        }
-
-        yield return new WaitForSeconds(1f); 
-        subtitleText.text = "";
-        subtitleText.gameObject.SetActive(false);
-    }
+    }   
 }

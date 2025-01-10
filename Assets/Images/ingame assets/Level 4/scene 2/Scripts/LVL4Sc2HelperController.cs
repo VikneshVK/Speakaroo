@@ -22,7 +22,7 @@ public class LVL4Sc2HelperController : MonoBehaviour
     public AudioClip cherryAudio;
     public LVL4Sc2AudioManager audioManager;
 
-    public TextMeshProUGUI subtitleText;
+    public SubtitleManager subtitleManager;
     private Animator birdAnimator;
     private Vector3 birdInitialPosition;
 
@@ -92,7 +92,7 @@ public class LVL4Sc2HelperController : MonoBehaviour
     private IEnumerator DelayTimerCoroutine()
     {
         float timer = 0f;
-        bool glowSpawned = false;
+       /* bool glowSpawned = false;*/
 
         while (timer < helperHandDelay)
         {
@@ -228,7 +228,7 @@ public class LVL4Sc2HelperController : MonoBehaviour
     private void PlayAudioAndSubtitle(AudioClip audioClip, string subtitleTextContent)
     {
         audioManager.PlayAudio(audioClip);
-        StartCoroutine(RevealTextWordByWord(subtitleTextContent, 0.5f)); // Adjust delay as needed
+        subtitleManager.DisplaySubtitle(subtitleTextContent, "Kiki", audioClip);
     }
 
     private IEnumerator TweenBirdBackAfterDelay(float delay)
@@ -238,24 +238,5 @@ public class LVL4Sc2HelperController : MonoBehaviour
         // Tween back to initial position
         LeanTween.move(bird, birdInitialPosition, 1f)
             .setEase(LeanTweenType.easeInOutQuad);
-    }
-
-    private IEnumerator RevealTextWordByWord(string fullText, float delayBetweenWords)
-    {
-        subtitleText.text = "";
-        subtitleText.gameObject.SetActive(true);
-
-        string[] words = fullText.Split(' ');
-
-        // Reveal words one by one
-        for (int i = 0; i < words.Length; i++)
-        {
-            subtitleText.text = string.Join(" ", words, 0, i + 1);
-            yield return new WaitForSeconds(delayBetweenWords);
-        }
-
-        yield return new WaitForSeconds(1f); // Wait for a bit after the last word
-        subtitleText.text = "";
-        subtitleText.gameObject.SetActive(false);
     }
 }

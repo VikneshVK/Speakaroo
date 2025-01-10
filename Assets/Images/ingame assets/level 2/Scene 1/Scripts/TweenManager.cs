@@ -17,6 +17,8 @@ public class TweenManager : MonoBehaviour
     private const string musicVolumeParam = "MusicVolume";
     private const string AmbientVolumeParam = "AmbientVolume";
     private GameObject stCanvas;
+    private GameObject SubtitlemanagerGameobject;
+    private SubtitleManager subtitleManager;
     private void Start()
     {
         ST_AudioManager.Instance.OnPlaybackComplete += HandlePlaybackComplete;
@@ -26,6 +28,9 @@ public class TweenManager : MonoBehaviour
         dialouge3 = Resources.Load<AudioClip>("Audio/FeedbackAudio/Dialouge3");
         // Get the reference to the Animator component of the Bird game object
         GameObject bird = GameObject.FindGameObjectWithTag("Bird");
+        SubtitlemanagerGameobject = GameObject.FindGameObjectWithTag("SubtitleManager");
+        subtitleManager = SubtitlemanagerGameobject.GetComponent<SubtitleManager>();
+
         if (bird != null)
         {
             birdAnimator = bird.GetComponent<Animator>();
@@ -155,6 +160,7 @@ public class TweenManager : MonoBehaviour
             birdAnimator.SetBool("resetPosition", false);
             feedbackAudiosource.clip = dialouge3;
             feedbackAudiosource.Play();
+            subtitleManager.DisplaySubtitle("Ok..! I will put the small toys on the Shelf","Kiki",feedbackAudiosource.clip);
         }
 
         // Tween the parent to scale 0

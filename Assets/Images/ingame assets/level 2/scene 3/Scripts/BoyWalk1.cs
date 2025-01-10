@@ -11,7 +11,7 @@ public class BoyWalk1 : MonoBehaviour
     public float moveSpeed = 2.0f;
     public GameObject Bag;  // The first object in the sequence
     public dragManager dragManager;  // Reference to DragManager
-    public TextMeshProUGUI subtitleText;
+    public SubtitleManager subtitleManager;
 
     private bool isWalking;
     private bool reachedStopPosition;
@@ -51,8 +51,8 @@ public class BoyWalk1 : MonoBehaviour
         if (boyAnimator.GetCurrentAnimatorStateInfo(0).IsName("Idle") &&
             boyAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.1f &&
             !isWalking)
-        {             
-            boyAnimator.SetBool("canWalk",true);
+        {
+            boyAnimator.SetBool("canWalk", true);
             isWalking = true;
         }
 
@@ -69,26 +69,31 @@ public class BoyWalk1 : MonoBehaviour
         {
             Debug.Log("bird will talk bagTalk");
             boyAnimator.SetBool("canTalk", false);  // Stop the boy from talking again
-           
+
             boyFinishedTalking = true;
-
-            // Use dragManager to play the object-specific audio and activate the bag
-            dragManager.PlayObjectAudio(0);  // Play audio for the first object (Bag)
-
-            bagCollider.enabled = true;  // Enable the collider for the Bag object (first drop object)
-
-            // Schedule the helper hand to point at the Bag
-            var bagDragHandler = Bag.GetComponent<DragHandler>();
-            if (bagDragHandler != null && helperPointer != null)
-            {
-                helperPointer.ScheduleHelperHand(bagDragHandler, dragManager);
-            }
+            StartCoroutine(DelayedActions());
+            
         }
 
-        if(birdAnimator.GetCurrentAnimatorStateInfo(0).IsName("Talk") &&
+        if (birdAnimator.GetCurrentAnimatorStateInfo(0).IsName("Talk") &&
             birdAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f)
         {
             birdAnimator.SetTrigger("finalTalkComplete");
+        }
+    }
+
+    private IEnumerator DelayedActions()
+    {
+        yield return new WaitForSeconds(1f);
+
+        dragManager.PlayObjectAudio(0); 
+
+        bagCollider.enabled = true; 
+
+        var bagDragHandler = Bag.GetComponent<DragHandler>();
+        if (bagDragHandler != null && helperPointer != null)
+        {
+            helperPointer.ScheduleHelperHand(bagDragHandler, dragManager);
         }
     }
 
@@ -107,25 +112,8 @@ public class BoyWalk1 : MonoBehaviour
             boyAnimator.SetBool("canTalk", true);  // Start the "Dialogue 1" animation
             reachedStopPosition = true;  // Mark that the boy reached the stop position
             audioSource.Play();
-            StartCoroutine(RevealTextWordByWord("Oh No..! Your Room is Messy Too, Dont worry Kiki Me and My Friend will help you clean it", 0.5f));
+            subtitleManager.DisplaySubtitle("Oh No..! Your Room is Messy Too, Dont worry Kiki Me and My Friend will help you clean it", "JoJo", audioSource.clip);
         }
     }
-    private IEnumerator RevealTextWordByWord(string fullText, float delayBetweenWords)
-    {
-        subtitleText.text = "";  // Clear the text before starting
-        subtitleText.gameObject.SetActive(true);  // Ensure the subtitle text is active
-
-        string[] words = fullText.Split(' ');  // Split the full text into individual words
-
-        // Reveal words one by one
-        for (int i = 0; i < words.Length; i++)
-        {
-            // Instead of appending, build the text up to the current word
-            subtitleText.text = string.Join(" ", words, 0, i + 1);  // Show only the words up to the current index
-            yield return new WaitForSeconds(delayBetweenWords);  // Wait before revealing the next word
-        }
-
-        yield return new WaitForSeconds(0.5f);
-        subtitleText.gameObject.SetActive(false);
-    }
+    
 }

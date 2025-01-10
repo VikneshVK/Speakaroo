@@ -30,7 +30,7 @@ public class Lvl7Sc2DragManager : MonoBehaviour
     // Reference to AudioManager
     public Lvl7Sc2AudioManager audioManager;
 
-    public TextMeshProUGUI subtitleText;
+    public SubtitleManager subtitleManager;
     public LVL7Sc2HelperFunction helperFunction;
     public Transform pizzaLocation;
 
@@ -178,22 +178,22 @@ public class Lvl7Sc2DragManager : MonoBehaviour
         if (topping == sauceTopping && sauceAudio != null)
         {
             audioManager.PlayAudio(sauceAudio);
-            StartCoroutine(RevealTextWordByWord("Put on the Tomato Sauce", 0.5f));
+            subtitleManager.DisplaySubtitle("Put on the Tomato Sauce", "Kiki", sauceAudio);
         }
         else if (topping == cheeseTopping && cheeseAudio != null)
         {
             audioManager.PlayAudio(cheeseAudio);
-            StartCoroutine(RevealTextWordByWord("Put on the Cheese", 0.5f));
+            subtitleManager.DisplaySubtitle("Put on the Cheese", "Kiki", cheeseAudio);
         }
         else if (topping == mushroomTopping && mushroomAudio != null)
         {
             audioManager.PlayAudio(mushroomAudio);
-            StartCoroutine(RevealTextWordByWord("Put on the Mushrooms", 0.5f));
+            subtitleManager.DisplaySubtitle("Put on the Mushrooms", "Kiki", mushroomAudio);
         }
         else if (topping == pepperoniTopping && pepperoniAudio != null)
         {
             audioManager.PlayAudio(pepperoniAudio);
-            StartCoroutine(RevealTextWordByWord("Put on the Pepperoni", 0.5f));
+            subtitleManager.DisplaySubtitle("Put on the Pepperoni", "Kiki", pepperoniAudio);
         }
         else
         {
@@ -363,21 +363,5 @@ public class Lvl7Sc2DragManager : MonoBehaviour
         }
 
         Debug.Log($"Updated opacity for {topping.name}, Collider Active: {isColliderActive}");
-    }   
-
-    private IEnumerator RevealTextWordByWord(string fullText, float delayBetweenWords)
-    {
-        subtitleText.text = "";
-        subtitleText.gameObject.SetActive(true);
-
-        string[] words = fullText.Split(' ');
-
-        for (int i = 0; i < words.Length; i++)
-        {
-            subtitleText.text = string.Join(" ", words, 0, i + 1);
-            yield return new WaitForSeconds(delayBetweenWords);
-        }
-        subtitleText.text = "";
     }
-
 }

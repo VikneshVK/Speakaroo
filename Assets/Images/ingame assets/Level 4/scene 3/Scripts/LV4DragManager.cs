@@ -30,7 +30,7 @@ public class LV4DragManager : MonoBehaviour
     public AudioSource audioSource2; // Drag Audio 2 here
     public AudioSource audioSource3;
     public AudioSource audioSource4;
-    public TextMeshProUGUI subtitleText;
+    public SubtitleManager subtitleManager;
 
     private AudioSource SfxAudioSource;
     public AudioClip SfxAudio1;
@@ -103,7 +103,7 @@ public class LV4DragManager : MonoBehaviour
         yield return new WaitUntil(() => birdAnimator.GetCurrentAnimatorStateInfo(0).IsName("Talk"));
 
         audioSource1.Play();
-        StartCoroutine(RevealTextWordByWord("Oh no, the dishes are so Dirty", 0.5f));
+        subtitleManager.DisplaySubtitle("Oh no, the dishes are so Dirty", "Kiki", audioSource1.clip);
 
         yield return new WaitUntil(() => birdAnimator.GetCurrentAnimatorStateInfo(0).IsName("Talk") == false);
 
@@ -112,7 +112,7 @@ public class LV4DragManager : MonoBehaviour
         yield return new WaitUntil(() => birdAnimator.GetCurrentAnimatorStateInfo(0).IsName("Put Dishes in Sink"));
 
         audioSource2.Play();
-        StartCoroutine(RevealTextWordByWord("Put the dishes in the sink!", 0.5f)); // Modified subtitle for clarity
+        subtitleManager.DisplaySubtitle("Put the dishes in the sink!", "Kiki", audioSource2.clip);        
 
         // Spawn the glow prefab, scale it, wait, and destroy
         if (glowPrefab != null)
@@ -262,8 +262,7 @@ public class LV4DragManager : MonoBehaviour
                         {
                             SpawnAndAnimateGlow(dish);
                         }
-
-                        StartCoroutine(RevealTextWordByWord("Lets Wash the Dishes", 0.5f));
+                        subtitleManager.DisplaySubtitle("Lets Wash the Dishes", "Kiki", imageAudioSource.clip);
                         StartCoroutine(WaitAndReturnBirdImage(birdRectTransform));
                         timerRunning = true;
                     });
@@ -404,7 +403,7 @@ public class LV4DragManager : MonoBehaviour
         LeanTween.move(dirtyDishes, originalPosition, 0.5f);
         birdAnimator.SetTrigger("dishClean");
         audioSource3.Play();
-        StartCoroutine(RevealTextWordByWord("Yohoo...! so Clean", 0.5f));
+        subtitleManager.DisplaySubtitle("Yohoo...! so Clean", "Kiki", audioSource3.clip);
         dishWashingManager.allDishesWashed = false;
         StartCoroutine(TriggerDishArrangeWithDelay());
     }
@@ -414,7 +413,7 @@ public class LV4DragManager : MonoBehaviour
         yield return new WaitForSeconds(3f); // 2-second delay
         birdAnimator.SetTrigger("dishArrange");
         audioSource4.Play();
-        StartCoroutine(RevealTextWordByWord("lets put the dishes on the rack", 0.5f));
+        subtitleManager.DisplaySubtitle("lets put the dishes on the rack", "Kiki", audioSource4.clip);
 
         foreach (Transform child in dirtyDishes.transform)
         {
@@ -457,23 +456,6 @@ public class LV4DragManager : MonoBehaviour
             dishWashingManager.allDishesWashed = true;
         }
     }
-
-    private IEnumerator RevealTextWordByWord(string fullText, float delayBetweenWords)
-    {
-        subtitleText.text = "";
-        subtitleText.gameObject.SetActive(true);
-
-        string[] words = fullText.Split(' ');
-
-        // Reveal words one by one
-        for (int i = 0; i < words.Length; i++)
-        {
-            subtitleText.text = string.Join(" ", words, 0, i + 1);
-            yield return new WaitForSeconds(delayBetweenWords);
-        }
-        subtitleText.text = "";
-    }
-
 }
 
 

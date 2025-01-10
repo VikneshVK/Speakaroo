@@ -25,7 +25,7 @@ public class SpriteChangeController : MonoBehaviour
 
     [Header("Tween Settings")]
     public LVL4Sc2AudioManager audioManager;
-    public TextMeshProUGUI subtitleText;
+    public SubtitleManager subtitleManager;
     public AudioClip audio1;
     public AudioClip audio2;
 
@@ -493,8 +493,7 @@ public class SpriteChangeController : MonoBehaviour
             audioManager.PlayAudio(audioClip);
 
             // Start subtitle display coroutine
-            StartCoroutine(RevealTextWordByWord(subtitleTextContent, 0.5f));
-
+            subtitleManager.DisplaySubtitle(subtitleTextContent, "Kiki", audioClip);
             StartCoroutine(WaitAndTweenBack(birdRectTransform));
         });
 
@@ -543,24 +542,5 @@ public class SpriteChangeController : MonoBehaviour
         {
             ResetBlender();
         });
-    }
-
-    private IEnumerator RevealTextWordByWord(string fullText, float delayBetweenWords)
-    {
-        subtitleText.text = "";
-        subtitleText.gameObject.SetActive(true);
-
-        string[] words = fullText.Split(' ');
-
-        // Reveal words one by one
-        for (int i = 0; i < words.Length; i++)
-        {
-            subtitleText.text = string.Join(" ", words, 0, i + 1);
-            yield return new WaitForSeconds(delayBetweenWords);
-        }
-
-        yield return new WaitForSeconds(1f); // Wait for a bit after the last word
-        subtitleText.text = "";
-        subtitleText.gameObject.SetActive(false);
-    }
+    }    
 }

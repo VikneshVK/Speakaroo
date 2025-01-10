@@ -61,7 +61,7 @@ public class Lvl7Sc1JojoController : MonoBehaviour
     public Image panelImage; // Reference to the Image component on the panel
 
     public float cameraXOffset = 0f; // Constant offset between Jojo and the camera on the x-axis
-    public TextMeshProUGUI subtitleText;
+    public SubtitleManager subtitleManager;
     public Transform cameraFollowPoint; // New reference to child object of Jojo for camera to follow
 
     [Header("SFX")]
@@ -110,7 +110,7 @@ public class Lvl7Sc1JojoController : MonoBehaviour
                     AudioPlayed = true;
                     boyAudioSource.clip = Audio2;
                     boyAudioSource.Play();
-                    StartCoroutine(RevealTextWordByWord("What do you want to Eat?", 0.5f));
+                    subtitleManager.DisplaySubtitle("What do you want to Eat?", "Kiki", Audio2);
                 }
             }
         }
@@ -334,7 +334,7 @@ public class Lvl7Sc1JojoController : MonoBehaviour
                     finaldialouge = true;
                     boyAudioSource.clip = Audio4;
                     boyAudioSource.Play();
-                    StartCoroutine(RevealTextWordByWord("Look..! It's a Pizza Shop", 0.5f));
+                    subtitleManager.DisplaySubtitle("Look..! It's a Pizza Shop", "JoJo", Audio4);
                 }
                 levelEnded = true; // Mark level as ended
                 return;
@@ -345,7 +345,7 @@ public class Lvl7Sc1JojoController : MonoBehaviour
                 jojoAnimator.SetBool("canTalk", true);
                 boyAudioSource.clip = Audio1;
                 boyAudioSource.Play();
-                StartCoroutine(RevealTextWordByWord("I am Hungry..! Lets buy some Food", 0.5f));
+                subtitleManager.DisplaySubtitle("I am Hungry..! Lets buy some Food", "JoJo", Audio1);
             }
             else
             {
@@ -353,7 +353,7 @@ public class Lvl7Sc1JojoController : MonoBehaviour
                 jojoAnimator.SetBool("canTalk", true);
                 boyAudioSource.clip = Audio3;
                 boyAudioSource.Play();
-                StartCoroutine(RevealTextWordByWord("I want Something Sweet", 0.5f));
+                subtitleManager.DisplaySubtitle("I want Something Sweet", "JoJo", Audio3);
             }
 
             isTalking = true;
@@ -641,20 +641,5 @@ public class Lvl7Sc1JojoController : MonoBehaviour
     {
         return jojoAnimator.GetCurrentAnimatorStateInfo(0).IsName(stateName) &&
                jojoAnimator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 1f;
-    }
-
-    private IEnumerator RevealTextWordByWord(string fullText, float delayBetweenWords)
-    {
-        subtitleText.text = "";
-        subtitleText.gameObject.SetActive(true);
-
-        string[] words = fullText.Split(' ');
-
-        for (int i = 0; i < words.Length; i++)
-        {
-            subtitleText.text = string.Join(" ", words, 0, i + 1);
-            yield return new WaitForSeconds(delayBetweenWords);
-        }
-        subtitleText.text = "";
     }
 }

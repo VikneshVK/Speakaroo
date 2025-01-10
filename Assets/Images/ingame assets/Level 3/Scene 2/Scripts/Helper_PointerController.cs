@@ -12,11 +12,9 @@ public class Helper_PointerController : MonoBehaviour
     public Transform tapPosition;
     public Transform offscreenPosition;
     public TapControl tapControl;
-
+    public SubtitleManager subtitleManager;
     public GameObject glowPrefab;
     private GameObject glowInstance;
-
-    public TextMeshProUGUI subtitleText;
 
     private GameObject helperHandInstance;
     private bool hasSpawnedHelperHand = false;
@@ -133,8 +131,7 @@ public class Helper_PointerController : MonoBehaviour
 
             if (isTapPosition && audioClip1 != null)
             {
-                audioSource.clip = audioClip1;
-                StartCoroutine(RevealTextWordByWord("Friend, open the tap", 0.5f));
+                audioSource.clip = audioClip1;                
                 audioSource.Play();
             }
         }
@@ -151,7 +148,7 @@ public class Helper_PointerController : MonoBehaviour
             if (isTapPosition && audioClip1 != null)
             {
                 audioSource.clip = audioClip1;
-                StartCoroutine(RevealTextWordByWord("Friend, open the tap", 0.5f));
+                subtitleManager.DisplaySubtitle("Friend, open the tap", "Kiki", audioSource.clip);                
                 audioSource.Play();
             }
         }
@@ -179,7 +176,7 @@ public class Helper_PointerController : MonoBehaviour
             {
                 audioSource.clip = audioClip2;
                 audioSource.Play();
-                StartCoroutine(RevealTextWordByWord("Now show your toys under the water", 0.5f));
+                subtitleManager.DisplaySubtitle("Now show your toys under the water", "Kiki", audioSource.clip);                
                 hasPlayedAudioClip2 = true;
             }
 
@@ -250,21 +247,5 @@ public class Helper_PointerController : MonoBehaviour
             SpawnHelperHand(toy.transform.position, false);
             TweenHelperHandToParticlesPosition(toy.transform.position);
         }
-    }
-
-    private IEnumerator RevealTextWordByWord(string fullText, float delayBetweenWords)
-    {
-        subtitleText.text = "";
-        subtitleText.gameObject.SetActive(true);
-
-        string[] words = fullText.Split(' ');
-
-        // Reveal words one by one
-        for (int i = 0; i < words.Length; i++)
-        {
-            subtitleText.text = string.Join(" ", words, 0, i + 1);
-            yield return new WaitForSeconds(delayBetweenWords);
-        }
-        subtitleText.text = "";
-    }
+    }    
 }

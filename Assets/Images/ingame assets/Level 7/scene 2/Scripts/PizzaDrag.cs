@@ -59,7 +59,7 @@ public class PizzaDrag : MonoBehaviour
 
     public AudioClip OvenAudio;
     public AudioClip EatAudio;
-    public TextMeshProUGUI subtitleText;
+    public SubtitleManager subtitleManager;
     public Lvl7Sc2AudioManager audioManager;
     public LVL7Sc2HelperFunction helperFunction;
 
@@ -192,7 +192,7 @@ public class PizzaDrag : MonoBehaviour
                             canTapPizzaBox = true;
                             kikiAnimator.SetTrigger("canEat");
                             audioManager.PlayAudio(EatAudio);
-                            StartCoroutine(RevealTextWordByWord("Pizza is ready..! Let's Eat...!", 0.5f));
+                            subtitleManager.DisplaySubtitle("Pizza is ready..! Let's Eat...!", "Kiki",EatAudio);
                             // Instantiate the glow object and tween its scale
                             spawnedGlow = Instantiate(glow, transform.position, Quaternion.identity);
                             LeanTween.scale(spawnedGlow, Vector3.one * 15, 0.7f)
@@ -472,7 +472,7 @@ public class PizzaDrag : MonoBehaviour
             // Trigger the "intoOven" animation
             kikiAnimator.SetTrigger("intoOven");
             audioManager.PlayAudio(OvenAudio);
-            StartCoroutine(RevealTextWordByWord("Let's put it in the Oven", 0.5f));
+            subtitleManager.DisplaySubtitle("Let's put it in the Oven", "Kiki", OvenAudio);
             // Start a coroutine to wait until the "intoOven" animation state is complete
             StartCoroutine(WaitForAnimationAndEnableCollider(OvenAudio, "intoOven"));
         }
@@ -549,20 +549,5 @@ public class PizzaDrag : MonoBehaviour
         {
             Debug.LogWarning("Quest Manager is not assigned.");
         }
-    }
-
-    private IEnumerator RevealTextWordByWord(string fullText, float delayBetweenWords)
-    {
-        subtitleText.text = "";
-        subtitleText.gameObject.SetActive(true);
-
-        string[] words = fullText.Split(' ');
-
-        for (int i = 0; i < words.Length; i++)
-        {
-            subtitleText.text = string.Join(" ", words, 0, i + 1);
-            yield return new WaitForSeconds(delayBetweenWords);
-        }
-        subtitleText.text = "";
     }
 }

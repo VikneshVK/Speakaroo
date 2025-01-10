@@ -49,6 +49,7 @@ public class Lvl6QuestManager : MonoBehaviour
     public AudioClip rightDropAudio;
     public AudioClip wrongDropAudio;
     public AudioClip finalAudio;
+    public SubtitleManager subtitleManager;
 
     private AudioSource SfxAudioSource;
     public AudioClip SfxAudio1;
@@ -256,7 +257,8 @@ public class Lvl6QuestManager : MonoBehaviour
         }
 
         // Start the subtitle coroutine with the specific subtitle text
-        StartCoroutine(RevealTextWordByWord(subtitleText, 0.5f));
+        /*StartCoroutine(RevealTextWordByWord(subtitleText, 0.5f));*/
+        subtitleManager.DisplaySubtitle(subtitleText, "Kiki", selectedAudio);
 
         return selectedAudio;
     }

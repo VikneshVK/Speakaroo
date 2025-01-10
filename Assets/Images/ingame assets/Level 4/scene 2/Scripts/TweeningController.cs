@@ -7,7 +7,7 @@ public class TweeningController : MonoBehaviour
     public bool isSecondTime = false;
     public LVL4Sc2AudioManager audioManager;
     public AudioClip Audio1;
-    public TextMeshProUGUI subtitleText;
+    public SubtitleManager subtitleManager;
     [Header("Set 1 Game Objects and Target Positions")]
     public GameObject[] set1Objects;
     public Transform[] set1Targets;
@@ -148,7 +148,7 @@ public class TweeningController : MonoBehaviour
             // Trigger "Intro2" animation
             birdAnimator.SetTrigger("Intro2");
             audioManager.PlayAudio(Audio1);
-            StartCoroutine(RevealTextWordByWord("Now, Let's make Juice", 0.5f));
+            subtitleManager.DisplaySubtitle("Now, Let's make Juice", "Kiki", Audio1);
         }
 
         yield return new WaitForSeconds(3f); // Wait for the animation and text reveal to complete
@@ -186,26 +186,5 @@ public class TweeningController : MonoBehaviour
             }
         }
     }
-    private IEnumerator RevealTextWordByWord(string fullText, float delayBetweenWords)
-    {
-        if (subtitleText == null)
-        {
-            Debug.LogError("subtitleText is not assigned in the Inspector.");
-            yield break; // Exit the coroutine if subtitleText is null
-        }
-
-        subtitleText.text = "";
-        subtitleText.gameObject.SetActive(true);
-
-        string[] words = fullText.Split(' ');
-
-        // Reveal words one by one
-        for (int i = 0; i < words.Length; i++)
-        {
-            subtitleText.text = string.Join(" ", words, 0, i + 1);
-            yield return new WaitForSeconds(delayBetweenWords);
-        }
-        subtitleText.text = "";
-    }
-
+    
 }

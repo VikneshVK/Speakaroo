@@ -30,7 +30,7 @@ public class PhotoQuestManager : MonoBehaviour
     public AudioClip audio6;
     public AudioClip rightAudio;
     public AudioClip wrongAudio;
-    public TextMeshProUGUI subtitleText;
+    public SubtitleManager subtitleManager;
 
     public bool isClicked = false;
 
@@ -56,7 +56,7 @@ public class PhotoQuestManager : MonoBehaviour
 
         birdAnimator.SetTrigger("Intro");
         GetComponent<AudioSource>().PlayOneShot(Dialouge1);
-        StartCoroutine(RevealTextWordByWord("Help us take Pictures of the Animals", 0.5f));
+        subtitleManager.DisplaySubtitle("Help us take Pictures of the Animals", "Kiki", Dialouge1);
 
         yield return new WaitForSeconds(3f);
 
@@ -118,32 +118,32 @@ public class PhotoQuestManager : MonoBehaviour
             case "Hippo":
                 birdAnimator.SetTrigger("Hippo");
                 GetComponent<AudioSource>().PlayOneShot(audio1);
-                StartCoroutine(RevealTextWordByWord("Find the Hippo", 0.5f));
+                subtitleManager.DisplaySubtitle("Find the Hippo", "Kiki", audio1);
                 break;
             case "Croc":
                 birdAnimator.SetTrigger("Croc");
                 GetComponent<AudioSource>().PlayOneShot(audio2);
-                StartCoroutine(RevealTextWordByWord("Find the Crocodile", 0.5f));
+                subtitleManager.DisplaySubtitle("Find the Crocodile", "Kiki", audio2);
                 break;
             case "Lion":
                 birdAnimator.SetTrigger("Lion");
                 GetComponent<AudioSource>().PlayOneShot(audio3);
-                StartCoroutine(RevealTextWordByWord("Find the Lion", 0.5f));
+                subtitleManager.DisplaySubtitle("Find the Lion", "Kiki", audio3);
                 break;
             case "Monkey":
                 birdAnimator.SetTrigger("Monkey");
                 GetComponent<AudioSource>().PlayOneShot(audio4);
-                StartCoroutine(RevealTextWordByWord("Find the Monkey", 0.5f));
+                subtitleManager.DisplaySubtitle("Find the Monkey", "Kiki", audio4);
                 break;
             case "Panda":
                 birdAnimator.SetTrigger("Panda");
                 GetComponent<AudioSource>().PlayOneShot(audio5);
-                StartCoroutine(RevealTextWordByWord("Find the Panda", 0.5f));
+                subtitleManager.DisplaySubtitle("Find the Panda", "Kiki", audio5);
                 break;
             case "Tiger":
                 birdAnimator.SetTrigger("Tiger");
                 GetComponent<AudioSource>().PlayOneShot(audio6);
-                StartCoroutine(RevealTextWordByWord("Find the Tiger", 0.5f));
+                subtitleManager.DisplaySubtitle("Find the Tiger", "Kiki", audio6);
                 break;
             default:
                 Debug.LogWarning("No animation or audio set for " + animalName);
@@ -357,7 +357,7 @@ public class PhotoQuestManager : MonoBehaviour
         {
             birdAnimator.SetTrigger("FinalDialouge");
             GetComponent<AudioSource>().PlayOneShot(FinalAudio);
-            StartCoroutine(RevealTextWordByWord("You are a good photographer", 0.5f));
+            subtitleManager.DisplaySubtitle("You are a good photographer", "Kiki", FinalAudio);
         }
         else
         {
@@ -472,7 +472,6 @@ public class PhotoQuestManager : MonoBehaviour
         {
             validationSuccess = true;
             birdAnimator.SetTrigger("rightTalk");
-            StartCoroutine(RevealTextWordByWord("Good Job..!", 0.5f));
             GetComponent<AudioSource>().PlayOneShot(rightAudio);
             StartCoroutine(HandleCorrectPhotoSequence(tappedAnimal));
         }
@@ -481,25 +480,7 @@ public class PhotoQuestManager : MonoBehaviour
             validationSuccess = false;
             birdAnimator.SetTrigger("wrongTalk");
             GetComponent<AudioSource>().PlayOneShot(wrongAudio);
-            StartCoroutine(RevealTextWordByWord("That's not right", 0.5f));
             StartCoroutine(HandleIncorrectPhotoSequence(tappedAnimal));
         }
-    }
-
-
-
-    private IEnumerator RevealTextWordByWord(string fullText, float delayBetweenWords)
-    {
-        subtitleText.text = "";
-        subtitleText.gameObject.SetActive(true);
-
-        string[] words = fullText.Split(' ');
-
-        for (int i = 0; i < words.Length; i++)
-        {
-            subtitleText.text = string.Join(" ", words, 0, i + 1);
-            yield return new WaitForSeconds(delayBetweenWords);
-        }
-        subtitleText.text = "";
     }
 }

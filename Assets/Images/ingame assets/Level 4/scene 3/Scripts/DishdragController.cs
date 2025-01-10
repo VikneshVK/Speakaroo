@@ -11,7 +11,7 @@ public class DishdragController : MonoBehaviour
     public float helperHandDelay;
     public bool isDroppedCorrectly = false;
     public AudioSource audio1;
-    public TextMeshProUGUI subtitleText;
+    public SubtitleManager subtitleManager;
 
     public Sprite newSprite;
     public Animator birdAnimator;
@@ -281,7 +281,7 @@ public class DishdragController : MonoBehaviour
         {
             birdAnimator.SetTrigger("LvlComplete");
             audio1.Play();
-            StartCoroutine(RevealTextWordByWord("WOW.! Thank You Friend the Kitchen looks So Clean", 0.5f));
+            subtitleManager.DisplaySubtitle("WOW.! Thank You Friend the Kitchen looks So Clean", "Kiki", audio1.clip);            
             Debug.Log("Level Completed! All dishes arranged.");
         }
     }
@@ -373,20 +373,5 @@ public class DishdragController : MonoBehaviour
                 break;
             }
         }
-    }
-
-    private IEnumerator RevealTextWordByWord(string fullText, float delayBetweenWords)
-    {
-        subtitleText.text = "";
-        subtitleText.gameObject.SetActive(true);
-
-        string[] words = fullText.Split(' ');
-
-        for (int i = 0; i < words.Length; i++)
-        {
-            subtitleText.text = string.Join(" ", words, 0, i + 1);
-            yield return new WaitForSeconds(delayBetweenWords);
-        }
-        subtitleText.text = "";
     }
 }

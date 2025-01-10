@@ -23,7 +23,7 @@ public class LVL5Sc1_3JojoController1 : MonoBehaviour
     public AudioClip Audio4;
     public AudioClip Audio5;
     private AudioSource boyAudioSource;
-    public TextMeshProUGUI subtitleText;
+    public SubtitleManager subtitleManager;
 
     public Transform position1;
     public Transform position2;
@@ -52,7 +52,6 @@ public class LVL5Sc1_3JojoController1 : MonoBehaviour
         suncreamSpawned = false;
         finalDialogueTriggered = false;
         animator.SetBool("canWalk", true);
-        subtitleText.text = "";
         SfxAudioSource = GameObject.FindWithTag("SFXAudioSource").GetComponent<AudioSource>();
     }
     void Update()
@@ -116,7 +115,7 @@ public class LVL5Sc1_3JojoController1 : MonoBehaviour
             kikiAnimator.SetTrigger("canTalk");
             boyAudioSource.clip = Audio1;
             boyAudioSource.Play();
-            StartCoroutine(RevealTextWordByWord("Oh No! Its too Hot", 0.5f));
+            subtitleManager.DisplaySubtitle("Oh No! Its too Hot", "Kiki", Audio1);
             StartCoroutine(ReturnBirdToStartPosition());
         });
     }
@@ -133,7 +132,7 @@ public class LVL5Sc1_3JojoController1 : MonoBehaviour
 
             boyAudioSource.clip = Audio2;
             boyAudioSource.Play();
-            StartCoroutine(RevealTextWordByWord("Let's ask Mom for Sunscreen", 0.5f));
+            subtitleManager.DisplaySubtitle("Let's ask Mom for Sunscreen", "JoJo", Audio2);
             StartCoroutine(ScaleChildrenAndSpawnPrefab());
         });
     }
@@ -201,7 +200,7 @@ public class LVL5Sc1_3JojoController1 : MonoBehaviour
             kikiAnimator.SetTrigger("canTalk2");
             boyAudioSource.clip = Audio3;
             boyAudioSource.Play();
-            StartCoroutine(RevealTextWordByWord("Put on the Sunscreen", 0.5f));
+            subtitleManager.DisplaySubtitle("Put on the Sunscreen", "Kiki", Audio3);
             StartCoroutine(ReturnBirdToStartPosition2());
         });
     }
@@ -230,28 +229,13 @@ public class LVL5Sc1_3JojoController1 : MonoBehaviour
 
         boyAudioSource.clip = Audio4;
         boyAudioSource.Play();
-        StartCoroutine(RevealTextWordByWord("Ahh.! Much Better", 0.5f));
+        subtitleManager.DisplaySubtitle("Ahh.! Much Better", "JoJo", Audio4);
 
         float animationLength = animator.GetCurrentAnimatorStateInfo(0).length;
         yield return new WaitForSeconds(animationLength);
 
         boyAudioSource.clip = Audio5;
         boyAudioSource.Play();
-        StartCoroutine(RevealTextWordByWord("Let's go In...!", 0.5f));
-    }
-
-    private IEnumerator RevealTextWordByWord(string fullText, float delayBetweenWords)
-    {
-        subtitleText.text = "";
-        subtitleText.gameObject.SetActive(true);
-
-        string[] words = fullText.Split(' ');
-
-        for (int i = 0; i < words.Length; i++)
-        {
-            subtitleText.text = string.Join(" ", words, 0, i + 1);
-            yield return new WaitForSeconds(delayBetweenWords);
-        }
-        subtitleText.text = "";
+        subtitleManager.DisplaySubtitle("Let's go In...!", "JoJo", Audio5);
     }
 }

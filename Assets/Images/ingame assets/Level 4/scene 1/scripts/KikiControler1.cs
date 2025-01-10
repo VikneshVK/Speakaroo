@@ -28,7 +28,7 @@ public class KikiController1 : MonoBehaviour
     public AudioClip Audio6;
     public AudioClip Audio7;
     public AudioClip Audio8;
-    public TextMeshProUGUI subtitleText;
+    public SubtitleManager subtitleManager;
 
     private AudioSource SfxAudioSource;
     public AudioClip SfxAudio1;
@@ -172,7 +172,7 @@ public class KikiController1 : MonoBehaviour
                     SfxAudioSource.loop = false;
                     SfxAudioSource.PlayOneShot(SfxAudio1);
                 }
-                StartCoroutine(RevealTextWordByWord("Okay, Here you Go..!", 0.5f));
+                subtitleManager.DisplaySubtitle("Here you go Jojo", "Kiki", audioSource.clip);
                 birdAnimator.SetTrigger("GoToRest");
 
                 currentState = BirdState.ReturningToStart;
@@ -194,17 +194,17 @@ public class KikiController1 : MonoBehaviour
                     case 0:
                         boyAnimator.SetTrigger("IceCream");
                         lvl4Sc1Audiomanger.PlayAudio(Audio1);
-                        StartCoroutine(RevealTextWordByWord("Can you please feed me IceCream?", 0.5f));
+                        subtitleManager.DisplaySubtitle("Can you please feed me IceCream?", "JoJo", Audio1);
                         break;
                     case 1:
                         boyAnimator.SetTrigger("Cookies");
                         lvl4Sc1Audiomanger.PlayAudio(Audio2);
-                        StartCoroutine(RevealTextWordByWord("Can you please feed me Cookies?", 0.5f));
+                        subtitleManager.DisplaySubtitle("Can you please feed me Cookies?", "JoJo", Audio2);
                         break;
                     case 2:
                         boyAnimator.SetTrigger("Apple");
                         lvl4Sc1Audiomanger.PlayAudio(Audio3);
-                        StartCoroutine(RevealTextWordByWord("Can you please feed me Apple?", 0.5f));
+                        subtitleManager.DisplaySubtitle("Can you please feed me Apple?", "JoJo", Audio3);
                         break;
                 }
 
@@ -281,7 +281,7 @@ public class KikiController1 : MonoBehaviour
             itemsDropped++;
             boyAnimator.SetTrigger("Expression");
             lvl4Sc1Audiomanger.PlayAudio(Audio4);
-            StartCoroutine(RevealTextWordByWord("mmm..! Tasty...!", 0.5f));
+            subtitleManager.DisplaySubtitle("mmm..! Tasty...!", "JoJo", Audio4);
             StartCoroutine(DelayedAnimationAndSpawn(3.5f));
         }
         else
@@ -309,7 +309,7 @@ public class KikiController1 : MonoBehaviour
             case 1:
                 boyAnimator.SetTrigger("Cookies");
                 lvl4Sc1Audiomanger.PlayAudio(Audio7);
-                StartCoroutine(RevealTextWordByWord("Next, I want to eat Cookies", 0.5f));
+                subtitleManager.DisplaySubtitle("Next, I want to eat Cookies", "JoJo", Audio7);
 
                 yield return new WaitForSeconds(4f);
                 SpawnSpeechBubble();
@@ -317,7 +317,7 @@ public class KikiController1 : MonoBehaviour
             case 2:
                 boyAnimator.SetTrigger("Apple");
                 lvl4Sc1Audiomanger.PlayAudio(Audio8);
-                StartCoroutine(RevealTextWordByWord("Next, I want to eat Apple", 0.5f));
+                subtitleManager.DisplaySubtitle("Next, I want to eat Apple", "JoJo", Audio8);
 
                 yield return new WaitForSeconds(4f);
                 SpawnSpeechBubble2();
@@ -325,12 +325,12 @@ public class KikiController1 : MonoBehaviour
             case 3:
                 boyAnimator.SetBool("allDone", true);
                 lvl4Sc1Audiomanger.PlayAudio(Audio5);
-                StartCoroutine(RevealTextWordByWord("mmm...! I'm so Full...!", 0.5f));
+                subtitleManager.DisplaySubtitle("mmm...! I'm so Full...!", "JoJo", Audio5);
 
                 yield return new WaitForSeconds(3f);
                 birdAnimator.SetBool("allDone", true);
                 lvl4Sc1Audiomanger.PlayAudio(Audio6);
-                StartCoroutine(RevealTextWordByWord("Thankyou for Helping Friend..!", 0.5f));
+                subtitleManager.DisplaySubtitle("Thankyou for Helping Friend..!", "Kiki", Audio6);
                 break;
         }
 
@@ -366,21 +366,5 @@ public class KikiController1 : MonoBehaviour
     public void UpdateItemReferences()
     {
         currentItem = null; // Reset currentItem
-    }
-
-    private IEnumerator RevealTextWordByWord(string fullText, float delayBetweenWords)
-    {
-        subtitleText.text = "";
-        subtitleText.gameObject.SetActive(true);
-
-        string[] words = fullText.Split(' ');
-
-        // Reveal words one by one
-        for (int i = 0; i < words.Length; i++)
-        {
-            subtitleText.text = string.Join(" ", words, 0, i + 1);
-            yield return new WaitForSeconds(delayBetweenWords);
-        }
-        subtitleText.text = "";
-    }
+    }    
 }
