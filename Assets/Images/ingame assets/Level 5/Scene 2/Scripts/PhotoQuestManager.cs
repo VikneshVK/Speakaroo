@@ -118,32 +118,32 @@ public class PhotoQuestManager : MonoBehaviour
             case "Hippo":
                 birdAnimator.SetTrigger("Hippo");
                 GetComponent<AudioSource>().PlayOneShot(audio1);
-                subtitleManager.DisplaySubtitle("Find the Hippo", "Kiki", audio1);
+                subtitleManager.DisplaySubtitle("Find the hippo.", "Kiki", audio1);
                 break;
             case "Croc":
                 birdAnimator.SetTrigger("Croc");
                 GetComponent<AudioSource>().PlayOneShot(audio2);
-                subtitleManager.DisplaySubtitle("Find the Crocodile", "Kiki", audio2);
+                subtitleManager.DisplaySubtitle("Find the crocodile.", "Kiki", audio2);
                 break;
             case "Lion":
                 birdAnimator.SetTrigger("Lion");
                 GetComponent<AudioSource>().PlayOneShot(audio3);
-                subtitleManager.DisplaySubtitle("Find the Lion", "Kiki", audio3);
+                subtitleManager.DisplaySubtitle("Find the lion.", "Kiki", audio3);
                 break;
             case "Monkey":
                 birdAnimator.SetTrigger("Monkey");
                 GetComponent<AudioSource>().PlayOneShot(audio4);
-                subtitleManager.DisplaySubtitle("Find the Monkey", "Kiki", audio4);
+                subtitleManager.DisplaySubtitle("Find the monkey.", "Kiki", audio4);
                 break;
             case "Panda":
                 birdAnimator.SetTrigger("Panda");
                 GetComponent<AudioSource>().PlayOneShot(audio5);
-                subtitleManager.DisplaySubtitle("Find the Panda", "Kiki", audio5);
+                subtitleManager.DisplaySubtitle("Find the panda.", "Kiki", audio5);
                 break;
             case "Tiger":
                 birdAnimator.SetTrigger("Tiger");
                 GetComponent<AudioSource>().PlayOneShot(audio6);
-                subtitleManager.DisplaySubtitle("Find the Tiger", "Kiki", audio6);
+                subtitleManager.DisplaySubtitle("Find the tiger.", "Kiki", audio6);
                 break;
             default:
                 Debug.LogWarning("No animation or audio set for " + animalName);
@@ -357,7 +357,7 @@ public class PhotoQuestManager : MonoBehaviour
         {
             birdAnimator.SetTrigger("FinalDialouge");
             GetComponent<AudioSource>().PlayOneShot(FinalAudio);
-            subtitleManager.DisplaySubtitle("You are a good photographer", "Kiki", FinalAudio);
+            subtitleManager.DisplaySubtitle("You are a good photographer.", "Kiki", FinalAudio);
         }
         else
         {

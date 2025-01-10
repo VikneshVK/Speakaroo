@@ -185,7 +185,7 @@ public class Lvl8Sc2QuestManager : MonoBehaviour
         {
             kikiAudioSource.clip = thirdColorAudio;
             kikiAudioSource.Play();
-            subtitleManager.DisplaySubtitle("Pour the Half Red TestTube into the Beaker", "Kiki", thirdColorAudio);
+            subtitleManager.DisplaySubtitle("Pour the half red testtube into the beaker.", "Kiki", thirdColorAudio);
         }
 
         yield return new WaitForSeconds(1.8f);
@@ -203,7 +203,7 @@ public class Lvl8Sc2QuestManager : MonoBehaviour
         {
             kikiAudioSource.clip = firstColorAudio;
             kikiAudioSource.Play();
-            subtitleManager.DisplaySubtitle("Pour the Full Blue TestTube into the Beaker", "Kiki", firstColorAudio);
+            subtitleManager.DisplaySubtitle("Pour the full blue testtube into the beaker.", "Kiki", firstColorAudio);
         }
 
         yield return new WaitForSeconds(1.8f);
@@ -233,7 +233,7 @@ public class Lvl8Sc2QuestManager : MonoBehaviour
         {
             kikiAudioSource.clip = secondColorAudio;
             kikiAudioSource.Play();
-            subtitleManager.DisplaySubtitle("Pour the Half Yellow TestTube into the Beaker", "Kiki", secondColorAudio);
+            subtitleManager.DisplaySubtitle("Pour the half yellow testtube into the beaker.", "Kiki", secondColorAudio);
         }
 
         yield return new WaitForSeconds(1.8f);
@@ -251,7 +251,7 @@ public class Lvl8Sc2QuestManager : MonoBehaviour
         {
             kikiAudioSource.clip = fourthColorAudio;
             kikiAudioSource.Play();
-            subtitleManager.DisplaySubtitle("Pour the Full Yellow TestTube into the Beaker", "Kiki", fourthColorAudio);
+            subtitleManager.DisplaySubtitle("Pour the full yellow testtube into the beaker.", "Kiki", fourthColorAudio);
         }
 
         yield return new WaitForSeconds(1.8f);
@@ -273,7 +273,7 @@ public class Lvl8Sc2QuestManager : MonoBehaviour
         {
             kikiAudioSource.clip = secondColorAudio;
             kikiAudioSource.Play();
-            subtitleManager.DisplaySubtitle("Pour the Half Yellow TestTube into the Beaker", "Kiki", secondColorAudio);
+            subtitleManager.DisplaySubtitle("Pour the half yellow testtube into the beaker.", "Kiki", secondColorAudio);
         }
     }
 
@@ -288,7 +288,7 @@ public class Lvl8Sc2QuestManager : MonoBehaviour
         {
             kikiAudioSource.clip = fourthColorAudio;
             kikiAudioSource.Play();
-            subtitleManager.DisplaySubtitle("Pour the Full Yellow TestTube into the Beaker", "Kiki", fourthColorAudio);
+            subtitleManager.DisplaySubtitle("Pour the full yellow testtube into the beaker.", "Kiki", fourthColorAudio);
         }
     }
 
@@ -305,7 +305,7 @@ public class Lvl8Sc2QuestManager : MonoBehaviour
             {
                 kikiAudioSource.clip = GreenAudio;
                 kikiAudioSource.Play();
-                subtitleManager.DisplaySubtitle("Wow..! Yellow and Blue made Green", "Kiki", GreenAudio);
+                subtitleManager.DisplaySubtitle("Wow! Yellow and blue made green.", "Kiki", GreenAudio);
             }
         }
         else if (colorsMade == 1)
@@ -315,7 +315,7 @@ public class Lvl8Sc2QuestManager : MonoBehaviour
             {
                 kikiAudioSource.clip = OrangeAudio;
                 kikiAudioSource.Play();
-                subtitleManager.DisplaySubtitle("Wow..! Yellow and Red made Orange", "Kiki", OrangeAudio);
+                subtitleManager.DisplaySubtitle("Wow..! Yellow and red made orange.", "Kiki", OrangeAudio);
             }
         }
         SfxAudioSource.PlayOneShot(SfxAudio1);
@@ -335,7 +335,7 @@ public class Lvl8Sc2QuestManager : MonoBehaviour
             {
                 kikiAudioSource.clip = wantMoreAudio;
                 kikiAudioSource.Play();
-                subtitleManager.DisplaySubtitle("haha..! Let's do it Again ", "Kiki", wantMoreAudio);
+                subtitleManager.DisplaySubtitle("haha! Let's do it again.", "Kiki", wantMoreAudio);
             }
 
             yield return new WaitForSeconds(2.0f);
@@ -363,7 +363,7 @@ public class Lvl8Sc2QuestManager : MonoBehaviour
             {
                 kikiAudioSource.clip = finalAudio;
                 kikiAudioSource.Play();
-                subtitleManager.DisplaySubtitle("So Fun..! I love mixing Colors ", "Kiki", finalAudio);
+                subtitleManager.DisplaySubtitle("So fun..! I love mixing colors.", "Kiki", finalAudio);
             }
             Board.GetComponent<SpriteRenderer>().sprite = BoardSprite2;
         }

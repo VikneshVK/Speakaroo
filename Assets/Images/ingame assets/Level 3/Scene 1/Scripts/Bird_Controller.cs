@@ -80,7 +80,7 @@ public class Bird_Controller : MonoBehaviour
         {
             birdAnimator.SetTrigger("instruction");
             instructionAudio.Play();            
-            subtitleManager.DisplaySubtitle("Put the Leaves inside the Bin", "Kiki", instructionAudio.clip);
+            subtitleManager.DisplaySubtitle("Put the leaves inside the bin.", "Kiki", instructionAudio.clip);
             SpawnGlowEffect();
         }
 
@@ -233,7 +233,7 @@ public class Bird_Controller : MonoBehaviour
             instructionAudio.Play();
             SpawnGlowEffect();
             inactivityTimerStarted = false;            
-            subtitleManager.DisplaySubtitle("Put the Leaves inside the Bin", "Kiki", instructionAudio.clip);
+            subtitleManager.DisplaySubtitle("Put the leaves inside the bin.", "Kiki", instructionAudio.clip);
         }
     }
 

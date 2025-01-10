@@ -175,7 +175,7 @@ public class ParrotController : MonoBehaviour
             if(pushedObjects.Count < requiredObjects.Count)
             {
                 ReferenceaudioSource.Play();
-                subtitleManager.DisplaySubtitle("Put the Big Toys on the Shelf", "Kiki",ReferenceaudioSource.clip);
+                subtitleManager.DisplaySubtitle("Put the big toys on the shelf.", "Kiki",ReferenceaudioSource.clip);
                 ResetAnimatorBooleans();
             }
             else

@@ -172,7 +172,7 @@ public class KikiController1 : MonoBehaviour
                     SfxAudioSource.loop = false;
                     SfxAudioSource.PlayOneShot(SfxAudio1);
                 }
-                subtitleManager.DisplaySubtitle("Here you go Jojo", "Kiki", audioSource.clip);
+                subtitleManager.DisplaySubtitle("Here you go Jojo.", "Kiki", audioSource.clip);
                 birdAnimator.SetTrigger("GoToRest");
 
                 currentState = BirdState.ReturningToStart;
@@ -281,7 +281,7 @@ public class KikiController1 : MonoBehaviour
             itemsDropped++;
             boyAnimator.SetTrigger("Expression");
             lvl4Sc1Audiomanger.PlayAudio(Audio4);
-            subtitleManager.DisplaySubtitle("mmm..! Tasty...!", "JoJo", Audio4);
+            subtitleManager.DisplaySubtitle("mmm! Tasty!", "JoJo", Audio4);
             StartCoroutine(DelayedAnimationAndSpawn(3.5f));
         }
         else
@@ -309,7 +309,7 @@ public class KikiController1 : MonoBehaviour
             case 1:
                 boyAnimator.SetTrigger("Cookies");
                 lvl4Sc1Audiomanger.PlayAudio(Audio7);
-                subtitleManager.DisplaySubtitle("Next, I want to eat Cookies", "JoJo", Audio7);
+                subtitleManager.DisplaySubtitle("Next, I want to eat cookies", "JoJo", Audio7);
 
                 yield return new WaitForSeconds(4f);
                 SpawnSpeechBubble();
@@ -317,7 +317,7 @@ public class KikiController1 : MonoBehaviour
             case 2:
                 boyAnimator.SetTrigger("Apple");
                 lvl4Sc1Audiomanger.PlayAudio(Audio8);
-                subtitleManager.DisplaySubtitle("Next, I want to eat Apple", "JoJo", Audio8);
+                subtitleManager.DisplaySubtitle("Next, I want to eat apple", "JoJo", Audio8);
 
                 yield return new WaitForSeconds(4f);
                 SpawnSpeechBubble2();
@@ -325,12 +325,12 @@ public class KikiController1 : MonoBehaviour
             case 3:
                 boyAnimator.SetBool("allDone", true);
                 lvl4Sc1Audiomanger.PlayAudio(Audio5);
-                subtitleManager.DisplaySubtitle("mmm...! I'm so Full...!", "JoJo", Audio5);
+                subtitleManager.DisplaySubtitle("mmm! I'm so full!", "JoJo", Audio5);
 
                 yield return new WaitForSeconds(3f);
                 birdAnimator.SetBool("allDone", true);
                 lvl4Sc1Audiomanger.PlayAudio(Audio6);
-                subtitleManager.DisplaySubtitle("Thankyou for Helping Friend..!", "Kiki", Audio6);
+                subtitleManager.DisplaySubtitle("Thankyou for helping friend..!", "Kiki", Audio6);
                 break;
         }
 

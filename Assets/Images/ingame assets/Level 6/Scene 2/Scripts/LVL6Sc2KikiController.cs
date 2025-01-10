@@ -29,7 +29,7 @@ public class LVL6Sc2KikiController : MonoBehaviour
         audioSource.clip = audioClip1;
         audioSource.Play();
         
-        subtitleManager.DisplaySubtitle("Something is under the Sand", "Kiki", audioClip1);
+        subtitleManager.DisplaySubtitle("Something is under the sand", "Kiki", audioClip1);
         yield return new WaitUntil(() => animator.GetCurrentAnimatorStateInfo(0).IsName("FirstTalk") &&
                                         animator.GetCurrentAnimatorStateInfo(0).normalizedTime >= 0.9f);
 

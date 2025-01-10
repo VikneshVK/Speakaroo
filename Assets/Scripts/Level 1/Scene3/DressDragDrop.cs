@@ -68,7 +68,7 @@ public class DressDragDrop : MonoBehaviour
         {
             hasboyTalkStarted = true;
             audiomanager.PlayAudio(audio3);            
-            subtitleManager.DisplaySubtitle("Lets get Dressed for School", "JoJo", audio3);
+            subtitleManager.DisplaySubtitle("Lets get Dressed for School.", "JoJo", audio3);
         }
     }
 
@@ -175,7 +175,7 @@ public class DressDragDrop : MonoBehaviour
     {
         yield return new WaitForSeconds(0.1f);
         audiomanager.PlayAudio(audio2);
-        subtitleManager.DisplaySubtitle("Woo Hoo..! Let's go to School Now", "JoJo", audio2);        
+        subtitleManager.DisplaySubtitle("Woo Hoo! Let's go to school now.", "JoJo", audio2);        
     }
 
     private IEnumerator HandleBirdInteraction()

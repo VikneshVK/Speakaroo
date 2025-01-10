@@ -84,7 +84,7 @@ public class Lvl3Sc3DragManager : MonoBehaviour
         if (skyAudio != null)
         {
             skyAudio.Play();
-            subtitleManager.DisplaySubtitle("Super now, let's hang the wet toys", "Kiki", skyAudio.clip);
+            subtitleManager.DisplaySubtitle("Super now, let's hang the wet toys.", "Kiki", skyAudio.clip);
         }
 
         yield return new WaitForSeconds(3f);
@@ -168,7 +168,7 @@ public class Lvl3Sc3DragManager : MonoBehaviour
         {
             kikiAudioSource.Play();
         }
-        subtitleManager.DisplaySubtitle("In the morning, The Sun will dry the clothes", "Kiki", kikiAudioSource.clip);
+        subtitleManager.DisplaySubtitle("In the morning, The Sun will dry the clothes.", "Kiki", kikiAudioSource.clip);
 
         Animator kikiAnimator = kiki.GetComponent<Animator>();
         if (kikiAnimator != null)

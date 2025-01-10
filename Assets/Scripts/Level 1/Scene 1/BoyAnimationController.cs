@@ -78,7 +78,7 @@ public class BoyAnimationController : MonoBehaviour
             isAudio2Played = true;
             audiomanager.PlayAudio(audio2);
             /*StartCoroutine(RevealTextWordByWord("Uh..! I can't reach it, Lets ask Kiki", 0.5f));*/
-            subtitleManager.DisplaySubtitle("Uh..! I can't reach it, Lets ask Kiki", "JoJo", audio2);
+            subtitleManager.DisplaySubtitle("Uh! I can't reach it, lets ask Kiki.", "JoJo", audio2);
         }
 
         // Spawn the speech bubble at the end of the "Talk" animation
@@ -94,14 +94,14 @@ public class BoyAnimationController : MonoBehaviour
             isAudio4Played = true;
             audiomanager.PlayAudio(audio4);
             /*StartCoroutine(RevealTextWordByWord("Here you go...! JoJo ", 0.5f));*/
-            subtitleManager.DisplaySubtitle("Here you go...! JoJo", "Kiki", audio4);
+            subtitleManager.DisplaySubtitle("Here you go! JoJo.", "Kiki", audio4);
         }
         if (animatorStateInfo.IsName("FinalDialouge") && animatorStateInfo.normalizedTime < 0.1f && !isAudio5Played)
         {
             isAudio5Played = true;
             audiomanager.PlayAudio(FinalDialouge);
             /*StartCoroutine(RevealTextWordByWord("WOW..! My Teeth looks so Clean, Thank You Kiki and Friend ", 0.5f));*/
-            subtitleManager.DisplaySubtitle("WOW..! My Teeth looks so Clean, Thank You Kiki and Friend", "JoJo", FinalDialouge);
+            subtitleManager.DisplaySubtitle("WOW! My teeth looks so clean, thankyou Kiki and Friend.", "JoJo", FinalDialouge);
         }
 
         // Reset flags when the "Talk" animation ends
@@ -132,7 +132,7 @@ public class BoyAnimationController : MonoBehaviour
         BirdAnimator.SetTrigger("GoodMorning");
         audiomanager.PlayAudio(audio5);
        /* StartCoroutine(RevealTextWordByWord("Hi Friend, Let's help JoJo brush his Teeth ", 0.5f));*/
-        subtitleManager.DisplaySubtitle("Hi Friend, Let's help JoJo brush his Teeth", "Kiki", audio5);
+        subtitleManager.DisplaySubtitle("Hi Friend, Let's help JoJo brush his teeth.", "Kiki", audio5);
         OnTalkAnimationEnd();
     }
 
@@ -211,7 +211,7 @@ public class BoyAnimationController : MonoBehaviour
 
         audiomanager.PlayAudio(audio1);
         /*StartCoroutine(RevealTextWordByWord("Oh No My Teeth is Yellow..! Let's Brush", 0.5f));*/
-        subtitleManager.DisplaySubtitle("Oh No My Teeth is Yellow..! Let's Brush", "JoJo", audio1);
+        subtitleManager.DisplaySubtitle("Oh no my teeth is yellow..! Let's brush.", "JoJo", audio1);
 
     }
 

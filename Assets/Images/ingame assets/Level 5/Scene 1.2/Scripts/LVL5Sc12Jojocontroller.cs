@@ -136,7 +136,7 @@ public class LVL5Sc12Jojocontroller : MonoBehaviour
                 animator.SetBool("canTalk", true); // Trigger talk animation
                 boyAudioSource.clip = Audio1;
                 boyAudioSource.Play();
-                subtitleManager.DisplaySubtitle("Ask for the tickets", "JoJo", Audio1);
+                subtitleManager.DisplaySubtitle("Ask for the tickets.", "JoJo", Audio1);
             }
             else
             {
@@ -190,7 +190,7 @@ public class LVL5Sc12Jojocontroller : MonoBehaviour
                         {
                             boyAudioSource.clip = Audio2;
                             boyAudioSource.Play();
-                            subtitleManager.DisplaySubtitle("Yay..! we got the Tickets", "JoJo", Audio1);
+                            subtitleManager.DisplaySubtitle("Yay! we got the Tickets.", "JoJo", Audio1);
                             ifDialougeComplete = true;
                         }
                     });
@@ -228,7 +228,7 @@ public class LVL5Sc12Jojocontroller : MonoBehaviour
             animator.SetBool("canTalk3", true); // Trigger Talk3 animation
             boyAudioSource.clip = Audio3;
             boyAudioSource.Play();
-            subtitleManager.DisplaySubtitle("Let's go in", "JoJo", Audio3);
+            subtitleManager.DisplaySubtitle("Let's go in.", "JoJo", Audio3);
         }
     }
 

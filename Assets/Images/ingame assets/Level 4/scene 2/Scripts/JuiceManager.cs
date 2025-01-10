@@ -293,32 +293,32 @@ public class JuiceManager : MonoBehaviour
             case "Kiwi":
                 birdAnimator.SetTrigger("Kiwi");
                 audioManager.PlayAudio(Audio1);
-                subtitleManager.DisplaySubtitle("Put the Kiwis in the Blender", "Kiki", Audio1);                
+                subtitleManager.DisplaySubtitle("Put the kiwis in the blender", "Kiki", Audio1);                
                 break;
             case "SB":
                 birdAnimator.SetTrigger("Strawberry");
                 audioManager.PlayAudio(Audio2);
-                subtitleManager.DisplaySubtitle("Put the Strawberrys in the Blender", "Kiki", Audio2);
+                subtitleManager.DisplaySubtitle("Put the strawberrys in the blender", "Kiki", Audio2);
                 break;
             case "BB":
                 birdAnimator.SetTrigger("BlueBerry");
                 audioManager.PlayAudio(Audio3);
-                subtitleManager.DisplaySubtitle("Put the Blueberry in the Blender", "Kiki", Audio3);
+                subtitleManager.DisplaySubtitle("Put the blueberry in the blender", "Kiki", Audio3);
                 break;
             case "KiwiStrawberry":
                 birdAnimator.SetTrigger("KiwiStrawberry");
                 audioManager.PlayAudio(Audio5);
-                subtitleManager.DisplaySubtitle("Put the Strawberries and the Kiwis in the Blender", "Kiki", Audio5);
+                subtitleManager.DisplaySubtitle("Put the strawberries and the kiwis in the blender", "Kiki", Audio5);
                 break;
             case "KiwiBlueBerry":
                 birdAnimator.SetTrigger("KiwiBlueBerry");
                 audioManager.PlayAudio(Audio4);
-                subtitleManager.DisplaySubtitle("Put the Kiwis and the Blueberries in the Blender", "Kiki", Audio4);
+                subtitleManager.DisplaySubtitle("Put the kiwis and the blueberries in the blender", "Kiki", Audio4);
                 break;
             case "StrawberryBlueberry":
                 birdAnimator.SetTrigger("StrawberryBlueberry");
                 audioManager.PlayAudio(Audio6);
-                subtitleManager.DisplaySubtitle("Put the Blueberry and the Strawberries in the Blender", "Kiki", Audio6);
+                subtitleManager.DisplaySubtitle("Put the blueberry and the strawberries in the blender", "Kiki", Audio6);
                 break;
         }
     }

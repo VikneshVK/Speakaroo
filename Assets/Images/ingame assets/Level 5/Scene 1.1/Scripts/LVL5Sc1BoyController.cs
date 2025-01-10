@@ -91,7 +91,7 @@ public class LVL5Sc1BoyController : MonoBehaviour
             walkingSfxPlayed = false;
             boyAnimator.SetTrigger("canTalk");
             Audio1.Play();
-            subtitleManager.DisplaySubtitle("YAY, We are at the Zoo. Let's go get the entry tickets", "Kiki", Audio1.clip);
+            subtitleManager.DisplaySubtitle("YAY, We are at the zoo. Let's go get the entry tickets.", "Kiki", Audio1.clip);
         }
     }
 

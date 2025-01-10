@@ -95,7 +95,7 @@ public class dragManager : MonoBehaviour
     private IEnumerator HandleAllItemsDropped()
     {
         kikiAudio.Play();
-        subtitleManager.DisplaySubtitle("Thank You, Jojo and Friend. My Room looks so clean now", "Kiki", kikiAudio.clip);// Play the audio
+        subtitleManager.DisplaySubtitle("Thank You, Jojo and Friend. My Room looks so clean now.", "Kiki", kikiAudio.clip);// Play the audio
         yield return new WaitUntil(() => !kikiAudio.isPlaying);  // Wait until the audio finishes playing
 
         allDone = true;  // Set allDone to true after audio finishes

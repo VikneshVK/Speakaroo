@@ -103,7 +103,7 @@ public class LV4DragManager : MonoBehaviour
         yield return new WaitUntil(() => birdAnimator.GetCurrentAnimatorStateInfo(0).IsName("Talk"));
 
         audioSource1.Play();
-        subtitleManager.DisplaySubtitle("Oh no, the dishes are so Dirty", "Kiki", audioSource1.clip);
+        subtitleManager.DisplaySubtitle("Oh no, The dishes are so dirty.", "Kiki", audioSource1.clip);
 
         yield return new WaitUntil(() => birdAnimator.GetCurrentAnimatorStateInfo(0).IsName("Talk") == false);
 
@@ -262,7 +262,7 @@ public class LV4DragManager : MonoBehaviour
                         {
                             SpawnAndAnimateGlow(dish);
                         }
-                        subtitleManager.DisplaySubtitle("Lets Wash the Dishes", "Kiki", imageAudioSource.clip);
+                        subtitleManager.DisplaySubtitle("Let's wash the dishes.", "Kiki", imageAudioSource.clip);
                         StartCoroutine(WaitAndReturnBirdImage(birdRectTransform));
                         timerRunning = true;
                     });
@@ -403,7 +403,7 @@ public class LV4DragManager : MonoBehaviour
         LeanTween.move(dirtyDishes, originalPosition, 0.5f);
         birdAnimator.SetTrigger("dishClean");
         audioSource3.Play();
-        subtitleManager.DisplaySubtitle("Yohoo...! so Clean", "Kiki", audioSource3.clip);
+        subtitleManager.DisplaySubtitle("Yohoo...! so clean.", "Kiki", audioSource3.clip);
         dishWashingManager.allDishesWashed = false;
         StartCoroutine(TriggerDishArrangeWithDelay());
     }
@@ -413,7 +413,7 @@ public class LV4DragManager : MonoBehaviour
         yield return new WaitForSeconds(3f); // 2-second delay
         birdAnimator.SetTrigger("dishArrange");
         audioSource4.Play();
-        subtitleManager.DisplaySubtitle("lets put the dishes on the rack", "Kiki", audioSource4.clip);
+        subtitleManager.DisplaySubtitle("Let's put the dishes on the rack.", "Kiki", audioSource4.clip);
 
         foreach (Transform child in dirtyDishes.transform)
         {

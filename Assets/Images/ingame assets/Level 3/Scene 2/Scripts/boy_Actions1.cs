@@ -101,7 +101,7 @@ public class boy_Actions1 : MonoBehaviour
             canTalk = true;
             boyAnimator.SetTrigger("CanTalk");
             jojoAudiosource.Play();
-            subtitleManager.DisplaySubtitle("Look, it's a water tap come on. Let's play", "JoJo", jojoAudiosource.clip);            
+            subtitleManager.DisplaySubtitle("Look, it's a water tap come on. Let's play.", "JoJo", jojoAudiosource.clip);            
             hoseCollider.enabled = true;
             /*pipeCollider.enabled = true;   */
         }
@@ -136,7 +136,7 @@ public class boy_Actions1 : MonoBehaviour
                 boyAnimator.SetTrigger("Play done");
                 sunAudioSource.Play();
                 StartCoroutine(audioPlayed());
-                subtitleManager.DisplaySubtitle("HaHa..! That was so Fun..!", "JoJo", sunAudioSource.clip);                
+                subtitleManager.DisplaySubtitle("HaHa! That was so Fun!", "JoJo", sunAudioSource.clip);                
             }
             
         }

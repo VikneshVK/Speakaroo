@@ -110,7 +110,7 @@ public class Lvl7Sc1JojoController : MonoBehaviour
                     AudioPlayed = true;
                     boyAudioSource.clip = Audio2;
                     boyAudioSource.Play();
-                    subtitleManager.DisplaySubtitle("What do you want to Eat?", "Kiki", Audio2);
+                    subtitleManager.DisplaySubtitle("What do you want to eat?", "Kiki", Audio2);
                 }
             }
         }
@@ -334,7 +334,7 @@ public class Lvl7Sc1JojoController : MonoBehaviour
                     finaldialouge = true;
                     boyAudioSource.clip = Audio4;
                     boyAudioSource.Play();
-                    subtitleManager.DisplaySubtitle("Look..! It's a Pizza Shop", "JoJo", Audio4);
+                    subtitleManager.DisplaySubtitle("Look..! It's a pizza shop.", "JoJo", Audio4);
                 }
                 levelEnded = true; // Mark level as ended
                 return;
@@ -345,7 +345,7 @@ public class Lvl7Sc1JojoController : MonoBehaviour
                 jojoAnimator.SetBool("canTalk", true);
                 boyAudioSource.clip = Audio1;
                 boyAudioSource.Play();
-                subtitleManager.DisplaySubtitle("I am Hungry..! Lets buy some Food", "JoJo", Audio1);
+                subtitleManager.DisplaySubtitle("I am hungry..! Lets buy some food.", "JoJo", Audio1);
             }
             else
             {
@@ -353,7 +353,7 @@ public class Lvl7Sc1JojoController : MonoBehaviour
                 jojoAnimator.SetBool("canTalk", true);
                 boyAudioSource.clip = Audio3;
                 boyAudioSource.Play();
-                subtitleManager.DisplaySubtitle("I want Something Sweet", "JoJo", Audio3);
+                subtitleManager.DisplaySubtitle("I want something sweet.", "JoJo", Audio3);
             }
 
             isTalking = true;

@@ -102,7 +102,7 @@ public class Lvl8Sc2JojoController : MonoBehaviour
         {
             audioSource.clip = dialogueAudio;
             audioSource.Play();
-            subtitleManager.DisplaySubtitle("YAY..! We are at the Lab, Let's mix some Colors", "Kiki", dialogueAudio);
+            subtitleManager.DisplaySubtitle("YAY! We are at the lab, Let's mix some colors", "Kiki", dialogueAudio);
         }
     }
 }

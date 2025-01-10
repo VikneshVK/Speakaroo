@@ -91,7 +91,7 @@ public class JojoController1 : MonoBehaviour
                 
                 boyAnimator.SetBool("canTalk", true);
                 audioSource.Play();
-                subtitleManager.DisplaySubtitle("Mom asked if we can Sweep the dry leaves in the Garden", "JoJo", audioSource.clip);
+                subtitleManager.DisplaySubtitle("Mom asked if we can sweep the dry leaves in the garden.", "JoJo", audioSource.clip);
             }
 
         }
@@ -106,7 +106,7 @@ public class JojoController1 : MonoBehaviour
             birdcanTalk = true;
             kikiAudiosource.Play();
             birdAnimator.SetBool("canTalk", true);
-            subtitleManager.DisplaySubtitle("Yes, Let's sweep the Garden, my friend, and I will help you, Jojo", "Kiki", kikiAudiosource.clip);
+            subtitleManager.DisplaySubtitle("Yes, Let's sweep the garden, My Friend, and I will help you, Jojo.", "Kiki", kikiAudiosource.clip);
         }
     }
 
@@ -119,7 +119,7 @@ public class JojoController1 : MonoBehaviour
             audioSource.Stop(); // Stop any ongoing audio
             audioSource.clip = lvlCompleteaudio; // Set level complete audio clip
             audioSource.Play();
-            subtitleManager.DisplaySubtitle("Good job, the garden looks clean now", "Jojo", audioSource.clip);
+            subtitleManager.DisplaySubtitle("Good job, the garden looks clean now.", "Jojo", audioSource.clip);
         }
 
     }

@@ -160,7 +160,7 @@ public class TweenManager : MonoBehaviour
             birdAnimator.SetBool("resetPosition", false);
             feedbackAudiosource.clip = dialouge3;
             feedbackAudiosource.Play();
-            subtitleManager.DisplaySubtitle("Ok..! I will put the small toys on the Shelf","Kiki",feedbackAudiosource.clip);
+            subtitleManager.DisplaySubtitle("Ok! I will put the small toys on the Shelf.","Kiki",feedbackAudiosource.clip);
         }
 
         // Tween the parent to scale 0

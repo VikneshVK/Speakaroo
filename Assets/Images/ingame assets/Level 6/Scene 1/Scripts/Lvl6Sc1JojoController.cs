@@ -76,7 +76,7 @@ public class Lvl6Sc1JojoController : MonoBehaviour
                 kikiAnimator.SetTrigger("Dialogue1");
                 audioSource.clip = audio1;
                 audioSource.Play();
-                subtitleManager.DisplaySubtitle("What do you want to Play With?", "Kiki", audio1);
+                subtitleManager.DisplaySubtitle("What do you want to play with?", "Kiki", audio1);
             }
             StartCoroutine(WaitForKikiTalkAnimation());
         }
@@ -90,7 +90,7 @@ public class Lvl6Sc1JojoController : MonoBehaviour
                 kikiAnimator.SetTrigger("finalTalk");
                 audioSource.clip = audio3;
                 audioSource.Play();
-                subtitleManager.DisplaySubtitle("The Beach was a Blast", "JoJo", audio3);
+                subtitleManager.DisplaySubtitle("The beach was a blast", "JoJo", audio3);
                 Debug.Log("All mini-games completed, triggering final talk animation.");
             }
             else
@@ -104,7 +104,7 @@ public class Lvl6Sc1JojoController : MonoBehaviour
                     kikiAnimator.SetTrigger("Dialogue1"); // Trigger Kiki's Talk animation
                     audioSource.clip = audio1;
                     audioSource.Play();
-                    subtitleManager.DisplaySubtitle("What do you want to Play With?", "Kiki", audio1);
+                    subtitleManager.DisplaySubtitle("What do you want to play with?", "Kiki", audio1);
                     StartCoroutine(WaitForKikiTalkAnimation());
                 }
             }
@@ -139,7 +139,7 @@ public class Lvl6Sc1JojoController : MonoBehaviour
             animator.SetBool("canTalk", true); // Start talking animation
             audioSource.clip = audio2;
             audioSource.Play();
-            subtitleManager.DisplaySubtitle("I love the Beach ", "JoJo", audio2);
+            subtitleManager.DisplaySubtitle("I love the beach ", "JoJo", audio2);
             isTalking = true;
         }
     }

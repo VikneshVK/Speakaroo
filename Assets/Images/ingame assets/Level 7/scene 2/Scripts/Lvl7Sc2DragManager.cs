@@ -178,22 +178,22 @@ public class Lvl7Sc2DragManager : MonoBehaviour
         if (topping == sauceTopping && sauceAudio != null)
         {
             audioManager.PlayAudio(sauceAudio);
-            subtitleManager.DisplaySubtitle("Put on the Tomato Sauce", "Kiki", sauceAudio);
+            subtitleManager.DisplaySubtitle("Put on the tomato sauce.", "Kiki", sauceAudio);
         }
         else if (topping == cheeseTopping && cheeseAudio != null)
         {
             audioManager.PlayAudio(cheeseAudio);
-            subtitleManager.DisplaySubtitle("Put on the Cheese", "Kiki", cheeseAudio);
+            subtitleManager.DisplaySubtitle("Put on the cheese.", "Kiki", cheeseAudio);
         }
         else if (topping == mushroomTopping && mushroomAudio != null)
         {
             audioManager.PlayAudio(mushroomAudio);
-            subtitleManager.DisplaySubtitle("Put on the Mushrooms", "Kiki", mushroomAudio);
+            subtitleManager.DisplaySubtitle("Put on the mushrooms.", "Kiki", mushroomAudio);
         }
         else if (topping == pepperoniTopping && pepperoniAudio != null)
         {
             audioManager.PlayAudio(pepperoniAudio);
-            subtitleManager.DisplaySubtitle("Put on the Pepperoni", "Kiki", pepperoniAudio);
+            subtitleManager.DisplaySubtitle("Put on the pepperoni.", "Kiki", pepperoniAudio);
         }
         else
         {

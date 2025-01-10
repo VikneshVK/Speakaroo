@@ -71,7 +71,7 @@ public class Lvl8Sc1Manager : MonoBehaviour
         yield return new WaitForSeconds(0.5f); // Optional delay for better pacing
         teacherAnimator.SetTrigger("Talk");
         PlayAudio(teacherAudio1);
-        subtitleManager.DisplaySubtitle("Good Morning Class", "Kiki", teacherAudio1);
+        subtitleManager.DisplaySubtitle("Good Morning class.", "Kiki", teacherAudio1);
     }
 
     private void PlayAudio(AudioClip clip)
@@ -169,13 +169,13 @@ public class Lvl8Sc1Manager : MonoBehaviour
         yield return new WaitForSeconds(0.5f); // Optional delay for better pacing
         npcAnimator.SetTrigger("Talk");
         PlayAudio(npcTalkAudio);
-        subtitleManager.DisplaySubtitle("Hello Teacher", "Kiki", npcTalkAudio);
+        subtitleManager.DisplaySubtitle("Hello Teacher.", "Kiki", npcTalkAudio);
     }
     private void TriggerKikiTalk()
     {
         kikiAnimator.SetTrigger("Talk");
         PlayAudio(kikiAudio1);
-        subtitleManager.DisplaySubtitle("Let's greet the Teacher", "Kiki", npcTalkAudio);
+        subtitleManager.DisplaySubtitle("Let's greet the Teacher.", "Kiki", npcTalkAudio);
     }
 
     private void TriggerJojoTalk()
@@ -185,7 +185,7 @@ public class Lvl8Sc1Manager : MonoBehaviour
 
     private IEnumerator TriggerTalkSequence()
     {
-        subtitleManager.DisplaySubtitle("Hello Teacher", "Kiki", jojoAudio1);
+        subtitleManager.DisplaySubtitle("Hello teacher.", "Kiki", jojoAudio1);
 
         if (jojoAudio1 != null && audioSource != null)
         {
@@ -208,7 +208,7 @@ public class Lvl8Sc1Manager : MonoBehaviour
     {
         teacherAnimator.SetTrigger("Talk");
         PlayAudio(teacherAudio1);
-        subtitleManager.DisplaySubtitle("Hello Class", "Kiki", teacherAudio1);
+        subtitleManager.DisplaySubtitle("Hello class.", "Kiki", teacherAudio1);
         teacherTalkTriggered = true;
     }
 
@@ -217,7 +217,7 @@ public class Lvl8Sc1Manager : MonoBehaviour
         
         teacherAnimator.SetTrigger("Learn");
         PlayAudio(teacherAudio2);
-        subtitleManager.DisplaySubtitle("Let's learn Alphabets", "Kiki", teacherAudio2);
+        subtitleManager.DisplaySubtitle("Let's learn alphabets.", "Kiki", teacherAudio2);
     }
 
     private void TriggerJojoDontHavePencil()
@@ -227,7 +227,7 @@ public class Lvl8Sc1Manager : MonoBehaviour
         {
             audioSource.clip = jojoAudio2;
             audioSource.Play();
-            subtitleManager.DisplaySubtitle("Uh Oh..! I don't have a Pencil to Write", "Kiki", jojoAudio2);
+            subtitleManager.DisplaySubtitle("Uh Oh! I don't have a pencil to write.", "Kiki", jojoAudio2);
         }
         jojoDontHavePencilTriggered = true;
     }
@@ -239,7 +239,7 @@ public class Lvl8Sc1Manager : MonoBehaviour
         {
             kikiAudioSource.clip = kikiAudio2;
             kikiAudioSource.Play();
-            subtitleManager.DisplaySubtitle("Don't worry Jojo, let's borrow a pencil from our Friend", "Kiki", kikiAudio2);
+            subtitleManager.DisplaySubtitle("Don't worry Jojo, let's borrow a pencil from our friend.", "Kiki", kikiAudio2);
         }
         kikiDialogue3Triggered = true;
     }
@@ -267,7 +267,7 @@ public class Lvl8Sc1Manager : MonoBehaviour
 
                         jojoAnimator.SetTrigger("Talk3");
                         PlayAudio(jojoAudio3);
-                        subtitleManager.DisplaySubtitle("Thank You Friend", "Kiki", jojoAudio3);
+                        subtitleManager.DisplaySubtitle("Thankyou friend.", "Kiki", jojoAudio3);
                         StartCoroutine(CheckJojoTalk3Complete());
                     });
                 });

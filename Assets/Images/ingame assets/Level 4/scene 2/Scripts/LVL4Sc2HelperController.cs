@@ -50,17 +50,17 @@ public class LVL4Sc2HelperController : MonoBehaviour
             case "Cereal":
                 audioClip = cerealAudio;
                 animationTrigger = "Cereal";
-                subtitle = "Put the Cereal in the Bowl";
+                subtitle = "Put the cereal in the bowl";
                 break;
             case "Milk":
                 audioClip = milkAudio;
                 animationTrigger = "Milk";
-                subtitle = "Pour the Milk in the Bowl";
+                subtitle = "Pour the milk in the bowl";
                 break;
             case "Cherry":
                 audioClip = cherryAudio;
                 animationTrigger = "Cherry";
-                subtitle = "Now Add some Berries on the Top";
+                subtitle = "Now add some berries on the top";
                 break;
         }
 

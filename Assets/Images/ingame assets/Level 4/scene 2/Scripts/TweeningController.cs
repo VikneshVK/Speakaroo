@@ -148,7 +148,7 @@ public class TweeningController : MonoBehaviour
             // Trigger "Intro2" animation
             birdAnimator.SetTrigger("Intro2");
             audioManager.PlayAudio(Audio1);
-            subtitleManager.DisplaySubtitle("Now, Let's make Juice", "Kiki", Audio1);
+            subtitleManager.DisplaySubtitle("Now, Let's make juice", "Kiki", Audio1);
         }
 
         yield return new WaitForSeconds(3f); // Wait for the animation and text reveal to complete

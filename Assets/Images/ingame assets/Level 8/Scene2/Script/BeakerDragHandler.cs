@@ -155,7 +155,7 @@ public class BeakerDragHandler : MonoBehaviour
             // Play the FirstColor audio
             kikiAudioSource.clip = color1Audio;
             kikiAudioSource.Play();
-            subtitleManager.DisplaySubtitle("Pour the Full Blue TestTube into the Beaker", "Kiki", color1Audio);
+            subtitleManager.DisplaySubtitle("Pour the full blue testtube into the beaker", "Kiki", color1Audio);
         }
     }
 
@@ -175,7 +175,7 @@ public class BeakerDragHandler : MonoBehaviour
             // Play the FirstColor audio
             kikiAudioSource.clip = color3Audio;
             kikiAudioSource.Play();
-            subtitleManager.DisplaySubtitle("Pour the Half Red TestTube into the Beaker", "Kiki", color3Audio);
+            subtitleManager.DisplaySubtitle("Pour the half red testTube into the beaker", "Kiki", color3Audio);
         }
     }
 

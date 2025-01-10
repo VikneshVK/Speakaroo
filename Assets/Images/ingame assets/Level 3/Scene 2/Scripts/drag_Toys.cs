@@ -248,7 +248,7 @@ public class drag_Toys : MonoBehaviour
                                                        if (!audioplayed)
                                                        {
                                                            tapAudiosource.Play();
-                                                           subtitleManager.DisplaySubtitle("Super now, let's hang the wet toys", "Kiki", tapAudiosource.clip);                                                           
+                                                           subtitleManager.DisplaySubtitle("Super now, let's hang the wet toys.", "Kiki", tapAudiosource.clip);                                                           
                                                            audioplayed = true;
                                                        }
                                                    }

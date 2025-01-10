@@ -281,7 +281,7 @@ public class DishdragController : MonoBehaviour
         {
             birdAnimator.SetTrigger("LvlComplete");
             audio1.Play();
-            subtitleManager.DisplaySubtitle("WOW.! Thank You Friend the Kitchen looks So Clean", "Kiki", audio1.clip);            
+            subtitleManager.DisplaySubtitle("WOW! Thankyou friend the kitchen looks so clean.", "Kiki", audio1.clip);            
             Debug.Log("Level Completed! All dishes arranged.");
         }
     }

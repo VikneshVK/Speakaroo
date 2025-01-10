@@ -112,7 +112,7 @@ public class BoyWalk1 : MonoBehaviour
             boyAnimator.SetBool("canTalk", true);  // Start the "Dialogue 1" animation
             reachedStopPosition = true;  // Mark that the boy reached the stop position
             audioSource.Play();
-            subtitleManager.DisplaySubtitle("Oh No..! Your Room is Messy Too, Dont worry Kiki Me and My Friend will help you clean it", "JoJo", audioSource.clip);
+            subtitleManager.DisplaySubtitle("Oh no..! Your room is messy too, Don't worry Kiki, Me and My Friend will help you clean it.", "JoJo", audioSource.clip);
         }
     }
     

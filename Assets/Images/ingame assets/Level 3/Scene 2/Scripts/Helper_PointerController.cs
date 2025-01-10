@@ -148,7 +148,7 @@ public class Helper_PointerController : MonoBehaviour
             if (isTapPosition && audioClip1 != null)
             {
                 audioSource.clip = audioClip1;
-                subtitleManager.DisplaySubtitle("Friend, open the tap", "Kiki", audioSource.clip);                
+                subtitleManager.DisplaySubtitle("Friend, open the tap.", "Kiki", audioSource.clip);                
                 audioSource.Play();
             }
         }
@@ -176,7 +176,7 @@ public class Helper_PointerController : MonoBehaviour
             {
                 audioSource.clip = audioClip2;
                 audioSource.Play();
-                subtitleManager.DisplaySubtitle("Now show your toys under the water", "Kiki", audioSource.clip);                
+                subtitleManager.DisplaySubtitle("Now show your toys under the water.", "Kiki", audioSource.clip);                
                 hasPlayedAudioClip2 = true;
             }
 

@@ -116,7 +116,7 @@ public class Lvl4Sc1JojoController : MonoBehaviour
                 animator.SetBool("canWalk", false);
                 animator.SetBool("canTalk", true);
                 lvl4Sc1Audiomanger.PlayAudio(Audioclip1);
-                subtitleManager.DisplaySubtitle("I am very Hungry, Let's see, What's inside the Fridge", "JoJo", Audioclip1);                
+                subtitleManager.DisplaySubtitle("I am very hungry, Let's see, What's inside the fridge", "JoJo", Audioclip1);                
             }
         }
     }
@@ -152,7 +152,7 @@ public class Lvl4Sc1JojoController : MonoBehaviour
             {
                 birdAnimator.SetTrigger("fridge");
                 lvl4Sc1Audiomanger.PlayAudio(AudioClip3);
-                subtitleManager.DisplaySubtitle("Open the Fridge", "Kiki", AudioClip3);                
+                subtitleManager.DisplaySubtitle("Open the fridge", "Kiki", AudioClip3);                
             }
         }
     }

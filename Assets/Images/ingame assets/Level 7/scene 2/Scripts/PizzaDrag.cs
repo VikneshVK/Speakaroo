@@ -192,7 +192,7 @@ public class PizzaDrag : MonoBehaviour
                             canTapPizzaBox = true;
                             kikiAnimator.SetTrigger("canEat");
                             audioManager.PlayAudio(EatAudio);
-                            subtitleManager.DisplaySubtitle("Pizza is ready..! Let's Eat...!", "Kiki",EatAudio);
+                            subtitleManager.DisplaySubtitle("Pizza is ready! Let's eat!", "Kiki",EatAudio);
                             // Instantiate the glow object and tween its scale
                             spawnedGlow = Instantiate(glow, transform.position, Quaternion.identity);
                             LeanTween.scale(spawnedGlow, Vector3.one * 15, 0.7f)
@@ -472,7 +472,7 @@ public class PizzaDrag : MonoBehaviour
             // Trigger the "intoOven" animation
             kikiAnimator.SetTrigger("intoOven");
             audioManager.PlayAudio(OvenAudio);
-            subtitleManager.DisplaySubtitle("Let's put it in the Oven", "Kiki", OvenAudio);
+            subtitleManager.DisplaySubtitle("Let's put it in the Oven.", "Kiki", OvenAudio);
             // Start a coroutine to wait until the "intoOven" animation state is complete
             StartCoroutine(WaitForAnimationAndEnableCollider(OvenAudio, "intoOven"));
         }

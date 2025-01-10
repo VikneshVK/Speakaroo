@@ -66,7 +66,7 @@ public class Lvl5Sc3FeedingManager : MonoBehaviour
         {
             birdAnimator.SetTrigger("Dialogue1");
             PlayAudioClip(audio1);
-            subtitleManager.DisplaySubtitle("the Animals are Hungry", "Kiki", audio1);
+            subtitleManager.DisplaySubtitle("the Animals are Hungry.", "Kiki", audio1);
         }
 
         StartCoroutine(FeedNextAnimal());
@@ -82,7 +82,7 @@ public class Lvl5Sc3FeedingManager : MonoBehaviour
             {
                 birdAnimator.SetTrigger("finalDialogue");
                 PlayAudioClip(audio10);
-                subtitleManager.DisplaySubtitle("The zoo was so much Fun", "Kiki", audio10);
+                subtitleManager.DisplaySubtitle("The zoo was so much Fun.", "Kiki", audio10);
             }
             yield break;
         }
@@ -335,27 +335,27 @@ public class Lvl5Sc3FeedingManager : MonoBehaviour
         {
             case "Hippo":
                 PlayAudioClip(audio2);
-                subtitleManager.DisplaySubtitle("Let's Feed the Hippo", "Kiki", audio2);
+                subtitleManager.DisplaySubtitle("Let's feed the hippo.", "Kiki", audio2);
                 break;
             case "Lion":
                 PlayAudioClip(audio3);
-                subtitleManager.DisplaySubtitle("Let's Feed the Lion", "Kiki", audio3);
+                subtitleManager.DisplaySubtitle("Let's feed the lion.", "Kiki", audio3);
                 break;
             case "Monkey":
                 PlayAudioClip(audio4);
-                subtitleManager.DisplaySubtitle("Let's Feed the Monkey", "Kiki", audio4);
+                subtitleManager.DisplaySubtitle("Let's feed the monkey.", "Kiki", audio4);
                 break;
             case "Croc":
                 PlayAudioClip(audio5);
-                subtitleManager.DisplaySubtitle("Let's Feed the Crocodile", "Kiki", audio5);
+                subtitleManager.DisplaySubtitle("Let's feed the crocodile.", "Kiki", audio5);
                 break;
             case "Panda":
                 PlayAudioClip(audio6);
-                subtitleManager.DisplaySubtitle("Let's Feed the Panda", "Kiki", audio6);
+                subtitleManager.DisplaySubtitle("Let's feed the panda", "Kiki", audio6);
                 break;
             case "Tiger":
                 PlayAudioClip(audio7);
-                subtitleManager.DisplaySubtitle("Let's Feed the Tiger", "Kiki", audio7);
+                subtitleManager.DisplaySubtitle("Let's feed the tiger", "Kiki", audio7);
                 break;
         }
     }

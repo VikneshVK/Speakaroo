@@ -149,7 +149,7 @@ public class boyController1 : MonoBehaviour
 
             AudioSource audioSource = nextaudiosoucre.GetComponent<AudioSource>();
             audioSource.PlayOneShot(audioClipBigPillow);
-            subtitleManager.DisplaySubtitle("Put the Big Pillow at the Back", "Kiki", audioSource.clip);
+            subtitleManager.DisplaySubtitle("Put the big pillow at the back.", "Kiki", audioSource.clip);
             pillowAudioPlayer = true;
         }
 
@@ -182,7 +182,7 @@ public class boyController1 : MonoBehaviour
         if (audioSource != null)
         {
             audioSource.Play();
-            subtitleManager.DisplaySubtitle("WoW..! My Bed looks so Clean, Thank you Kiki and Friend", "JoJo", audioSource.clip);
+            subtitleManager.DisplaySubtitle("WOW! My bed looks so clean, Thank you Kiki and Friend.", "JoJo", audioSource.clip);
         }
         else
         {
@@ -216,7 +216,7 @@ public class boyController1 : MonoBehaviour
             {
                 birdaudioplayed = true;
                 birdAudiosource.Play();
-                subtitleManager.DisplaySubtitle("Oh JoJo, Your Bed sure does look Messy, Don't worry my Friend, and I will help you ", "JoJo", birdAudiosource.clip);
+                subtitleManager.DisplaySubtitle("Oh JoJo, Your bed sure does look messy, Don't worry my Friend, and I will help you. ", "JoJo", birdAudiosource.clip);
             }
         }
     }

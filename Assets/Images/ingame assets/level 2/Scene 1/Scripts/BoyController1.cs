@@ -118,7 +118,7 @@ public class BoyController1 : MonoBehaviour
         yield return new WaitForSeconds(0.3f);  // Wait for 1 second
         
         boyAnimator.SetBool("canTalk", true);  // Enable the "canTalk" animation after the delay
-        PlayAudioWithSubtitles(0, "Oh No..!, My Room is So Messy", "JoJo");
+        PlayAudioWithSubtitles(0, "Oh no..!, My room is so messy.", "JoJo");
         Debug.Log("Walking complete, switching back to front view.");
         
     }
@@ -133,7 +133,7 @@ public class BoyController1 : MonoBehaviour
             isTalking = true;
             birdAnimator.SetBool("can talk", true);
             parrotController.SpawnAndTweenGlowOnInteractableObjects();
-            PlayAudioWithSubtitles(3, "Put the Big Toys on the Shelf", "Kiki" ); //added temp, change after
+            PlayAudioWithSubtitles(3, "Put the big toys on the shelf.", "Kiki" ); //added temp, change after
             
             boyspriteRenderer.flipX = true;
         }
@@ -178,7 +178,7 @@ public class BoyController1 : MonoBehaviour
             if (!hasFinalAudioPlayed)
             {
                 boyAnimator.SetTrigger("CleaningComplete");
-                PlayAudioWithSubtitles(2, "Wow, Thank you, Kiki and Friend. My room looks so Clean", "JoJo");  // Play audio
+                PlayAudioWithSubtitles(2, "Wow, Thank you, Kiki and Friend. My room looks so clean.", "JoJo");  // Play audio
                 
                 hasFinalAudioPlayed = true; // Mark as played
                 Debug.Log("final audio playing once");

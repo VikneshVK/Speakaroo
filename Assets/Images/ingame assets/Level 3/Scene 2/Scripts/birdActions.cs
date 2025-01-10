@@ -70,7 +70,7 @@ public class birdActions : MonoBehaviour
                 animator.SetBool("canFly", false);
                 kikiAudiosource.clip = audioClip1;
                 kikiAudiosource.Play();
-                subtitleManager.DisplaySubtitle("Mom told us to wash our toys", "Kiki", kikiAudiosource.clip);                
+                subtitleManager.DisplaySubtitle("Mom told us to wash our toys.", "Kiki", kikiAudiosource.clip);                
             }
         }
     }
@@ -126,7 +126,7 @@ public class birdActions : MonoBehaviour
                     /*animator.SetTrigger("helper");*/
                     kikiAudiosource.clip = audioClip2;
                     kikiAudiosource.Play();
-                    subtitleManager.DisplaySubtitle("Now show your toys under the water", "Kiki", kikiAudiosource.clip);
+                    subtitleManager.DisplaySubtitle("Now show your toys under the water.", "Kiki", kikiAudiosource.clip);
                     hasPlayedAudioClip2 = true; // Mark that the second audio has been played
                 }
             }

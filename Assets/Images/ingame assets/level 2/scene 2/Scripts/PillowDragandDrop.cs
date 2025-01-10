@@ -260,7 +260,7 @@ public class PillowDragAndDrop : MonoBehaviour
             SpawnGlow(gameObject); // Spawn glow on the big pillow
             AudioSource audioSource = nextaudiosoucre.GetComponent<AudioSource>() ?? feedbackAudioSource;
             if (audioSource != null) audioSource.PlayOneShot(audioClipBigPillow);
-            subtitleManager.DisplaySubtitle("Put the Big Pillow at the Back", "Kiki", audioSource.clip);
+            subtitleManager.DisplaySubtitle("Put the big pillow at the back.", "Kiki", audioSource.clip);
             Debug.Log("Playing big pillow audio.");
         }
         else
@@ -269,7 +269,7 @@ public class PillowDragAndDrop : MonoBehaviour
             SpawnGlow(gameObject); // Spawn glow on the small pillow
             AudioSource audioSource = nextaudiosoucre.GetComponent<AudioSource>() ?? feedbackAudioSource;
             if (audioSource != null) audioSource.PlayOneShot(audioClipSmallPillow);
-            subtitleManager.DisplaySubtitle("Put the Small Pillow at the front of the big Pillow", "Kiki", audioSource.clip);
+            subtitleManager.DisplaySubtitle("Put the small pillow at the front of the big pillow.", "Kiki", audioSource.clip);
             Debug.Log("Playing small pillow audio.");
         }
     }
@@ -301,7 +301,7 @@ public class PillowDragAndDrop : MonoBehaviour
                             kikiAnimator.SetTrigger("bigPillow");
                             SpawnGlow(nextPillow.gameObject); // Spawn glow on the big pillow
                             audioSource.PlayOneShot(audioClipBigPillow);
-                            subtitleManager.DisplaySubtitle("Put the Big Pillow at the Back", "Kiki", audioSource.clip);
+                            subtitleManager.DisplaySubtitle("Put the big pillow at the back.", "Kiki", audioSource.clip);
                             Debug.Log("Playing big pillow audio.");
                         }
                         else
@@ -309,7 +309,7 @@ public class PillowDragAndDrop : MonoBehaviour
                             kikiAnimator.SetTrigger("smallPillow");
                             SpawnGlow(nextPillow.gameObject); // Spawn glow on the small pillow
                             audioSource.PlayOneShot(audioClipSmallPillow);
-                            subtitleManager.DisplaySubtitle("Put the Small Pillow at the front of the big Pillow", "Kiki", audioSource.clip);
+                            subtitleManager.DisplaySubtitle("Put the small pillow at the front of the big pillow.", "Kiki", audioSource.clip);
                             Debug.Log("Playing small pillow audio.");
                         }
                     }

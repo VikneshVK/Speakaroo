@@ -50,10 +50,10 @@ public class DraggingController1 : MonoBehaviour
     public AudioClip Audio5;
 
     public SubtitleManager subtitleManager;
-    private string subtitle1 = "Lets make Cereal for Breakfast";
-    private string subtitle2 = "Put the Cereal in the Bowl";
-    private string subtitle3 = "Pour the Milk in the Bowl";
-    private string subtitle4 = "Now Add some Berries on the Top";
+    private string subtitle1 = "Lets make cereal for breakfast";
+    private string subtitle2 = "Put the cereal in the bowl";
+    private string subtitle3 = "Pour the milk in the bowl";
+    private string subtitle4 = "Now add some berries on the top";
     private string subtitle5 = "mmm Tasty..!";
 
     private BoxCollider2D cerealCollider;

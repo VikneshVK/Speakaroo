@@ -102,7 +102,7 @@ public class Lvl8Sc2KikiController : MonoBehaviour
         {
             audioSource.clip = beakerAudio;
             audioSource.Play();
-            subtitleManager.DisplaySubtitle("Please place the Beaker on the Stand", "Kiki", beakerAudio);
+            subtitleManager.DisplaySubtitle("Please place the beaker on the stand", "Kiki", beakerAudio);
         }
 
         while (kikiAnimator.GetCurrentAnimatorStateInfo(0).IsName("Beaker") &&

@@ -183,7 +183,7 @@ public class ShowerMechanics : MonoBehaviour
         {
             hasTalkStarted = true;
             Audiomanager.PlayAudio(audio1);
-            subtitleManager.DisplaySubtitle("Let's take a Shower", "JoJo", audio1);
+            subtitleManager.DisplaySubtitle("Let's take a shower.", "JoJo", audio1);
         }
 
         // Check if the "Talk sample" animation has just ended
@@ -210,7 +210,7 @@ public class ShowerMechanics : MonoBehaviour
         {
             hasAskKikiStarted = true;
             Audiomanager.PlayAudio(audio2);
-            subtitleManager.DisplaySubtitle("Uh..! I can't reach it, Lets ask Kiki", "JoJo", audio2);
+            subtitleManager.DisplaySubtitle("Uh! I can't reach it, Let's ask Kiki.", "JoJo", audio2);
         }
     }
 
@@ -222,7 +222,7 @@ public class ShowerMechanics : MonoBehaviour
         {
             birdanimation = true;
             Audiomanager.PlayAudio(audio4);
-            subtitleManager.DisplaySubtitle("Here you go...! JoJo ", "Kiki", audio4);
+            subtitleManager.DisplaySubtitle("Here you go! JoJo.", "Kiki", audio4);
         }
 
         if (stateInfo.IsName("birdKnock") && stateInfo.normalizedTime >= 0.9f && birdanimation)
@@ -243,7 +243,7 @@ public class ShowerMechanics : MonoBehaviour
         {
             birdAnimator.SetTrigger("shampoo");
             Audiomanager.PlayAudio(audio8);
-            subtitleManager.DisplaySubtitle("Put the Shampoo", "Kiki", audio8);
+            subtitleManager.DisplaySubtitle("Put the shampoo.", "Kiki", audio8);
         }
     }
 
@@ -289,7 +289,7 @@ public class ShowerMechanics : MonoBehaviour
         {
             hasShowerDoneStarted = true;
             Audiomanager.PlayAudio(audio3);
-            subtitleManager.DisplaySubtitle("All Clean..! Let's get Dressed", "JoJo", audio3);
+            subtitleManager.DisplaySubtitle("All Clean! Let's get Dressed.", "JoJo", audio3);
         }
     }
 

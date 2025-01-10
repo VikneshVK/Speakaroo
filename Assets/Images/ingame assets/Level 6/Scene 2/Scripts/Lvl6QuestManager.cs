@@ -328,7 +328,7 @@ public class Lvl6QuestManager : MonoBehaviour
         {
             kikiController.TriggerAnimation("FinalTalk");
             kikiController.PlayQuestAudio(finalAudio);
-            StartCoroutine(RevealTextWordByWord("Playing in the Sand was Super Fun ", 0.5f));
+            StartCoroutine(RevealTextWordByWord("Playing in the sand was super fun ", 0.5f));
         }
         else
         {

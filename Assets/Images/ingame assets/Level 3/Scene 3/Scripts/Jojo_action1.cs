@@ -84,7 +84,7 @@ public class Jojo_action1 : MonoBehaviour
         if (!subtitleTriggered) 
         {
             subtitleTriggered = true;
-            subtitleManager.DisplaySubtitle("Woo Hoo..! the Laundry is done. lets take it in", "JoJo", farmaudio.clip); 
+            subtitleManager.DisplaySubtitle("Woo Hoo! the laundry is done. lets take it in.", "JoJo", farmaudio.clip); 
         }        
         audioPlayed = true;
     }
@@ -159,14 +159,14 @@ public class Jojo_action1 : MonoBehaviour
         {
             audioSource.clip = audioClip1;
             audioSource.Play();
-            subtitleManager.DisplaySubtitle("Looks like some clothes are still wet", "JoJo", audioSource.clip);
+            subtitleManager.DisplaySubtitle("Looks like some clothes are still wet.", "JoJo", audioSource.clip);
             StartCoroutine(TriggerHelperAfterDialogue());
         }
         else if (talkTrigger == "canTalk2" && audioClip2 != null)
         {
             audioSource.clip = audioClip2;
             audioSource.Play();
-            subtitleManager.DisplaySubtitle("You are right, Kiki. It is evening now the clothes and toys are dry", "JoJo", audioSource.clip);
+            subtitleManager.DisplaySubtitle("You are right, Kiki. It is evening now the clothes and toys are dry.", "JoJo", audioSource.clip);
             StartCoroutine(TriggerHelper2AfterDialogue());
         }
     }
@@ -187,7 +187,7 @@ public class Jojo_action1 : MonoBehaviour
         {
             clothStandAudio.Play();
         }
-        subtitleManager.DisplaySubtitle("Let's put the dry clothes in the basket", "Kiki", clothStandAudio.clip);
+        subtitleManager.DisplaySubtitle("Let's put the dry clothes in the basket.", "Kiki", clothStandAudio.clip);
         CheckAndEnableColliders();
     }
 
@@ -209,7 +209,7 @@ public class Jojo_action1 : MonoBehaviour
         }
 
         // Start the coroutine to reveal text and spawn glow prefabs
-        subtitleManager.DisplaySubtitle("Let's put the toys and the clothes in the basket", "Kiki", sunAudio.clip);
+        subtitleManager.DisplaySubtitle("Let's put the toys and the clothes in the basket.", "Kiki", sunAudio.clip);
 
         // After the text reveals, spawn glow prefabs for the handlers
         SpawnGlowForHandlers();
