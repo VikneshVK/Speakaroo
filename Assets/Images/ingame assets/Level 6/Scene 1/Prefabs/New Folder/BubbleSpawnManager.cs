@@ -9,7 +9,7 @@ public class BubbleSpawnManager : MonoBehaviour
     [SerializeField] private Transform bubbleCanvas; // Reference to the Bubble Canvas
     [SerializeField] private float minSpeed = 2f; // Minimum speed for bubbles
     [SerializeField] private float maxSpeed = 5f; // Maximum speed for bubbles
-    private int[] weights = { 40, 20, 20, 20 };
+    private int[] weights = { 15, 15, 15, 15, 10, 15, 15 };
 
     private Camera mainCamera;
     private List<GameObject> activeBubbles = new List<GameObject>(); 
