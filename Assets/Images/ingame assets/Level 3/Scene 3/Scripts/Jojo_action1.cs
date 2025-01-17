@@ -173,7 +173,7 @@ public class Jojo_action1 : MonoBehaviour
 
     private IEnumerator TriggerHelperAfterDialogue()
     {
-        yield return new WaitForSeconds(3.5f);
+        yield return new WaitForSeconds(4.5f);
 
         // Trigger "helper1" on Kiki's animator
         if (kikiAnimator != null)

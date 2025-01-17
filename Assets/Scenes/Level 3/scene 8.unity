@@ -1514,6 +1514,14 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1697680507102767587, guid: 847534c042e917e46b1dd3653c8ed88e, type: 3}
+      propertyPath: maxSpeed
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 1697680507102767587, guid: 847534c042e917e46b1dd3653c8ed88e, type: 3}
+      propertyPath: minSpeed
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 1697680507102767587, guid: 847534c042e917e46b1dd3653c8ed88e, type: 3}
       propertyPath: confetti1
       value: 
       objectReference: {fileID: 1938636700}
@@ -1521,6 +1529,10 @@ PrefabInstance:
       propertyPath: confetti2
       value: 
       objectReference: {fileID: 1938636699}
+    - target: {fileID: 1697680507102767587, guid: 847534c042e917e46b1dd3653c8ed88e, type: 3}
+      propertyPath: bubbleCanvas
+      value: 
+      objectReference: {fileID: 954746902}
     - target: {fileID: 1697680507102767587, guid: 847534c042e917e46b1dd3653c8ed88e, type: 3}
       propertyPath: lvlCompleteText
       value: 
@@ -1823,6 +1835,11 @@ Transform:
   m_Children: []
   m_Father: {fileID: 693440656513191883}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 53}
+--- !u!224 &954746902 stripped
+RectTransform:
+  m_CorrespondingSourceObject: {fileID: 6350390639416100924, guid: f220240d8c2873f4c8c9e109e59f275a, type: 3}
+  m_PrefabInstance: {fileID: 1938636697}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &1003334397 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1413623391560918997, guid: b63c158d5846b1c409aeabb0ddcb67c4, type: 3}

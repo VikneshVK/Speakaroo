@@ -1430,6 +1430,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2953298107607894016, guid: 12df2058d59b17e4792531d9b04bdba2, type: 3}
+      propertyPath: m_Camera
+      value: 
+      objectReference: {fileID: 1199197493}
     - target: {fileID: 5918867926419259331, guid: 12df2058d59b17e4792531d9b04bdba2, type: 3}
       propertyPath: m_Name
       value: Subtitle Canvas
@@ -2855,6 +2859,14 @@ PrefabInstance:
     - target: {fileID: 821808351703117089, guid: 847534c042e917e46b1dd3653c8ed88e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1697680507102767587, guid: 847534c042e917e46b1dd3653c8ed88e, type: 3}
+      propertyPath: maxSpeed
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 1697680507102767587, guid: 847534c042e917e46b1dd3653c8ed88e, type: 3}
+      propertyPath: minSpeed
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 1697680507102767587, guid: 847534c042e917e46b1dd3653c8ed88e, type: 3}
       propertyPath: confetti1

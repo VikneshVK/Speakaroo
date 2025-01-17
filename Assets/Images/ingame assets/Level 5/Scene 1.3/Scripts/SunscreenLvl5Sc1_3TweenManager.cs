@@ -30,7 +30,7 @@ public class SunscreenLvl5Sc1_3TweenManager : MonoBehaviour
         }
 
         // Find the UICanvas and the Button within it
-        GameObject uiCanvas = GameObject.FindGameObjectWithTag("UiPanel");
+        GameObject uiCanvas = GameObject.FindGameObjectWithTag("STCanvas");
         if (uiCanvas != null)
         {
             buttonToActivate = uiCanvas.transform.Find("RetryButton").gameObject; // Replace "ButtonName" with the actual name of your button

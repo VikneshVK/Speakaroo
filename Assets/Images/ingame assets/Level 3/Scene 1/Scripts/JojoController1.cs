@@ -119,7 +119,7 @@ public class JojoController1 : MonoBehaviour
             audioSource.Stop(); // Stop any ongoing audio
             audioSource.clip = lvlCompleteaudio; // Set level complete audio clip
             audioSource.Play();
-            subtitleManager.DisplaySubtitle("Good job, the garden looks clean now.", "Jojo", audioSource.clip);
+            subtitleManager.DisplaySubtitle("Good job, the garden looks clean now.", "JoJo", audioSource.clip);
         }
 
     }

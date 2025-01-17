@@ -41,7 +41,7 @@ public class BubbleSpawnManager : MonoBehaviour
                 LeanTween.alpha(LvlCompleteImage.GetComponent<RectTransform>(), 1f, 0.5f)
                 .setOnComplete(() =>
                 {
-                       lvlCompleteText.GetComponent<AudioSource>().Play();
+                       LvlCompleteImage.GetComponent<AudioSource>().Play();
                        StartCoroutine(AnimateText(lvlCompleteText, "LEVEL COMPLETED"));
                        PlayConfettiEffects();
                        StartCoroutine(SpawnBubblesAtPositions());
@@ -75,6 +75,7 @@ public class BubbleSpawnManager : MonoBehaviour
 
     private IEnumerator AnimateText(TextMeshProUGUI textComponent, string textToDisplay)
     {
+        textComponent.gameObject.SetActive(true);
         textComponent.text = ""; // Clear the text initially
         foreach (char letter in textToDisplay)
         {
@@ -189,7 +190,7 @@ public class BubbleSpawnManager : MonoBehaviour
         // Reset the alpha
         SetInitialAlpha(LvlCompletePanel.GetComponent<Image>());
         SetInitialAlpha(LvlCompleteImage.GetComponent<Image>());
-
+        lvlCompleteText.gameObject.SetActive(false);
         // Reset the text
         lvlCompleteText.text = "";
     }

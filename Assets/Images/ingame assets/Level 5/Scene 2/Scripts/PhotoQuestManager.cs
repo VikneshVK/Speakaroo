@@ -358,6 +358,7 @@ public class PhotoQuestManager : MonoBehaviour
             birdAnimator.SetTrigger("FinalDialouge");
             GetComponent<AudioSource>().PlayOneShot(FinalAudio);
             subtitleManager.DisplaySubtitle("You are a good photographer.", "Kiki", FinalAudio);
+            photoCameraController.enabled = false;
         }
         else
         {

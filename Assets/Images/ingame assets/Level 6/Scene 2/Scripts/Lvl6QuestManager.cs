@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using TMPro;
 using System.Collections;
+using static UnityEditor.PlayerSettings;
 
 public class Lvl6QuestManager : MonoBehaviour
 {
@@ -328,7 +329,7 @@ public class Lvl6QuestManager : MonoBehaviour
         {
             kikiController.TriggerAnimation("FinalTalk");
             kikiController.PlayQuestAudio(finalAudio);
-            StartCoroutine(RevealTextWordByWord("Playing in the sand was super fun ", 0.5f));
+            subtitleManager.DisplaySubtitle("Playing in the sand was super fun", "Kiki", finalAudio);
         }
         else
         {

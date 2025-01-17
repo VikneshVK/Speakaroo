@@ -136,7 +136,7 @@ public class boy_Actions1 : MonoBehaviour
                 boyAnimator.SetTrigger("Play done");
                 sunAudioSource.Play();
                 StartCoroutine(audioPlayed());
-                subtitleManager.DisplaySubtitle("HaHa! That was so Fun!", "JoJo", sunAudioSource.clip);                
+                /*subtitleManager.DisplaySubtitle("HaHa! That was so Fun!", "JoJo", sunAudioSource.clip);*/                
             }
             
         }

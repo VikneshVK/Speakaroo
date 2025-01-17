@@ -233,6 +233,7 @@ public class Lvl5Sc3FeedingManager : MonoBehaviour
     public void OnFoodDropped(Transform food, bool isRightFood)
     {
         helperhand.ResetTimer();
+
         if (isRightFood)
             StartCoroutine(HandleCorrectFood(food));
         else
