@@ -141,20 +141,28 @@ public class DishdragController : MonoBehaviour
     }
     private void HandleCorrectDrop(Transform target, bool isGlass = false, bool isPlate = false, bool isBowl = false)
     {
-        if (dishesArranged < 5)
+        if (helperHandCoroutine != null)
         {
-            birdAnimator.SetTrigger("correct");
+            StopCoroutine(helperHandCoroutine);
+        }
 
-            if (correctAudioSource != null)
-            {
-                correctAudioSource.Play();
-            }
+        // Clear existing helper hand and its animations/tweens if any
+        if (helperHandManager != null)
+        {
+            helperHandManager.StopHelperHand();
+        }
 
-            if (SfxAudioSource != null)
-            {
-                SfxAudioSource.PlayOneShot(SfxAudio1);
-            }
-        }        
+        birdAnimator.SetTrigger("correct");
+
+        if (correctAudioSource != null)
+        {
+            correctAudioSource.Play();
+        }
+
+        if (SfxAudioSource != null)
+        {
+            SfxAudioSource.PlayOneShot(SfxAudio1);
+        }
 
         OnDropped(true, isGlass, isPlate, isBowl, target);
     }
@@ -233,6 +241,7 @@ public class DishdragController : MonoBehaviour
 
             isDroppedCorrectly = true;
             gameObject.GetComponent<SpriteRenderer>().enabled = false;
+            gameObject.GetComponent<Collider2D>().enabled = false;
             dishesArranged++;
             CheckDishesArranged();
 
@@ -308,56 +317,61 @@ public class DishdragController : MonoBehaviour
     private IEnumerator TriggerHelperHandWithDelay()
     {
         Debug.Log("TriggerHelperHandWithDelay started for " + gameObject.name);
+
+        // Initial delay before checking if the object is correctly dropped
         yield return new WaitForSeconds(helperHandDelay);
 
-        Transform target = null;
+        // Check again if the object is correctly dropped before spawning helper hand
+        if (!isDroppedCorrectly)
+        {
+            Transform target = null;
 
-        // Determine drop targets based on the object name
-        if (gameObject.name.Contains("Bowl"))
-        {
-            target = GetAvailableTarget(bowlDropTarget1, bowlDropTarget2, usedBowlTargets);
-            if (target == null && !usedBowlTargets.Contains(bowlDropTarget1))
+            if (gameObject.name.Contains("Bowl"))
             {
-                target = bowlDropTarget1; // Fallback to unused target
+                target = GetAvailableTarget(bowlDropTarget1, bowlDropTarget2, usedBowlTargets);
+                if (target == null && !usedBowlTargets.Contains(bowlDropTarget1))
+                {
+                    target = bowlDropTarget1; // Fallback to unused target
+                }
+                else if (target == null && !usedBowlTargets.Contains(bowlDropTarget2))
+                {
+                    target = bowlDropTarget2; // Fallback to unused target
+                }
             }
-            else if (target == null && !usedBowlTargets.Contains(bowlDropTarget2))
+            else if (gameObject.name.Contains("glass"))
             {
-                target = bowlDropTarget2; // Fallback to unused target
+                target = GetAvailableTarget(glassDropTarget1, glassDropTarget2, usedGlassTargets);
+                if (target == null && !usedGlassTargets.Contains(glassDropTarget1))
+                {
+                    target = glassDropTarget1; // Fallback to unused target
+                }
+                else if (target == null && !usedGlassTargets.Contains(glassDropTarget2))
+                {
+                    target = glassDropTarget2; // Fallback to unused target
+                }
             }
-        }
-        else if (gameObject.name.Contains("glass"))
-        {
-            target = GetAvailableTarget(glassDropTarget1, glassDropTarget2, usedGlassTargets);
-            if (target == null && !usedGlassTargets.Contains(glassDropTarget1))
+            else if (gameObject.name.Contains("plate"))
             {
-                target = glassDropTarget1; // Fallback to unused target
+                target = GetAvailableTarget(plateDropTarget1, plateDropTarget2, usedPlateTargets);
+                if (target == null && !usedPlateTargets.Contains(plateDropTarget1))
+                {
+                    target = plateDropTarget1; // Fallback to unused target
+                }
+                else if (target == null && !usedPlateTargets.Contains(plateDropTarget2))
+                {
+                    target = plateDropTarget2; // Fallback to unused target
+                }
             }
-            else if (target == null && !usedGlassTargets.Contains(glassDropTarget2))
-            {
-                target = glassDropTarget2; // Fallback to unused target
-            }
-        }
-        else if (gameObject.name.Contains("plate"))
-        {
-            target = GetAvailableTarget(plateDropTarget1, plateDropTarget2, usedPlateTargets);
-            if (target == null && !usedPlateTargets.Contains(plateDropTarget1))
-            {
-                target = plateDropTarget1; // Fallback to unused target
-            }
-            else if (target == null && !usedPlateTargets.Contains(plateDropTarget2))
-            {
-                target = plateDropTarget2; // Fallback to unused target
-            }
-        }
 
-        if (target != null)
-        {
-            Debug.Log("Target found: " + target.name + " for " + gameObject.name);
-            helperHandManager.SpawnHelperHand(transform.position, target.position);
-        }
-        else
-        {
-            Debug.LogWarning("No valid target found for " + gameObject.name);
+            if (target != null)
+            {
+                Debug.Log("Target found: " + target.name + " for " + gameObject.name);
+                helperHandManager.SpawnHelperHand(transform.position, target.position);
+            }
+            else
+            {
+                Debug.LogWarning("No valid target found for " + gameObject.name);
+            }
         }
     }
 

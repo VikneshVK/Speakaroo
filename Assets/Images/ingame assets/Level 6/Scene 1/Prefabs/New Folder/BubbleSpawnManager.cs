@@ -2,6 +2,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
+using System;
+using TMPro;
 
 public class BubbleSpawnManager : MonoBehaviour
 {
@@ -9,19 +11,76 @@ public class BubbleSpawnManager : MonoBehaviour
     [SerializeField] private Transform bubbleCanvas; // Reference to the Bubble Canvas
     [SerializeField] private float minSpeed = 2f; // Minimum speed for bubbles
     [SerializeField] private float maxSpeed = 5f; // Maximum speed for bubbles
-    private int[] weights = { 15, 15, 15, 15, 10, 15, 15 };
-
+    [SerializeField] private GameObject LvlCompletePanel;
+    [SerializeField] private GameObject LvlCompleteImage;   
+    [SerializeField] private GameObject confetti1; // Reference to Confetti 1
+    [SerializeField] private GameObject confetti2; // Reference to Confetti 2
+    [SerializeField] private TextMeshProUGUI lvlCompleteText;
+    private int[] weights = { 20, 16, 16, 16, 16, 16 };
+    public event Action OnBubblesDestroyed;
     private Camera mainCamera;
-    private List<GameObject> activeBubbles = new List<GameObject>(); 
+    private List<GameObject> activeBubbles = new List<GameObject>();
+    private void Awake()
+    {
+        ResetPanelAndImage(); // Reset everything at the start
+    }
 
     private void Start()
     {
-        mainCamera = Camera.main;
-        StartBubbleSpawning();
+        mainCamera = Camera.main;/*
+        StartBubbleSpawning();*/
     }
     public void StartBubbleSpawning()
     {
-        StartCoroutine(SpawnBubblesAtPositions());
+        SetInitialAlpha(LvlCompletePanel.GetComponent<Image>());
+        SetInitialAlpha(LvlCompleteImage.GetComponent<Image>());
+
+        LeanTween.alpha(LvlCompletePanel.GetComponent<RectTransform>(), 1f, 0.5f)
+        .setOnComplete(() =>
+        {
+                LeanTween.alpha(LvlCompleteImage.GetComponent<RectTransform>(), 1f, 0.5f)
+                .setOnComplete(() =>
+                {
+                       lvlCompleteText.GetComponent<AudioSource>().Play();
+                       StartCoroutine(AnimateText(lvlCompleteText, "LEVEL COMPLETED"));
+                       PlayConfettiEffects();
+                       StartCoroutine(SpawnBubblesAtPositions());
+                });
+        });
+            
+    }
+
+    private void SetInitialAlpha(Image image)
+    {
+        Color initialColor = image.color;
+        initialColor.a = 0;
+        image.color = initialColor; // Set the initial alpha to 0 (fully transparent)
+    }
+
+    private void PlayConfettiEffects()
+    {
+        if (confetti1 != null && confetti2 != null)
+        {
+            confetti1.SetActive(true);
+            confetti2.SetActive(true);
+
+            var confetti1ParticleSystem = confetti1.GetComponent<ParticleSystem>();
+            var confetti2ParticleSystem = confetti2.GetComponent<ParticleSystem>();
+
+            if (confetti1ParticleSystem != null) confetti1ParticleSystem.Play();
+            if (confetti2ParticleSystem != null) confetti2ParticleSystem.Play();
+        }
+    }
+
+
+    private IEnumerator AnimateText(TextMeshProUGUI textComponent, string textToDisplay)
+    {
+        textComponent.text = ""; // Clear the text initially
+        foreach (char letter in textToDisplay)
+        {
+            textComponent.text += letter;
+            yield return new WaitForSeconds(0.1f); // Wait for 0.1 seconds between each letter
+        }
     }
     private IEnumerator SpawnBubblesAtPositions()
     {
@@ -58,7 +117,7 @@ public class BubbleSpawnManager : MonoBehaviour
             bubbleButton.onClick.AddListener(() => OnBubbleClick(bubble, spawnPosition)); 
         }
 
-        float bubbleSpeed = Random.Range(minSpeed, maxSpeed);
+        float bubbleSpeed = UnityEngine.Random.Range(minSpeed, maxSpeed);
         Vector3 targetPosition = new Vector3(spawnPosition.x, -10f, spawnPosition.z); 
 
         TweenBubble(bubble, spawnPosition, targetPosition, bubbleSpeed);
@@ -105,14 +164,34 @@ public class BubbleSpawnManager : MonoBehaviour
 
     private void DestroyAllBubbles()
     {
-        // Destroy all the active bubbles
         foreach (GameObject bubble in activeBubbles)
         {
             Destroy(bubble);
         }
 
-        // Clear the active bubbles list
-        activeBubbles.Clear();
+        activeBubbles.Clear();        
+
+        OnBubblesDestroyed?.Invoke(); // Invoke the event
+
+        LeanTween.alpha(LvlCompleteImage.GetComponent<RectTransform>(), 0f, 0.5f)
+         .setOnComplete(() =>
+         {
+             LeanTween.alpha(LvlCompletePanel.GetComponent<RectTransform>(), 0f, 0.5f)
+                 .setOnComplete(() =>
+                 {
+                     ResetPanelAndImage(); // Reset after fade-out completes
+                 });
+         });
+    }
+
+    private void ResetPanelAndImage()
+    {
+        // Reset the alpha
+        SetInitialAlpha(LvlCompletePanel.GetComponent<Image>());
+        SetInitialAlpha(LvlCompleteImage.GetComponent<Image>());
+
+        // Reset the text
+        lvlCompleteText.text = "";
     }
 
     private GameObject SelectPrefabBasedOnWeight()
@@ -123,7 +202,7 @@ public class BubbleSpawnManager : MonoBehaviour
             totalWeight += weight;
         }
 
-        int randomValue = Random.Range(0, totalWeight);
+        int randomValue = UnityEngine.Random.Range(0, totalWeight);
         int runningSum = 0;
 
         for (int i = 0; i < bubblePrefabs.Length; i++)
