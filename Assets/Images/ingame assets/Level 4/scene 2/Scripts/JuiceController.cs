@@ -75,7 +75,7 @@ public class JuiceController : MonoBehaviour
             Vector3 outsideViewportPosition = new Vector3(-10, -10, 0); 
             Transform blenderPosition = GameObject.FindGameObjectWithTag("Blender").transform;
            
-            helperhand.SpawnAndTweenHelperHand(outsideViewportPosition, blenderPosition);
+            helperhand.SpawnHelperHand( blenderPosition.position);
             Debug.Log("Helper hand spawned to guide the player to click the blender.");
         }
     }

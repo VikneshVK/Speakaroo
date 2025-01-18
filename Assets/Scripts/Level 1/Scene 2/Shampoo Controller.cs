@@ -175,6 +175,7 @@ public class ShampooController : MonoBehaviour
         if (showerMechanics != null && showerMechanics.hotTapOn)
         {
             Debug.Log("Tap is on, closing the tap.");
+            
             StartCoroutine(TriggerCloseTapAfterDelay());
         }
     }
@@ -242,13 +243,9 @@ public class ShampooController : MonoBehaviour
 
         // Wait until bird animation is done
         yield return new WaitForSeconds(1.5f);
-
-        
-        
-            colliderEnabled = true;
-            HotTap.GetComponent<Collider2D>().enabled = true;
-        
-        
+        colliderEnabled = true;
+        HotTap.GetComponent<Collider2D>().enabled = true;
+        helperFunctionScript.StartTimer(true);
     }
 
     private IEnumerator RevealTextWordByWord(string fullText, float delayBetweenWords)

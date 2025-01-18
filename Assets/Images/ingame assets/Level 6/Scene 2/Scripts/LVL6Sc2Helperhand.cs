@@ -38,12 +38,7 @@ public class LVL6Sc2Helperhand : MonoBehaviour
     // Spawns the helper hand and tweens it to the current quest object in a loop
     private void SpawnHelperHand()
     {
-        
-        spawnedHelperHand = Instantiate(helperHandPrefab, transform.position, Quaternion.identity);
-        
-        LeanTween.move(spawnedHelperHand, currentQuestObject.transform.position, 2f)
-            .setLoopClamp()
-            .setEase(LeanTweenType.linear);
+        spawnedHelperHand = Instantiate(helperHandPrefab, currentQuestObject.transform.position, Quaternion.identity);               
     }
 
     // Destroys the helper hand and resets the delay timer

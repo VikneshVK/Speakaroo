@@ -199,7 +199,7 @@ public class ParrotController : MonoBehaviour
     }
 
 
-    private void EnableCorrectColliders()
+    public void EnableCorrectColliders()
     {
         bool busDropped = pushedObjects.Contains("bus S");
         bool whaleDropped = pushedObjects.Contains("whale s");

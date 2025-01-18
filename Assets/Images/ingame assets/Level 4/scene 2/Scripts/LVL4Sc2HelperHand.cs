@@ -8,6 +8,7 @@ public class LVL4Sc2HelperHand : MonoBehaviour
     public static LVL4Sc2HelperHand Instance { get; private set; }
 
     public GameObject helperHandPrefab;
+    public GameObject helperHandPrefab2;
     public GameObject glowPrefab;
     public float delayTime; // Total delay time
     public TweeningController tweeningController;
@@ -165,7 +166,14 @@ public class LVL4Sc2HelperHand : MonoBehaviour
         }
     }
 
+    public void SpawnHelperHand(Vector3 spawnPosition)
+    {
+        if (helperHandPrefab == null ) return;
 
+        DestroySpawnedHelperHand();
+
+        spawnedHelperHand = Instantiate(helperHandPrefab2, spawnPosition, Quaternion.identity);        
+    }
 
     public void SpawnAndTweenHelperHand(Vector3 spawnPosition, Transform targetPosition)
     {

@@ -320,7 +320,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 3
+  m_SortingOrder: 4
   m_Sprite: {fileID: 21300000, guid: d789eeea04aa76848a89c3f04fd2186e, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -453,9 +453,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c856ad9b32e6094eba6c121df466a0a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  delayBeforeHelp: 10
   isInteracted: 0
   needsHelp: 0
+  bus: {fileID: 218784474}
+  whale: {fileID: 717157622}
+  building: {fileID: 1512471183}
 --- !u!1001 &219768137
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -506,11 +508,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1697680507102767587, guid: 847534c042e917e46b1dd3653c8ed88e, type: 3}
       propertyPath: maxSpeed
-      value: 6
+      value: 6.5
       objectReference: {fileID: 0}
     - target: {fileID: 1697680507102767587, guid: 847534c042e917e46b1dd3653c8ed88e, type: 3}
       propertyPath: minSpeed
-      value: 6
+      value: 6.5
       objectReference: {fileID: 0}
     - target: {fileID: 1697680507102767587, guid: 847534c042e917e46b1dd3653c8ed88e, type: 3}
       propertyPath: confetti1
@@ -1441,7 +1443,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 3
+  m_SortingOrder: 4
   m_Sprite: {fileID: 21300000, guid: 6c4f42ce95346e14e9bb0839b15d0df1, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -1574,9 +1576,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c856ad9b32e6094eba6c121df466a0a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  delayBeforeHelp: 14
   isInteracted: 0
   needsHelp: 0
+  bus: {fileID: 218784474}
+  whale: {fileID: 717157622}
+  building: {fileID: 1512471183}
 --- !u!1 &731790912
 GameObject:
   m_ObjectHideFlags: 0
@@ -3029,76 +3033,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 268106270}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1001 &1327913756
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 668317662352755921, guid: 75692ccf92d941440b5a63993daa8d77, type: 3}
-      propertyPath: m_Name
-      value: helpPointer (1)
-      objectReference: {fileID: 0}
-    - target: {fileID: 668317662352755921, guid: 75692ccf92d941440b5a63993daa8d77, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1954783083703522029, guid: 75692ccf92d941440b5a63993daa8d77, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -10.442057
-      objectReference: {fileID: 0}
-    - target: {fileID: 1954783083703522029, guid: 75692ccf92d941440b5a63993daa8d77, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 3.4288032
-      objectReference: {fileID: 0}
-    - target: {fileID: 1954783083703522029, guid: 75692ccf92d941440b5a63993daa8d77, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1954783083703522029, guid: 75692ccf92d941440b5a63993daa8d77, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1954783083703522029, guid: 75692ccf92d941440b5a63993daa8d77, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1954783083703522029, guid: 75692ccf92d941440b5a63993daa8d77, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1954783083703522029, guid: 75692ccf92d941440b5a63993daa8d77, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1954783083703522029, guid: 75692ccf92d941440b5a63993daa8d77, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1954783083703522029, guid: 75692ccf92d941440b5a63993daa8d77, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1954783083703522029, guid: 75692ccf92d941440b5a63993daa8d77, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 8207231872687776040, guid: 75692ccf92d941440b5a63993daa8d77, type: 3}
-      propertyPath: m_Sprite
-      value: 
-      objectReference: {fileID: 21300000, guid: 8cd43411d7a0c6b418b1cffe82d2011b, type: 3}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 75692ccf92d941440b5a63993daa8d77, type: 3}
---- !u!1 &1327913757 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 668317662352755921, guid: 75692ccf92d941440b5a63993daa8d77, type: 3}
-  m_PrefabInstance: {fileID: 1327913756}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1339362997
 GameObject:
   m_ObjectHideFlags: 0
@@ -3144,10 +3078,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1bf2923fc0c70244d8206020e523e8dc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  birdAnimator: {fileID: 1148544127}
-  pointer: {fileID: 1327913757}
-  glowPrefab: {fileID: 6008917645427281803, guid: 98f653f208adcf14aa39655e1f137f8f, type: 3}
-  subtitleText: {fileID: 0}
+  pointer: {fileID: 668317662352755921, guid: f7ec2cdca01704e4cb724e19d9c8fdb8, type: 3}
+  activeHelperHand: {fileID: 0}
+  bus: {fileID: 218784474}
+  whale: {fileID: 717157622}
+  block: {fileID: 1512471183}
 --- !u!82 &1339363001
 AudioSource:
   m_ObjectHideFlags: 0
@@ -3693,7 +3628,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 3
+  m_SortingOrder: 4
   m_Sprite: {fileID: 21300000, guid: 07fe2d24a7a0d534e8104baaf99d014f, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
@@ -3826,9 +3761,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c856ad9b32e6094eba6c121df466a0a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  delayBeforeHelp: 10
   isInteracted: 0
   needsHelp: 0
+  bus: {fileID: 218784474}
+  whale: {fileID: 717157622}
+  building: {fileID: 1512471183}
 --- !u!114 &1527417230 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 4881741031467497598, guid: 12df2058d59b17e4792531d9b04bdba2, type: 3}
@@ -4727,7 +4664,6 @@ SceneRoots:
   - {fileID: 1581081880}
   - {fileID: 2094902405}
   - {fileID: 550111664}
-  - {fileID: 1327913756}
   - {fileID: 1339362999}
   - {fileID: 1136118253}
   - {fileID: 1528684697}

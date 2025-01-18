@@ -140,6 +140,7 @@ public class ShowerMechanics : MonoBehaviour
 
         // Re-enable the collider after the "close tap" animation finishes
         HotTap.GetComponent<Collider2D>().enabled = true;
+        StartHelperTimerForTap();
     }
 
 
@@ -301,6 +302,7 @@ public class ShowerMechanics : MonoBehaviour
             helperFunctionScript.StartTimer(true); // Start the helper timer for the tap
         }
     }
+    
 
     void SpawnPrefab()
     {

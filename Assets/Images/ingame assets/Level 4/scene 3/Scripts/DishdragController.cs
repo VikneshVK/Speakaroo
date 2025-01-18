@@ -288,11 +288,17 @@ public class DishdragController : MonoBehaviour
     {
         if (dishesArranged == 6)
         {
-            birdAnimator.SetTrigger("LvlComplete");
-            audio1.Play();
-            subtitleManager.DisplaySubtitle("WOW! Thankyou friend the kitchen looks so clean.", "Kiki", audio1.clip);            
-            Debug.Log("Level Completed! All dishes arranged.");
+            StartCoroutine(LevelEnd());
         }
+    }
+
+    private IEnumerator LevelEnd()
+    {
+        yield return new WaitForSeconds(2f);
+        birdAnimator.SetTrigger("LvlComplete");
+        audio1.Play();
+        subtitleManager.DisplaySubtitle("WOW! Thankyou friend the kitchen looks so clean.", "Kiki", audio1.clip);
+        Debug.Log("Level Completed! All dishes arranged.");
     }
 
     private void ResetPosition()

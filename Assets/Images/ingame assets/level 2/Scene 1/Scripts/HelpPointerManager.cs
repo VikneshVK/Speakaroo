@@ -1,27 +1,33 @@
-using TMPro;
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class HelpPointerManager : MonoBehaviour
 {
     public static HelpPointerManager Instance;
-    public static bool IsAnyObjectBeingInteracted = false;
-    public Animator birdAnimator;
-
     public GameObject pointer; // Helper hand pointer
-    public GameObject glowPrefab; // Glow object to be assigned in inspector
-    public TextMeshProUGUI subtitleText; // Reference to the TMP text component
     private AudioSource audioSource;
+    public GameObject activeHelperHand = null;
 
-    private bool isHelpActive = false; // Shared flag for help activity
-    private GameObject currentHelpObject; // Tracks the object currently being helped
+    public GameObject bus;
+    public GameObject whale;
+    public GameObject block;
+
+    private float timerBus = 10f;
+    private float timerWhale = 10f;
+    private float timerBlock = 10f;
+
+    private bool isHelpActive = false;
+    private GameObject currentHelpObject = null;
+    private Coroutine activeHelperCoroutine;
+
 
     private void Awake()
     {
         if (Instance == null)
         {
             Instance = this;
-            audioSource = GetComponent<AudioSource>(); // Get the AudioSource component attached to the game object
+            audioSource = GetComponent<AudioSource>();
         }
         else
         {
@@ -29,152 +35,84 @@ public class HelpPointerManager : MonoBehaviour
         }
     }
 
-    public void SpawnGlowEffect(GameObject targetObject)
+    void Update()
     {
-        if (isHelpActive || glowPrefab == null) return;
-
-        // Instantiate the glow prefab at the object's position
-        GameObject spawnedGlow = Instantiate(glowPrefab, targetObject.transform.position, Quaternion.identity);
-
-        LeanTween.scale(spawnedGlow, new Vector3(8, 8, 8), 0.5f)
-            .setEase(LeanTweenType.easeInOutSine)
-            .setOnComplete(() =>
-            {
-                StartCoroutine(WaitAndDestroyGlow(spawnedGlow));
-            });
-
-        Debug.Log("Glow prefab spawned for " + targetObject.name);
-    }
-
-    private IEnumerator WaitAndDestroyGlow(GameObject glow)
-    {
-        yield return new WaitForSeconds(1f);  // Wait for 1 second
-        LeanTween.scale(glow, Vector3.zero, 0.5f)
-                 .setEase(LeanTweenType.easeInOutSine)
-                 .setOnComplete(() =>
-                 {
-                     Destroy(glow);  // Destroy the glow object after scaling down
-                 });
-    }
-
-
-    public void CheckAndShowHelpForObject(GameObject reactivatedObject, float delayBeforeHelp)
-    {
-        if (isHelpActive || currentHelpObject == reactivatedObject) return;
-
-        InteractableObject interactable = reactivatedObject.GetComponent<InteractableObject>();
-        if (interactable != null && !interactable.isInteracted)
+        // Check if colliders are enabled, and start looping the helper hand if necessary
+        if (activeHelperHand == null)
         {
-            currentHelpObject = reactivatedObject;
-            pointer.transform.position = interactable.transform.position;
-            pointer.SetActive(true);
-            birdAnimator.SetTrigger("onceMore");
-            StartCoroutine(HandleHelpPointer(interactable, delayBeforeHelp));
-
-            if (subtitleText != null)
+            if (!InteractableObject.isBusDropped && bus.GetComponent<Collider2D>().enabled)
             {
-                StartCoroutine(RevealTextWordByWord("Put the Toys on the Shelf", 0.5f));
-            }
-
-            if (audioSource != null)
-            {
-                audioSource.Play();
-                StartCoroutine(DisableSubtitleAfterAudio());
-            }
-
-            isHelpActive = true;
-        }
-    }
-
-    private IEnumerator HandleHelpPointer(InteractableObject interactable, float delayBeforeHelp)
-    {
-        while (!interactable.isInteracted) // Continue until the object is interacted with
-        {
-            Vector3 dropPosition = interactable.GetDropLocation();
-
-            // Tween the pointer to the drop position
-            LeanTween.move(pointer, dropPosition, 2f)
-                .setEase(LeanTweenType.easeInOutSine)
-                .setOnComplete(() =>
+                timerBus -= Time.deltaTime;
+                if (timerBus <= 0)
                 {
-                    // After reaching the drop position, teleport back to the object's position
-                    pointer.transform.position = interactable.transform.position;
-                });
-
-            yield return new WaitForSeconds(2f); // Wait for tween duration before repeating
-        }
-
-        // Object was interacted with, reset help
-        ClearHelpRequest(interactable);
-    }
-
-    // Coroutine to reveal text word by word
-    private IEnumerator RevealTextWordByWord(string fullText, float delayBetweenWords)
-    {
-        subtitleText.text = "";  // Clear the text before starting
-        subtitleText.gameObject.SetActive(true);  // Ensure the subtitle text is active
-
-        string[] words = fullText.Split(' ');  // Split the full text into individual words
-
-        // Reveal words one by one
-        for (int i = 0; i < words.Length; i++)
-        {
-            // Instead of appending, build the text up to the current word
-            subtitleText.text = string.Join(" ", words, 0, i + 1);  // Show only the words up to the current index
-            yield return new WaitForSeconds(delayBetweenWords);  // Wait before revealing the next word
+                    activeHelperCoroutine = StartCoroutine(LoopHelperHand(bus));
+                }                   
+            }
+            else if (!InteractableObject.isWhaleDropped && whale.GetComponent<Collider2D>().enabled && InteractableObject.isBusDropped)
+            {
+                timerWhale -= Time.deltaTime;
+                if (timerWhale <= 0)
+                {
+                    activeHelperCoroutine = StartCoroutine(LoopHelperHand(whale));
+                }                   
+            }
+            else if (!InteractableObject.isBlockDropped && block.GetComponent<Collider2D>().enabled && InteractableObject.isBusDropped && InteractableObject.isWhaleDropped)
+            {
+                timerBlock -= Time.deltaTime;
+                if (timerBlock <= 0)
+                {
+                    activeHelperCoroutine = StartCoroutine(LoopHelperHand(block));
+                }
+                    
+            }
         }
     }
 
-    // Coroutine to disable the subtitle after the audio finishes, with a 1-second delay
-    private IEnumerator DisableSubtitleAfterAudio()
+
+    private IEnumerator LoopHelperHand(GameObject targetObject)
     {
-        // Wait until the audio is done playing
-        while (audioSource != null && audioSource.isPlaying)
+        // Spawn the helper hand at the object's position
+        activeHelperHand = Instantiate(pointer, targetObject.transform.position, Quaternion.identity);
+
+        // Move the helper hand to the drop position and set it to loop
+        Vector3 dropPosition = targetObject.GetComponent<InteractableObject>().GetDropLocation();
+        LeanTween.move(activeHelperHand, dropPosition, 2f)
+            .setLoopClamp()  // Loop the tween indefinitely
+            .setEase(LeanTweenType.easeInOutSine);
+
+        // Wait until the object is interacted with
+        while (!targetObject.GetComponent<InteractableObject>().isInteracted)
         {
-            yield return null;
+            yield return null;  // Yield control back to Unity until the condition is met
         }
 
-        // Wait an additional 1 second after the audio finishes
-        yield return new WaitForSeconds(1f);
-
-        // Disable the subtitle text
-        if (subtitleText != null)
-        {
-            subtitleText.gameObject.SetActive(false);
-        }
+        // Destroy the active helper hand after interaction is complete
+        Destroy(activeHelperHand);
+        activeHelperHand = null;
     }
 
-    public void ClearHelpRequest(InteractableObject interactable)
+    public void ResetTimerForObject(GameObject targetObject)
     {
-        if (pointer.activeInHierarchy && interactable.gameObject == currentHelpObject)
+        if (targetObject == bus || targetObject == whale || targetObject == block)
         {
-            StopHelpPointer();
-        }
+            timerBus = 10f;
+            timerWhale = 10f;
+            timerBlock = 10f;
+        }       
     }
 
     public void StopHelpPointer()
     {
-        if (isHelpActive)
+        if (activeHelperHand != null)
         {
-            isHelpActive = false;
-            currentHelpObject = null;
-            LeanTween.cancel(pointer);
-            pointer.SetActive(false);
+            Destroy(activeHelperHand);
+            activeHelperHand = null;
+        }
 
-            if (audioSource != null)
-            {
-                audioSource.Stop();
-            }
-
-            Debug.Log("Help pointer deactivated");
+        if (activeHelperCoroutine != null)
+        {
+            StopCoroutine(activeHelperCoroutine);
+            activeHelperCoroutine = null;
         }
     }
-
-    public bool IsHelpActive()
-    {
-        return isHelpActive;
-    }
-
-
-
 }

@@ -17,6 +17,7 @@ public class DragAndDropController : MonoBehaviour
     public GameObject BoyCharacter;
     public Transform speechBubbleContainer;
     public GameObject bird;
+   /* public HelpPointerManager helpercontroller;*/
 
     public float dropOffset;
     public float blinkCount;
@@ -34,6 +35,7 @@ public class DragAndDropController : MonoBehaviour
     private Quaternion originalRotation;
     private SpriteRenderer objectRenderer;
     private BoyController1 parentController;
+    private int originalOrderInLayer;
 
     private AudioSource feedbackAudioSource;
     private AudioClip positiveAudio1;
@@ -82,24 +84,26 @@ public class DragAndDropController : MonoBehaviour
             if (hit.collider != null && hit.collider.gameObject == gameObject)
             {
                 isDragging = true;
-                HelpPointerManager.IsAnyObjectBeingInteracted = true;
-
-                // Stop the help pointer for all objects
-                if (HelpPointerManager.Instance.IsHelpActive())
-                {
-                    HelpPointerManager.Instance.StopHelpPointer();
-                }
-
+                HelpPointerManager.Instance.ResetTimerForObject(gameObject);
+                HelpPointerManager.Instance.StopHelpPointer();
                 offset = transform.position - mousePosition;
                 interactableObject.OnInteract();
+
+                // Store the original order in layer and set it to 10 while dragging
+                SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
+                originalOrderInLayer = spriteRenderer.sortingOrder;
+                spriteRenderer.sortingOrder = 10;
             }
         }
 
         if (Input.GetMouseButtonUp(0) && isDragging)
         {
             isDragging = false;
-            HelpPointerManager.IsAnyObjectBeingInteracted = false;
             CheckDrop();
+
+            // Reset the order in layer to the original value
+            SpriteRenderer spriteRenderer = GetComponent<SpriteRenderer>();
+            spriteRenderer.sortingOrder = originalOrderInLayer;
         }
 
         if (isDragging)
@@ -107,7 +111,6 @@ public class DragAndDropController : MonoBehaviour
             DragObject();
         }
     }
-
 
     void DragObject()
     {
@@ -135,20 +138,24 @@ public class DragAndDropController : MonoBehaviour
                 StartCoroutine(InstantiateSpeechBubbleAfterAudio());
 
                 DisableAllColliders();
-
+                HelpPointerManager.Instance.ResetTimerForObject(gameObject);
+                HelpPointerManager.Instance.StopHelpPointer();
                 correctDropZoneObject.GetComponent<SpriteRenderer>().enabled = false;
-
+                interactableObject.UpdateDropStatus(gameObject.name);
                 EnableMiniatureCollider();
                 MarkAsInteracted(gameObject);
             });
         }
         else
         {
+            DisableAllColliders();
             birdAnimator.SetTrigger("wrongDrop");
 
             PlayNegativeFeedbackAudio();            
             ResetObjectPosition();
             interactableObject.isInteracted = false;
+            HelpPointerManager.Instance.ResetTimerForObject(gameObject); // Reset the timer for this object
+            HelpPointerManager.Instance.StopHelpPointer();
             StartCoroutine(HandleNegativeFeedbackDelay());
         }
     }
@@ -160,7 +167,10 @@ public class DragAndDropController : MonoBehaviour
         birdAnimator.SetTrigger("onceMore");
         parentController.PlayAudioWithSubtitles(3, "Put the Big Toys on the Shelf", "Kiki");
         parrotController.SpawnAndTweenGlowOnInteractableObjects();        
+       
+        yield return new WaitForSeconds(2f);
         ResetInteractionStatus();
+        parrotController.EnableCorrectColliders();
     }
 
 
