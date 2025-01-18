@@ -2,7 +2,6 @@ using UnityEngine;
 using System.Collections.Generic;
 using TMPro;
 using System.Collections;
-using static UnityEditor.PlayerSettings;
 
 public class Lvl6QuestManager : MonoBehaviour
 {
